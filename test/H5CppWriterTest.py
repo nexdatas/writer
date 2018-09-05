@@ -2143,13 +2143,18 @@ class H5CppWriterTest(unittest.TestCase):
                 link_base=dt.h5object, link_path=h5cpp.Path("lkfloatvec"))
             lk = [e for e in dt.h5object.links if e.path.name == "lkfloatvec"][0]
             lkfloatvec = H5CppWriter.H5CppLink(lk, dt)
-            h5cpp.node.link(h5cpp.Path("/entry12345/instrument/intspec"), dt.h5object, h5cpp.Path("lkintspec"))
-            lk = [e for e in dt.h5object.links if e.path.name == "lkintspec"][0]
+            h5cpp.node.link(h5cpp.Path("/entry12345/instrument/intspec"),
+                            dt.h5object, h5cpp.Path("lkintspec"))
+            lk = [e for e in dt.h5object.links
+                  if e.path.name == "lkintspec"][0]
             lkintspec = H5CppWriter.H5CppLink(lk, dt)
-            h5cpp.node.link(h5cpp.Path("/entry12345/instrument/detector"), dt.h5object, h5cpp.Path("lkdet"))
+            h5cpp.node.link(
+                h5cpp.Path("/entry12345/instrument/detector"),
+                dt.h5object, h5cpp.Path("lkdet"))
             lk = [e for e in dt.h5object.links if e.path.name == "lkdet"][0]
             lkdet = H5CppWriter.H5CppLink(lk, dt)
-            h5cpp.node.link(h5cpp.Path("/notype/unknown"), dt.h5object, h5cpp.Path("lkno"))
+            h5cpp.node.link(
+                h5cpp.Path("/notype/unknown"), dt.h5object, h5cpp.Path("lkno"))
             lk = [e for e in dt.h5object.links if e.path.name == "lkno"][0]
             lkno = H5CppWriter.H5CppLink(lk, dt)
             lk = None
@@ -2203,7 +2208,8 @@ class H5CppWriterTest(unittest.TestCase):
             lkno_op = dt.open("lkno")
 
             self.assertTrue(isinstance(lkintimage_op, H5CppWriter.H5CppField))
-            self.assertTrue(isinstance(lkintimage_op.h5object, h5cpp._node.Dataset))
+            self.assertTrue(
+                isinstance(lkintimage_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(lkintimage_op.name, 'lkintimage')
             self.assertEqual(
                 lkintimage_op.path,
@@ -2212,7 +2218,8 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(lkintimage_op.shape, (0, 30))
 
             self.assertTrue(isinstance(lkfloatvec_op, H5CppWriter.H5CppField))
-            self.assertTrue(isinstance(lkfloatvec_op.h5object, h5cpp._node.Dataset))
+            self.assertTrue(
+                isinstance(lkfloatvec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(lkfloatvec_op.name, 'lkfloatvec')
             self.assertEqual(lkfloatvec_op.path,
                              '/entry12345:NXentry/data:NXdata/lkfloatvec')
@@ -2310,7 +2317,8 @@ class H5CppWriterTest(unittest.TestCase):
     def test_pniattributemanager(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__,
+                                      fun)
 
         try:
             overwrite = False
@@ -2330,44 +2338,47 @@ class H5CppWriterTest(unittest.TestCase):
             df2.rate = 4
             df2.shuffle = 6
 
-            strscalar = entry.create_field("strscalar", "string")
-            floatscalar = entry.create_field("floatscalar", "float64")
+            entry.create_field("strscalar", "string")
+            entry.create_field("floatscalar", "float64")
             intscalar = entry.create_field("intscalar", "uint64")
-            strspec = ins.create_field("strspec", "string", [10], [6])
-            floatspec = ins.create_field("floatspec", "float32", [20], [16])
-            intspec = ins.create_field("intspec", "int64", [30], [5])
-            strimage = det.create_field("strimage", "string", [2, 2], [2, 1])
-            floatimage = det.create_field(
+            ins.create_field("strspec", "string", [10], [6])
+            ins.create_field("floatspec", "float32", [20], [16])
+            ins.create_field("intspec", "int64", [30], [5])
+            det.create_field("strimage", "string", [2, 2], [2, 1])
+            det.create_field(
                 "floatimage", "float64", [20, 10], dfilter=df0)
-            intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
-            strvec = det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
-            floatvec = det.create_field(
+            det.create_field("intimage", "uint32", [0, 30], [1, 30])
+            det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
+            det.create_field(
                 "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
-            intvec = det.create_field(
+            det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-            lkintimage = H5CppWriter.link(
+            H5CppWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
-            lkfloatvec = H5CppWriter.link(
+            H5CppWriter.link(
                 "/entry12345/instrument/detector/floatvec", dt, "lkfloatvec")
-            lkintspec = H5CppWriter.link(
+            H5CppWriter.link(
                 "/entry12345/instrument/intspec", dt, "lkintspec")
-            lkdet = H5CppWriter.link(
+            H5CppWriter.link(
                 "/entry12345/instrument/detector", dt, "lkdet")
-            lkno = H5CppWriter.link(
+            H5CppWriter.link(
                 "/notype/unknown", dt, "lkno")
 
             attr0 = rt.attributes
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            self.assertTrue(isinstance(attr0, H5CppWriter.H5CppAttributeManager))
+            self.assertTrue(
+                isinstance(attr0, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
-            self.assertTrue(isinstance(attr1, H5CppWriter.H5CppAttributeManager))
+            self.assertTrue(
+                isinstance(attr1, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr1.h5object, h5cpp._attribute.AttributeManager))
-            self.assertTrue(isinstance(attr2, H5CppWriter.H5CppAttributeManager))
+            self.assertTrue(
+                isinstance(attr2, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr2.h5object, h5cpp._attribute.AttributeManager))
 
@@ -2392,8 +2403,10 @@ class H5CppWriterTest(unittest.TestCase):
             print(dir(atintscalar))
             print(dir(atintscalar.h5object))
 
-            self.assertTrue(isinstance(atintscalar, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atintscalar.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atintscalar, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atintscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintscalar.parent, rt)
             self.assertEqual(atintscalar.name, 'atintscalar')
             self.assertEqual(atintscalar.path, '/@atintscalar')
@@ -2406,13 +2419,16 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atintscalar.h5object.name, 'atintscalar')
             # self.assertEqual(atintscalar.h5object.path, '/@atintscalar')
             # self.assertEqual(atintscalar.h5object.dtype, 'int64')
-            # self.assertEqual(atintscalar.h5object.dataspace.current_dimensions, (1,))
+            # self.assertEqual(
+            #     atintscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(atintscalar.h5object.is_valid, True)
             self.assertEqual(atintscalar.h5object.read(), 0)
             self.assertEqual(atintscalar.h5object[...], 0)
 
-            self.assertTrue(isinstance(atfloatspec, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atfloatspec.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atfloatspec, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atfloatspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatspec.parent, rt)
             self.assertEqual(atfloatspec.name, 'atfloatspec')
             self.assertEqual(atfloatspec.path, '/@atfloatspec')
@@ -2426,13 +2442,15 @@ class H5CppWriterTest(unittest.TestCase):
             # self.assertEqual(atfloatspec.h5object.path, '/@atfloatspec')
             # self.assertEqual(atfloatspec.h5object.dtype, 'float32')
             print("WW")
-            self.assertEqual(atfloatspec.h5object.dataspace.current_dimensions, (12,))
+            self.assertEqual(
+                atfloatspec.h5object.dataspace.current_dimensions, (12,))
             self.assertEqual(atfloatspec.h5object.is_valid, True)
             self.assertEqual(list(atfloatspec.h5object.read()), [0.] * 12)
             self.assertEqual(list(atfloatspec.h5object[...]), [0.] * 12)
 
             self.assertTrue(isinstance(atstrimage, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atstrimage.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atstrimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrimage.parent, rt)
             self.assertEqual(atstrimage.name, 'atstrimage')
             self.assertEqual(atstrimage.path, '/@atstrimage')
@@ -2445,16 +2463,20 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atstrimage.h5object.name, 'atstrimage')
             # self.assertEqual(atstrimage.h5object.path, '/@atstrimage')
             # self.assertEqual(atstrimage.h5object.dtype, 'string')
-            self.assertEqual(atstrimage.h5object.dataspace.current_dimensions, (2, 3))
+            self.assertEqual(
+                atstrimage.h5object.dataspace.current_dimensions, (2, 3))
             self.assertEqual(atstrimage.h5object.is_valid, True)
             self.myAssertImage(atstrimage.h5object.read(), [[''] * 3] * 2)
             self.myAssertImage(atstrimage.h5object[...], [[''] * 3] * 2)
 
-            self.assertTrue(isinstance(atstrscalar, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atstrscalar.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atstrscalar, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atstrscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrscalar.parent, entry)
             self.assertEqual(atstrscalar.name, 'atstrscalar')
-            self.assertEqual(atstrscalar.path, '/entry12345:NXentry@atstrscalar')
+            self.assertEqual(
+                atstrscalar.path, '/entry12345:NXentry@atstrscalar')
             self.assertEqual(atstrscalar.dtype, 'string')
             self.assertEqual(atstrscalar.shape, (1,))
             self.assertEqual(atstrscalar.is_valid, True)
@@ -2465,13 +2487,15 @@ class H5CppWriterTest(unittest.TestCase):
             # self.assertEqual(atstrscalar.h5object.path,
             #                             '/entry12345:NXentry@atstrscalar')
             # self.assertEqual(atstrscalar.h5object.dtype, 'string')
-            # self.assertEqual(atstrscalar.h5object.dataspace.current_dimensions, (1,))
+            # self.assertEqual(
+            #   atstrscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(atstrscalar.h5object.is_valid, True)
             self.assertEqual(atstrscalar.h5object.read(), '')
             self.assertEqual(atstrscalar.h5object[...], '')
 
             self.assertTrue(isinstance(atintspec, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atintspec.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atintspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintspec.parent, entry)
             self.assertEqual(atintspec.name, 'atintspec')
             self.assertEqual(atintspec.path, '/entry12345:NXentry@atintspec')
@@ -2482,18 +2506,23 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(list(atintspec[...]), [0] * 2)
             self.assertEqual(atintspec.parent.h5object, entry.h5object)
             self.assertEqual(atintspec.h5object.name, 'atintspec')
-            # self.assertEqual(atintspec.h5object.path, '/entry12345:NXentry@atintspec')
+            # self.assertEqual(
+            # atintspec.h5object.path, '/entry12345:NXentry@atintspec')
             # self.assertEqual(atintspec.h5object.dtype, 'uint32')
-            self.assertEqual(atintspec.h5object.dataspace.current_dimensions, (2,))
+            self.assertEqual(
+                atintspec.h5object.dataspace.current_dimensions, (2,))
             self.assertEqual(atintspec.h5object.is_valid, True)
             self.assertEqual(list(atintspec.h5object.read()), [0] * 2)
             self.assertEqual(list(atintspec.h5object[...]), [0] * 2)
 
-            self.assertTrue(isinstance(atfloatimage, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atfloatimage.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atfloatimage, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atfloatimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatimage.parent, entry)
             self.assertEqual(atfloatimage.name, 'atfloatimage')
-            self.assertEqual(atfloatimage.path, '/entry12345:NXentry@atfloatimage')
+            self.assertEqual(
+                atfloatimage.path, '/entry12345:NXentry@atfloatimage')
             self.assertEqual(atfloatimage.dtype, 'float64')
             self.assertEqual(atfloatimage.shape, (3, 2))
             self.assertEqual(atfloatimage.is_valid, True)
@@ -2504,13 +2533,16 @@ class H5CppWriterTest(unittest.TestCase):
             # self.assertEqual(atfloatimage.h5object.path,
             #                  '/entry12345:NXentry@atfloatimage')
             # self.assertEqual(atfloatimage.h5object.dtype, 'float64')
-            self.assertEqual(atfloatimage.h5object.dataspace.current_dimensions, (3, 2))
+            self.assertEqual(
+                atfloatimage.h5object.dataspace.current_dimensions, (3, 2))
             self.assertEqual(atfloatimage.h5object.is_valid, True)
             self.myAssertImage(atfloatimage.h5object.read(), [[0.] * 2] * 3)
             self.myAssertImage(atfloatimage.h5object[...], [[0.] * 2] * 3)
 
-            self.assertTrue(isinstance(atfloatscalar, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atfloatscalar.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atfloatscalar, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atfloatscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatscalar.parent, intscalar)
             self.assertEqual(atfloatscalar.name, 'atfloatscalar')
             self.assertEqual(atfloatscalar.path,
@@ -2520,18 +2552,22 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atfloatscalar.is_valid, True)
             self.assertEqual(atfloatscalar.read(), 0)
             self.assertEqual(atfloatscalar[...], 0)
-            self.assertEqual(atfloatscalar.parent.h5object, intscalar.h5object)
+            self.assertEqual(
+                atfloatscalar.parent.h5object, intscalar.h5object)
             self.assertEqual(atfloatscalar.h5object.name, 'atfloatscalar')
             # self.assertEqual(atfloatscalar.h5object.path,
             #                 '/entry12345:NXentry/intscalar@atfloatscalar')
             # self.assertEqual(atfloatscalar.h5object.dtype, 'float64')
-            # self.assertEqual(atfloatscalar.h5object.dataspace.current_dimensions, (1,))
+            # self.assertEqual(
+            #    atfloatscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(atfloatscalar.h5object.is_valid, True)
             self.assertEqual(atfloatscalar.h5object.read(), 0)
             self.assertEqual(atfloatscalar.h5object[...], 0)
 
-            self.assertTrue(isinstance(atstrspec, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atstrspec.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atstrspec, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atstrspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrspec.parent, intscalar)
             self.assertEqual(atstrspec.name, 'atstrspec')
             self.assertEqual(atstrspec.path,
@@ -2546,13 +2582,16 @@ class H5CppWriterTest(unittest.TestCase):
             # self.assertEqual(atstrspec.h5object.path,
             #                  '/entry12345:NXentry/intscalar@atstrspec')
             # self.assertEqual(atstrspec.h5object.dtype, 'string')
-            self.assertEqual(atstrspec.h5object.dataspace.current_dimensions, (4,))
+            self.assertEqual(
+                atstrspec.h5object.dataspace.current_dimensions, (4,))
             self.assertEqual(atstrspec.h5object.is_valid, True)
             self.assertEqual(list(atstrspec.h5object.read()), [''] * 4)
             self.assertEqual(list(atstrspec.h5object[...]), [''] * 4)
 
-            self.assertTrue(isinstance(atintimage, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atintimage.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atintimage, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atintimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintimage.parent, intscalar)
             self.assertEqual(atintimage.name, 'atintimage')
             self.assertEqual(atintimage.path,
@@ -2584,8 +2623,10 @@ class H5CppWriterTest(unittest.TestCase):
             atstrspec = attr2["atstrspec"]
             atintimage = attr2["atintimage"]
 
-            self.assertTrue(isinstance(atintscalar, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atintscalar.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atintscalar, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atintscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintscalar.parent, rt)
             self.assertEqual(atintscalar.name, 'atintscalar')
             self.assertEqual(atintscalar.path, '/@atintscalar')
@@ -2598,13 +2639,16 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atintscalar.h5object.name, 'atintscalar')
             # self.assertEqual(atintscalar.h5object.path, '/@atintscalar')
             # self.assertEqual(atintscalar.h5object.dtype, 'int64')
-            # self.assertEqual(atintscalar.h5object.dataspace.current_dimensions, (1,))
+            # self.assertEqual(
+            #    atintscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(atintscalar.h5object.is_valid, True)
             self.assertEqual(atintscalar.h5object.read(), 0)
             self.assertEqual(atintscalar.h5object[...], 0)
 
-            self.assertTrue(isinstance(atfloatspec, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atfloatspec.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atfloatspec, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atfloatspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatspec.parent, rt)
             self.assertEqual(atfloatspec.name, 'atfloatspec')
             self.assertEqual(atfloatspec.path, '/@atfloatspec')
@@ -2617,13 +2661,16 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atfloatspec.h5object.name, 'atfloatspec')
             # self.assertEqual(atfloatspec.h5object.path, '/@atfloatspec')
             # self.assertEqual(atfloatspec.h5object.dtype, 'float32')
-            self.assertEqual(atfloatspec.h5object.dataspace.current_dimensions, (12,))
+            self.assertEqual(
+                atfloatspec.h5object.dataspace.current_dimensions, (12,))
             self.assertEqual(atfloatspec.h5object.is_valid, True)
             self.assertEqual(list(atfloatspec.h5object.read()), [0.] * 12)
             self.assertEqual(list(atfloatspec.h5object[...]), [0.] * 12)
 
-            self.assertTrue(isinstance(atstrimage, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atstrimage.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atstrimage, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atstrimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrimage.parent, rt)
             self.assertEqual(atstrimage.name, 'atstrimage')
             self.assertEqual(atstrimage.path, '/@atstrimage')
@@ -2636,16 +2683,20 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atstrimage.h5object.name, 'atstrimage')
             # self.assertEqual(atstrimage.h5object.path, '/@atstrimage')
             # self.assertEqual(atstrimage.h5object.dtype, 'string')
-            self.assertEqual(atstrimage.h5object.dataspace.current_dimensions, (2, 3))
+            self.assertEqual(
+                atstrimage.h5object.dataspace.current_dimensions, (2, 3))
             self.assertEqual(atstrimage.h5object.is_valid, True)
             self.myAssertImage(atstrimage.h5object.read(), [[''] * 3] * 2)
             self.myAssertImage(atstrimage.h5object[...], [[''] * 3] * 2)
 
-            self.assertTrue(isinstance(atstrscalar, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atstrscalar.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atstrscalar, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atstrscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrscalar.parent, entry)
             self.assertEqual(atstrscalar.name, 'atstrscalar')
-            self.assertEqual(atstrscalar.path, '/entry12345:NXentry@atstrscalar')
+            self.assertEqual(
+                atstrscalar.path, '/entry12345:NXentry@atstrscalar')
             self.assertEqual(atstrscalar.dtype, 'string')
             self.assertEqual(atstrscalar.shape, (1,))
             self.assertEqual(atstrscalar.is_valid, True)
@@ -2656,13 +2707,16 @@ class H5CppWriterTest(unittest.TestCase):
             # self.assertEqual(atstrscalar.h5object.path,
             #                  '/entry12345:NXentry@atstrscalar')
             # self.assertEqual(atstrscalar.h5object.dtype, 'string')
-            # self.assertEqual(atstrscalar.h5object.dataspace.current_dimensions, (1,))
+            # self.assertEqual(
+            #   atstrscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(atstrscalar.h5object.is_valid, True)
             self.assertEqual(atstrscalar.h5object.read(), '')
             self.assertEqual(atstrscalar.h5object[...], '')
 
-            self.assertTrue(isinstance(atintspec, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atintspec.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atintspec, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atintspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintspec.parent, entry)
             self.assertEqual(atintspec.name, 'atintspec')
             self.assertEqual(atintspec.path, '/entry12345:NXentry@atintspec')
@@ -2673,18 +2727,23 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(list(atintspec[...]), [0] * 2)
             self.assertEqual(atintspec.parent.h5object, entry.h5object)
             self.assertEqual(atintspec.h5object.name, 'atintspec')
-            # self.assertEqual(atintspec.h5object.path, '/entry12345:NXentry@atintspec')
+            # self.assertEqual(atintspec.h5object.path,
+            #    '/entry12345:NXentry@atintspec')
             # self.assertEqual(atintspec.h5object.dtype, 'uint32')
-            self.assertEqual(atintspec.h5object.dataspace.current_dimensions, (2,))
+            self.assertEqual(
+                atintspec.h5object.dataspace.current_dimensions, (2,))
             self.assertEqual(atintspec.h5object.is_valid, True)
             self.assertEqual(list(atintspec.h5object.read()), [0] * 2)
             self.assertEqual(list(atintspec.h5object[...]), [0] * 2)
 
-            self.assertTrue(isinstance(atfloatimage, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atfloatimage.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(isinstance(
+                atfloatimage, H5CppWriter.H5CppAttribute))
+            self.assertTrue(isinstance(
+                atfloatimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatimage.parent, entry)
             self.assertEqual(atfloatimage.name, 'atfloatimage')
-            self.assertEqual(atfloatimage.path, '/entry12345:NXentry@atfloatimage')
+            self.assertEqual(
+                atfloatimage.path, '/entry12345:NXentry@atfloatimage')
             self.assertEqual(atfloatimage.dtype, 'float64')
             self.assertEqual(atfloatimage.shape, (3, 2))
             self.assertEqual(atfloatimage.is_valid, True)
@@ -2695,13 +2754,16 @@ class H5CppWriterTest(unittest.TestCase):
             # self.assertEqual(atfloatimage.h5object.path,
             #                  '/entry12345:NXentry@atfloatimage')
             # self.assertEqual(atfloatimage.h5object.dtype, 'float64')
-            self.assertEqual(atfloatimage.h5object.dataspace.current_dimensions, (3, 2))
+            self.assertEqual(
+                atfloatimage.h5object.dataspace.current_dimensions, (3, 2))
             self.assertEqual(atfloatimage.h5object.is_valid, True)
             self.myAssertImage(atfloatimage.h5object.read(), [[0.] * 2] * 3)
             self.myAssertImage(atfloatimage.h5object[...], [[0.] * 2] * 3)
 
-            self.assertTrue(isinstance(atfloatscalar, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atfloatscalar.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atfloatscalar, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atfloatscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatscalar.parent, intscalar)
             self.assertEqual(atfloatscalar.name, 'atfloatscalar')
             self.assertEqual(atfloatscalar.path,
@@ -2716,13 +2778,15 @@ class H5CppWriterTest(unittest.TestCase):
             # self.assertEqual(atfloatscalar.h5object.link.path,
             #                  '/entry12345:NXentry/intscalar@atfloatscalar')
             # self.assertEqual(atfloatscalar.h5object.dtype, 'float64')
-            # self.assertEqual(atfloatscalar.h5object.dataspace.current_dimensions, (1,))
+            # self.assertEqual(
+            #  atfloatscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(atfloatscalar.h5object.is_valid, True)
             self.assertEqual(atfloatscalar.h5object.read(), 0)
             self.assertEqual(atfloatscalar.h5object[...], 0)
 
             self.assertTrue(isinstance(atstrspec, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atstrspec.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atstrspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrspec.parent, intscalar)
             self.assertEqual(atstrspec.name, 'atstrspec')
             self.assertEqual(atstrspec.path,
@@ -2737,13 +2801,15 @@ class H5CppWriterTest(unittest.TestCase):
             # self.assertEqual(atstrspec.h5object.path,
             #                  '/entry12345:NXentry/intscalar@atstrspec')
             # self.assertEqual(atstrspec.h5object.dtype, 'string')
-            self.assertEqual(atstrspec.h5object.dataspace.current_dimensions, (4,))
+            self.assertEqual(
+                atstrspec.h5object.dataspace.current_dimensions, (4,))
             self.assertEqual(atstrspec.h5object.is_valid, True)
             self.assertEqual(list(atstrspec.h5object.read()), [''] * 4)
             self.assertEqual(list(atstrspec.h5object[...]), [''] * 4)
 
             self.assertTrue(isinstance(atintimage, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atintimage.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atintimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintimage.parent, intscalar)
             self.assertEqual(atintimage.name, 'atintimage')
             self.assertEqual(atintimage.path,
@@ -2758,16 +2824,19 @@ class H5CppWriterTest(unittest.TestCase):
             # self.assertEqual(atintimage.h5object.path,
             #                  '/entry12345:NXentry/intscalar@atintimage')
             # self.assertEqual(atintimage.h5object.dtype, 'int32')
-            self.assertEqual(atintimage.h5object.dataspace.current_dimensions, (3, 2))
+            self.assertEqual(
+                atintimage.h5object.dataspace.current_dimensions, (3, 2))
             self.assertEqual(atintimage.h5object.is_valid, True)
             self.myAssertImage(atintimage.h5object.read(), [[0] * 2] * 3)
             self.myAssertImage(atintimage.h5object[...], [[0] * 2] * 3)
 
-            self.myAssertRaise(Exception, attr2.create, "atintimage", "uint64", [4])
+            self.myAssertRaise(
+                Exception, attr2.create, "atintimage", "uint64", [4])
             atintimage = attr2.create("atintimage", "uint64", [4], True)
 
             self.assertTrue(isinstance(atintimage, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atintimage.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atintimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintimage.parent, intscalar)
             self.assertEqual(atintimage.name, 'atintimage')
             self.assertEqual(atintimage.path,
@@ -2782,7 +2851,8 @@ class H5CppWriterTest(unittest.TestCase):
             # self.assertEqual(atintimage.h5object.path,
             #                  '/entry12345:NXentry/intscalar@atintimage')
             # self.assertEqual(atintimage.h5object.dtype, 'uint64')
-            self.assertEqual(atintimage.h5object.dataspace.current_dimensions, (4,))
+            self.assertEqual(
+                atintimage.h5object.dataspace.current_dimensions, (4,))
             self.assertEqual(atintimage.h5object.is_valid, True)
             self.assertEqual(list(atintimage.h5object.read()), [0] * 4)
             self.assertEqual(list(atintimage.h5object[...]), [0] * 4)
@@ -2867,7 +2937,7 @@ class H5CppWriterTest(unittest.TestCase):
             fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
 #            self.assertEqual(6, len(f.attributes))
-            atts = []
+            # atts = []
             for at in f.attributes:
                 print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
@@ -2886,14 +2956,15 @@ class H5CppWriterTest(unittest.TestCase):
     def test_pniattribute_scalar(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__,
+                                      fun)
 
         try:
-            overwrite = False
+            # overwrite = False
             fl = H5CppWriter.create_file(self._fname)
 
             rt = fl.root()
-            nt = rt.create_group("notype")
+            rt.create_group("notype")
             entry = rt.create_group("entry12345", "NXentry")
             ins = entry.create_group("instrument", "NXinstrument")
             det = ins.create_group("detector", "NXdetector")
@@ -2906,31 +2977,31 @@ class H5CppWriterTest(unittest.TestCase):
             df2.rate = 4
             df2.shuffle = 6
 
-            strscalar = entry.create_field("strscalar", "string")
-            floatscalar = entry.create_field("floatscalar", "float64")
+            entry.create_field("strscalar", "string")
+            entry.create_field("floatscalar", "float64")
             intscalar = entry.create_field("intscalar", "uint64")
-            strspec = ins.create_field("strspec", "string", [10], [6])
-            floatspec = ins.create_field("floatspec", "float32", [20], [16])
-            intspec = ins.create_field("intspec", "int64", [30], [5])
-            strimage = det.create_field("strimage", "string", [2, 2], [2, 1])
-            floatimage = det.create_field(
+            ins.create_field("strspec", "string", [10], [6])
+            ins.create_field("floatspec", "float32", [20], [16])
+            ins.create_field("intspec", "int64", [30], [5])
+            det.create_field("strimage", "string", [2, 2], [2, 1])
+            det.create_field(
                 "floatimage", "float64", [20, 10], dfilter=df0)
-            intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
-            strvec = det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
-            floatvec = det.create_field(
+            det.create_field("intimage", "uint32", [0, 30], [1, 30])
+            det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
+            det.create_field(
                 "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
-            intvec = det.create_field(
+            det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-            lkintimage = H5CppWriter.link(
+            H5CppWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
-            lkfloatvec = H5CppWriter.link(
+            H5CppWriter.link(
                 "/entry12345/instrument/detector/floatvec", dt, "lkfloatvec")
-            lkintspec = H5CppWriter.link(
+            H5CppWriter.link(
                 "/entry12345/instrument/intspec", dt, "lkintspec")
-            lkdet = H5CppWriter.link(
+            H5CppWriter.link(
                 "/entry12345/instrument/detector", dt, "lkdet")
-            lkno = H5CppWriter.link(
+            H5CppWriter.link(
                 "/notype/unknown", dt, "lkno")
 
             attr0 = rt.attributes
@@ -2938,13 +3009,16 @@ class H5CppWriterTest(unittest.TestCase):
             attr2 = intscalar.attributes
 
             print(attr0.h5object)
-            self.assertTrue(isinstance(attr0, H5CppWriter.H5CppAttributeManager))
+            self.assertTrue(
+                isinstance(attr0, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
-            self.assertTrue(isinstance(attr1, H5CppWriter.H5CppAttributeManager))
+            self.assertTrue(
+                isinstance(attr1, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr1.h5object, h5cpp._attribute.AttributeManager))
-            self.assertTrue(isinstance(attr2, H5CppWriter.H5CppAttributeManager))
+            self.assertTrue(
+                isinstance(attr2, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr2.h5object, h5cpp._attribute.AttributeManager))
 
@@ -2953,13 +3027,13 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(len(attr2), 0)
 
             atintscalar = attr0.create("atintscalar", "int64")
-            atfloatspec = attr0.create("atfloatspec", "float32", [12])
-            atstrimage = attr0.create("atstrimage", "string", [2, 3])
+            attr0.create("atfloatspec", "float32", [12])
+            attr0.create("atstrimage", "string", [2, 3])
             atstrscalar = attr1.create("atstrscalar", "string")
-            atintspec = attr1.create("atintspec", "uint32", [2])
-            atfloatimage = attr1.create("atfloatimage", "float64", [3, 2])
+            attr1.create("atintspec", "uint32", [2])
+            attr1.create("atfloatimage", "float64", [3, 2])
             atfloatscalar = attr2.create("atfloatscalar", "float64")
-            atstrspec = attr2.create("atstrspec", "string", [4])
+            attr2.create("atstrspec", "string", [4])
             atintimage = attr2.create("atintimage", "int32", [3, 2])
 
             self.assertEqual(len(attr0), 9)
@@ -2972,15 +3046,19 @@ class H5CppWriterTest(unittest.TestCase):
             chars = string.ascii_uppercase + string.digits
             stvl = [
                 ''.join(self.__rnd.choice(chars)
-                        for _ in range(self.__rnd.randint(1, 10))) for _ in range(10)]
+                        for _ in range(self.__rnd.randint(1, 10)))
+                for _ in range(10)
+            ]
             itvl = [self.__rnd.randint(1, 16000) for _ in range(100)]
 
             flvl = [self.__rnd.uniform(-200.0, 200) for _ in range(80)]
 
             atintscalar.write(itvl[0])
 
-            self.assertTrue(isinstance(atintscalar, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atintscalar.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atintscalar, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atintscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintscalar.parent, rt)
             self.assertEqual(atintscalar.name, 'atintscalar')
             self.assertEqual(atintscalar.path, '/@atintscalar')
@@ -2993,7 +3071,8 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atintscalar.h5object.name, 'atintscalar')
             # self.assertEqual(atintscalar.h5object.path, '/@atintscalar')
             # self.assertEqual(atintscalar.h5object.datatype.type, 'int64')
-            # self.assertEqual(atintscalar.h5object.dataspace.current_dimensions, (1,))
+            # self.assertEqual(
+            #       atintscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(atintscalar.h5object.is_valid, True)
             self.assertEqual(atintscalar.h5object.read(), itvl[0])
             self.assertEqual(atintscalar.h5object[...], itvl[0])
@@ -3021,11 +3100,14 @@ class H5CppWriterTest(unittest.TestCase):
 
             atstrscalar.write(stvl[0])
 
-            self.assertTrue(isinstance(atstrscalar, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atstrscalar.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atstrscalar, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atstrscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrscalar.parent, entry)
             self.assertEqual(atstrscalar.name, 'atstrscalar')
-            self.assertEqual(atstrscalar.path, '/entry12345:NXentry@atstrscalar')
+            self.assertEqual(
+                atstrscalar.path, '/entry12345:NXentry@atstrscalar')
             self.assertEqual(atstrscalar.dtype, 'string')
             self.assertEqual(atstrscalar.shape, (1,))
             self.assertEqual(atstrscalar.is_valid, True)
@@ -3036,7 +3118,8 @@ class H5CppWriterTest(unittest.TestCase):
 #            self.assertEqual(atstrscalar.h5object.path,
 #                             '/entry12345:NXentry@atstrscalar')
 #            self.assertEqual(atstrscalar.h5object.dtype, 'string')
-#            self.assertEqual(atstrscalar.h5object.dataspace.current_dimensions, (1,))
+#            self.assertEqual(
+#               atstrscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(atstrscalar.h5object.is_valid, True)
             self.assertEqual(atstrscalar.h5object.read(), stvl[0])
             self.assertEqual(atstrscalar.h5object[...], stvl[0])
@@ -3064,8 +3147,10 @@ class H5CppWriterTest(unittest.TestCase):
 
             atfloatscalar.write(flvl[0])
 
-            self.assertTrue(isinstance(atfloatscalar, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atfloatscalar.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atfloatscalar, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atfloatscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatscalar.parent, intscalar)
             self.assertEqual(atfloatscalar.name, 'atfloatscalar')
             self.assertEqual(atfloatscalar.path,
@@ -3080,7 +3165,8 @@ class H5CppWriterTest(unittest.TestCase):
 #            self.assertEqual(atfloatscalar.h5object.path,
 #                             '/entry12345:NXentry/intscalar@atfloatscalar')
 #            self.assertEqual(atfloatscalar.h5object.dtype, 'float64')
-#            self.assertEqual(atfloatscalar.h5object.dataspace.current_dimensions, (1,))
+#            self.assertEqual(
+#               atfloatscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(atfloatscalar.h5object.is_valid, True)
             self.assertEqual(atfloatscalar.h5object.read(), flvl[0])
             self.assertEqual(atfloatscalar.h5object[...], flvl[0])
@@ -3191,7 +3277,7 @@ class H5CppWriterTest(unittest.TestCase):
             fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
 #            self.assertEqual(6, len(f.attributes))
-            atts = []
+            # atts = []
             for at in f.attributes:
                 print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
@@ -3210,16 +3296,17 @@ class H5CppWriterTest(unittest.TestCase):
     def test_pniattribute_scalar_bis(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__,
+                                      fun)
 
         try:
-            overwrite = False
+            # overwrite = False
             fl = H5CppWriter.create_file(self._fname)
 
             rt = fl.root()
             attr0 = rt.attributes
 
-            atintscalar = attr0.create("atintscalar", "int64")
+            attr0.create("atintscalar", "int64")
 
             fl.reopen(True)
             self.assertEqual(fl.readonly, True)
@@ -3234,14 +3321,15 @@ class H5CppWriterTest(unittest.TestCase):
     def test_pniattribute_spectrum(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
 
         try:
-            overwrite = False
+            # overwrite = False
             fl = H5CppWriter.create_file(self._fname)
 
             rt = fl.root()
-            nt = rt.create_group("notype")
+            rt.create_group("notype")
             entry = rt.create_group("entry12345", "NXentry")
             ins = entry.create_group("instrument", "NXinstrument")
             det = ins.create_group("detector", "NXdetector")
@@ -3254,31 +3342,31 @@ class H5CppWriterTest(unittest.TestCase):
             df2.rate = 4
             df2.shuffle = 6
 
-            strscalar = entry.create_field("strscalar", "string")
-            floatscalar = entry.create_field("floatscalar", "float64")
+            # strscalar = entry.create_field("strscalar", "string")
+            # floatscalar = entry.create_field("floatscalar", "float64")
             intscalar = entry.create_field("intscalar", "uint64")
-            strspec = ins.create_field("strspec", "string", [10], [6])
-            floatspec = ins.create_field("floatspec", "float32", [20], [16])
-            intspec = ins.create_field("intspec", "int64", [30], [5])
-            strimage = det.create_field("strimage", "string", [2, 2], [2, 1])
-            floatimage = det.create_field(
+            ins.create_field("strspec", "string", [10], [6])
+            ins.create_field("floatspec", "float32", [20], [16])
+            ins.create_field("intspec", "int64", [30], [5])
+            det.create_field("strimage", "string", [2, 2], [2, 1])
+            det.create_field(
                 "floatimage", "float64", [20, 10], dfilter=df0)
-            intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
-            strvec = det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
-            floatvec = det.create_field(
+            det.create_field("intimage", "uint32", [0, 30], [1, 30])
+            det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
+            det.create_field(
                 "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
-            intvec = det.create_field(
+            det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-            lkintimage = H5CppWriter.link(
+            H5CppWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
-            lkfloatvec = H5CppWriter.link(
+            H5CppWriter.link(
                 "/entry12345/instrument/detector/floatvec", dt, "lkfloatvec")
-            lkintspec = H5CppWriter.link(
+            H5CppWriter.link(
                 "/entry12345/instrument/intspec", dt, "lkintspec")
-            lkdet = H5CppWriter.link(
+            H5CppWriter.link(
                 "/entry12345/instrument/detector", dt, "lkdet")
-            lkno = H5CppWriter.link(
+            H5CppWriter.link(
                 "/notype/unknown", dt, "lkno")
 
             attr0 = rt.attributes
@@ -3286,13 +3374,18 @@ class H5CppWriterTest(unittest.TestCase):
             attr2 = intscalar.attributes
 
             print(attr0.h5object)
-            self.assertTrue(isinstance(attr0, H5CppWriter.H5CppAttributeManager))
+            self.assertTrue(
+                isinstance(attr0, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
-            self.assertTrue(isinstance(attr1, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
-                isinstance(attr1.h5object, h5cpp._attribute.AttributeManager))
-            self.assertTrue(isinstance(attr2, H5CppWriter.H5CppAttributeManager))
+                isinstance(attr1, H5CppWriter.H5CppAttributeManager))
+            self.assertTrue(
+                isinstance(attr1.h5object,
+                           h5cpp._attribute.AttributeManager))
+            self.assertTrue(
+                isinstance(attr2,
+                           H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr2.h5object, h5cpp._attribute.AttributeManager))
 
@@ -3302,11 +3395,11 @@ class H5CppWriterTest(unittest.TestCase):
 
             atintscalar = attr0.create("atintscalar", "int64")
             atfloatspec = attr0.create("atfloatspec", "float32", [12])
-            atstrimage = attr0.create("atstrimage", "string", [2, 3])
-            atstrscalar = attr1.create("atstrscalar", "string")
+            attr0.create("atstrimage", "string", [2, 3])
+            attr1.create("atstrscalar", "string")
             atintspec = attr1.create("atintspec", "uint32", [2])
-            atfloatimage = attr1.create("atfloatimage", "float64", [3, 2])
-            atfloatscalar = attr2.create("atfloatscalar", "float64")
+            attr1.create("atfloatimage", "float64", [3, 2])
+            attr2.create("atfloatscalar", "float64")
             atstrspec = attr2.create("atstrspec", "string", [4])
             atintimage = attr2.create("atintimage", "int32", [3, 2])
 
@@ -3318,19 +3411,26 @@ class H5CppWriterTest(unittest.TestCase):
             print(dir(atintscalar.h5object))
 
             chars = string.ascii_uppercase + string.digits
-            stvl = [[
-                ''.join(self.__rnd.choice(chars)
-                        for _ in range(self.__rnd.randint(1, 10))) for _ in range(4)]
+            stvl = [
+                [
+                    ''.join(self.__rnd.choice(chars)
+                            for _ in range(self.__rnd.randint(1, 10)))
+                    for _ in range(4)]
+                for _ in range(10)
+            ]
+
+            itvl = [[self.__rnd.randint(1, 16000) for _ in range(2)]
                     for _ in range(10)]
 
-            itvl = [[self.__rnd.randint(1, 16000) for _ in range(2)] for _ in range(10)]
-
-            flvl = [[self.__rnd.uniform(-200.0, 200) for _ in range(12)] for _ in range(10)]
+            flvl = [[self.__rnd.uniform(-200.0, 200)
+                     for _ in range(12)] for _ in range(10)]
 
             atfloatspec.write(flvl[0])
 
-            self.assertTrue(isinstance(atfloatspec, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atfloatspec.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atfloatspec, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atfloatspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatspec.parent, rt)
             self.assertEqual(atfloatspec.name, 'atfloatspec')
             self.assertEqual(atfloatspec.path, '/@atfloatspec')
@@ -3343,50 +3443,66 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atfloatspec.h5object.name, 'atfloatspec')
             # self.assertEqual(atfloatspec.h5object.path, '/@atfloatspec')
             # self.assertEqual(atfloatspec.h5object.dtype, 'float32')
-            self.assertEqual(atfloatspec.h5object.dataspace.current_dimensions, (12,))
+            self.assertEqual(
+                atfloatspec.h5object.dataspace.current_dimensions, (12,))
             self.assertEqual(atfloatspec.h5object.is_valid, True)
-            self.myAssertFloatList(list(atfloatspec.h5object.read()), flvl[0], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object[...]), flvl[0], 1e-3)
+            self.myAssertFloatList(
+                list(atfloatspec.h5object.read()), flvl[0], 1e-3)
+            self.myAssertFloatList(
+                list(atfloatspec.h5object[...]), flvl[0], 1e-3)
 
             atfloatspec[...] = flvl[1]
 
             self.myAssertFloatList(list(atfloatspec.read()), flvl[1], 1e-3)
             self.myAssertFloatList(list(atfloatspec[...]), flvl[1], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object.read()), flvl[1], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object[...]), flvl[1], 1e-3)
+            self.myAssertFloatList(
+                list(atfloatspec.h5object.read()), flvl[1], 1e-3)
+            self.myAssertFloatList(
+                list(atfloatspec.h5object[...]), flvl[1], 1e-3)
 
             atfloatspec[:] = flvl[2]
 
             self.myAssertFloatList(list(atfloatspec.read()), flvl[2], 1e-3)
             self.myAssertFloatList(list(atfloatspec[...]), flvl[2], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object.read()), flvl[2], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object[...]), flvl[2], 1e-3)
+            self.myAssertFloatList(
+                list(atfloatspec.h5object.read()), flvl[2], 1e-3)
+            self.myAssertFloatList(
+                list(atfloatspec.h5object[...]), flvl[2], 1e-3)
 
             atfloatspec[0:12] = flvl[3]
 
             self.myAssertFloatList(list(atfloatspec.read()), flvl[3], 1e-3)
             self.myAssertFloatList(list(atfloatspec[...]), flvl[3], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object.read()), flvl[3], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object[...]), flvl[3], 1e-3)
+            self.myAssertFloatList(
+                list(atfloatspec.h5object.read()), flvl[3], 1e-3)
+            self.myAssertFloatList(
+                list(atfloatspec.h5object[...]), flvl[3], 1e-3)
 
             atfloatspec[1:10] = flvl[4][1:10]
 
-            self.myAssertFloatList(list(atfloatspec.read()[1:10]), flvl[4][1:10], 1e-3)
-            self.myAssertFloatList(list(atfloatspec[1:10]), flvl[4][1:10], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object.read()[1:10]), flvl[4][1:10], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object[1:10]), flvl[4][1:10], 1e-3)
+            self.myAssertFloatList(
+                list(atfloatspec.read()[1:10]), flvl[4][1:10], 1e-3)
+            self.myAssertFloatList(
+                list(atfloatspec[1:10]), flvl[4][1:10], 1e-3)
+            self.myAssertFloatList(
+                list(atfloatspec.h5object.read()[1:10]), flvl[4][1:10], 1e-3)
+            self.myAssertFloatList(
+                list(atfloatspec.h5object[1:10]), flvl[4][1:10], 1e-3)
 
             atfloatspec[1:10] = flvl[3][1:10]
 
             self.myAssertFloatList(list(atfloatspec.read()), flvl[3], 1e-3)
             self.myAssertFloatList(list(atfloatspec[...]), flvl[3], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object.read()), flvl[3], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object[...]), flvl[3], 1e-3)
+            self.myAssertFloatList(
+                list(atfloatspec.h5object.read()), flvl[3], 1e-3)
+            self.myAssertFloatList(
+                list(atfloatspec.h5object[...]), flvl[3], 1e-3)
 
             atintspec.write(itvl[0])
 
             self.assertTrue(isinstance(atintspec, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atintspec.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(isinstance(
+                atintspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintspec.parent, entry)
             self.assertEqual(atintspec.name, 'atintspec')
             self.assertEqual(atintspec.path, '/entry12345:NXentry@atintspec')
@@ -3397,9 +3513,11 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(list(atintspec[...]), itvl[0])
             self.assertEqual(atintspec.parent.h5object, entry.h5object)
             self.assertEqual(atintspec.h5object.name, 'atintspec')
-            # self.assertEqual(atintspec.h5object.path, '/entry12345:NXentry@atintspec')
+            # self.assertEqual(atintspec.h5object.path,
+            #   '/entry12345:NXentry@atintspec')
             # self.assertEqual(atintspec.h5object.dtype, 'uint32')
-            self.assertEqual(atintspec.h5object.dataspace.current_dimensions, (2,))
+            self.assertEqual(atintspec.h5object.dataspace.current_dimensions,
+                             (2,))
             self.assertEqual(atintspec.h5object.is_valid, True)
             self.assertEqual(list(atintspec.h5object.read()), itvl[0])
             self.assertEqual(list(atintspec.h5object[...]), itvl[0])
@@ -3442,7 +3560,8 @@ class H5CppWriterTest(unittest.TestCase):
             atstrspec.write(stvl[0])
 
             self.assertTrue(isinstance(atstrspec, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atstrspec.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(isinstance(atstrspec.h5object,
+                                       h5cpp._attribute.Attribute))
             self.assertEqual(atstrspec.parent, intscalar)
             self.assertEqual(atstrspec.name, 'atstrspec')
             self.assertEqual(atstrspec.path,
@@ -3457,7 +3576,8 @@ class H5CppWriterTest(unittest.TestCase):
             # self.assertEqual(atstrspec.h5object.path,
             #                 '/entry12345:NXentry/intscalar@atstrspec')
             # self.assertEqual(atstrspec.h5object.dtype, 'string')
-            self.assertEqual(atstrspec.h5object.dataspace.current_dimensions, (4,))
+            self.assertEqual(atstrspec.h5object.dataspace.current_dimensions,
+                             (4,))
             self.assertEqual(atstrspec.h5object.is_valid, True)
             self.assertEqual(list(atstrspec.h5object.read()), stvl[0])
             self.assertEqual(list(atstrspec.h5object[...]), stvl[0])
@@ -3551,10 +3671,11 @@ class H5CppWriterTest(unittest.TestCase):
 
             fl.reopen()
             self.assertEqual(fl.name, self._fname)
-            self.assertEqual(fl.path,
-                             "%s/%s" % (
-                                 os.getcwd(),
-                                 "H5CppWriterTesttest_pniattribute_spectrum.h5"))
+            self.assertEqual(
+                fl.path,
+                "%s/%s" % (
+                    os.getcwd(),
+                    "H5CppWriterTesttest_pniattribute_spectrum.h5"))
             self.assertTrue(
                 isinstance(fl.h5object, h5cpp._file.File))
             self.assertEqual(fl.parent, None)
@@ -3565,10 +3686,11 @@ class H5CppWriterTest(unittest.TestCase):
 
             fl.reopen(True)
             self.assertEqual(fl.name, self._fname)
-            self.assertEqual(fl.path,
-                             "%s/%s" % (
-                                 os.getcwd(),
-                                 "H5CppWriterTesttest_pniattribute_spectrum.h5"))
+            self.assertEqual(
+                fl.path,
+                "%s/%s" % (
+                    os.getcwd(),
+                    "H5CppWriterTesttest_pniattribute_spectrum.h5"))
             self.assertTrue(
                 isinstance(fl.h5object, h5cpp._file.File))
             self.assertEqual(fl.parent, None)
@@ -3585,7 +3707,7 @@ class H5CppWriterTest(unittest.TestCase):
             fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
 #            self.assertEqual(6, len(f.attributes))
-            atts = []
+            # atts = []
             for at in f.attributes:
                 print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
@@ -3604,14 +3726,15 @@ class H5CppWriterTest(unittest.TestCase):
     def test_pniattribute_image(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__,
+                                      fun)
 
         try:
-            overwrite = False
+            # overwrite = False
             fl = H5CppWriter.create_file(self._fname)
 
             rt = fl.root()
-            nt = rt.create_group("notype")
+            rt.create_group("notype")
             entry = rt.create_group("entry12345", "NXentry")
             ins = entry.create_group("instrument", "NXinstrument")
             det = ins.create_group("detector", "NXdetector")
@@ -3624,31 +3747,31 @@ class H5CppWriterTest(unittest.TestCase):
             df2.rate = 4
             df2.shuffle = 6
 
-            strscalar = entry.create_field("strscalar", "string")
-            floatscalar = entry.create_field("floatscalar", "float64")
+            entry.create_field("strscalar", "string")
+            entry.create_field("floatscalar", "float64")
             intscalar = entry.create_field("intscalar", "uint64")
-            strspec = ins.create_field("strspec", "string", [10], [6])
-            floatspec = ins.create_field("floatspec", "float32", [20], [16])
-            intspec = ins.create_field("intspec", "int64", [30], [5])
-            strimage = det.create_field("strimage", "string", [2, 2], [2, 1])
-            floatimage = det.create_field(
+            ins.create_field("strspec", "string", [10], [6])
+            ins.create_field("floatspec", "float32", [20], [16])
+            ins.create_field("intspec", "int64", [30], [5])
+            det.create_field("strimage", "string", [2, 2], [2, 1])
+            det.create_field(
                 "floatimage", "float64", [20, 10], dfilter=df0)
-            intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
-            strvec = det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
-            floatvec = det.create_field(
+            det.create_field("intimage", "uint32", [0, 30], [1, 30])
+            det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
+            det.create_field(
                 "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
-            intvec = det.create_field(
+            det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-            lkintimage = H5CppWriter.link(
+            H5CppWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
-            lkfloatvec = H5CppWriter.link(
+            H5CppWriter.link(
                 "/entry12345/instrument/detector/floatvec", dt, "lkfloatvec")
-            lkintspec = H5CppWriter.link(
+            H5CppWriter.link(
                 "/entry12345/instrument/intspec", dt, "lkintspec")
-            lkdet = H5CppWriter.link(
+            H5CppWriter.link(
                 "/entry12345/instrument/detector", dt, "lkdet")
-            lkno = H5CppWriter.link(
+            H5CppWriter.link(
                 "/notype/unknown", dt, "lkno")
 
             attr0 = rt.attributes
@@ -3656,13 +3779,16 @@ class H5CppWriterTest(unittest.TestCase):
             attr2 = intscalar.attributes
 
             print(attr0.h5object)
-            self.assertTrue(isinstance(attr0, H5CppWriter.H5CppAttributeManager))
+            self.assertTrue(
+                isinstance(attr0, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
-            self.assertTrue(isinstance(attr1, H5CppWriter.H5CppAttributeManager))
+            self.assertTrue(
+                isinstance(attr1, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr1.h5object, h5cpp._attribute.AttributeManager))
-            self.assertTrue(isinstance(attr2, H5CppWriter.H5CppAttributeManager))
+            self.assertTrue(
+                isinstance(attr2, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr2.h5object, h5cpp._attribute.AttributeManager))
 
@@ -3671,13 +3797,13 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(len(attr2), 0)
 
             atintscalar = attr0.create("atintscalar", "int64")
-            atfloatspec = attr0.create("atfloatspec", "float32", [12])
+            attr0.create("atfloatspec", "float32", [12])
             atstrimage = attr0.create("atstrimage", "string", [2, 3])
-            atstrscalar = attr1.create("atstrscalar", "string")
-            atintspec = attr1.create("atintspec", "uint32", [2])
+            attr1.create("atstrscalar", "string")
+            attr1.create("atintspec", "uint32", [2])
             atfloatimage = attr1.create("atfloatimage", "float64", [3, 2])
-            atfloatscalar = attr2.create("atfloatscalar", "float64")
-            atstrspec = attr2.create("atstrspec", "string", [4])
+            attr2.create("atfloatscalar", "float64")
+            attr2.create("atstrspec", "string", [4])
             atintimage = attr2.create("atintimage", "int32", [3, 2])
 
             self.assertEqual(len(attr0), 9)
@@ -3688,10 +3814,14 @@ class H5CppWriterTest(unittest.TestCase):
             print(dir(atintscalar.h5object))
 
             chars = string.ascii_uppercase + string.digits
-            stvl = [[[
-                ''.join(self.__rnd.choice(chars)
-                        for _ in range(self.__rnd.randint(1, 10))) for _ in range(3)]
-                    for _ in range(2)] for _ in range(10)]
+            stvl = [
+                [
+                    [
+                        ''.join(self.__rnd.choice(chars)
+                                for _ in range(self.__rnd.randint(1, 10)))
+                        for _ in range(3)]
+                    for _ in range(2)] for _ in range(10)
+            ]
 
             itvl = [[[self.__rnd.randint(1, 16000) for _ in range(2)]
                      for _ in range(3)] for _ in range(10)]
@@ -3702,8 +3832,10 @@ class H5CppWriterTest(unittest.TestCase):
 
             atstrimage.write(stvl[0])
 
-            self.assertTrue(isinstance(atstrimage, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atstrimage.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atstrimage, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atstrimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrimage.parent, rt)
             self.assertEqual(atstrimage.name, 'atstrimage')
             self.assertEqual(atstrimage.path, '/@atstrimage')
@@ -3717,7 +3849,8 @@ class H5CppWriterTest(unittest.TestCase):
             print(dir(atstrimage.h5object.datatype.native_type()))
             # self.assertEqual(atstrimage.h5object.path, '/@atstrimage')
             # self.assertEqual(atstrimage.h5object.datatype, 'string')
-            # self.assertEqual(atstrimage.h5object.dataspace.current_dimensions, (2, 3))
+            # self.assertEqual(
+            #  atstrimage.h5object.dataspace.current_dimensions, (2, 3))
             self.assertEqual(atstrimage.h5object.is_valid, True)
             self.myAssertImage(atstrimage.h5object.read(), stvl[0])
             self.myAssertImage(atstrimage.h5object[...], stvl[0])
@@ -3761,11 +3894,14 @@ class H5CppWriterTest(unittest.TestCase):
 
             atfloatimage.write(flvl[0])
 
-            self.assertTrue(isinstance(atfloatimage, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atfloatimage.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(
+                isinstance(atfloatimage, H5CppWriter.H5CppAttribute))
+            self.assertTrue(
+                isinstance(atfloatimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatimage.parent, entry)
             self.assertEqual(atfloatimage.name, 'atfloatimage')
-            self.assertEqual(atfloatimage.path, '/entry12345:NXentry@atfloatimage')
+            self.assertEqual(
+                atfloatimage.path, '/entry12345:NXentry@atfloatimage')
             self.assertEqual(atfloatimage.dtype, 'float64')
             self.assertEqual(atfloatimage.shape, (3, 2))
             self.assertEqual(atfloatimage.is_valid, True)
@@ -3776,7 +3912,8 @@ class H5CppWriterTest(unittest.TestCase):
             # self.assertEqual(atfloatimage.h5object.path,
             #                  '/entry12345:NXentry@atfloatimage')
             # self.assertEqual(atfloatimage.h5object.dtype, 'float64')
-            self.assertEqual(atfloatimage.h5object.dataspace.current_dimensions, (3, 2))
+            self.assertEqual(
+                atfloatimage.h5object.dataspace.current_dimensions, (3, 2))
             self.assertEqual(atfloatimage.h5object.is_valid, True)
             self.myAssertImage(atfloatimage.h5object.read(), flvl[0])
             self.myAssertImage(atfloatimage.h5object[...], flvl[0])
@@ -3821,7 +3958,8 @@ class H5CppWriterTest(unittest.TestCase):
             atintimage.write(itvl[0])
 
             self.assertTrue(isinstance(atintimage, H5CppWriter.H5CppAttribute))
-            self.assertTrue(isinstance(atintimage.h5object, h5cpp._attribute.Attribute))
+            self.assertTrue(isinstance(
+                atintimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintimage.parent, intscalar)
             self.assertEqual(atintimage.name, 'atintimage')
             self.assertEqual(atintimage.path,
@@ -3836,7 +3974,8 @@ class H5CppWriterTest(unittest.TestCase):
             # self.assertEqual(atintimage.h5object.path,
             #                 '/entry12345:NXentry/intscalar@atintimage')
             # self.assertEqual(atintimage.h5object.dtype, 'int32')
-            self.assertEqual(atintimage.h5object.dataspace.current_dimensions, (3, 2))
+            self.assertEqual(
+                atintimage.h5object.dataspace.current_dimensions, (3, 2))
             self.assertEqual(atintimage.h5object.is_valid, True)
             self.myAssertImage(atintimage.h5object.read(), itvl[0])
             self.myAssertImage(atintimage.h5object[...], itvl[0])
