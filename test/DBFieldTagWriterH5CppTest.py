@@ -2352,8 +2352,7 @@ class DBFieldTagWriterH5CppTest(unittest.TestCase):
                 "nexdatas_canfail_error": None})
         self._sc.checkImageField(
             det, "pid_exported_image_int", "int64", "NX_INT",
-            [[[numpy.iinfo(getattr(numpy, 'int64')).max]]
-             * 3] * 3,
+            [[[numpy.iinfo(getattr(numpy, 'int64')).max]] * 3] * 3,
             attrs={"type": "NX_INT", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
