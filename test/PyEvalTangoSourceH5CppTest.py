@@ -115,7 +115,8 @@ class PyEvalTangoSourceH5CppTest(unittest.TestCase):
     # \param encoding data encoding
     # \param decoders data decoders
     # \param error data error
-    def checkData(self, data, format, value, ttype, shape, encoding=None, decoders=None, error=0):
+    def checkData(self, data, format, value, ttype, shape, encoding=None,
+                  decoders=None, error=0):
         self.assertEqual(data["rank"], format)
         self.assertEqual(data["tangoDType"], ttype)
         self.assertEqual(data["shape"], shape)
@@ -161,7 +162,8 @@ class PyEvalTangoSourceH5CppTest(unittest.TestCase):
         self.assertTrue(isinstance(ds, DataSource))
         self.myAssertRaise(DataSourceSetupError, ds.getData)
         self.assertEqual(ds.setup(
-            "<datasource><datasource type='CLIENT' name='inp'/><result>%s</result></datasource>" % script),
+            "<datasource><datasource type='CLIENT' name='inp'/>"
+            "<result>%s</result></datasource>" % script),
             None)
         dt = ds.getData()
         self.checkData(dt, "SCALAR", 123.2, "DevDouble", [])
@@ -170,7 +172,8 @@ class PyEvalTangoSourceH5CppTest(unittest.TestCase):
         self.assertTrue(isinstance(ds, DataSource))
         self.myAssertRaise(DataSourceSetupError, ds.getData)
         self.assertEqual(ds.setup(
-            "<datasource><datasource type='CLIENT' name='inp'/><result>%s</result></datasource>" % script2),
+            "<datasource><datasource type='CLIENT' name='inp'/>"
+            "<result>%s</result></datasource>" % script2),
             None)
         gjson = '{"data":{"inp":"21"}}'
         self.assertEqual(ds.setJSON(json.loads(gjson)), None)
@@ -302,9 +305,14 @@ except:
         }
 
         arr3 = {
-            "ScalarEncoded": ["string", "DevEncoded", ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded": ["string", "DevEncoded",
-                               ('UINT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+            "ScalarEncoded": [
+                "string",
+                "DevEncoded",
+                ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+            "SpectrumEncoded": [
+                "string", "DevEncoded",
+                ('UINT32',
+                 '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
         }
 
         for k in arr:
@@ -408,10 +416,12 @@ except:
 
                 if type(vv).__name__ == 'ndarray':
                     self.checkData(
-                        dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__], [len(vv)])
+                        dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__],
+                        [len(vv)])
                 else:
                     self.checkData(
-                        dt, carr[a][1], vv, NTP.pTt[type(vv).__name__], carr[a][3])
+                        dt, carr[a][1], vv, NTP.pTt[type(vv).__name__],
+                        carr[a][3])
 
     # setup test
     # \brief It tests default settings
@@ -429,7 +439,7 @@ else:
         if sys.version_info > (3,):
             script = script.replace("unicode", "str")
         dsp = DataSourcePool()
-        dcp = DecoderPool()
+        DecoderPool()
 
         carr = {
             "int": [1243, "SPECTRUM", "DevLong64", []],
@@ -451,7 +461,8 @@ else:
             "SpectrumLong64": ["int64", "DevLong64", 234, [1, 0]],
             "SpectrumULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "SpectrumFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0],
+                               1e-14],
             "SpectrumString": ["string", "DevString", "MyTrue", [1, 0]],
         }
 
@@ -473,11 +484,13 @@ else:
             if carr[k][2] != "DevBoolean":
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 3)]
                 carr[k][0] = [
-                    carr[k][0] * self.__rnd.randint(1, 3) for c in range(mlen[0])]
+                    carr[k][0] * self.__rnd.randint(1, 3)
+                    for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10)]
-                carr[k][0] = [("true" if self.__rnd.randint(0, 1) else "false")
-                              for c in range(mlen[0])]
+                carr[k][0] = [
+                    ("true" if self.__rnd.randint(0, 1) else "false")
+                    for c in range(mlen[0])]
 
             carr[k][3] = [mlen[0]]
 
@@ -504,16 +517,19 @@ else:
                         str(carr[k][0]).replace("'", "\""))
                 elif carr[k][2] == "DevBoolean":
                     gjson = '{"data":{"rinp":%s}}' % (
-                        '[' + ''.join([a + ',' for a in carr[k][0]])[:-1] + "]")
+                        '[' + ''.join(
+                            [a + ',' for a in carr[k][0]])[:-1] + "]")
                 else:
                     gjson = '{"data":{"rinp":%s}}' % (
-                        '[' + ''.join([str(a) + ',' for a in carr[k][0]])[:-1] + "]")
+                        '[' + ''.join(
+                            [str(a) + ',' for a in carr[k][0]])[:-1] + "]")
 
                 self.assertEqual(ds.setDataSources(dsp), None)
                 self.assertEqual(ds.setJSON(json.loads(gjson)), None)
                 dt = ds.getData()
                 v1 = [Converters.toBool(a)
-                      for a in carr[k][0]] if carr[k][2] == "DevBoolean" else carr[k][0]
+                      for a in carr[k][0]] if carr[k][2] == "DevBoolean" \
+                    else carr[k][0]
                 v2 = [Converters.toBool(a) for a in arr[k2][2]] if arr[
                     k2][1] == "DevBoolean" else arr[k2][2]
                 if NTP.pTt[type(v1[0]).__name__] == str(type(v2[0]).__name__):
@@ -536,12 +552,13 @@ else:
 if type(ds.inp[0][0]) == type(ds.inp2[0][0]):
     ds.res = list(ds.inp) + list(ds.inp2)
 else:
-    ds.res = [[unicode(j) for j in i] for i in ds.inp] + [[unicode(j2) for j2 in i2] for i2 in ds.inp2]
+    ds.res = [[unicode(j) for j in i] for i in ds.inp] + \
+        [[unicode(j2) for j2 in i2] for i2 in ds.inp2]
 """
         if sys.version_info > (3,):
             script = script.replace("unicode", "str")
         dsp = DataSourcePool()
-        dcp = DecoderPool()
+        DecoderPool()
 
         carr = {
             "int": [1243, "IMAGE", "DevLong64", []],
@@ -563,7 +580,8 @@ else:
             "ImageLong64": ["int64", "DevLong64", 234, [1, 0]],
             "ImageULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "ImageFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0],
+                            1e-14],
             "ImageString": ["string", "DevString", "MyTrue", [1, 0]],
         }
 
@@ -572,13 +590,15 @@ else:
             if carr[k][2] != "DevBoolean":
                 mlen = [
                     self.__rnd.randint(1, 10), nl2, self.__rnd.randint(0, 3)]
-                carr[k][0] = [[carr[k][0] * self.__rnd.randint(1, 3)
-                               for r in range(mlen[1])] for c in range(mlen[0])]
+                carr[k][0] = [[
+                    carr[k][0] * self.__rnd.randint(1, 3)
+                    for r in range(mlen[1])] for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10), nl2]
                 if carr[k][2] == 'DevBoolean':
-                    carr[k][0] = [[("true" if self.__rnd.randint(0, 1) else "false")
-                                   for c in range(mlen[1])] for r in range(mlen[0])]
+                    carr[k][0] = [[
+                        ("true" if self.__rnd.randint(0, 1) else "false")
+                        for c in range(mlen[1])] for r in range(mlen[0])]
 
             carr[k][3] = [mlen[0], mlen[1]]
 
@@ -586,12 +606,18 @@ else:
             mlen = [self.__rnd.randint(1, 10), nl2, self.__rnd.randint(0, 3)]
             if arr[k][1] != "DevBoolean":
                 arr[k][2] = [[arr[k][2] * self.__rnd.randint(1, 3)
-                              for r in range(mlen[1])] for c in range(mlen[0])]
+                              for r in range(mlen[1])]
+                             for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10), nl2]
                 if arr[k][1] == 'DevBoolean':
-                    arr[k][2] = [[(True if self.__rnd.randint(0, 1) else False)
-                                  for c in range(mlen[1])] for r in range(mlen[0])]
+                    arr[k][2] = [
+                        [
+                            (True if self.__rnd.randint(0, 1) else False)
+                            for c in range(mlen[1])
+                        ]
+                        for r in range(mlen[0])
+                    ]
 
             arr[k][3] = [mlen[0], mlen[1]]
             self._simps.dp.write_attribute(k, arr[k][2])
@@ -620,24 +646,32 @@ else:
                         str(carr[k][0]).replace("'", "\""))
                 elif carr[k][2] == "DevBoolean":
                     gjson = '{"data":{"rinp":%s}}' % (
-                        '[' + "".join(['[' + ''.join([a + ',' for a in row])[:-1] + "]," for row in carr[k][0]])[:-1] + ']')
+                        '[' + "".join(['[' + ''.join(
+                            [a + ',' for a in row])[:-1] + "],"
+                            for row in carr[k][0]])[:-1] + ']')
                 else:
                     gjson = '{"data":{"rinp":%s}}' % (
-                        '[' + "".join(['[' + ''.join([str(a) + ',' for a in row])[:-1] + "]," for row in carr[k][0]])[:-1] + ']')
+                        '[' + "".join(['[' + ''.join(
+                            [str(a) + ',' for a in row])[:-1] + "],"
+                            for row in carr[k][0]])[:-1] + ']')
 
                 self.assertEqual(ds.setDataSources(dsp), None)
                 self.assertEqual(ds.setJSON(json.loads(gjson)), None)
                 dt = ds.getData()
                 v1 = [[Converters.toBool(a) for a in row]
-                      for row in carr[k][0]] if carr[k][2] == "DevBoolean" else carr[k][0]
+                      for row in carr[k][0]] if carr[k][2] == "DevBoolean" \
+                    else carr[k][0]
                 v2 = [[Converters.toBool(a) for a in row]
-                      for row in arr[k2][2]] if arr[k2][1] == "DevBoolean" else arr[k2][2]
-                if NTP.pTt[type(v1[0][0]).__name__] == str(type(v2[0][0]).__name__):
+                      for row in arr[k2][2]] if arr[k2][1] == "DevBoolean" \
+                    else arr[k2][2]
+                if NTP.pTt[type(v1[0][0]).__name__] == \
+                   str(type(v2[0][0]).__name__):
                     vv = v1 + v2
                     error = (arr[k2][4] if len(arr[k2]) > 4 else 0)
                 else:
                     vv = [[unicode(j) for j in i]
-                          for i in v1] + [[unicode(j2) for j2 in i2] for i2 in v2]
+                          for i in v1] + [[unicode(j2) for j2 in i2]
+                                          for i2 in v2]
                     error = 0
                 shape = [len(vv), len(vv[0])]
                 self.checkData(dt, carr[k][1], vv, NTP.pTt[
@@ -671,7 +705,8 @@ ds.res = commonblock["myres"]
         self.assertTrue(isinstance(ds, DataSource))
         self.myAssertRaise(DataSourceSetupError, ds.getData)
         self.assertEqual(ds.setup(
-            "<datasource><datasource type='CLIENT' name='inp'/><result>%s</result></datasource>" % script),
+            "<datasource><datasource type='CLIENT' name='inp'/>"
+            "<result>%s</result></datasource>" % script),
             None)
         dt = ds.getData()
         self.checkData(dt, "SCALAR", 123.2, "DevDouble", [])
@@ -680,7 +715,8 @@ ds.res = commonblock["myres"]
         self.assertTrue(isinstance(ds, DataSource))
         self.myAssertRaise(DataSourceSetupError, ds.getData)
         self.assertEqual(ds.setup(
-            "<datasource><datasource type='CLIENT' name='inp'/><result>%s</result></datasource>" % script2),
+            "<datasource><datasource type='CLIENT' name='inp'/>"
+            "<result>%s</result></datasource>" % script2),
             None)
         gjson = '{"data":{"inp":"21"}}'
         self.assertEqual(ds.setJSON(json.loads(gjson)), None)
@@ -889,9 +925,13 @@ commonblock["myres"] = ds.res
         }
 
         arr3 = {
-            "ScalarEncoded": ["string", "DevEncoded", ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded": ["string", "DevEncoded",
-                               ('UINT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+            "ScalarEncoded": [
+                "string", "DevEncoded",
+                ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+            "SpectrumEncoded": [
+                "string", "DevEncoded",
+                ('UINT32',
+                 '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
         }
 
         for k in arr:
@@ -1013,10 +1053,12 @@ commonblock["myres"] = ds.res
 
                 if type(vv).__name__ == 'ndarray':
                         self.checkData(
-                            dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__], [len(vv)])
+                            dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__],
+                            [len(vv)])
                 else:
                     self.checkData(
-                        dt, carr[a][1], vv, NTP.pTt[type(vv).__name__], carr[a][3])
+                        dt, carr[a][1], vv, NTP.pTt[type(vv).__name__],
+                        carr[a][3])
 
                 ds2 = PyEvalSource()
                 self.assertTrue(isinstance(ds2, DataSource))
@@ -1030,10 +1072,12 @@ commonblock["myres"] = ds.res
                 dt = ds2.getData()
                 if type(vv).__name__ == 'ndarray':
                     self.checkData(
-                        dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__], [len(vv)])
+                        dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__],
+                        [len(vv)])
                 else:
                     self.checkData(
-                        dt, carr[a][1], vv, NTP.pTt[type(vv).__name__], carr[a][3])
+                        dt, carr[a][1], vv, NTP.pTt[type(vv).__name__],
+                        carr[a][3])
 
     # setup test
     # \brief It tests default settings
@@ -1053,7 +1097,7 @@ commonblock["my1res"] = ds.res
             script = script.replace("unicode", "str")
         script2 = 'ds.res2 = commonblock["my1res"]'
         dsp = DataSourcePool()
-        dcp = DecoderPool()
+        DecoderPool()
 
         carr = {
             "int": [1243, "SPECTRUM", "DevLong64", []],
@@ -1098,7 +1142,8 @@ commonblock["my1res"] = ds.res
             if carr[k][2] != "DevBoolean":
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 3)]
                 carr[k][0] = [
-                    carr[k][0] * self.__rnd.randint(1, 3) for c in range(mlen[0])]
+                    carr[k][0] * self.__rnd.randint(1, 3)
+                    for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10)]
                 carr[k][0] = [("true" if self.__rnd.randint(0, 1) else "false")
@@ -1129,16 +1174,19 @@ commonblock["my1res"] = ds.res
                         str(carr[k][0]).replace("'", "\""))
                 elif carr[k][2] == "DevBoolean":
                     gjson = '{"data":{"rinp":%s}}' % (
-                        '[' + ''.join([a + ',' for a in carr[k][0]])[:-1] + "]")
+                        '[' + ''.join([a + ','
+                                       for a in carr[k][0]])[:-1] + "]")
                 else:
                     gjson = '{"data":{"rinp":%s}}' % (
-                        '[' + ''.join([str(a) + ',' for a in carr[k][0]])[:-1] + "]")
+                        '[' + ''.join([str(a) + ','
+                                       for a in carr[k][0]])[:-1] + "]")
 
                 self.assertEqual(ds.setDataSources(dsp), None)
                 self.assertEqual(ds.setJSON(json.loads(gjson)), None)
                 dt = ds.getData()
                 v1 = [Converters.toBool(a)
-                      for a in carr[k][0]] if carr[k][2] == "DevBoolean" else carr[k][0]
+                      for a in carr[k][0]] if carr[k][2] == "DevBoolean" \
+                    else carr[k][0]
                 v2 = [Converters.toBool(a) for a in arr[k2][2]] if arr[
                     k2][1] == "DevBoolean" else arr[k2][2]
                 if NTP.pTt[type(v1[0]).__name__] == str(type(v2[0]).__name__):
@@ -1175,14 +1223,15 @@ commonblock["my1res"] = ds.res
 if type(ds.inp[0][0]) == type(ds.inp2[0][0]):
     ds.res = list(ds.inp) + list(ds.inp2)
 else:
-    ds.res = [[unicode(j) for j in i] for i in ds.inp] + [[unicode(j2) for j2 in i2] for i2 in ds.inp2]
+    ds.res = [[unicode(j) for j in i] for i in ds.inp] + \
+        [[unicode(j2) for j2 in i2] for i2 in ds.inp2]
 commonblock["myre3"] = ds.res
 """
         if sys.version_info > (3,):
             script = script.replace("unicode", "str")
         script2 = 'ds.res2 = commonblock["myre3"]'
         dsp = DataSourcePool()
-        dcp = DecoderPool()
+        DecoderPool()
 
         carr = {
             "int": [1243, "IMAGE", "DevLong64", []],
@@ -1190,7 +1239,7 @@ commonblock["myre3"] = ds.res
             "float": [-1.223e-01, "IMAGE", "DevDouble", []],
             "str": ['My String', "IMAGE", "DevString", []],
             "unicode": ["Hello", "IMAGE", "DevString", []],
-            #            "unicode":[u'\x12\xf8\xff\xf4',"IMAGE","DevString",[]],
+            #    "unicode":[u'\x12\xf8\xff\xf4',"IMAGE","DevString",[]],
             "bool": ['true', "IMAGE", "DevBoolean", []],
         }
 
@@ -1204,7 +1253,8 @@ commonblock["myre3"] = ds.res
             "ImageLong64": ["int64", "DevLong64", 234, [1, 0]],
             "ImageULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "ImageFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0],
+                            1e-14],
             "ImageString": ["string", "DevString", "MyTrue", [1, 0]],
         }
 
@@ -1214,12 +1264,15 @@ commonblock["myre3"] = ds.res
                 mlen = [
                     self.__rnd.randint(1, 10), nl2, self.__rnd.randint(0, 3)]
                 carr[k][0] = [[carr[k][0] * self.__rnd.randint(1, 3)
-                               for r in range(mlen[1])] for c in range(mlen[0])]
+                               for r in range(mlen[1])]
+                              for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10), nl2]
                 if carr[k][2] == 'DevBoolean':
-                    carr[k][0] = [[("true" if self.__rnd.randint(0, 1) else "false")
-                                   for c in range(mlen[1])] for r in range(mlen[0])]
+                    carr[k][0] = [[("true" if self.__rnd.randint(0, 1)
+                                    else "false")
+                                   for c in range(mlen[1])]
+                                  for r in range(mlen[0])]
 
             carr[k][3] = [mlen[0], mlen[1]]
 
@@ -1227,12 +1280,18 @@ commonblock["myre3"] = ds.res
             mlen = [self.__rnd.randint(1, 10), nl2, self.__rnd.randint(0, 3)]
             if arr[k][1] != "DevBoolean":
                 arr[k][2] = [[arr[k][2] * self.__rnd.randint(1, 3)
-                              for r in range(mlen[1])] for c in range(mlen[0])]
+                              for r in range(mlen[1])]
+                             for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10), nl2]
                 if arr[k][1] == 'DevBoolean':
-                    arr[k][2] = [[(True if self.__rnd.randint(0, 1) else False)
-                                  for c in range(mlen[1])] for r in range(mlen[0])]
+                    arr[k][2] = [
+                        [
+                            (
+                                True if self.__rnd.randint(0, 1) else False)
+                            for c in range(mlen[1])]
+                        for r in range(mlen[0])
+                    ]
 
             arr[k][3] = [mlen[0], mlen[1]]
             self._simps.dp.write_attribute(k, arr[k][2])
@@ -1261,26 +1320,32 @@ commonblock["myre3"] = ds.res
                         str(carr[k][0]).replace("'", "\""))
                 elif carr[k][2] == "DevBoolean":
                     gjson = '{"data":{"rinp":%s}}' % (
-                        '[' + "".join(['[' + ''.join([a + ',' for a in row])[:-1] + "]," for row in carr[k][0]])[:-1] + ']')
+                        '[' + "".join(['[' + ''.join(
+                            [a + ',' for a in row])[:-1] + "],"
+                            for row in carr[k][0]])[:-1] + ']')
                 else:
                     gjson = '{"data":{"rinp":%s}}' % (
-                        '[' + "".join(['[' + ''.join([str(a) + ',' for a in row])[:-1] + "]," for row in carr[k][0]])[:-1] + ']')
+                        '[' + "".join(['[' + ''.join(
+                            [str(a) + ',' for a in row])[:-1] + "],"
+                            for row in carr[k][0]])[:-1] + ']')
 
                 self.assertEqual(ds.setDataSources(dsp), None)
                 self.assertEqual(ds.setJSON(json.loads(gjson)), None)
                 dt = ds.getData()
                 v1 = [[Converters.toBool(a) for a in row]
                       for row in carr[k][0]] if carr[k][2] == "DevBoolean" \
-                      else carr[k][0]
+                    else carr[k][0]
                 v2 = [[Converters.toBool(a) for a in row]
                       for row in arr[k2][2]] if arr[k2][1] == "DevBoolean" \
-                      else arr[k2][2]
-                if NTP.pTt[type(v1[0][0]).__name__] == str(type(v2[0][0]).__name__):
+                    else arr[k2][2]
+                if NTP.pTt[type(v1[0][0]).__name__] == \
+                   str(type(v2[0][0]).__name__):
                     vv = v1 + v2
                     error = (arr[k2][4] if len(arr[k2]) > 4 else 0)
                 else:
                     vv = [[unicode(j) for j in i]
-                          for i in v1] + [[unicode(j2) for j2 in i2] for i2 in v2]
+                          for i in v1] + [[unicode(j2) for j2 in i2]
+                                          for i2 in v2]
                     error = 0
                 shape = [len(vv), len(vv[0])]
                 self.checkData(dt, carr[k][1], vv, NTP.pTt[
