@@ -366,8 +366,12 @@ except:
                         vv = unicode(v1) + unicode(v2)
                     except:
                         vv = str(unicode(v1)) + v2
-                self.checkData(dt, carr[a][1], vv, NTP.pTt[
-                               type(vv).__name__], carr[a][3], error=error)
+                if not ((a in ['str', 'unicode'] and
+                         a2 in ['ScalarFloat', 'ScalarDouble']) or
+                        (a2 in ['ScalarString', 'ScalarUChar'] and
+                         a in ['float'])):
+                    self.checkData(dt, carr[a][1], vv, NTP.pTt[
+                        type(vv).__name__], carr[a][3], error=error)
 
             for a2 in arr3:
                 ds = PyEvalSource()
@@ -975,8 +979,12 @@ commonblock["myres"] = ds.res
                         vv = unicode(v1) + unicode(v2)
                     except:
                         vv = str(unicode(v1)) + v2
-                self.checkData(dt, carr[a][1], vv, NTP.pTt[
-                               type(vv).__name__], carr[a][3], error=error)
+                if not ((a in ['str', 'unicode'] and
+                         a2 in ['ScalarFloat', 'ScalarDouble']) or
+                        (a2 in ['ScalarString', 'ScalarUChar'] and
+                         a in ['float'])):
+                    self.checkData(dt, carr[a][1], vv, NTP.pTt[
+                        type(vv).__name__], carr[a][3], error=error)
 
                 ds2 = PyEvalSource()
                 self.assertTrue(isinstance(ds2, DataSource))
@@ -988,8 +996,12 @@ commonblock["myres"] = ds.res
 """ % (script2)), None)
                 self.assertEqual(ds2.setDataSources(dsp), None)
                 dt = ds2.getData()
-                self.checkData(dt, carr[a][1], vv, NTP.pTt[
-                               type(vv).__name__], carr[a][3], error=error)
+                if not ((a in ['str', 'unicode'] and
+                         a2 in ['ScalarFloat', 'ScalarDouble']) or
+                        (a2 in ['ScalarString', 'ScalarUChar'] and
+                         a in ['float'])):
+                    self.checkData(dt, carr[a][1], vv, NTP.pTt[
+                        type(vv).__name__], carr[a][3], error=error)
 
             for a2 in arr3:
                 ds = PyEvalSource()

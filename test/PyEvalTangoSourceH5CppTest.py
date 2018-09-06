@@ -357,8 +357,13 @@ except:
                         vv = unicode(v1) + unicode(v2)
                     except:
                         vv = str(unicode(v1)) + v2
-                self.checkData(dt, carr[a][1], vv, NTP.pTt[
-                               type(vv).__name__], carr[a][3], error=error)
+                if not ((a in ['str', 'unicode'] and
+                         a2 in ['ScalarFloat', 'ScalarDouble']) or
+                        (a2 in ['ScalarString', 'ScalarUChar'] and
+                         a in ['float'])):
+                    self.checkData(
+                        dt, carr[a][1], vv, NTP.pTt[type(vv).__name__],
+                        carr[a][3], error=error)
 
             for a2 in arr3:
                 ds = PyEvalSource()
@@ -939,8 +944,14 @@ commonblock["myres"] = ds.res
                         vv = unicode(v1) + unicode(v2)
                     except:
                         vv = str(unicode(v1)) + v2
-                self.checkData(dt, carr[a][1], vv, NTP.pTt[
-                               type(vv).__name__], carr[a][3], error=error)
+                if not ((a in ['str', 'unicode'] and
+                         a2 in ['ScalarFloat', 'ScalarDouble']) or
+                        (a2 in ['ScalarString', 'ScalarUChar'] and
+                         a in ['float'])):
+                    self.checkData(
+                        dt, carr[a][1], vv, NTP.pTt[
+                            type(vv).__name__], carr[a][3],
+                        error=error)
 
                 ds2 = PyEvalSource()
                 self.assertTrue(isinstance(ds2, DataSource))
@@ -952,8 +963,12 @@ commonblock["myres"] = ds.res
 """ % (script2)), None)
                 self.assertEqual(ds2.setDataSources(dsp), None)
                 dt = ds2.getData()
-                self.checkData(dt, carr[a][1], vv, NTP.pTt[
-                               type(vv).__name__], carr[a][3], error=error)
+                if not ((a in ['str', 'unicode'] and
+                         a2 in ['ScalarFloat', 'ScalarDouble']) or
+                        (a2 in ['ScalarString', 'ScalarUChar'] and
+                         a in ['float'])):
+                    self.checkData(dt, carr[a][1], vv, NTP.pTt[
+                        type(vv).__name__], carr[a][3], error=error)
 
             for a2 in arr3:
                 ds = PyEvalSource()
@@ -1255,9 +1270,11 @@ commonblock["myre3"] = ds.res
                 self.assertEqual(ds.setJSON(json.loads(gjson)), None)
                 dt = ds.getData()
                 v1 = [[Converters.toBool(a) for a in row]
-                      for row in carr[k][0]] if carr[k][2] == "DevBoolean" else carr[k][0]
+                      for row in carr[k][0]] if carr[k][2] == "DevBoolean" \
+                      else carr[k][0]
                 v2 = [[Converters.toBool(a) for a in row]
-                      for row in arr[k2][2]] if arr[k2][1] == "DevBoolean" else arr[k2][2]
+                      for row in arr[k2][2]] if arr[k2][1] == "DevBoolean" \
+                      else arr[k2][2]
                 if NTP.pTt[type(v1[0][0]).__name__] == str(type(v2[0][0]).__name__):
                     vv = v1 + v2
                     error = (arr[k2][4] if len(arr[k2]) > 4 else 0)
