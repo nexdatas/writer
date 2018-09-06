@@ -26,14 +26,20 @@ import json
 import numpy
 
 import PyTango
-from ProxyHelper import ProxyHelper
+try:
+    from ProxyHelper import ProxyHelper
+except:
+    from .ProxyHelper import ProxyHelper
 
 import struct
 
 import nxswriter.H5CppWriter as H5CppWriter
 
 
-import ServerSetUp
+try:
+    import ServerSetUp
+except:
+    from . import ServerSetUp
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
