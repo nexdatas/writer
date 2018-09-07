@@ -28,7 +28,11 @@ import numpy
 
 import PyTango
 import time
-from ProxyHelper import ProxyHelper
+
+try:
+    from ProxyHelper import ProxyHelper
+except:
+    from .ProxyHelper import ProxyHelper
 
 
 from xml.sax import SAXParseException
@@ -38,7 +42,10 @@ import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
 
 
-import ServerSetUp
+try:
+    import ServerSetUp
+except:
+    from . import ServerSetUp
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
