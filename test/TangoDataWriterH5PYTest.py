@@ -1966,10 +1966,10 @@ ds.res2 = str(True)
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/counter1 not found. DATASOURCE: "
                 "CLIENT record exp_c01', 'Data without value')\n"
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/counter1 not found. DATASOURCE: "
                 "CLIENT record exp_c01', 'Data without value')")
 
@@ -2046,10 +2046,10 @@ ds.res2 = str(True)
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/mca not found. DATASOURCE: CLIENT"
                 " record p09/mca/exp.02', 'Data without value')\n"
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/mca not found. DATASOURCE: CLIENT"
                 " record p09/mca/exp.02', 'Data without value')")
 
@@ -2139,10 +2139,10 @@ ds.res2 = str(True)
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/counter1 not found. DATASOURCE: CLIENT"
                 " record exp_c01', 'Data without value')\n"
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/counter1 not found. DATASOURCE: CLIENT"
                 " record exp_c01', 'Data without value')")
 
@@ -2209,10 +2209,10 @@ ds.res2 = str(True)
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
                 "record p09/mca/exp.02', 'Data without value')\n"
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
                 "record p09/mca/exp.02', 'Data without value')")
 
@@ -2418,10 +2418,10 @@ ds.res2 = str(True)
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/counter1 not found. DATASOURCE: CLIENT"
                 " record exp_c01', 'Data without value')\n"
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/counter1 not found. DATASOURCE: CLIENT"
                 " record exp_c01', 'Data without value')")
 
@@ -2498,10 +2498,10 @@ ds.res2 = str(True)
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
                 "record p09/mca/exp.02', 'Data without value')\n"
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
                 "record p09/mca/exp.02', 'Data without value')")
 
@@ -2591,10 +2591,10 @@ ds.res2 = str(True)
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/counter1 not found. DATASOURCE: "
                 "CLIENT record exp_c01', 'Data without value')\n"
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/counter1 not found. DATASOURCE: "
                 "CLIENT record exp_c01', 'Data without value')")
 
@@ -2661,10 +2661,10 @@ ds.res2 = str(True)
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
                 "record p09/mca/exp.02', 'Data without value')\n"
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
                 "record p09/mca/exp.02', 'Data without value')")
 
@@ -2870,10 +2870,10 @@ ds.res2 = str(True)
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/counter1 not found. DATASOURCE: "
                 "CLIENT record exp_c01', 'Data without value')\n"
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/counter1 not found. DATASOURCE: "
                 "CLIENT record exp_c01', 'Data without value')")
 
@@ -2950,10 +2950,10 @@ ds.res2 = str(True)
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/mca not found. DATASOURCE: CLIENT"
                 " record p09/mca/exp.02', 'Data without value')\n"
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/mca not found. DATASOURCE: CLIENT"
                 " record p09/mca/exp.02', 'Data without value')")
 
@@ -3043,10 +3043,10 @@ ds.res2 = str(True)
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/counter1 not found. DATASOURCE:"
                 " CLIENT record exp_c01', 'Data without value')\n"
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/counter1 not found. DATASOURCE:"
                 " CLIENT record exp_c01', 'Data without value')")
 
@@ -3113,10 +3113,10 @@ ds.res2 = str(True)
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/mca not found. DATASOURCE: "
                 "CLIENT record p09/mca/exp.02', 'Data without value')\n"
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector/mca not found. DATASOURCE: CLIENT"
                 " record p09/mca/exp.02', 'Data without value')")
 

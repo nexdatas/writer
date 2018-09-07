@@ -181,13 +181,17 @@ class EAttribute(FElement):
         field = self._lastObject()
         if field is not None:
             if error:
+                if isinstance(error, tuple):
+                    serror = str(tuple([str(e) for e in error]))
+                else:
+                    serror = str(error)
                 if "nexdatas_canfail_error" in \
                    [at.name for at in field.attributes]:
                     olderror = field.attributes["nexdatas_canfail_error"][...]
                     if olderror:
-                        error = str(olderror) + "\n" + str(error)
+                        serror = str(olderror) + "\n" + serror
                 field.attributes.create("nexdatas_canfail_error", "string",
-                                        overwrite=True)[...] = str(error)
+                                        overwrite=True)[...] = serror
             field.attributes.create("nexdatas_canfail", "string",
                                     overwrite=True)[...] = "FAILED"
             if self._streams:
