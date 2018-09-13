@@ -33,7 +33,10 @@ import time
 import json
 
 
-import SimpleServerSetUp
+try:
+    import SimpleServerSetUp
+except:
+    from . import SimpleServerSetUp
 
 
 from nxswriter.DataSources import DataSource
@@ -189,7 +192,8 @@ class TgGroupTest(unittest.TestCase):
     # \param encoding data encoding
     # \param decoders data decoders
     # \param error data error
-    def checkData(self, data, format, value, ttype, shape, encoding=None, decoders=None, error=0):
+    def checkData(self, data, format, value, ttype, shape, encoding=None,
+                  decoders=None, error=0):
         self.assertEqual(data["rank"], format)
         self.assertEqual(data["tangoDType"], ttype)
         self.assertEqual(data["shape"], shape)
@@ -259,9 +263,13 @@ class TgGroupTest(unittest.TestCase):
         }
 
         arr3 = {
-            "ScalarEncoded": ["string", "DevEncoded", ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded": ["string", "DevEncoded",
-                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+            "ScalarEncoded": [
+                "string", "DevEncoded",
+                ("UTF8", b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+            "SpectrumEncoded": [
+                "string", "DevEncoded",
+                ('INT32',
+                 b'\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
         }
 
         counter = self.__rnd.randint(-2, 10)
@@ -298,7 +306,9 @@ class TgGroupTest(unittest.TestCase):
                 dv2.setMember(mb)
             flip = not flip
 
+        print("FETCH %s" % counter)
         gr.getData(counter)
+        print("FETCH END")
 
         for k in arr1:
             self._simps.dp.write_attribute(k, arr1b[k][2])
@@ -309,12 +319,14 @@ class TgGroupTest(unittest.TestCase):
         for k in arr:
             if flip:
                 dt = (gr.getDevice(dvn).members[k]).getValue()
-                self.checkData(dt, "SCALAR", arr[k][2], arr[k][1], [
-                               1, 0], None, None, arr[k][3] if len(arr[k]) > 3 else 0)
+                self.checkData(
+                    dt, "SCALAR", arr[k][2], arr[k][1], [1, 0], None,
+                    None, arr[k][3] if len(arr[k]) > 3 else 0)
             else:
                 dt = (gr.getDevice(dvn2).members[k]).getValue()
-                self.checkData(dt, "SCALAR", arrb[k][2], arrb[k][1], [
-                               1, 0], None, None, arrb[k][3] if len(arr[k]) > 3 else 0)
+                self.checkData(
+                    dt, "SCALAR", arrb[k][2], arrb[k][1], [1, 0],
+                    None, None, arrb[k][3] if len(arr[k]) > 3 else 0)
             flip = not flip
 
         gr.getData(counter)
@@ -323,12 +335,13 @@ class TgGroupTest(unittest.TestCase):
         for k in arr:
             if flip:
                 dt = (gr.getDevice(dvn).members[k]).getValue()
-                self.checkData(dt, "SCALAR", arr[k][2], arr[k][1], [
-                               1, 0], None, None, arr[k][3] if len(arr[k]) > 3 else 0)
+                self.checkData(dt, "SCALAR", arr[k][2], arr[k][1], [1, 0],
+                               None, None, arr[k][3] if len(arr[k]) > 3 else 0)
             else:
                 dt = (gr.getDevice(dvn2).members[k]).getValue()
-                self.checkData(dt, "SCALAR", arrb[k][2], arrb[k][1], [
-                               1, 0], None, None, arrb[k][3] if len(arr[k]) > 3 else 0)
+                self.checkData(
+                    dt, "SCALAR", arrb[k][2], arrb[k][1], [1, 0], None, None,
+                    arrb[k][3] if len(arr[k]) > 3 else 0)
             flip = not flip
 
         gr.getData(counter + 1)
@@ -338,22 +351,26 @@ class TgGroupTest(unittest.TestCase):
             if flip:
                 dt = (gr.getDevice(dvn).members[k]).getValue()
                 self.checkData(dt, "SCALAR", arrb[k][2], arrb[k][1], [
-                               1, 0], None, None, arrb[k][3] if len(arr[k]) > 3 else 0)
+                    1, 0], None, None, arrb[k][3] if len(arr[k]) > 3 else 0)
             else:
                 dt = (gr.getDevice(dvn2).members[k]).getValue()
                 self.checkData(dt, "SCALAR", arr[k][2], arr[k][1], [
-                               1, 0], None, None, arr[k][3] if len(arr[k]) > 3 else 0)
+                    1, 0], None, None, arr[k][3] if len(arr[k]) > 3 else 0)
             flip = not flip
 
         dp = DecoderPool()
         flip = True
         for k in arr3:
+            print(k)
             if flip:
+                print(gr.getDevice(dvn).members[k])
                 dt = (gr.getDevice(dvn).members[k]).getValue(dp)
             else:
+                print(gr.getDevice(dvn2).members[k])
                 dt = (gr.getDevice(dvn2).members[k]).getValue(dp)
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
+            print(dt)
+            self.checkData(dt, "SCALAR", arr3[k][2], arr3[k][1],
+                           [1, 0], arr3[k][2][0], dp)
             flip = not flip
 
     # getData test
@@ -372,7 +389,8 @@ class TgGroupTest(unittest.TestCase):
             "SpectrumLong64": ["int64", "DevLong64", 234, [1, 0]],
             "SpectrumULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "SpectrumFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0],
+                               1e-14],
             "SpectrumString": ["string", "DevString", "MyTrue", [1, 0]],
         }
 
@@ -386,7 +404,8 @@ class TgGroupTest(unittest.TestCase):
             "SpectrumLong64": ["int64", "DevLong64", 114, [1, 0]],
             "SpectrumULong64": ["uint64", "DevULong64", 11, [1, 0]],
             "SpectrumFloat": ["float32", "DevFloat", 10.124, [1, 0], 1e-5],
-            "SpectrumDouble": ["float64", "DevDouble", -1.133173e+02, [1, 0], 1e-14],
+            "SpectrumDouble": ["float64", "DevDouble", -1.133173e+02, [1, 0],
+                               1e-14],
             "SpectrumString": ["string", "DevString", "MyFalse", [1, 0]],
         }
 
@@ -443,15 +462,13 @@ class TgGroupTest(unittest.TestCase):
             if flip:
                 dt = (gr.getDevice(dvn).members[k]).getValue()
                 self.checkData(
-                    dt, "SPECTRUM", arr[k][2], arr[
-                        k][1], arr[k][3], None, None,
-                               arr[k][4] if len(arr[k]) > 4 else 0)
+                    dt, "SPECTRUM", arr[k][2], arr[k][1], arr[k][3], None,
+                    None, arr[k][4] if len(arr[k]) > 4 else 0)
             else:
                 dt = (gr.getDevice(dvn2).members[k]).getValue()
                 self.checkData(
-                    dt, "SPECTRUM", arrb[k][2], arrb[
-                        k][1], arrb[k][3], None, None,
-                               arrb[k][4] if len(arrb[k]) > 4 else 0)
+                    dt, "SPECTRUM", arrb[k][2], arrb[k][1], arrb[k][3],
+                    None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
             flip = not flip
 
         gr.getData(counter)
@@ -461,15 +478,13 @@ class TgGroupTest(unittest.TestCase):
             if flip:
                 dt = (gr.getDevice(dvn).members[k]).getValue()
                 self.checkData(
-                    dt, "SPECTRUM", arr[k][2], arr[
-                        k][1], arr[k][3], None, None,
-                               arr[k][4] if len(arr[k]) > 4 else 0)
+                    dt, "SPECTRUM", arr[k][2], arr[k][1], arr[k][3], None,
+                    None, arr[k][4] if len(arr[k]) > 4 else 0)
             else:
                 dt = (gr.getDevice(dvn2).members[k]).getValue()
                 self.checkData(
-                    dt, "SPECTRUM", arrb[k][2], arrb[
-                        k][1], arrb[k][3], None, None,
-                               arrb[k][4] if len(arrb[k]) > 4 else 0)
+                    dt, "SPECTRUM", arrb[k][2], arrb[k][1], arrb[k][3],
+                    None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
             flip = not flip
 
         gr.getData(counter + 1)
@@ -479,15 +494,13 @@ class TgGroupTest(unittest.TestCase):
             if flip:
                 dt = (gr.getDevice(dvn).members[k]).getValue()
                 self.checkData(
-                    dt, "SPECTRUM", arrb[k][2], arrb[
-                        k][1], arrb[k][3], None, None,
-                               arrb[k][4] if len(arrb[k]) > 4 else 0)
+                    dt, "SPECTRUM", arrb[k][2], arrb[k][1], arrb[k][3],
+                    None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
             else:
                 dt = (gr.getDevice(dvn2).members[k]).getValue()
                 self.checkData(
-                    dt, "SPECTRUM", arr[k][2], arr[
-                        k][1], arr[k][3], None, None,
-                               arr[k][4] if len(arr[k]) > 4 else 0)
+                    dt, "SPECTRUM", arr[k][2], arr[k][1], arr[k][3], None,
+                    None, arr[k][4] if len(arr[k]) > 4 else 0)
             flip = not flip
 
     # getData test
@@ -506,7 +519,8 @@ class TgGroupTest(unittest.TestCase):
             "ImageLong64": ["int64", "DevLong64", 234, [1, 0]],
             "ImageULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "ImageFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0],
+                            1e-14],
             "ImageString": ["string", "DevString", "MyTrue", [1, 0]],
         }
 
@@ -520,7 +534,8 @@ class TgGroupTest(unittest.TestCase):
             "ImageLong64": ["int64", "DevLong64", 123, [1, 0]],
             "ImageULong64": ["uint64", "DevULong64", 19, [1, 0]],
             "ImageFloat": ["float32", "DevFloat", 1.2324, [1, 0], 1e-5],
-            "ImageDouble": ["float64", "DevDouble", -1.423473e+02, [1, 0], 1e-14],
+            "ImageDouble": ["float64", "DevDouble", -1.423473e+02, [1, 0],
+                            1e-14],
             "ImageString": ["string", "DevString", "MyTFAL", [1, 0]],
         }
 
@@ -530,13 +545,15 @@ class TgGroupTest(unittest.TestCase):
             mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(
                 1, 10), self.__rnd.randint(0, 3)]
             if arr[k][1] != "DevBoolean":
-                arr[k][2] = [[arr[k][2] * self.__rnd.randint(0, 3)
-                              for r in range(mlen[1])] for c in range(mlen[0])]
+                arr[k][2] = [[
+                    arr[k][2] * self.__rnd.randint(0, 3)
+                    for r in range(mlen[1])] for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if arr[k][1] == 'DevBoolean':
-                    arr[k][2] = [[(True if self.__rnd.randint(0, 1) else False)
-                                  for c in range(mlen[1])] for r in range(mlen[0])]
+                    arr[k][2] = [[
+                        (True if self.__rnd.randint(0, 1) else False)
+                        for c in range(mlen[1])] for r in range(mlen[0])]
 
             arr[k][3] = [mlen[0], mlen[1]]
             self._simps.dp.write_attribute(k, arr[k][2])
@@ -545,13 +562,15 @@ class TgGroupTest(unittest.TestCase):
             mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(
                 1, 10), self.__rnd.randint(0, 3)]
             if arrb[k][1] != "DevBoolean":
-                arrb[k][2] = [[arrb[k][2] * self.__rnd.randint(0, 3)
-                               for r in range(mlen[1])] for c in range(mlen[0])]
+                arrb[k][2] = [[
+                    arrb[k][2] * self.__rnd.randint(0, 3)
+                    for r in range(mlen[1])] for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if arrb[k][1] == 'DevBoolean':
-                    arrb[k][2] = [[(True if self.__rnd.randint(0, 1) else False)
-                                   for c in range(mlen[1])] for r in range(mlen[0])]
+                    arrb[k][2] = [[
+                        (True if self.__rnd.randint(0, 1) else False)
+                        for c in range(mlen[1])] for r in range(mlen[0])]
 
             arrb[k][3] = [mlen[0], mlen[1]]
             self._simps2.dp.write_attribute(k, arrb[k][2])
@@ -582,12 +601,14 @@ class TgGroupTest(unittest.TestCase):
         for k in arr:
             if flip:
                 dt = (gr.getDevice(dvn).members[k]).getValue()
-                self.checkData(dt, "IMAGE", arr[k][2], arr[k][1], arr[
-                               k][3], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                self.checkData(
+                    dt, "IMAGE", arr[k][2], arr[k][1], arr[k][3], None,
+                    None, arr[k][4] if len(arr[k]) > 4 else 0)
             else:
                 dt = (gr.getDevice(dvn2).members[k]).getValue()
-                self.checkData(dt, "IMAGE", arrb[k][2], arrb[k][1], arrb[
-                               k][3], None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
+                self.checkData(
+                    dt, "IMAGE", arrb[k][2], arrb[k][1], arrb[k][3], None,
+                    None, arrb[k][4] if len(arrb[k]) > 4 else 0)
             flip = not flip
 
         gr.getData(counter)
@@ -596,12 +617,14 @@ class TgGroupTest(unittest.TestCase):
         for k in arrb:
             if flip:
                 dt = (gr.getDevice(dvn).members[k]).getValue()
-                self.checkData(dt, "IMAGE", arr[k][2], arr[k][1], arr[
-                               k][3], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                self.checkData(
+                    dt, "IMAGE", arr[k][2], arr[k][1], arr[k][3], None,
+                    None, arr[k][4] if len(arr[k]) > 4 else 0)
             else:
                 dt = (gr.getDevice(dvn2).members[k]).getValue()
-                self.checkData(dt, "IMAGE", arrb[k][2], arrb[k][1], arrb[
-                               k][3], None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
+                self.checkData(
+                    dt, "IMAGE", arrb[k][2], arrb[k][1], arrb[k][3], None,
+                    None, arrb[k][4] if len(arrb[k]) > 4 else 0)
             flip = not flip
 
         gr.getData(counter + 1)
@@ -610,12 +633,14 @@ class TgGroupTest(unittest.TestCase):
         for k in arrb:
             if flip:
                 dt = (gr.getDevice(dvn).members[k]).getValue()
-                self.checkData(dt, "IMAGE", arrb[k][2], arrb[k][1], arrb[
-                               k][3], None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
+                self.checkData(
+                    dt, "IMAGE", arrb[k][2], arrb[k][1], arrb[k][3], None,
+                    None, arrb[k][4] if len(arrb[k]) > 4 else 0)
             else:
                 dt = (gr.getDevice(dvn2).members[k]).getValue()
-                self.checkData(dt, "IMAGE", arr[k][2], arr[k][1], arr[
-                               k][3], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                self.checkData(
+                    dt, "IMAGE", arr[k][2], arr[k][1], arr[k][3], None,
+                    None, arr[k][4] if len(arr[k]) > 4 else 0)
             flip = not flip
 
     # getData test
@@ -626,7 +651,7 @@ class TgGroupTest(unittest.TestCase):
 
         arr = {
             "GetBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
-            #            "GetUChar":["ScalarUChar", "uint8", "DevUChar", 23],
+            #  "GetUChar":["ScalarUChar", "uint8", "DevUChar", 23],
             "GetShort": ["ScalarShort", "int16", "DevShort", -123],
             "GetUShort": ["ScalarUShort", "uint16", "DevUShort", 1234],
             "GetLong": ["ScalarLong", "int64", "DevLong", -124],
@@ -634,13 +659,14 @@ class TgGroupTest(unittest.TestCase):
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 234],
             "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
-            "GetDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02, 1e-14],
+            "GetDouble": ["ScalarDouble", "float64", "DevDouble",
+                          -2.456673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyTrue"],
         }
 
         arrb = {
             "GetBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
-            #            "GetUChar":["ScalarUChar", "uint8", "DevUChar", 23],
+            #   "GetUChar":["ScalarUChar", "uint8", "DevUChar", 23],
             "GetShort": ["ScalarShort", "int16", "DevShort", -121],
             "GetUShort": ["ScalarUShort", "uint16", "DevUShort", 1223],
             "GetLong": ["ScalarLong", "int64", "DevLong", -344],
@@ -648,7 +674,8 @@ class TgGroupTest(unittest.TestCase):
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 234],
             "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 1345],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 2.123, 1e-5],
-            "GetDouble": ["ScalarDouble", "float64", "DevDouble", -1.1233213e+02, 1e-14],
+            "GetDouble": ["ScalarDouble", "float64", "DevDouble",
+                          -1.1233213e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyFAADSD"],
         }
 
@@ -687,12 +714,14 @@ class TgGroupTest(unittest.TestCase):
         for k in arr:
             if flip:
                 dt = (gr.getDevice(dvn).members[k]).getValue()
-                self.checkData(dt, "SCALAR", arr[k][3], arr[k][2], [
-                               1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                self.checkData(
+                    dt, "SCALAR", arr[k][3], arr[k][2], [1, 0], None, None,
+                    arr[k][4] if len(arr[k]) > 4 else 0)
             else:
                 dt = (gr.getDevice(dvn2).members[k]).getValue()
-                self.checkData(dt, "SCALAR", arrb[k][3], arrb[k][2], [
-                               1, 0], None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
+                self.checkData(
+                    dt, "SCALAR", arrb[k][3], arrb[k][2], [1, 0],
+                    None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
             flip = not flip
 
         gr.getData(counter)
@@ -701,12 +730,13 @@ class TgGroupTest(unittest.TestCase):
         for k in arr:
             if flip:
                 dt = (gr.getDevice(dvn).members[k]).getValue()
-                self.checkData(dt, "SCALAR", arr[k][3], arr[k][2], [
-                               1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                self.checkData(dt, "SCALAR", arr[k][3], arr[k][2], [1, 0],
+                               None, None, arr[k][4] if len(arr[k]) > 4 else 0)
             else:
                 dt = (gr.getDevice(dvn2).members[k]).getValue()
-                self.checkData(dt, "SCALAR", arrb[k][3], arrb[k][2], [
-                               1, 0], None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
+                self.checkData(
+                    dt, "SCALAR", arrb[k][3], arrb[k][2], [1, 0], None,
+                    None, arrb[k][4] if len(arrb[k]) > 4 else 0)
             flip = not flip
 
         gr.getData(counter + 1)
@@ -715,12 +745,14 @@ class TgGroupTest(unittest.TestCase):
         for k in arrb:
             if flip:
                 dt = (gr.getDevice(dvn).members[k]).getValue()
-                self.checkData(dt, "SCALAR", arrb[k][3], arrb[k][2], [
-                               1, 0], None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
+                self.checkData(
+                    dt, "SCALAR", arrb[k][3], arrb[k][2], [1, 0],
+                    None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
             else:
                 dt = (gr.getDevice(dvn2).members[k]).getValue()
-                self.checkData(dt, "SCALAR", arr[k][3], arr[k][2], [
-                               1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                self.checkData(
+                    dt, "SCALAR", arr[k][3], arr[k][2], [1, 0],
+                    None, None, arr[k][4] if len(arr[k]) > 4 else 0)
             flip = not flip
 
     # getData test
@@ -731,29 +763,33 @@ class TgGroupTest(unittest.TestCase):
 
         arr = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
-            #            "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
+            #   "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
             "DeviceShort": ["ScalarShort", "int16", "DevShort", -123],
             "DeviceUShort": ["ScalarUShort", "uint16", "DevUShort", 1234],
             "DeviceLong": ["ScalarLong", "int64", "DevLong", -124],
             "DeviceULong": ["ScalarULong", "uint64", "DevULong", 234],
-            #            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234],
-            #            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23],
-            "DeviceFloat": ["ScalarFloat", "float32", "DevFloat", 12.234],
-            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02],
+            #   "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234],
+            #   "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23],
+            "DeviceFloat": ["ScalarFloat", "float32", "DevFloat",
+                            12.234],
+            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble",
+                             -2.456673e+02],
             "DeviceString": ["ScalarString", "string", "DevString", "MyTrue"],
         }
 
         arrb = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", False],
-            #            "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 21],
+            #       "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 21],
             "DeviceShort": ["ScalarShort", "int16", "DevShort", -113],
             "DeviceUShort": ["ScalarUShort", "uint16", "DevUShort", 1232],
             "DeviceLong": ["ScalarLong", "int64", "DevLong", -112],
             "DeviceULong": ["ScalarULong", "uint64", "DevULong", 221],
-            #            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 414],
-            #            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 12],
-            "DeviceFloat": ["ScalarFloat", "float32", "DevFloat", 11.111],
-            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble", -1.111673e+02],
+            #   "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 414],
+            #   "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 12],
+            "DeviceFloat": ["ScalarFloat", "float32", "DevFloat",
+                            11.111],
+            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble",
+                             -1.111673e+02],
             "DeviceString": ["ScalarString", "string", "DevString", "Mywrew"],
         }
 
@@ -793,11 +829,13 @@ class TgGroupTest(unittest.TestCase):
             if flip:
                 dt = (gr.getDevice(dvn).members[k]).getValue()
                 self.checkData(dt, "SCALAR", str(self._simps.device_prop[k]),
-                               'DevString', [1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                               'DevString', [1, 0], None, None,
+                               arr[k][4] if len(arr[k]) > 4 else 0)
             else:
                 dt = (gr.getDevice(dvn2).members[k]).getValue()
                 self.checkData(dt, "SCALAR", str(self._simps.device_prop[k]),
-                               'DevString', [1, 0], None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
+                               'DevString', [1, 0], None, None,
+                               arrb[k][4] if len(arrb[k]) > 4 else 0)
             flip = not flip
 
         gr.getData(counter)
@@ -806,12 +844,16 @@ class TgGroupTest(unittest.TestCase):
         for k in arr:
             if flip:
                 dt = (gr.getDevice(dvn).members[k]).getValue()
-                self.checkData(dt, "SCALAR", str(self._simps.device_prop[k]),
-                               'DevString', [1, 0], None, None, arr[k][4] if len(arrb[k]) > 4 else 0)
+                self.checkData(
+                    dt, "SCALAR", str(self._simps.device_prop[k]),
+                    'DevString', [1, 0], None, None, arr[k][4]
+                    if len(arrb[k]) > 4 else 0)
             else:
                 dt = (gr.getDevice(dvn2).members[k]).getValue()
-                self.checkData(dt, "SCALAR", str(self._simps.device_prop[k]),
-                               'DevString', [1, 0], None, None, arrb[k][4] if len(arr[k]) > 4 else 0)
+                self.checkData(
+                    dt, "SCALAR", str(self._simps.device_prop[k]),
+                    'DevString', [1, 0], None, None, arrb[k][4]
+                    if len(arr[k]) > 4 else 0)
             flip = not flip
 
         gr.getData(counter + 1)
@@ -820,12 +862,16 @@ class TgGroupTest(unittest.TestCase):
         for k in arrb:
             if flip:
                 dt = (gr.getDevice(dvn).members[k]).getValue()
-                self.checkData(dt, "SCALAR", str(self._simps.device_prop[k]),
-                               'DevString', [1, 0], None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
+                self.checkData(
+                    dt, "SCALAR", str(self._simps.device_prop[k]),
+                    'DevString', [1, 0], None, None, arrb[k][4]
+                    if len(arrb[k]) > 4 else 0)
             else:
                 dt = (gr.getDevice(dvn2).members[k]).getValue()
-                self.checkData(dt, "SCALAR", str(self._simps.device_prop[k]),
-                               'DevString', [1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                self.checkData(
+                    dt, "SCALAR", str(self._simps.device_prop[k]),
+                    'DevString', [1, 0], None, None, arr[k][4]
+                    if len(arr[k]) > 4 else 0)
             flip = not flip
 
 

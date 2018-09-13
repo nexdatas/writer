@@ -28,7 +28,11 @@ import numpy
 
 import PyTango
 import time
-from ProxyHelper import ProxyHelper
+
+try:
+    from ProxyHelper import ProxyHelper
+except:
+    from .ProxyHelper import ProxyHelper
 
 try:
     from pni.io.nx.h5 import open_file
@@ -39,7 +43,11 @@ except:
 from xml.sax import SAXParseException
 import struct
 
-import ServerSetUp
+try:
+    import ServerSetUp
+except:
+    from . import ServerSetUp
+
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
