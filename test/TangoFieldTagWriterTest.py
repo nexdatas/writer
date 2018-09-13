@@ -30,7 +30,10 @@ import binascii
 import time
 import PyTango
 
-from ProxyHelper import ProxyHelper
+try:
+    from ProxyHelper import ProxyHelper
+except:
+    from .ProxyHelper import ProxyHelper
 
 
 try:
@@ -43,9 +46,17 @@ from xml.sax import SAXParseException
 
 from nxswriter import Types
 from nxswriter.TangoDataWriter import TangoDataWriter
-from Checkers import Checker
 
-import SimpleServerSetUp
+try:
+    from Checkers import Checker
+except:
+    from .Checkers import Checker
+
+
+try:
+    import SimpleServerSetUp
+except:
+    from . import SimpleServerSetUp
 
 
 # if 64-bit machione
@@ -84,9 +95,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._logical2 = [
             [[True, False, True, False], [True, False, False, True]],
-                           [[False, False, True, True], [
-                               False, False, True, False]],
-                           [[True, False, True, True], [False, False, True, False]]]
+            [[False, False, True, True], [False, False, True, False]],
+            [[True, False, True, True], [False, False, True, False]]]
 
         self._sc = Checker(self)
         self._mca1 = [[self.__rnd.randint(-100, 100)
@@ -99,24 +109,24 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._dates = [
             ["1996-07-31T21:15:22.123+0600", "2012-11-14T14:05:23.2344-0200",
              "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"],
-                       ["1956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
-                        "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"],
-                       ["1966-02-21T11:22:02.113+0200", "1432-12-11T11:23:13.1223-0300",
-                        "1714-11-10T14:03:13.12-0400", "1001-01-01T14:11:11.0011-0100"]]
+            ["1956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
+             "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"],
+            ["1966-02-21T11:22:02.113+0200", "1432-12-11T11:23:13.1223-0300",
+             "1714-11-10T14:03:13.12-0400", "1001-01-01T14:11:11.0011-0100"]]
 
         self._dates2 = [
             [["1996-07-31T21:15:22.123+0600", "2012-11-14T14:05:23.2344-0200",
               "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"],
              ["1996-07-31T21:15:22.123+0600", "2012-11-14T14:05:23.2344-0200",
               "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"]],
-                        [["1996-07-31T21:15:22.123+0600", "2012-11-14T14:05:23.2344-0200",
-                          "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"],
-                         ["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
-                          "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"]],
-                        [["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
-                          "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"],
-                         ["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
-                          "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"]]]
+            [["1996-07-31T21:15:22.123+0600", "2012-11-14T14:05:23.2344-0200",
+              "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"],
+             ["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
+              "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"]],
+            [["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
+              "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"],
+             ["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
+              "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"]]]
 
         self._pco1 = [[[self.__rnd.randint(0, 100) for e1 in range(8)]
                        for e2 in range(10)] for i in range(3)]
@@ -186,7 +196,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
        <field units="m" type="NX_BOOLEAN" name="ScalarBoolean">
           <strategy mode="STEP"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarBoolean"/>
           </datasource>
         </field>
@@ -194,7 +205,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_UINT8" name="ScalarUChar">
           <strategy mode="STEP"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarUChar"/>
           </datasource>
         </field>
@@ -202,7 +214,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_INT16" name="ScalarShort">
           <strategy mode="STEP"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarShort"/>
           </datasource>
         </field>
@@ -210,7 +223,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_UINT16" name="ScalarUShort">
           <strategy mode="STEP"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarUShort"/>
           </datasource>
         </field>
@@ -218,7 +232,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_INT" name="ScalarLong">
           <strategy mode="STEP"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarLong"/>
           </datasource>
         </field>
@@ -226,7 +241,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_UINT" name="ScalarULong">
           <strategy mode="STEP"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarULong"/>
           </datasource>
         </field>
@@ -234,7 +250,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_INT64" name="ScalarLong64">
           <strategy mode="STEP"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarLong64"/>
           </datasource>
         </field>
@@ -242,7 +259,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_FLOAT32" name="ScalarFloat">
           <strategy mode="STEP"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarFloat"/>
           </datasource>
         </field>
@@ -250,7 +268,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_FLOAT64" name="ScalarDouble">
           <strategy mode="STEP"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarDouble"/>
           </datasource>
         </field>
@@ -259,7 +278,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_CHAR" name="ScalarString">
           <strategy mode="STEP"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarString"/>
           </datasource>
         </field>
@@ -268,7 +288,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"/>
           <datasource type="TANGO">
             <record name="ScalarEncoded"/>
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="UTF8"/>
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" encoding="UTF8"/>
           </datasource>
         </field>
 
@@ -277,7 +298,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"/>
           <datasource type="TANGO">
             <record name="ScalarEncoded"/>
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="MUTF8"/>
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" encoding="MUTF8"/>
           </datasource>
         </field>
 
@@ -285,7 +307,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_CHAR" name="ScalarState">
           <strategy mode="STEP"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="State"/>
           </datasource>
         </field>
@@ -293,7 +316,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_UINT32" name="InitScalarULong">
           <strategy mode="INIT"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarULong"/>
           </datasource>
         </field>
@@ -301,7 +325,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_FLOAT64" name="FinalScalarDouble">
           <strategy mode="FINAL"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarDouble"/>
           </datasource>
         </field>
@@ -310,7 +335,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_UINT64" name="ScalarULong64">
           <strategy mode="STEP"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarULong64"/>
           </datasource>
         </field>
@@ -355,39 +381,50 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkScalarField(
             det, "ScalarBoolean", "bool", "NX_BOOLEAN", self._bools)
         self._sc.checkScalarField(
-            det, "ScalarUChar", "uint8", "NX_UINT8", [abs(c) for c in self._counter])
+            det, "ScalarUChar", "uint8", "NX_UINT8",
+            [abs(c) for c in self._counter])
         self._sc.checkScalarField(
             det, "ScalarShort", "int16", "NX_INT16", self._counter)
         self._sc.checkScalarField(
-            det, "ScalarUShort", "uint16", "NX_UINT16", [abs(c) for c in self._counter])
+            det, "ScalarUShort", "uint16", "NX_UINT16",
+            [abs(c) for c in self._counter])
         self._sc.checkScalarField(
             det, "ScalarLong", "int64", "NX_INT", self._counter)
         self._sc.checkScalarField(
-            det, "ScalarULong", "uint64", "NX_UINT", [abs(c) for c in self._counter])
+            det, "ScalarULong", "uint64", "NX_UINT",
+            [abs(c) for c in self._counter])
         self._sc.checkScalarField(
             det, "ScalarLong64", "int64", "NX_INT64", self._counter)
         self._sc.checkScalarField(
-            det, "ScalarULong64", "uint64", "NX_UINT64", [abs(c) for c in self._counter])
+            det, "ScalarULong64", "uint64", "NX_UINT64",
+            [abs(c) for c in self._counter])
         self._sc.checkScalarField(
-            det, "ScalarFloat", "float32", "NX_FLOAT32", self._fcounter, error=1e-6)
+            det, "ScalarFloat", "float32", "NX_FLOAT32", self._fcounter,
+            error=1e-6)
         self._sc.checkScalarField(
-            det, "ScalarDouble", "float64", "NX_FLOAT64", self._dcounter, error=1e-14)
+            det, "ScalarDouble", "float64", "NX_FLOAT64",
+            self._dcounter, error=1e-14)
         self._sc.checkScalarField(
             det, "ScalarString", "string", "NX_CHAR", self._bools)
-        self._sc.checkScalarField(det, "ScalarEncoded", "string", "NX_CHAR", [
-                                  "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b" for c in self._bools])
-        self._sc.checkScalarField(det, "ScalarEncoded_MUTF8", "string", "NX_CHAR", [
-                                  "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b" for c in self._bools])
         self._sc.checkScalarField(
-            det, "ScalarState", "string", "NX_CHAR", ["ON" for c in self._bools])
+            det, "ScalarEncoded", "string", "NX_CHAR", [
+                b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"
+                for c in self._bools])
+        self._sc.checkScalarField(
+            det, "ScalarEncoded_MUTF8", "string", "NX_CHAR", [
+                "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b" for c in self._bools])
+        self._sc.checkScalarField(
+            det, "ScalarState", "string", "NX_CHAR",
+            ["ON" for c in self._bools])
 
         # writing encoded attributes not supported for PyTango 7.2.3
 
         self._sc.checkSingleScalarField(
-            det, "InitScalarULong", "uint32", "NX_UINT32", abs(self._counter[0]))
+            det, "InitScalarULong", "uint32", "NX_UINT32",
+            abs(self._counter[0]))
         self._sc.checkSingleScalarField(
             det, "FinalScalarDouble", "float64", "NX_FLOAT64",
-                                        self._dcounter[steps - 1], error=1e-14)
+            self._dcounter[steps - 1], error=1e-14)
 
         f.close()
         os.remove(fname)
@@ -406,7 +443,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
        <field units="m" type="NX_BOOLEAN" name="ScalarBoolean">
           <strategy mode="STEP" canfail="true"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarBoolean"/>
           </datasource>
         </field>
@@ -414,7 +452,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_UINT8" name="ScalarUChar">
           <strategy mode="STEP" canfail="true"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarUChar"/>
           </datasource>
         </field>
@@ -422,7 +461,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_INT16" name="ScalarShort">
           <strategy mode="STEP" canfail="true"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarShort"/>
           </datasource>
         </field>
@@ -430,7 +470,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_UINT16" name="ScalarUShort">
           <strategy mode="STEP" canfail="true"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarUShort"/>
           </datasource>
         </field>
@@ -438,7 +479,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_INT" name="ScalarLong">
           <strategy mode="STEP" canfail="true"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarLong"/>
           </datasource>
         </field>
@@ -446,7 +488,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_UINT" name="ScalarULong">
           <strategy mode="STEP" canfail="true"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarULong"/>
           </datasource>
         </field>
@@ -454,7 +497,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_INT64" name="ScalarLong64">
           <strategy mode="STEP" canfail="true"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarLong64"/>
           </datasource>
         </field>
@@ -463,7 +507,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_UINT64" name="ScalarULong64">
           <strategy mode="STEP"  canfail="true"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarULong64"/>
           </datasource>
         </field>
@@ -471,7 +516,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_FLOAT32" name="ScalarFloat">
           <strategy mode="STEP" canfail="true"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarFloat"/>
           </datasource>
         </field>
@@ -479,7 +525,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_FLOAT64" name="ScalarDouble">
           <strategy mode="STEP" canfail="true"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarDouble"/>
           </datasource>
         </field>
@@ -488,7 +535,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_CHAR" name="ScalarString">
           <strategy mode="STEP" canfail="true"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarString"/>
           </datasource>
         </field>
@@ -497,7 +545,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP" canfail="true"/>
           <datasource type="TANGO">
             <record name="ScalarEncoded"/>
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="UTF8"/>
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" encoding="UTF8"/>
           </datasource>
         </field>
 
@@ -506,7 +555,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP" canfail="true"/>
           <datasource type="TANGO">
             <record name="ScalarEncoded"/>
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="MUTF8"/>
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" encoding="MUTF8"/>
           </datasource>
         </field>
 
@@ -514,7 +564,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_CHAR" name="ScalarState">
           <strategy mode="STEP" canfail="true"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="State"/>
           </datasource>
         </field>
@@ -522,7 +573,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_UINT32" name="InitScalarULong">
           <strategy mode="INIT" canfail="true"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarULong_canfail"/>
           </datasource>
         </field>
@@ -530,7 +582,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_FLOAT64" name="FinalScalarDouble">
           <strategy mode="FINAL" canfail="true"/>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ScalarDouble"/>
           </datasource>
         </field>
@@ -586,77 +639,86 @@ class TangoFieldTagWriterTest(unittest.TestCase):
              for i in range(steps)],
             attrs={
                 "type": "NX_BOOLEAN", "units": "m", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "ScalarUChar", "uint8", "NX_UINT8",
-            [(abs(self._counter[i]) if i % 2 else numpy.iinfo(getattr(numpy, 'uint8')).max)
+            [(abs(self._counter[i]) if i % 2
+              else numpy.iinfo(getattr(numpy, 'uint8')).max)
              for i in range(steps)],
             attrs={"type": "NX_UINT8", "units": "m", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "ScalarShort", "int16", "NX_INT16",
-            [(self._counter[i] if i % 2 else numpy.iinfo(getattr(numpy, 'int16')).max)
+            [(self._counter[i] if i % 2
+              else numpy.iinfo(getattr(numpy, 'int16')).max)
              for i in range(steps)],
             attrs={"type": "NX_INT16", "units": "m", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "ScalarUShort", "uint16", "NX_UINT16",
-            [(abs(self._counter[i]) if i % 2 else numpy.iinfo(getattr(numpy, 'uint16')).max)
+            [(abs(self._counter[i]) if i % 2
+              else numpy.iinfo(getattr(numpy, 'uint16')).max)
              for i in range(steps)],
             attrs={
                 "type": "NX_UINT16", "units": "m", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "ScalarLong", "int64", "NX_INT",
-            [(self._counter[i] if i % 2 else numpy.iinfo(getattr(numpy, 'int64')).max)
+            [(self._counter[i] if i % 2
+              else numpy.iinfo(getattr(numpy, 'int64')).max)
              for i in range(steps)],
             attrs={"type": "NX_INT", "units": "m", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "ScalarULong", "uint64", "NX_UINT",
-            [(abs(self._counter[i]) if i % 2 else numpy.iinfo(getattr(numpy, 'int64')).max)
+            [(abs(self._counter[i]) if i % 2
+              else numpy.iinfo(getattr(numpy, 'int64')).max)
              for i in range(steps)],
             attrs={"type": "NX_UINT", "units": "m", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "ScalarLong64", "int64", "NX_INT64",
-            [(self._counter[i] if i % 2 else numpy.iinfo(getattr(numpy, 'int64')).max)
+            [(self._counter[i] if i % 2
+              else numpy.iinfo(getattr(numpy, 'int64')).max)
              for i in range(steps)],
             attrs={"type": "NX_INT64", "units": "m", "nexdatas_source": None,
                    "nexdatas_strategy": None, "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "ScalarULong64", "uint64", "NX_UINT",
-            [(abs(self._counter[i]) if i % 2 else numpy.iinfo(getattr(numpy, 'int64')).max)
+            [(abs(self._counter[i]) if i % 2
+              else numpy.iinfo(getattr(numpy, 'int64')).max)
              for i in range(steps)],
             attrs={
                 "type": "NX_UINT64", "units": "m", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "ScalarFloat", "float32", "NX_FLOAT32",
-            [(self._fcounter[i] if i % 2 else numpy.finfo(getattr(numpy, 'float32')).max)
+            [(self._fcounter[i] if i % 2
+              else numpy.finfo(getattr(numpy, 'float32')).max)
              for i in range(steps)],
             attrs={
                 "type": "NX_FLOAT32", "units": "m", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None},
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None},
             error=1e-6)
 
         self._sc.checkScalarField(
             det, "ScalarDouble", "float64", "NX_FLOAT64",
-            [(self._dcounter[i] if i % 2 else numpy.finfo(getattr(numpy, 'float64')).max)
+            [(self._dcounter[i] if i % 2
+              else numpy.finfo(getattr(numpy, 'float64')).max)
              for i in range(steps)],
             attrs={
                 "type": "NX_FLOAT64", "units": "m", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None},
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None},
             error=1e-14)
 
         self._sc.checkScalarField(
@@ -695,15 +757,15 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             numpy.iinfo(getattr(numpy, 'uint32')).max,
             attrs={
                 "type": "NX_UINT32", "units": "m", "nexdatas_source": None,
-                     "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
         self._sc.checkSingleScalarField(
             det, "FinalScalarDouble", "float64", "NX_FLOAT64",
             numpy.finfo(getattr(numpy, 'float64')).max,
             attrs={
                 "type": "NX_FLOAT64", "units": "m", "nexdatas_source": None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
 
         f.close()
         os.remove(fname)
@@ -723,26 +785,31 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP" canfail="true"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumBoolean"/>
           </datasource>
         </field>
 
 
        <field units="" type="NX_UINT8" name="SpectrumUChar">
-          <strategy mode="STEP"  compression="true"  grows="2" shuffle="false" canfail="true" />
+          <strategy mode="STEP"  compression="true"  grows="2"
+ shuffle="false" canfail="true" />
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumUChar"/>
           </datasource>
         </field>
 
        <field units="" type="NX_INT16" name="SpectrumShort">
-          <strategy mode="STEP"  compression="true"  grows="3" shuffle="True"  canfail="true"/>
+          <strategy mode="STEP"  compression="true"  grows="3"
+ shuffle="True"  canfail="true"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumShort"/>
           </datasource>
         </field>
@@ -751,7 +818,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"   grows="2"  canfail="true"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumUShort"/>
           </datasource>
         </field>
@@ -759,19 +827,23 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
        <field units="" type="NX_INT32" name="SpectrumLong">
-          <strategy mode="STEP"  compression="true"   shuffle="false"  canfail="true"/>
+          <strategy mode="STEP"  compression="true"   shuffle="false"
+  canfail="true"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumLong"/>
           </datasource>
         </field>
 
        <field units="" type="NX_UINT32" name="SpectrumULong">
-          <strategy mode="STEP"   compression="true"  grows="1"  canfail="true"/>
+          <strategy mode="STEP"   compression="true"  grows="1"
+  canfail="true"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumULong"/>
           </datasource>
         </field>
@@ -780,20 +852,24 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
        <field units="" type="NX_INT64" name="SpectrumLong64">
-          <strategy mode="STEP"  compression="true"  grows="2" shuffle="True" canfail="true"/>
+          <strategy mode="STEP"  compression="true"  grows="2"
+ shuffle="True" canfail="true"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumLong64"/>
           </datasource>
         </field>
 
 
        <field units="" type="NX_UINT64" name="SpectrumULong64">
-          <strategy mode="STEP"  compression="true"  grows="2" shuffle="True" canfail="true"/>
+          <strategy mode="STEP"  compression="true"  grows="2"
+ shuffle="True" canfail="true"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumULong64"/>
           </datasource>
         </field>
@@ -803,17 +879,20 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"  canfail="true"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumFloat"/>
           </datasource>
         </field>
 
 
        <field units="" type="NX_FLOAT64" name="SpectrumDouble">
-          <strategy mode="STEP"  compression="true"  grows="1" shuffle="false" canfail="true"/>
+          <strategy mode="STEP"  compression="true"  grows="1"
+ shuffle="false" canfail="true"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumDouble"/>
           </datasource>
         </field>
@@ -822,7 +901,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP" canfail="true"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumString"/>
           </datasource>
         </field>
@@ -832,7 +912,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="1" />
           <datasource type="TANGO">
             <record name="SpectrumEncoded"/>
-            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="UINT32"/>
+            <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" encoding="UINT32"/>
           </datasource>
         </field>
 
@@ -842,19 +923,22 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="1" />
           <datasource type="TANGO">
             <record name="SpectrumEncoded"/>
-            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="MUINT32"/>
+            <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" encoding="MUINT32"/>
           </datasource>
         </field>
 
 
 
        <field units="" type="NX_INT64" name="InitSpectrumLong64">
-          <strategy mode="INIT"  compression="true"  shuffle="True" canfail="true"/>
+          <strategy mode="INIT"  compression="true"  shuffle="True"
+ canfail="true"/>
           <dimensions rank="1">
             <dim value="256" index="1"/>
           </dimensions>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumLong64_canfail"/>
           </datasource>
         </field>
@@ -864,7 +948,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="FINAL"  canfail="true"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumFloat"/>
           </datasource>
         </field>
@@ -892,7 +977,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._simps.dp.SpectrumDouble = self._fmca1[0]
         self._simps.dp.SpectrumString = self._dates[0]
 
-        decoder = '"decoders":{"MUINT32":"nxswriter.DecoderPool.UINT32decoder"}'
+        decoder = '"decoders":{"MUINT32":' \
+                  '"nxswriter.DecoderPool.UINT32decoder"}'
         tdw = self.openWriter(fname, xml, json='{ ' + decoder + ' }')
 
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
@@ -932,15 +1018,18 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         det = self._sc.checkFieldTree(f, fname, 15)
         self._sc.checkSpectrumField(
             det, "SpectrumBoolean", "bool", "NX_BOOLEAN",
-            [(self._logical[i] if not i % 2 else [False] * len(self._logical[i]))
+            [(self._logical[i] if not i % 2 else [False] *
+              len(self._logical[i]))
              for i in range(steps)],
             attrs={
                 "type": "NX_BOOLEAN", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
         self._sc.checkSpectrumField(
             det, "SpectrumUChar", "uint8", "NX_UINT8",
-            [(self._mca2[i] if not i % 2 else [numpy.iinfo(getattr(numpy, 'uint8')).max] * len(self._mca2[i]))
+            [(self._mca2[i] if not i % 2
+              else [numpy.iinfo(getattr(numpy, 'uint8')).max] *
+              len(self._mca2[i]))
              for i in range(steps)],
             attrs={"type": "NX_UINT8", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -948,7 +1037,9 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             grows=2)
         self._sc.checkSpectrumField(
             det, "SpectrumShort", "int16", "NX_INT16",
-            [(self._mca1[i] if not i % 2 else [numpy.iinfo(getattr(numpy, 'int16')).max] * len(self._mca1[i]))
+            [(self._mca1[i] if not i % 2
+              else [numpy.iinfo(getattr(numpy, 'int16')).max] *
+              len(self._mca1[i]))
              for i in range(steps)],
             attrs={"type": "NX_INT16", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -956,7 +1047,9 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             grows=3)
         self._sc.checkSpectrumField(
             det, "SpectrumUShort", "uint16", "NX_UINT16",
-            [(self._mca2[i] if not i % 2 else [numpy.iinfo(getattr(numpy, 'uint16')).max] * len(self._mca2[i]))
+            [(self._mca2[i] if not i % 2
+              else [numpy.iinfo(getattr(numpy, 'uint16')).max] *
+              len(self._mca2[i]))
              for i in range(steps)],
             attrs={"type": "NX_UINT16", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -965,14 +1058,18 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSpectrumField(
             det, "SpectrumLong", "int32", "NX_INT32",
-            [(self._mca1[i] if not i % 2 else [numpy.iinfo(getattr(numpy, 'int32')).max] * len(self._mca1[i]))
+            [(self._mca1[i] if not i % 2
+              else [numpy.iinfo(getattr(numpy, 'int32')).max] *
+              len(self._mca1[i]))
              for i in range(steps)],
             attrs={"type": "NX_INT32", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkSpectrumField(
             det, "SpectrumULong", "uint32", "NX_UINT32",
-            [(self._mca2[i] if not i % 2 else [numpy.iinfo(getattr(numpy, 'uint32')).max] * len(self._mca2[i]))
+            [(self._mca2[i] if not i % 2
+              else [numpy.iinfo(getattr(numpy, 'uint32')).max] *
+              len(self._mca2[i]))
              for i in range(steps)],
             attrs={"type": "NX_UINT32", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -981,7 +1078,9 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSpectrumField(
             det, "SpectrumLong64", "int64", "NX_INT64",
-            [(self._mca1[i] if not i % 2 else [numpy.iinfo(getattr(numpy, 'int64')).max] * len(self._mca1[i]))
+            [(self._mca1[i] if not i % 2
+              else [numpy.iinfo(getattr(numpy, 'int64')).max] *
+              len(self._mca1[i]))
              for i in range(steps)],
             attrs={"type": "NX_INT64", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -989,7 +1088,9 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             grows=2)
         self._sc.checkSpectrumField(
             det, "SpectrumULong64", "uint64", "NX_UINT64",
-            [(self._mca2[i] if not i % 2 else [numpy.iinfo(getattr(numpy, 'int64')).max] * len(self._mca2[i]))
+            [(self._mca2[i] if not i % 2
+              else [numpy.iinfo(getattr(numpy, 'int64')).max] *
+              len(self._mca2[i]))
              for i in range(steps)],
             attrs={"type": "NX_UINT64", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -998,22 +1099,26 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSpectrumField(
             det, "SpectrumFloat", "float32", "NX_FLOAT32",
-            [(self._fmca1[i] if not i % 2 else [numpy.finfo(getattr(numpy, 'float32')).max] * len(self._fmca1[i]))
+            [(self._fmca1[i] if not i % 2
+              else [numpy.finfo(getattr(numpy, 'float32')).max] *
+              len(self._fmca1[i]))
              for i in range(steps)],
             attrs={
                 "type": "NX_FLOAT32", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None},
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None},
             grows=0, error=1e-6)
 
         self._sc.checkSpectrumField(
             det, "SpectrumDouble", "float64", "NX_FLOAT64",
-            [(self._fmca1[i] if not i % 2 else [numpy.finfo(getattr(numpy, 'float64')).max] * len(self._fmca1[i]))
+            [(self._fmca1[i] if not i % 2
+              else [numpy.finfo(getattr(numpy, 'float64')).max] *
+              len(self._fmca1[i]))
              for i in range(steps)],
             attrs={
                 "type": "NX_FLOAT64", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None},
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None},
             grows=1, error=1e-14)
 
         self._sc.checkSpectrumField(
@@ -1028,7 +1133,9 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSpectrumField(
             det, "SpectrumEncoded", "int32", "NX_INT32",
-            [(self._mca2[i] if not i % 2 else [numpy.iinfo(getattr(numpy, 'int32')).max] * len(self._mca2[i]))
+            [(self._mca2[i] if not i % 2
+              else [numpy.iinfo(getattr(numpy, 'int32')).max] *
+              len(self._mca2[i]))
              for i in range(steps)],
             attrs={"type": "NX_INT32", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -1036,7 +1143,9 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSpectrumField(
             det, "SpectrumEncoded_MUINT32", "int32", "NX_INT32",
-            [(self._mca2[i] if not i % 2 else [numpy.iinfo(getattr(numpy, 'int32')).max] * len(self._mca2[i]))
+            [(self._mca2[i] if not i % 2
+              else [numpy.iinfo(getattr(numpy, 'int32')).max] *
+              len(self._mca2[i]))
              for i in range(steps)],
             attrs={"type": "NX_INT32", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -1054,8 +1163,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             [numpy.finfo(getattr(numpy, 'float32')).max] * len(self._fmca1[0]),
             attrs={
                 "type": "NX_FLOAT32", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None},
+                "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None},
             error=1.0e-06)
 
         f.close()
@@ -1076,26 +1185,31 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumBoolean"/>
           </datasource>
         </field>
 
 
        <field units="" type="NX_UINT8" name="SpectrumUChar">
-          <strategy mode="STEP"  compression="true"  grows="2" shuffle="false" />
+          <strategy mode="STEP"  compression="true"
+  grows="2" shuffle="false" />
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumUChar"/>
           </datasource>
         </field>
 
        <field units="" type="NX_INT16" name="SpectrumShort">
-          <strategy mode="STEP"  compression="true"  grows="3" shuffle="True" />
+          <strategy mode="STEP"  compression="true"  grows="3"
+ shuffle="True" />
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumShort"/>
           </datasource>
         </field>
@@ -1104,7 +1218,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"   grows="2" />
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumUShort"/>
           </datasource>
         </field>
@@ -1115,7 +1230,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"  compression="true"   shuffle="false" />
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumLong"/>
           </datasource>
         </field>
@@ -1124,7 +1240,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"   compression="true"  grows="1" />
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumULong"/>
           </datasource>
         </field>
@@ -1133,20 +1250,24 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
        <field units="" type="NX_INT64" name="SpectrumLong64">
-          <strategy mode="STEP"  compression="true"  grows="2" shuffle="True"/>
+          <strategy mode="STEP"  compression="true"  grows="2"
+ shuffle="True"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumLong64"/>
           </datasource>
         </field>
 
 
        <field units="" type="NX_UINT64" name="SpectrumULong64">
-          <strategy mode="STEP"  compression="true"  grows="2" shuffle="True"/>
+          <strategy mode="STEP"  compression="true"  grows="2"
+ shuffle="True"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumULong64"/>
           </datasource>
         </field>
@@ -1156,17 +1277,20 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP" />
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumFloat"/>
           </datasource>
         </field>
 
 
        <field units="" type="NX_FLOAT64" name="SpectrumDouble">
-          <strategy mode="STEP"  compression="true"  grows="1" shuffle="false"/>
+          <strategy mode="STEP"  compression="true"  grows="1"
+ shuffle="false"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumDouble"/>
           </datasource>
         </field>
@@ -1175,7 +1299,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumString"/>
           </datasource>
         </field>
@@ -1185,7 +1310,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="1" />
           <datasource type="TANGO">
             <record name="SpectrumEncoded"/>
-            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="UINT32"/>
+            <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" encoding="UINT32"/>
           </datasource>
         </field>
 
@@ -1195,7 +1321,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="1" />
           <datasource type="TANGO">
             <record name="SpectrumEncoded"/>
-            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="MUINT32"/>
+            <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" encoding="MUINT32"/>
           </datasource>
         </field>
 
@@ -1205,7 +1332,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="INIT"  compression="true"  shuffle="True"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumLong64"/>
           </datasource>
         </field>
@@ -1215,7 +1343,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="FINAL" />
           <dimensions rank="1" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumFloat"/>
           </datasource>
         </field>
@@ -1243,7 +1372,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._simps.dp.SpectrumDouble = self._fmca1[0]
         self._simps.dp.SpectrumString = self._dates[0]
 
-        decoder = '"decoders":{"MUINT32":"nxswriter.DecoderPool.UINT32decoder"}'
+        decoder = '"decoders":{"MUINT32":' \
+                  '"nxswriter.DecoderPool.UINT32decoder"}'
         tdw = self.openWriter(fname, xml, json='{ ' + decoder + ' }')
 
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
@@ -1273,38 +1403,39 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         f = open_file(fname, readonly=True)
         det = self._sc.checkFieldTree(f, fname, 15)
         self._sc.checkSpectrumField(
-            det, "SpectrumBoolean", "bool", "NX_BOOLEAN", self._logical[:steps])
+            det, "SpectrumBoolean", "bool", "NX_BOOLEAN",
+            self._logical[:steps])
         self._sc.checkSpectrumField(
             det, "SpectrumUChar", "uint8", "NX_UINT8", self._mca2[:steps],
-                                    grows=2)
+            grows=2)
         self._sc.checkSpectrumField(
             det, "SpectrumShort", "int16", "NX_INT16", self._mca1[:steps],
-                                    grows=3)
+            grows=3)
         self._sc.checkSpectrumField(
             det, "SpectrumUShort", "uint16", "NX_UINT16", self._mca2[:steps],
-                                    grows=2)
+            grows=2)
         self._sc.checkSpectrumField(
             det, "SpectrumLong", "int32", "NX_INT32", self._mca1[:steps])
         self._sc.checkSpectrumField(
             det, "SpectrumULong", "uint32", "NX_UINT32", self._mca2[:steps],
-                                    grows=1)
+            grows=1)
         self._sc.checkSpectrumField(
             det, "SpectrumLong64", "int64", "NX_INT64", self._mca1[:steps],
-                                    grows=2)
+            grows=2)
         self._sc.checkSpectrumField(
             det, "SpectrumULong64", "uint64", "NX_UINT64", self._mca2[:steps],
-                                    grows=2)
+            grows=2)
         self._sc.checkSpectrumField(
             det, "SpectrumFloat", "float32", "NX_FLOAT32", self._fmca1[:steps],
-                                    error=1e-6)
+            error=1e-6)
         self._sc.checkSpectrumField(
             det, "SpectrumDouble", "float64", "NX_FLOAT64", self._fmca1[
                 :steps],
-                                    grows=1, error=1e-14)
+            grows=1, error=1e-14)
         self._sc.checkSpectrumField(
             det, "SpectrumDouble", "float64", "NX_FLOAT64", self._fmca1[
                 :steps],
-                                    error=1e-14)
+            error=1e-14)
 
         self._sc.checkSpectrumField(
             det, "SpectrumString", "string", "NX_CHAR", self._dates[:steps])
@@ -1314,7 +1445,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             det, "SpectrumEncoded", "int32", "NX_INT32", self._mca2[:steps])
 
         self._sc.checkSpectrumField(
-            det, "SpectrumEncoded_MUINT32", "int32", "NX_INT32", self._mca2[:steps])
+            det, "SpectrumEncoded_MUINT32", "int32", "NX_INT32",
+            self._mca2[:steps])
 
         self._sc.checkSingleSpectrumField(
             det, "InitSpectrumLong64", "int64", "NX_INT64", self._mca1[0])
@@ -1322,7 +1454,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkSingleSpectrumField(
             det, "FinalSpectrumFloat", "float32", "NX_FLOAT32", self._fmca1[
                 steps - 1],
-                                          error=1.0e-06)
+            error=1.0e-06)
 
         f.close()
         os.remove(fname)
@@ -1343,7 +1475,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageBoolean"/>
           </datasource>
         </field>
@@ -1352,16 +1485,19 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"   compression="true"  grows="2" />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageUChar"/>
           </datasource>
         </field>
 
        <field units="" type="NX_INT16" name="ImageShort">
-          <strategy mode="STEP"    compression="true"  grows="3" shuffle="false"/>
+          <strategy mode="STEP"    compression="true"  grows="3"
+ shuffle="false"/>
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageShort"/>
           </datasource>
         </field>
@@ -1371,16 +1507,19 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"   grows="1"   />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageUShort"/>
           </datasource>
         </field>
 
        <field units="" type="NX_INT32" name="ImageLong">
-          <strategy mode="STEP"  compression="true"  grows="2" shuffle="true"  />
+          <strategy mode="STEP"  compression="true"  grows="2"
+ shuffle="true"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageLong"/>
           </datasource>
         </field>
@@ -1390,17 +1529,20 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"  grows="3"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageULong"/>
           </datasource>
         </field>
 
 
        <field units="" type="NX_INT64" name="ImageLong64">
-          <strategy mode="STEP"  compression="true"  grows="1" shuffle="false"  />
+          <strategy mode="STEP"  compression="true"  grows="1"
+ shuffle="false"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageLong64"/>
           </datasource>
         </field>
@@ -1410,7 +1552,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"  compression="true"  grows="2"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageULong64"/>
           </datasource>
         </field>
@@ -1418,10 +1561,12 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
        <field units="" type="NX_FLOAT32" name="ImageFloat">
-          <strategy mode="STEP"  compression="true"  grows="3" shuffle="true"  />
+          <strategy mode="STEP"  compression="true"  grows="3"
+ shuffle="true"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageFloat"/>
           </datasource>
         </field>
@@ -1431,7 +1576,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"  compression="true"  grows="1"   />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageDouble"/>
           </datasource>
         </field>
@@ -1440,27 +1586,32 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageString"/>
           </datasource>
         </field>
 
         <field units="" type="NX_UINT8" name="ImageEncoded">
-          <strategy mode="STEP"  compression="true"  shuffle="false" grows="3"/>
+          <strategy mode="STEP"  compression="true"  shuffle="false"
+ grows="3"/>
           <dimensions rank="2" />
           <datasource type="TANGO">
             <record name="ImageEncoded"/>
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="LIMA_VIDEO_IMAGE"/>
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" encoding="LIMA_VIDEO_IMAGE"/>
           </datasource>
         </field>
 
 
         <field units="" type="NX_UINT8" name="ImageEncoded_MLIMA">
-          <strategy mode="STEP"  compression="true"  shuffle="false" grows="3"/>
+          <strategy mode="STEP"  compression="true"  shuffle="false"
+ grows="3"/>
           <dimensions rank="2" />
           <datasource type="TANGO">
             <record name="ImageEncoded"/>
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="MLIMA"/>
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" encoding="MLIMA"/>
           </datasource>
         </field>
 
@@ -1470,7 +1621,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="INIT" />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageULong64"/>
           </datasource>
         </field>
@@ -1481,7 +1633,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="FINAL"  compression="true"  shuffle="true"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageFloat"/>
           </datasource>
         </field>
@@ -1541,45 +1694,46 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             det, "ImageBoolean", "bool", "NX_BOOLEAN", self._logical2[:steps])
         self._sc.checkImageField(
             det, "ImageUChar", "uint8", "NX_UINT8", self._pco1[:steps],
-                                 grows=2)
+            grows=2)
         self._sc.checkImageField(
             det, "ImageShort", "int16", "NX_INT16", self._pco1[:steps],
-                                 grows=3)
+            grows=3)
         self._sc.checkImageField(
             det, "ImageUShort", "uint16", "NX_UINT16", self._pco1[:steps],
-                                 grows=1)
+            grows=1)
         self._sc.checkImageField(
             det, "ImageLong", "int32", "NX_INT32", self._pco1[:steps],
-                                 grows=2)
+            grows=2)
         self._sc.checkImageField(
             det, "ImageULong", "uint32", "NX_UINT32", self._pco1[:steps],
-                                 grows=3)
+            grows=3)
         self._sc.checkImageField(
             det, "ImageLong64", "int64", "NX_INT64", self._pco1[:steps],
-                                 grows=1)
+            grows=1)
         self._sc.checkImageField(
             det, "ImageULong64", "uint64", "NX_UINT64", self._pco1[:steps],
-                                 grows=2)
+            grows=2)
         self._sc.checkImageField(
             det, "ImageFloat", "float32", "NX_FLOAT32", self._fpco1[:steps],
-                                 grows=3, error=1.0e-6)
+            grows=3, error=1.0e-6)
         self._sc.checkImageField(
             det, "ImageDouble", "float64", "NX_FLOAT64", self._fpco1[:steps],
-                                 grows=1, error=1.0e-14)
+            grows=1, error=1.0e-14)
         self._sc.checkImageField(
             det, "ImageString", "string", "NX_CHAR", self._dates2[:steps])
         self._sc.checkImageField(
             det, "ImageEncoded", "uint8", "NX_UINT8", self._pco1[:steps],
-                                 grows=3)
+            grows=3)
 
         self._sc.checkImageField(
             det, "ImageEncoded_MLIMA", "uint8", "NX_UINT8", self._pco1[:steps],
-                                 grows=3)
+            grows=3)
 
         self._sc.checkSingleImageField(
             det, "InitImageULong64", "uint64", "NX_UINT64", self._pco1[0])
         self._sc.checkSingleImageField(
-            det, "FinalImageFloat", "float32", "NX_FLOAT32", self._fpco1[steps - 1], error=1.0e-6)
+            det, "FinalImageFloat", "float32", "NX_FLOAT32",
+            self._fpco1[steps - 1], error=1.0e-6)
         f.close()
         os.remove(fname)
 
@@ -1599,25 +1753,30 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"  canfail="true" />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageBoolean"/>
           </datasource>
         </field>
 
        <field units="" type="NX_UINT8" name="ImageUChar">
-          <strategy mode="STEP"   compression="true"  grows="2"  canfail="true"/>
+          <strategy mode="STEP"   compression="true"  grows="2"
+  canfail="true"/>
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageUChar"/>
           </datasource>
         </field>
 
        <field units="" type="NX_INT16" name="ImageShort">
-          <strategy mode="STEP"    compression="true"  grows="3" shuffle="false" canfail="true"/>
+          <strategy mode="STEP"    compression="true"  grows="3"
+ shuffle="false" canfail="true"/>
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageShort"/>
           </datasource>
         </field>
@@ -1627,16 +1786,19 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"   grows="1"  canfail="true"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageUShort"/>
           </datasource>
         </field>
 
        <field units="" type="NX_INT32" name="ImageLong">
-          <strategy mode="STEP"  compression="true"  grows="2" shuffle="true"  canfail="true" />
+          <strategy mode="STEP"  compression="true"  grows="2"
+ shuffle="true"  canfail="true" />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageLong"/>
           </datasource>
         </field>
@@ -1646,27 +1808,32 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"  grows="3"  canfail="true" />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageULong"/>
           </datasource>
         </field>
 
 
        <field units="" type="NX_INT64" name="ImageLong64">
-          <strategy mode="STEP"  compression="true"  grows="1" shuffle="false"  canfail="true" />
+          <strategy mode="STEP"  compression="true"  grows="1"
+ shuffle="false"  canfail="true" />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageLong64"/>
           </datasource>
         </field>
 
 
        <field units="" type="NX_UINT64" name="ImageULong64">
-          <strategy mode="STEP"  compression="true"  grows="2" canfail="true"  />
+          <strategy mode="STEP"  compression="true"  grows="2"
+ canfail="true"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageULong64"/>
           </datasource>
         </field>
@@ -1674,20 +1841,24 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
        <field units="" type="NX_FLOAT32" name="ImageFloat">
-          <strategy mode="STEP"  compression="true"  grows="3" shuffle="true"  canfail="true"  />
+          <strategy mode="STEP"  compression="true"  grows="3"
+ shuffle="true"  canfail="true"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageFloat"/>
           </datasource>
         </field>
 
 
        <field units="" type="NX_FLOAT64" name="ImageDouble">
-          <strategy mode="STEP"  compression="true"  grows="1"  canfail="true"  />
+          <strategy mode="STEP"  compression="true"  grows="1"
+  canfail="true"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageDouble"/>
           </datasource>
         </field>
@@ -1696,27 +1867,32 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"  canfail="true" />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageString"/>
           </datasource>
         </field>
 
         <field units="" type="NX_UINT8" name="ImageEncoded">
-          <strategy mode="STEP"  compression="true"  shuffle="false" grows="3"  canfail="true"/>
+          <strategy mode="STEP"  compression="true"  shuffle="false"
+ grows="3"  canfail="true"/>
           <dimensions rank="2" />
           <datasource type="TANGO">
             <record name="ImageEncoded"/>
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="LIMA_VIDEO_IMAGE"/>
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" encoding="LIMA_VIDEO_IMAGE"/>
           </datasource>
         </field>
 
 
         <field units="" type="NX_UINT8" name="ImageEncoded_MLIMA">
-          <strategy mode="STEP"  compression="true"  shuffle="false" grows="3"  canfail="true"/>
+          <strategy mode="STEP"  compression="true"  shuffle="false"
+ grows="3"  canfail="true"/>
           <dimensions rank="2" />
           <datasource type="TANGO">
             <record name="ImageEncoded"/>
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="MLIMA"/>
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" encoding="MLIMA"/>
           </datasource>
         </field>
 
@@ -1729,7 +1905,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             <dim value="8" index="2"/>
           </dimensions>
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageULong64_canfail"/>
           </datasource>
         </field>
@@ -1737,10 +1914,12 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
        <field units="" type="NX_FLOAT32" name="FinalImageFloat">
-          <strategy mode="FINAL"  compression="true"  shuffle="true"  canfail="true" />
+          <strategy mode="FINAL"  compression="true"  shuffle="true"
+  canfail="true" />
           <dimensions rank="2" />
           <datasource type="TANGO">
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageFloat"/>
           </datasource>
         </field>
@@ -1805,17 +1984,20 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         det = self._sc.checkFieldTree(f, fname, 15)
         self._sc.checkImageField(
             det, "ImageBoolean", "bool", "NX_BOOLEAN",
-            [(self._logical2[i] if not i % 2 else [[False] * len(self._logical2[i][0])] * len(self._logical2[i]))
+            [(self._logical2[i] if not i % 2
+              else [[False] * len(self._logical2[i][0])] *
+              len(self._logical2[i]))
              for i in range(steps)],
             attrs={
                 "type": "NX_BOOLEAN", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
 
         self._sc.checkImageField(
             det, "ImageUChar", "uint8", "NX_UINT8",
             [(self._pco1[i] if not i % 2 else
-              [[numpy.iinfo(getattr(numpy, 'uint8')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+              [[numpy.iinfo(getattr(numpy, 'uint8')).max] *
+               len(self._pco1[i][0])] * len(self._pco1[i]))
              for i in range(steps)],
             attrs={"type": "NX_UINT8", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -1825,7 +2007,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageShort", "int16", "NX_INT16",
             [(self._pco1[i] if not i % 2 else
-              [[numpy.iinfo(getattr(numpy, 'int16')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+              [[numpy.iinfo(getattr(numpy, 'int16')).max] *
+               len(self._pco1[i][0])] * len(self._pco1[i]))
              for i in range(steps)],
             attrs={"type": "NX_INT16", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -1834,7 +2017,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageUShort", "uint16", "NX_UINT16",
             [(self._pco1[i] if not i % 2 else
-              [[numpy.iinfo(getattr(numpy, 'uint16')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+              [[numpy.iinfo(getattr(numpy, 'uint16')).max] *
+               len(self._pco1[i][0])] * len(self._pco1[i]))
              for i in range(steps)],
             attrs={"type": "NX_UINT16", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -1844,7 +2028,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageLong", "int32", "NX_INT32",
             [(self._pco1[i] if not i % 2 else
-              [[numpy.iinfo(getattr(numpy, 'int32')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+              [[numpy.iinfo(getattr(numpy, 'int32')).max] *
+               len(self._pco1[i][0])] * len(self._pco1[i]))
              for i in range(steps)],
             attrs={"type": "NX_INT32", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -1853,7 +2038,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageULong", "uint32", "NX_UINT32",
             [(self._pco1[i] if not i % 2 else
-              [[numpy.iinfo(getattr(numpy, 'uint32')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+              [[numpy.iinfo(getattr(numpy, 'uint32')).max] *
+               len(self._pco1[i][0])] * len(self._pco1[i]))
              for i in range(steps)],
             attrs={"type": "NX_UINT32", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -1863,7 +2049,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageLong64", "int64", "NX_INT64",
             [(self._pco1[i] if not i % 2 else
-              [[numpy.iinfo(getattr(numpy, 'int64')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+              [[numpy.iinfo(getattr(numpy, 'int64')).max] *
+               len(self._pco1[i][0])] * len(self._pco1[i]))
              for i in range(steps)],
             attrs={"type": "NX_INT64", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -1872,7 +2059,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageULong64", "uint64", "NX_UINT64",
             [(self._pco1[i] if not i % 2 else
-              [[numpy.iinfo(getattr(numpy, 'int64')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+              [[numpy.iinfo(getattr(numpy, 'int64')).max] *
+               len(self._pco1[i][0])] * len(self._pco1[i]))
              for i in range(steps)],
             attrs={"type": "NX_UINT64", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -1882,22 +2070,24 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageFloat", "float32", "NX_FLOAT32",
             [(self._fpco1[i] if not i % 2 else
-              [[numpy.finfo(getattr(numpy, 'float32')).max] * len(self._fpco1[i][0])] * len(self._fpco1[i]))
+              [[numpy.finfo(getattr(numpy, 'float32')).max] *
+               len(self._fpco1[i][0])] * len(self._fpco1[i]))
              for i in range(steps)],
             attrs={
                 "type": "NX_FLOAT32", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None},
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None},
             grows=3, error=1.0e-6)
         self._sc.checkImageField(
             det, "ImageDouble", "float64", "NX_FLOAT64",
             [(self._fpco1[i] if not i % 2 else
-              [[numpy.finfo(getattr(numpy, 'float64')).max] * len(self._fpco1[i][0])] * len(self._fpco1[i]))
+              [[numpy.finfo(getattr(numpy, 'float64')).max] *
+               len(self._fpco1[i][0])] * len(self._fpco1[i]))
              for i in range(steps)],
             attrs={
                 "type": "NX_FLOAT64", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None},
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None},
             grows=1, error=1.0e-14)
 
         self._sc.checkImageField(
@@ -1912,7 +2102,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageEncoded", "uint8", "NX_UINT8",
             [(self._pco1[i] if not i % 2 else
-              [[numpy.iinfo(getattr(numpy, 'uint8')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+              [[numpy.iinfo(getattr(numpy, 'uint8')).max] *
+               len(self._pco1[i][0])] * len(self._pco1[i]))
              for i in range(steps)],
             attrs={"type": "NX_UINT8", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -1922,28 +2113,31 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageEncoded_MLIMA", "uint8", "NX_UINT8",
             [(self._pco1[i] if not i % 2 else
-              [[numpy.iinfo(getattr(numpy, 'uint8')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+              [[numpy.iinfo(getattr(numpy, 'uint8')).max] *
+               len(self._pco1[i][0])] * len(self._pco1[i]))
              for i in range(steps)],
-            attrs={"type": "NX_UINT8", "units": "", "nexdatas_source": None,
-                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                   "nexdatas_canfail_error": None},
+            attrs={
+                "type": "NX_UINT8", "units": "", "nexdatas_source": None,
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None},
             grows=3)
 
         self._sc.checkSingleImageField(
             det, "InitImageULong64", "uint64", "NX_UINT64",
-             [[numpy.iinfo(getattr(numpy, 'int64')).max] * len(
-                 self._pco1[0][0])] * len(self._pco1[0]),
-            attrs={"type": "NX_UINT64", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+            [[numpy.iinfo(getattr(numpy, 'int64')).max] * len(
+                self._pco1[0][0])] * len(self._pco1[0]),
+            attrs={
+                "type": "NX_UINT64", "units": "", "nexdatas_source": None,
+                "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
         self._sc.checkSingleImageField(
             det, "FinalImageFloat", "float32", "NX_FLOAT32",
             [[numpy.finfo(getattr(numpy, 'float32')).max] * len(
                 self._fpco1[0][0])] * len(self._fpco1[0]),
             attrs={
                 "type": "NX_FLOAT32", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
 
         f.close()
         os.remove(fname)

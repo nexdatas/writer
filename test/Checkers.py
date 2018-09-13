@@ -362,13 +362,21 @@ class Checker(object):
     # \param values  original values
     # \param error data precision
     # \param attrs dictionary with string attributes
-    def checkScalarField(self, det, name, dtype, nxtype, values, error=0, attrs=None):
+    def checkScalarField(self, det, name, dtype, nxtype, values, error=0,
+                         attrs=None):
 
         atts = {"type": nxtype, "units": "m",
                 "nexdatas_source": None, "nexdatas_strategy": None}
         if attrs is not None:
             atts = attrs
         cnt = det.open(name)
+        print("ONE")
+        print(cnt.name)
+        print(values)
+        print(type(values[0]))
+        print("FILE")
+        print(cnt)
+        print(type(cnt[0]))
         self._tc.assertTrue(cnt.is_valid)
         self._tc.assertEqual(cnt.name, name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
@@ -377,14 +385,7 @@ class Checker(object):
         self._tc.assertEqual(cnt.dtype, dtype)
         self._tc.assertEqual(cnt.size, len(values))
         # pninx is not supporting reading string areas
-        # print("ONE")
-        # print(cnt.name)
-        # print(values[0])
-        # print(type(values[0]))
-        # print("FILE")
-        # print(cnt[0])
-        # print(type(cnt[0]))
-        if not isinstance(values[0], str) and not isinstance(values[0], unicode):
+        if (not isinstance(values[0], str) and not isinstance(values[0], unicode)):
             value = cnt.read()
             for i in range(len(value)):
                 if self._isNumeric(value[i]):
@@ -435,7 +436,8 @@ class Checker(object):
     # \param values  original values
     # \param error data precision
     # \param attrs dictionary with string attributes
-    def checkSingleScalarField(self, det, name, dtype, nxtype, values, error=0, attrs=None):
+    def checkSingleScalarField(self, det, name, dtype, nxtype, values, error=0,
+                               attrs=None):
 
         atts = {"type": nxtype, "units": "m",
                 "nexdatas_source": None, "nexdatas_strategy": None}
