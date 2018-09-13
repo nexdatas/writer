@@ -337,9 +337,12 @@ class Checker(object):
     # \param nrGauss of Gaussians
     # \returns list with the plot
     def nicePlot(self, xlen=2048, nrGauss=5):
-        pr = [[self.__rnd.uniform(0.01, 0.001), self.__rnd.uniform(0, xlen), self.__rnd.uniform(0.0, 1.)]
+        pr = [[self.__rnd.uniform(0.01, 0.001),
+               self.__rnd.uniform(0, xlen),
+               self.__rnd.uniform(0.0, 1.)]
               for i in range(nrGauss)]
-        return [sum([pr[j][2] * exp(-pr[j][0] * (i - pr[j][1]) ** 2) for j in range(len(pr))])
+        return [sum([pr[j][2] * exp(-pr[j][0] * (i - pr[j][1]) ** 2)
+                     for j in range(len(pr))])
                 for i in range(xlen)]
 
     # creates spectrum plot with random Gaussians
@@ -348,9 +351,13 @@ class Checker(object):
     # \param nrGauss of Gaussians
     # \returns list with the plot
     def nicePlot2D(self, xlen=1024, ylen=1024, nrGauss=5):
-        pr = [[self.__rnd.uniform(0.1, 0.01), self.__rnd.uniform(0.01, 0.1), self.__rnd.uniform(0, ylen), self.__rnd.uniform(0, xlen), self.__rnd.uniform(0.0, 1.)]
+        pr = [[self.__rnd.uniform(0.1, 0.01),
+               self.__rnd.uniform(0.01, 0.1), self.__rnd.uniform(0, ylen),
+               self.__rnd.uniform(0, xlen), self.__rnd.uniform(0.0, 1.)]
               for i in range(nrGauss)]
-        return [[sum([pr[j][4] * exp(-pr[j][0] * (i1 - pr[j][2]) ** 2 - pr[j][1] * (i2 - pr[j][3]) ** 2)
+        return [[sum([pr[j][4] *
+                      exp(-pr[j][0] * (i1 - pr[j][2]) ** 2 - pr[j][1] *
+                          (i2 - pr[j][3]) ** 2)
                       for j in range(len(pr))])
                  for i1 in range(ylen)] for i2 in range(xlen)]
 
@@ -370,13 +377,13 @@ class Checker(object):
         if attrs is not None:
             atts = attrs
         cnt = det.open(name)
-        print("ONE")
-        print(cnt.name)
-        print(values)
-        print(type(values[0]))
-        print("FILE")
-        print(cnt)
-        print(type(cnt[0]))
+        # print("ONE")
+        # print(cnt.name)
+        # print(values)
+        # print(type(values[0]))
+        # print("FILE")
+        # print(cnt)
+        # print(type(cnt[0]))
         self._tc.assertTrue(cnt.is_valid)
         self._tc.assertEqual(cnt.name, name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
@@ -385,7 +392,8 @@ class Checker(object):
         self._tc.assertEqual(cnt.dtype, dtype)
         self._tc.assertEqual(cnt.size, len(values))
         # pninx is not supporting reading string areas
-        if (not isinstance(values[0], str) and not isinstance(values[0], unicode)):
+        if (not isinstance(values[0], str) and not isinstance(values[0], unicode)
+            and not isinstance(values[0], bytes)):
             value = cnt.read()
             for i in range(len(value)):
                 if self._isNumeric(value[i]):

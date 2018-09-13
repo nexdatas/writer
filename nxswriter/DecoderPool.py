@@ -50,7 +50,7 @@ class UTF8decoder(object):
         """ loads encoded data
 
         :param data: encoded data
-        :type data: [:obj:`str`, :obj:`str`]
+        :type data: [:obj:`str`, :obj:`bytes`]
         """
         self.__data = data
         self.format = data[0]
@@ -74,7 +74,10 @@ class UTF8decoder(object):
         if not self.__data:
             return
         if not self.__value:
+            # self.__value = self.__data[1].decode("utf8")
             self.__value = self.__data[1]
+        print(type(self.__value))
+        print(self.__value)
         return self.__value
 
 
@@ -104,7 +107,7 @@ class UINT32decoder(object):
         """ loads encoded data
 
         :param data: encoded data
-        :type data: [:obj:`str`, :obj:`str`]
+        :type data: [:obj:`str`, :obj:`bytes`]
         """
         if not hasattr(data, "__iter__"):
             raise ValueError("Wrong Data Format")
