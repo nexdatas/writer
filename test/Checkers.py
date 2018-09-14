@@ -382,7 +382,7 @@ class Checker(object):
         # print(values)
         # print(type(values[0]))
         # print("FILE")
-        # print(cnt)
+        # print(cnt[...])
         # print(type(cnt[0]))
         self._tc.assertTrue(cnt.is_valid)
         self._tc.assertEqual(cnt.name, name)

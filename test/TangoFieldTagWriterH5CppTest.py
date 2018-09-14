@@ -30,7 +30,6 @@ import binascii
 import time
 import PyTango
 
-from ProxyHelper import ProxyHelper
 
 
 from xml.sax import SAXParseException
@@ -38,11 +37,23 @@ from xml.sax import SAXParseException
 
 from nxswriter import Types
 from nxswriter.TangoDataWriter import TangoDataWriter
-from Checkers import Checker
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5CppWriter as H5CppWriter
 
-import SimpleServerSetUp
+try:
+    from ProxyHelper import ProxyHelper
+except:
+    from .ProxyHelper import ProxyHelper
+
+try:
+    from Checkers import Checker
+except:
+    from .Checkers import Checker
+        
+try:
+    import SimpleServerSetUp
+except:
+    from . import SimpleServerSetUp
 
 
 if sys.version_info > (3,):

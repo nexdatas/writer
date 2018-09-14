@@ -30,18 +30,28 @@ import binascii
 import time
 import PyTango
 
-from ProxyHelper import ProxyHelper
-
 from xml.sax import SAXParseException
 
 
 from nxswriter import Types
 from nxswriter.TangoDataWriter import TangoDataWriter
-from Checkers import Checker
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
 
-import SimpleServerSetUp
+try:
+    from ProxyHelper import ProxyHelper
+except:
+    from .ProxyHelper import ProxyHelper
+
+try:
+    from Checkers import Checker
+except:
+    from .Checkers import Checker
+        
+try:
+    import SimpleServerSetUp
+except:
+    from . import SimpleServerSetUp
 
 
 if sys.version_info > (3,):
@@ -80,10 +90,10 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
 
         self._logical2 = [
             [[True, False, True, False], [True, False, False, True]],
-                           [[False, False, True, True], [
-                               False, False, True, False]],
-                           [[True, False, True, True], [False, False, True, False]]]
-
+            [[False, False, True, True], [
+                False, False, True, False]],
+            [[True, False, True, True], [False, False, True, False]]]
+        
         self._sc = Checker(self)
         self._mca1 = [[self.__rnd.randint(-100, 100)
                        for e in range(256)] for i in range(3)]
@@ -105,15 +115,15 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
               "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"],
              ["1996-07-31T21:15:22.123+0600", "2012-11-14T14:05:23.2344-0200",
               "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"]],
-                        [["1996-07-31T21:15:22.123+0600", "2012-11-14T14:05:23.2344-0200",
-                          "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"],
-                         ["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
-                          "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"]],
-                        [["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
-                          "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"],
-                         ["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
-                          "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"]]]
-
+            [["1996-07-31T21:15:22.123+0600", "2012-11-14T14:05:23.2344-0200",
+              "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"],
+             ["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
+              "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"]],
+            [["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
+              "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"],
+             ["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
+              "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"]]]
+        
         self._pco1 = [[[self.__rnd.randint(0, 100) for e1 in range(8)]
                        for e2 in range(10)] for i in range(3)]
         self._fpco1 = [self._sc.nicePlot2D(20, 30, 5) for i in range(4)]
