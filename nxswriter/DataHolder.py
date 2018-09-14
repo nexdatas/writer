@@ -140,7 +140,8 @@ class DataHolder(object):
                 else:
                     return self.value
             else:
-                if self.value == "" and (dtype not in ['str', 'string', 'bytes']):
+                if self.value == "" and (
+                        dtype not in ['str', 'string', 'bytes']):
                     return NTP.convert[dtype](0)
                 else:
                     return NTP.convert[dtype](self.value)

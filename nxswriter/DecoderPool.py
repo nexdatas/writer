@@ -69,15 +69,12 @@ class UTF8decoder(object):
         """ provides the decoded data
 
         :returns: the decoded data if data was loaded
-        :rtype: :class:`numpy.ndarray`
+        :rtype: :obj:`bytes`
         """
         if not self.__data:
             return
         if not self.__value:
-            # self.__value = self.__data[1].decode("utf8")
-            self.__value = self.__data[1]
-        print(type(self.__value))
-        print(self.__value)
+            self.__value = bytes(self.__data[1])
         return self.__value
 
 
