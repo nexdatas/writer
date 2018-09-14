@@ -47,7 +47,7 @@ class UTF8decoderTest(unittest.TestCase):
         self._bfloat = "float64" if IS64BIT else "float32"
         self.__name = 'UTF8'
 
-        self.__data = ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")
+        self.__data = ("UTF8", b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")
         self.__dtype = "string"
 
     # test starter

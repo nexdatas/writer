@@ -23,6 +23,9 @@ import struct
 import numpy
 import sys
 
+if sys.version_info > (3,):
+    unicode = str
+
 
 class UTF8decoder(object):
 

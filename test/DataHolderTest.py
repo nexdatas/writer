@@ -289,13 +289,13 @@ class DataHolderTest(unittest.TestCase):
         arr = {
             "ScalarEncoded": [
                 "UTF8", "DevEncoded",
-                ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"),
+                ("UTF8", b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"),
                 [1, 0], "SCALAR",
-                "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b", "DevString"],
+                b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b", "DevString"],
             "SpectrumEncoded": [
                 "UINT32", "DevEncoded",
                 ('INT32',
-                 '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00'),
+                 b'\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00'),
                 [4, 0], "SPECTRUM", spectrum, "DevULong"],
             "ImageEncoded": ["LIMA_VIDEO_IMAGE", "DevEncoded",
                              self.encodeImage(image),
@@ -347,10 +347,10 @@ class DataHolderTest(unittest.TestCase):
         image = numpy.array([[2]], dtype='uint16')
 
         arr = {
-            "ScalarEncoded": ["UTF8", "DevEncoded", ("UTF8", "\xc3\xb3"),
-                              [1, 0], "SCALAR", "\xc3\xb3", "DevString"],
+            "ScalarEncoded": ["UTF8", "DevEncoded", ("UTF8", b"\xc3\xb3"),
+                              [1, 0], "SCALAR", b"\xc3\xb3", "DevString"],
             "SpectrumEncoded": ["UINT32", "DevEncoded",
-                                ('INT32', '\xd2\x04\x00\x00'),
+                                ('INT32', b'\xd2\x04\x00\x00'),
                                 [1, 0], "SPECTRUM", spectrum, "DevULong"],
             "ImageEncoded": ["LIMA_VIDEO_IMAGE", "DevEncoded",
                              self.encodeImage(image),
