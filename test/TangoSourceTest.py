@@ -1403,7 +1403,6 @@ class TangoSourceTest(unittest.TestCase):
             dp = DecoderPool()
             dt = el.setDecoders(dp)
             dt = el.getData()
-            print(dt)
             self.checkData(
                 dt, "SCALAR", arr3[k][2], arr3[k][1], [1, 0], arr3[k][2][0],
                 dp)

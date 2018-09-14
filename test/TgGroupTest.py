@@ -368,7 +368,6 @@ class TgGroupTest(unittest.TestCase):
             else:
                 print(gr.getDevice(dvn2).members[k])
                 dt = (gr.getDevice(dvn2).members[k]).getValue(dp)
-            print(dt)
             self.checkData(dt, "SCALAR", arr3[k][2], arr3[k][1],
                            [1, 0], arr3[k][2][0], dp)
             flip = not flip
