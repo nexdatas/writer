@@ -25,9 +25,6 @@ import sys
 
 if sys.version_info > (3,):
     long = int
-    unicode = str
-else:
-    bytes = str
 
 
 def nptype(dtype):
@@ -129,8 +126,8 @@ class NTP(object):
         :rtype: :obj:`int`
         """
         rank = 0
-        if hasattr(array, "__iter__") and \
-           not isinstance(array, (str, unicode, bytes)):
+        if hasattr(array, "__iter__") and not \
+           isinstance(array, (str, bytes)):
             try:
                 rank = 1 + self.arrayRank(array[0])
             except IndexError:
@@ -153,8 +150,8 @@ class NTP(object):
         rank = 0
         shape = []
         pythonDType = None
-        if hasattr(array, "__iter__") and \
-           not isinstance(array, (str, unicode, bytes)):
+        if hasattr(array, "__iter__") and not \
+           isinstance(array, (str, bytes)):
             try:
                 rank, shape, pythonDType = self.arrayRankRShape(array[0])
                 rank += 1
@@ -210,8 +207,8 @@ class NTP(object):
         :returns: created array
         :rtype: :obj:`list` <any>
         """
-        if hasattr(value, "__iter__") and \
-           not isinstance(value, (str, unicode, bytes)):
+        if not hasattr(value, "__iter__") or \
+           isinstance(value, (str, bytes)):
             return fun(value) if fun else value
         else:
             return [self.createArray(v, fun) for v in value]
