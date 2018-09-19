@@ -135,7 +135,7 @@ class SimpleServer(PyTango.Device_4Impl):
         # print "In ", self.get_name(), "::always_excuted_hook()"
 
     def encodeSpectrum(self):
-        format = b'INT32'
+        format = 'INT32'
         # uint8 B
         #        mode = 0
         # uint16 H
@@ -147,7 +147,7 @@ class SimpleServer(PyTango.Device_4Impl):
         return [format, ibuffer]
 
     def encodeImage(self):
-        format = b'VIDEO_IMAGE'
+        format = 'VIDEO_IMAGE'
         # uint8 B
         mode = 0
         # uint16 H
