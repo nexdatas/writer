@@ -408,11 +408,11 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             det, "ScalarString", "string", "NX_CHAR", self._bools)
         self._sc.checkScalarField(
             det, "ScalarEncoded", "string", "NX_CHAR", [
-                b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"
+                b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b".decode("utf8")
                 for c in self._bools])
         self._sc.checkScalarField(
             det, "ScalarEncoded_MUTF8", "string", "NX_CHAR", [
-                b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"
+                b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b".decode("utf8")
                 for c in self._bools])
         self._sc.checkScalarField(
             det, "ScalarState", "string", "NX_CHAR",
@@ -731,7 +731,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkScalarField(
             det, "ScalarEncoded", "string", "NX_CHAR",
-            [(b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b" if i % 2 else '')
+            [(b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b".decode("utf8")
+              if i % 2 else '')
              for i in range(steps)],
             attrs={"type": "NX_CHAR", "units": "m", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -739,7 +740,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkScalarField(
             det, "ScalarEncoded_MUTF8", "string", "NX_CHAR",
-            [(b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b" if i % 2 else '')
+            [(b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b".decode("utf8")
+              if i % 2 else '')
              for i in range(steps)],
             attrs={"type": "NX_CHAR", "units": "m", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
