@@ -19,10 +19,11 @@
 
 """ Provides pni file writer """
 
-
+import sys
 import pni.io.nx.h5 as nx
 
 from . import FileWriter
+
 
 
 def open_file(filename, readonly=False, libver=None):
@@ -427,6 +428,11 @@ class PNIField(FileWriter.FTField):
         :param o: pni object
         :type o: :obj:`any`
         """
+        try:
+            if isinstance(o, bytes) and sys.version_info > (3,):
+                o = o.decode("utf8")
+        except:
+            pass
         self._h5object.write(o)
 
     def __setitem__(self, t, o):
@@ -437,6 +443,11 @@ class PNIField(FileWriter.FTField):
         :param o: pni object
         :type o: :obj:`any`
         """
+        try:
+            if isinstance(o, bytes) and sys.version_info > (3,):
+                o = o.decode("utf8")
+        except:
+            pass
         self._h5object.__setitem__(t, o)
 
     def __getitem__(self, t):

@@ -54,14 +54,24 @@ class ServerSetUp(object):
         db.add_server(
             self.new_device_info_writer.server, self.new_device_info_writer)
 
-        if os.path.isfile("../NXSDataWriter"):
-            self._psub = subprocess.call(
-                "cd ..; ./NXSDataWriter %s &" % self.instance, stdout=None,
-                stderr=None, shell=True)
+        if sys.version_info > (3,):
+            if os.path.isfile("../NXSDataWriter"):
+                self._psub = subprocess.call(
+                    "cd ..; python3 ./NXSDataWriter %s &" % self.instance, stdout=None,
+                    stderr=None, shell=True)
+            else:
+                self._psub = subprocess.call(
+                    "python3 NXSDataWriter %s &" % self.instance, stdout=None,
+                    stderr=None, shell=True)
         else:
-            self._psub = subprocess.call(
-                "NXSDataWriter %s &" % self.instance, stdout=None,
-                stderr=None, shell=True)
+            if os.path.isfile("../NXSDataWriter"):
+                self._psub = subprocess.call(
+                    "cd ..; ./NXSDataWriter %s &" % self.instance, stdout=None,
+                    stderr=None, shell=True)
+            else:
+                self._psub = subprocess.call(
+                    "NXSDataWriter %s &" % self.instance, stdout=None,
+                    stderr=None, shell=True)
         sys.stdout.write("waiting for server ")
 
         found = False

@@ -94,7 +94,7 @@ class SimpleServer(PyTango.Device_4Impl):
         self.attr_ScalarDouble = 1.233
         self.attr_ScalarString = "Hello!"
         self.attr_ScalarEncoded = \
-            "UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"
+            "UTF8", b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"
 
         self.attr_SpectrumBoolean = [True, False]
         self.attr_SpectrumUChar = [1, 2]
@@ -109,7 +109,7 @@ class SimpleServer(PyTango.Device_4Impl):
         self.attr_SpectrumDouble = [1.123, 23.435, 3.5, 3.345]
         self.attr_SpectrumString = ["Hello", "Word", "!", "!!"]
         self.attr_SpectrumEncoded = [
-            b"INT32", b"\x00\x01\x03\x04\x20\x31\x43\x54\x10\x11\x13\x14"]
+            "INT32", b"\x00\x01\x03\x04\x20\x31\x43\x54\x10\x11\x13\x14"]
         self.attr_SpectrumEncoded = self.encodeSpectrum()
 
         self.attr_ImageBoolean = numpy.array([[True]], dtype='int16')
@@ -135,7 +135,7 @@ class SimpleServer(PyTango.Device_4Impl):
         # print "In ", self.get_name(), "::always_excuted_hook()"
 
     def encodeSpectrum(self):
-        format = b'INT32'
+        format = 'INT32'
         # uint8 B
         #        mode = 0
         # uint16 H
@@ -147,7 +147,7 @@ class SimpleServer(PyTango.Device_4Impl):
         return [format, ibuffer]
 
     def encodeImage(self):
-        format = b'VIDEO_IMAGE'
+        format = 'VIDEO_IMAGE'
         # uint8 B
         mode = 0
         # uint16 H

@@ -65,6 +65,26 @@ if sys.version_info > (3,):
 else:
     import thread
 
+#: (:obj:`bool`) PyTango bug #213 flag related to EncodedAttributes in python3
+PYTG_BUG_213 = False
+if sys.version_info > (3,):
+    try:
+        import PyTango
+        PYTGMAJOR, PYTGMINOR, PYTGPATCH = list(
+            map(int, PyTango.__version__.split(".")[:3]))
+        if PYTGMAJOR <= 9:
+            if PYTGMAJOR == 9:
+                if PYTGMINOR < 2:
+                    PYTG_BUG_213 = True
+                elif PYTGMINOR == 2 and PYTGPATCH < 4:
+                    PYTG_BUG_213 = True
+            else:
+                PYTG_BUG_213 = True
+    except:
+        pass
+
+
+    
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
@@ -211,7 +231,8 @@ class TangoSourceTest(unittest.TestCase):
     # \param encoding data encoding
     # \param decoders data decoders
     # \param error data error
-    def checkData(self, data, format, value, ttype, shape, encoding=None, decoders=None, error=0):
+    def checkData(self, data, format, value, ttype, shape, encoding=None,
+                  decoders=None, error=0):
         self.assertEqual(data["rank"], format)
         self.assertEqual(data["tangoDType"], ttype)
         self.assertEqual(data["shape"], shape)
@@ -265,28 +286,33 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        self.myAssertRaise(DataSourceSetupError, ds.setup,
-                           "<datasource> <device name='%s'/> </datasource>" % device)
+        self.myAssertRaise(
+            DataSourceSetupError, ds.setup,
+            "<datasource> <device name='%s'/> </datasource>" % device)
 
         ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        self.myAssertRaise(DataSourceSetupError, ds.setup,
-                           "<datasource> <record name='%s'/> </datasource>" % dname)
+        self.myAssertRaise(
+            DataSourceSetupError, ds.setup,
+            "<datasource> <record name='%s'/> </datasource>" % dname)
 
         ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        self.myAssertRaise(DataSourceSetupError, ds.setup,
-                           "<datasource> <record/>  <device/> </datasource>")
+        self.myAssertRaise(
+            DataSourceSetupError, ds.setup,
+            "<datasource> <record/>  <device/> </datasource>")
         ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s'/> </datasource>" %
-                 (dname, device))
+        ds.setup(
+            "<datasource> <record name='%s'/> <device name='%s'/> "
+            "</datasource>" %
+            (dname, device))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
         self.assertEqual(ds.client, None)
@@ -299,8 +325,10 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s'/> </datasource>" %
-                 (dname, device, ctype))
+        ds.setup(
+            "<datasource> <record name='%s'/> "
+            "<device name='%s' member ='%s'/> </datasource>" %
+            (dname, device, ctype))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.client, None)
         self.assertEqual(ds.device, device)
@@ -311,7 +339,8 @@ class TangoSourceTest(unittest.TestCase):
         ds.device = None
         ds.member.name = None
         ds.member.memberType = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s'/> </datasource>" %
+        ds.setup("<datasource> <record name='%s'/> "
+                 "<device name='%s' member ='%s'/> </datasource>" %
                  (dname, device, 'strange'))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -323,7 +352,8 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s'/> </datasource>" %
+        ds.setup("<datasource> <record name='%s'/> "
+                 "<device name='%s' hostname='%s'/> </datasource>" %
                  (dname, device, host))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -335,7 +365,8 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
 
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' port='%s'/> </datasource>" %
+        ds.setup("<datasource> <record name='%s'/> "
+                 "<device name='%s' hostname='%s' port='%s'/> </datasource>" %
                  (dname, device, host, port))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, "%s:%s/%s" % (host, port, device))
@@ -349,7 +380,8 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.memberType = None
         ds.member.encoding = None
         ds.group = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s'/> </datasource>" %
+        ds.setup("<datasource> <record name='%s'/> "
+                 "<device name='%s' encoding='%s'/> </datasource>" %
                  (dname, device, encoding))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -362,7 +394,9 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         ds.member.encoding = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s' group= '%s'/> </datasource>" %
+        ds.setup("<datasource> <record name='%s'/> "
+                 "<device name='%s' encoding='%s' group= '%s'/> "
+                 "</datasource>" %
                  (dname, device, encoding, group))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -384,7 +418,7 @@ class TangoSourceTest(unittest.TestCase):
         host = self._dbhost
         port = '10000'
         encoding = 'UTF8'
-        group = 'common_motors'
+        # group = 'common_motors'
 
         ds = TangoSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -394,28 +428,36 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        self.myAssertRaise(DataSourceSetupError, ds.setup,
-                           "<datasource> <device name='%s' group='__CLIENT__'/> </datasource>" % device)
+        self.myAssertRaise(
+            DataSourceSetupError, ds.setup,
+            "<datasource> <device name='%s' group='__CLIENT__'/> "
+            "</datasource>" % device)
 
         ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        self.myAssertRaise(DataSourceSetupError, ds.setup,
-                           "<datasource> <record name='%s' group='__CLIENT__'/> </datasource>" % dname)
+        self.myAssertRaise(
+            DataSourceSetupError, ds.setup,
+            "<datasource> <record name='%s' group='__CLIENT__'/> "
+            "</datasource>" % dname)
 
         ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        self.myAssertRaise(DataSourceSetupError, ds.setup,
-                           "<datasource> <record/>  <device group='__CLIENT__'/> </datasource>")
+        self.myAssertRaise(
+            DataSourceSetupError, ds.setup,
+            "<datasource> <record/>  <device group='__CLIENT__'/> "
+            "</datasource>")
         ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' group='__CLIENT__'/> </datasource>" %
-                 (dname, device))
+        ds.setup(
+            "<datasource> <record name='%s'/> <device name='%s' "
+            "group='__CLIENT__'/> </datasource>" %
+            (dname, device))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
         self.assertEqual(ds.client, None)
@@ -427,8 +469,10 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s' group='__CLIENT__'/> </datasource>" %
-                 (dname, device, ctype))
+        ds.setup(
+            "<datasource> <record name='%s'/> <device name='%s' "
+            "member ='%s' group='__CLIENT__'/> </datasource>" %
+            (dname, device, ctype))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
         self.assertEqual(ds.member.memberType, ctype)
@@ -439,8 +483,10 @@ class TangoSourceTest(unittest.TestCase):
         ds.device = None
         ds.member.name = None
         ds.member.memberType = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s' group='__CLIENT__'/> </datasource>" %
-                 (dname, device, 'strange'))
+        ds.setup(
+            "<datasource> <record name='%s'/> <device name='%s' "
+            "member ='%s' group='__CLIENT__'/> </datasource>" %
+            (dname, device, 'strange'))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
         self.assertEqual(ds.client, None)
@@ -451,7 +497,8 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' group='__CLIENT__'/> </datasource>" %
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' "
+                 "hostname='%s' group='__CLIENT__'/> </datasource>" %
                  (dname, device, host))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -462,7 +509,8 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
 
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' port='%s' group='__CLIENT__'/> </datasource>" %
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' "
+                 "hostname='%s' port='%s' group='__CLIENT__'/> </datasource>" %
                  (dname, device, host, port))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, "%s:%s/%s" % (host, port, device))
@@ -483,7 +531,8 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
 
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' port='%s' group='__CLIENT__'/> </datasource>" %
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' "
+                 "hostname='%s' port='%s' group='__CLIENT__'/> </datasource>" %
                  (dname, device, host, port))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, "%s:%s/%s" % (host, port, device))
@@ -502,7 +551,8 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.memberType = None
         ds.member.encoding = None
         ds.group = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s' group='__CLIENT__'/> </datasource>" %
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' "
+                 "encoding='%s' group='__CLIENT__'/> </datasource>" %
                  (dname, device, encoding))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -520,7 +570,8 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         ds.member.encoding = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s' group='__CLIENT__'/> </datasource>" %
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' "
+                 "encoding='%s' group='__CLIENT__'/> </datasource>" %
                  (dname, device, encoding))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -688,9 +739,13 @@ class TangoSourceTest(unittest.TestCase):
         }
 
         arr3 = {
-            "ScalarEncoded": ["string", "DevEncoded", ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded": ["string", "DevEncoded",
-                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+            "ScalarEncoded": [
+                "string", "DevEncoded",
+                ("UTF8", b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+            "SpectrumEncoded": [
+                "string", "DevEncoded",
+                ('INT32',
+                 b'\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
         }
 
         for k in arr1:
@@ -704,20 +759,23 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             dt = el.getData()
-            self.checkData(dt, "SCALAR", arr[k][2], arr[k][1], [
-                           1, 0], None, None, arr[k][3] if len(arr[k]) > 3 else 0)
+            self.checkData(
+                dt, "SCALAR", arr[k][2], arr[k][1], [1, 0], None, None,
+                arr[k][3] if len(arr[k]) > 3
+                else 0)
 
-        for k in arr3:
-            el = TangoSource()
-            el.device = 'stestp09/testss/s1r228'
-            el.member.memberType = 'attribute'
-            el.member.name = k
-            el.member.encoding = arr3[k][2][0]
-            dp = DecoderPool()
-            dt = el.setDecoders(dp)
-            dt = el.getData()
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
+        if not PYTG_BUG_213:
+            for k in arr3:
+                el = TangoSource()
+                el.device = 'stestp09/testss/s1r228'
+                el.member.memberType = 'attribute'
+                el.member.name = k
+                el.member.encoding = arr3[k][2][0]
+                dp = DecoderPool()
+                dt = el.setDecoders(dp)
+                dt = el.getData()
+                self.checkData(dt, "SCALAR", arr3[k][2], arr3[k][1], [1, 0],
+                               arr3[k][2][0], dp)
 
     # getData test
     # \brief It tests default settings
@@ -734,19 +792,27 @@ class TangoSourceTest(unittest.TestCase):
             "ScalarULong": ["uint64", "DevULong", 234, "DevLong64", 23],
             "ScalarLong64": ["int64", "DevLong64", 234, "DevLong64", -13],
             "ScalarULong64": ["uint64", "DevULong64", 23, "DevLong64", 223],
-            "ScalarFloat": ["float32", "DevFloat", 12.234, "DevDouble", -12.234, 1e-5],
-            "ScalarDouble": ["float64", "DevDouble", -2.456673e+02, "DevDouble", +2.456673e+02, 1e-14],
-            "ScalarString": ["string", "DevString", "MyTrue", "DevString", "MyFaTrue"],
+            "ScalarFloat": ["float32", "DevFloat", 12.234, "DevDouble",
+                            -12.234, 1e-5],
+            "ScalarDouble": ["float64", "DevDouble", -2.456673e+02,
+                             "DevDouble", +2.456673e+02, 1e-14],
+            "ScalarString": ["string", "DevString", "MyTrue", "DevString",
+                             "MyFaTrue"],
         }
 
         arr2 = {
-            "State": ["string", "DevState", PyTango._PyTango.DevState.ON, "DevState", PyTango._PyTango.DevState.ON],
+            "State": ["string", "DevState", PyTango._PyTango.DevState.ON,
+                      "DevState", PyTango._PyTango.DevState.ON],
         }
 
         arr3 = {
-            "ScalarEncoded": ["string", "DevEncoded", ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded": ["string", "DevEncoded",
-                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+            "ScalarEncoded": [
+                "string", "DevEncoded", (
+                    "UTF8", b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+            "SpectrumEncoded": [
+                "string", "DevEncoded",
+                ('INT32',
+                 b'\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
         }
 
         for k in arr1:
@@ -764,7 +830,7 @@ class TangoSourceTest(unittest.TestCase):
             dt = el.getData()
             self.checkData(
                 dt, "SCALAR", arr[k][2], arr[k][1], [1, 0], None, None,
-                           arr[k][5] if len(arr[k]) > 5 else 0)
+                arr[k][5] if len(arr[k]) > 5 else 0)
 
         for k in arr1:
             el = TangoSource()
@@ -782,7 +848,8 @@ class TangoSourceTest(unittest.TestCase):
             self.assertEqual(el.setJSON(json.loads(gjson)), None)
             dt = el.getData()
             self.checkData(dt, "SCALAR", arr[k][4],
-                           arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
+                           arr[k][3], [], None, None,
+                           arr[k][5] if len(arr[k]) > 5 else 0)
 
         for k in arr1:
             el = TangoSource()
@@ -803,7 +870,8 @@ class TangoSourceTest(unittest.TestCase):
                 el.setJSON(json.loads(gjson), json.loads(ljson)), None)
             dt = el.getData()
             self.checkData(dt, "SCALAR", arr[k][4],
-                           arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
+                           arr[k][3], [], None, None,
+                           arr[k][5] if len(arr[k]) > 5 else 0)
 
         for k in arr1:
             el = TangoSource()
@@ -824,7 +892,8 @@ class TangoSourceTest(unittest.TestCase):
                 el.setJSON(json.loads(gjson), json.loads(ljson)), None)
             dt = el.getData()
             self.checkData(dt, "SCALAR", arr[k][4],
-                           arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
+                           arr[k][3], [], None, None,
+                           arr[k][5] if len(arr[k]) > 5 else 0)
 
         for k in arr1:
             el = TangoSource()
@@ -848,21 +917,23 @@ class TangoSourceTest(unittest.TestCase):
                 el.setJSON(json.loads(gjson), json.loads(ljson)), None)
             dt = el.getData()
             self.checkData(dt, "SCALAR", arr[k][4],
-                           arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
+                           arr[k][3], [], None, None,
+                           arr[k][5] if len(arr[k]) > 5 else 0)
 
-        for k in arr3:
-            el = TangoSource()
-            el.device = 'stestp09/testss/s1r228'
-            el.member.memberType = 'attribute'
-            el.member.name = k
-            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
-            sclient = 'stestp09/testss/s1r228/'
-            el.member.encoding = arr3[k][2][0]
-            dp = DecoderPool()
-            dt = el.setDecoders(dp)
-            dt = el.getData()
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
+        if not PYTG_BUG_213:
+            for k in arr3:
+                el = TangoSource()
+                el.device = 'stestp09/testss/s1r228'
+                el.member.memberType = 'attribute'
+                el.member.name = k
+                el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+                sclient = 'stestp09/testss/s1r228/'
+                el.member.encoding = arr3[k][2][0]
+                dp = DecoderPool()
+                dt = el.setDecoders(dp)
+                dt = el.getData()
+                self.checkData(dt, "SCALAR", arr3[k][
+                               2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
 
     # getData test
     # \brief It tests default settings
@@ -879,19 +950,27 @@ class TangoSourceTest(unittest.TestCase):
             "ScalarULong": ["uint64", "DevULong", 234, "DevLong64", 23],
             "ScalarLong64": ["int64", "DevLong64", 234, "DevLong64", -13],
             "ScalarULong64": ["uint64", "DevULong64", 23, "DevLong64", 223],
-            "ScalarFloat": ["float32", "DevFloat", 12.234, "DevDouble", -12.234, 1e-5],
-            "ScalarDouble": ["float64", "DevDouble", -2.456673e+02, "DevDouble", +2.456673e+02, 1e-14],
-            "ScalarString": ["string", "DevString", "MyTrue", "DevString", "MyFaTrue"],
+            "ScalarFloat": ["float32", "DevFloat", 12.234, "DevDouble",
+                            -12.234, 1e-5],
+            "ScalarDouble": ["float64", "DevDouble", -2.456673e+02,
+                             "DevDouble", +2.456673e+02, 1e-14],
+            "ScalarString": ["string", "DevString", "MyTrue", "DevString",
+                             "MyFaTrue"],
         }
 
         arr2 = {
-            "State": ["string", "DevState", PyTango._PyTango.DevState.ON, "DevState", PyTango._PyTango.DevState.ON],
+            "State": ["string", "DevState", PyTango._PyTango.DevState.ON,
+                      "DevState", PyTango._PyTango.DevState.ON],
         }
 
         arr3 = {
-            "ScalarEncoded": ["string", "DevEncoded", ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded": ["string", "DevEncoded",
-                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+            "ScalarEncoded": [
+                "string", "DevEncoded",
+                ("UTF8", b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+            "SpectrumEncoded": [
+                "string", "DevEncoded",
+                ('INT32',
+                 b'\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
         }
 
         for k in arr1:
@@ -908,7 +987,7 @@ class TangoSourceTest(unittest.TestCase):
             dt = el.getData()
             self.checkData(
                 dt, "SCALAR", arr[k][2], arr[k][1], [1, 0], None, None,
-                           arr[k][5] if len(arr[k]) > 5 else 0)
+                arr[k][5] if len(arr[k]) > 5 else 0)
 
         for k in arr1:
             el = TangoSource()
@@ -925,8 +1004,10 @@ class TangoSourceTest(unittest.TestCase):
                 gjson = '{"data":{"%s":%s}}' % (el.client, arr[k][4])
             self.assertEqual(el.setJSON(json.loads(gjson)), None)
             dt = el.getData()
-            self.checkData(dt, "SCALAR", arr[k][4],
-                           arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
+            self.checkData(
+                dt, "SCALAR", arr[k][4],
+                arr[k][3], [], None, None, arr[k][5]
+                if len(arr[k]) > 5 else 0)
 
         for k in arr1:
             el = TangoSource()
@@ -945,8 +1026,10 @@ class TangoSourceTest(unittest.TestCase):
             self.assertEqual(
                 el.setJSON(json.loads(gjson), json.loads(ljson)), None)
             dt = el.getData()
-            self.checkData(dt, "SCALAR", arr[k][4],
-                           arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
+            self.checkData(
+                dt, "SCALAR", arr[k][4],
+                arr[k][3], [], None, None, arr[k][5]
+                if len(arr[k]) > 5 else 0)
 
         for k in arr1:
             el = TangoSource()
@@ -965,8 +1048,9 @@ class TangoSourceTest(unittest.TestCase):
             self.assertEqual(
                 el.setJSON(json.loads(gjson), json.loads(ljson)), None)
             dt = el.getData()
-            self.checkData(dt, "SCALAR", arr[k][4],
-                           arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
+            self.checkData(
+                dt, "SCALAR", arr[k][4],
+                arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
 
         for k in arr1:
             el = TangoSource()
@@ -988,21 +1072,23 @@ class TangoSourceTest(unittest.TestCase):
             self.assertEqual(
                 el.setJSON(json.loads(gjson), json.loads(ljson)), None)
             dt = el.getData()
-            self.checkData(dt, "SCALAR", arr[k][4],
-                           arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
+            self.checkData(
+                dt, "SCALAR", arr[k][4],
+                arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
 
-        for k in arr3:
-            el = TangoSource()
-            el.device = 'stestp09/testss/s1r228'
-            el.member.memberType = 'attribute'
-            el.member.name = k
-            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
-            el.member.encoding = arr3[k][2][0]
-            dp = DecoderPool()
-            dt = el.setDecoders(dp)
-            dt = el.getData()
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
+        if not PYTG_BUG_213:
+            for k in arr3:
+                el = TangoSource()
+                el.device = 'stestp09/testss/s1r228'
+                el.member.memberType = 'attribute'
+                el.member.name = k
+                el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+                el.member.encoding = arr3[k][2][0]
+                dp = DecoderPool()
+                dt = el.setDecoders(dp)
+                dt = el.getData()
+                self.checkData(dt, "SCALAR", arr3[k][
+                               2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
 
     # getData test
     # \brief It tests default settings
@@ -1019,19 +1105,27 @@ class TangoSourceTest(unittest.TestCase):
             "ScalarULong": ["uint64", "DevULong", 234, "DevLong64", 23],
             "ScalarLong64": ["int64", "DevLong64", 234, "DevLong64", -13],
             "ScalarULong64": ["uint64", "DevULong64", 23, "DevLong64", 223],
-            "ScalarFloat": ["float32", "DevFloat", 12.234, "DevDouble", -12.234, 1e-5],
-            "ScalarDouble": ["float64", "DevDouble", -2.456673e+02, "DevDouble", +2.456673e+02, 1e-14],
-            "ScalarString": ["string", "DevString", "MyTrue", "DevString", "MyFaTrue"],
+            "ScalarFloat": ["float32", "DevFloat", 12.234, "DevDouble",
+                            -12.234, 1e-5],
+            "ScalarDouble": ["float64", "DevDouble", -2.456673e+02,
+                             "DevDouble", +2.456673e+02, 1e-14],
+            "ScalarString": ["string", "DevString", "MyTrue", "DevString",
+                             "MyFaTrue"],
         }
 
         arr2 = {
-            "State": ["string", "DevState", PyTango._PyTango.DevState.ON, "DevState", PyTango._PyTango.DevState.ON],
+            "State": ["string", "DevState", PyTango._PyTango.DevState.ON,
+                      "DevState", PyTango._PyTango.DevState.ON],
         }
 
         arr3 = {
-            "ScalarEncoded": ["string", "DevEncoded", ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded": ["string", "DevEncoded",
-                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+            "ScalarEncoded": [
+                "string", "DevEncoded",
+                ("UTF8", b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+            "SpectrumEncoded": [
+                "string", "DevEncoded",
+                ('INT32',
+                 b'\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
         }
 
         for k in arr1:
@@ -1048,7 +1142,7 @@ class TangoSourceTest(unittest.TestCase):
             dt = el.getData()
             self.checkData(
                 dt, "SCALAR", arr[k][2], arr[k][1], [1, 0], None, None,
-                           arr[k][5] if len(arr[k]) > 5 else 0)
+                arr[k][5] if len(arr[k]) > 5 else 0)
 
         for k in arr1:
             el = TangoSource()
@@ -1065,8 +1159,9 @@ class TangoSourceTest(unittest.TestCase):
                 gjson = '{"data":{"tango://%s":%s}}' % (el.client, arr[k][4])
             self.assertEqual(el.setJSON(json.loads(gjson)), None)
             dt = el.getData()
-            self.checkData(dt, "SCALAR", arr[k][4],
-                           arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
+            self.checkData(
+                dt, "SCALAR", arr[k][4],
+                arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
 
         for k in arr1:
             el = TangoSource()
@@ -1085,8 +1180,9 @@ class TangoSourceTest(unittest.TestCase):
             self.assertEqual(
                 el.setJSON(json.loads(gjson), json.loads(ljson)), None)
             dt = el.getData()
-            self.checkData(dt, "SCALAR", arr[k][4],
-                           arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
+            self.checkData(
+                dt, "SCALAR", arr[k][4],
+                arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
 
         for k in arr1:
             el = TangoSource()
@@ -1105,8 +1201,9 @@ class TangoSourceTest(unittest.TestCase):
             self.assertEqual(
                 el.setJSON(json.loads(gjson), json.loads(ljson)), None)
             dt = el.getData()
-            self.checkData(dt, "SCALAR", arr[k][4],
-                           arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
+            self.checkData(
+                dt, "SCALAR", arr[k][4],
+                arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
 
         for k in arr1:
             el = TangoSource()
@@ -1128,21 +1225,23 @@ class TangoSourceTest(unittest.TestCase):
             self.assertEqual(
                 el.setJSON(json.loads(gjson), json.loads(ljson)), None)
             dt = el.getData()
-            self.checkData(dt, "SCALAR", arr[k][4],
-                           arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
+            self.checkData(
+                dt, "SCALAR", arr[k][4],
+                arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
 
-        for k in arr3:
-            el = TangoSource()
-            el.device = 'stestp09/testss/s1r228'
-            el.member.memberType = 'attribute'
-            el.member.name = k
-            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
-            el.member.encoding = arr3[k][2][0]
-            dp = DecoderPool()
-            dt = el.setDecoders(dp)
-            dt = el.getData()
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
+        if not PYTG_BUG_213:
+            for k in arr3:
+                el = TangoSource()
+                el.device = 'stestp09/testss/s1r228'
+                el.member.memberType = 'attribute'
+                el.member.name = k
+                el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+                el.member.encoding = arr3[k][2][0]
+                dp = DecoderPool()
+                dt = el.setDecoders(dp)
+                dt = el.getData()
+                self.checkData(dt, "SCALAR", arr3[k][
+                               2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
 
     # getData test
     # \brief It tests default settings
@@ -1169,9 +1268,13 @@ class TangoSourceTest(unittest.TestCase):
         }
 
         arr3 = {
-            "ScalarEncoded": ["string", "DevEncoded", ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded": ["string", "DevEncoded",
-                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+            "ScalarEncoded": [
+                "string", "DevEncoded",
+                ("UTF8", b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+            "SpectrumEncoded": [
+                "string", "DevEncoded",
+                ('INT32',
+                 b'\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
         }
 
         for k in arr1:
@@ -1185,20 +1288,22 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k.lower()
             dt = el.getData()
-            self.checkData(dt, "SCALAR", arr[k][2], arr[k][1], [
-                           1, 0], None, None, arr[k][3] if len(arr[k]) > 3 else 0)
+            self.checkData(
+                dt, "SCALAR", arr[k][2], arr[k][1], [1, 0], None, None,
+                arr[k][3] if len(arr[k]) > 3 else 0)
 
-        for k in arr3:
-            el = TangoSource()
-            el.device = 'stestp09/testss/s1r228'
-            el.member.memberType = 'attribute'
-            el.member.name = k.lower()
-            el.member.encoding = arr3[k][2][0]
-            dp = DecoderPool()
-            dt = el.setDecoders(dp)
-            dt = el.getData()
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
+        if not PYTG_BUG_213:
+            for k in arr3:
+                el = TangoSource()
+                el.device = 'stestp09/testss/s1r228'
+                el.member.memberType = 'attribute'
+                el.member.name = k.lower()
+                el.member.encoding = arr3[k][2][0]
+                dp = DecoderPool()
+                dt = el.setDecoders(dp)
+                dt = el.getData()
+                self.checkData(dt, "SCALAR", arr3[k][
+                               2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
 
     # getData test
     # \brief It tests default settings
@@ -1239,12 +1344,16 @@ class TangoSourceTest(unittest.TestCase):
         }
 
         arr3 = {
-            "ScalarEncoded": ["string", "DevEncoded", ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded": ["string", "DevEncoded",
-                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+            "ScalarEncoded": [
+                "string", "DevEncoded",
+                ("UTF8", b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+            "SpectrumEncoded": [
+                "string", "DevEncoded",
+                ('INT32',
+                 b'\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
         }
 
-        counter = self.__rnd.randint(-2, 10)
+        # counter = self.__rnd.randint(-2, 10)
 
         for k in arr1:
             self._simps.dp.write_attribute(k, arr1[k][2])
@@ -1291,34 +1400,38 @@ class TangoSourceTest(unittest.TestCase):
 
         for k in arrb:
             dt = el2[k].getData()
-            self.checkData(dt, "SCALAR", arrb[k][2], arrb[k][1], [
-                           1, 0], None, None, arrb[k][3] if len(arrb[k]) > 3 else 0)
+            self.checkData(
+                dt, "SCALAR", arrb[k][2], arrb[k][1], [1, 0], None, None,
+                arrb[k][3] if len(arrb[k]) > 3 else 0)
 
         pl.counter = 2
 
         for k in arr:
             dt = el[k].getData()
-            self.checkData(dt, "SCALAR", arrb[k][2], arrb[k][1], [
-                           1, 0], None, None, arrb[k][3] if len(arrb[k]) > 3 else 0)
+            self.checkData(
+                dt, "SCALAR", arrb[k][2], arrb[k][1], [1, 0], None, None,
+                arrb[k][3] if len(arrb[k]) > 3 else 0)
 
         for k in arrb:
             dt = el2[k].getData()
-            self.checkData(dt, "SCALAR", arr[k][2], arr[k][1], [
-                           1, 0], None, None, arr[k][3] if len(arr[k]) > 3 else 0)
+            self.checkData(
+                dt, "SCALAR", arr[k][2], arr[k][1], [1, 0], None, None,
+                arr[k][3] if len(arr[k]) > 3 else 0)
 
-        for k in arr3:
-            print(k)
-            el = TangoSource()
-            el.device = 'stestp09/testss/s1r228'
-            el.member.memberType = 'attribute'
-            el.member.name = k
-            el.member.encoding = arr3[k][2][0]
-            dp = DecoderPool()
-            dt = el.setDecoders(dp)
-            dt = el.getData()
-            print(dt)
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
+        if not PYTG_BUG_213:
+            for k in arr3:
+                print(k)
+                el = TangoSource()
+                el.device = 'stestp09/testss/s1r228'
+                el.member.memberType = 'attribute'
+                el.member.name = k
+                el.member.encoding = arr3[k][2][0]
+                dp = DecoderPool()
+                dt = el.setDecoders(dp)
+                dt = el.getData()
+                self.checkData(
+                    dt, "SCALAR", arr3[k][2], arr3[k][1], [1, 0], arr3[k][2][0],
+                    dp)
 
     # getData test
     # \brief It tests default settings
@@ -1359,12 +1472,16 @@ class TangoSourceTest(unittest.TestCase):
         }
 
         arr3 = {
-            "ScalarEncoded": ["string", "DevEncoded", ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded": ["string", "DevEncoded",
-                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+            "ScalarEncoded": [
+                "string", "DevEncoded",
+                ("UTF8", b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+            "SpectrumEncoded": [
+                "string", "DevEncoded",
+                ('INT32',
+                 b'\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
         }
 
-        counter = self.__rnd.randint(-2, 10)
+        # counter = self.__rnd.randint(-2, 10)
 
         for k in arr1:
             self._simps.dp.write_attribute(k, arr1[k][2])
@@ -1405,37 +1522,42 @@ class TangoSourceTest(unittest.TestCase):
 
         for k in arr:
             dt = el[k].getData()
-            self.checkData(dt, "SCALAR", arr[k][2], arr[k][1], [
-                           1, 0], None, None, arr[k][3] if len(arr[k]) > 3 else 0)
+            self.checkData(
+                dt, "SCALAR", arr[k][2], arr[k][1], [
+                    1, 0], None, None, arr[k][3] if len(arr[k]) > 3 else 0)
 
         for k in arrb:
             dt = el2[k].getData()
-            self.checkData(dt, "SCALAR", arrb[k][2], arrb[k][1], [
-                           1, 0], None, None, arrb[k][3] if len(arrb[k]) > 3 else 0)
+            self.checkData(
+                dt, "SCALAR", arrb[k][2], arrb[k][1], [
+                    1, 0], None, None, arrb[k][3] if len(arrb[k]) > 3 else 0)
 
         pl.counter = 2
 
         for k in arr:
             dt = el[k].getData()
-            self.checkData(dt, "SCALAR", arrb[k][2], arrb[k][1], [
-                           1, 0], None, None, arrb[k][3] if len(arrb[k]) > 3 else 0)
+            self.checkData(
+                dt, "SCALAR", arrb[k][2], arrb[k][1], [
+                    1, 0], None, None, arrb[k][3] if len(arrb[k]) > 3 else 0)
 
         for k in arrb:
             dt = el2[k].getData()
-            self.checkData(dt, "SCALAR", arr[k][2], arr[k][1], [
-                           1, 0], None, None, arr[k][3] if len(arr[k]) > 3 else 0)
+            self.checkData(
+                dt, "SCALAR", arr[k][2], arr[k][1], [1, 0],
+                None, None, arr[k][3] if len(arr[k]) > 3 else 0)
 
-        for k in arr3:
-            el = TangoSource()
-            el.device = 'stestp09/testss/s1r228'
-            el.member.memberType = 'attribute'
-            el.member.name = k
-            el.member.encoding = arr3[k][2][0]
-            dp = DecoderPool()
-            dt = el.setDecoders(dp)
-            dt = el.getData()
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
+        if not PYTG_BUG_213:
+            for k in arr3:
+                el = TangoSource()
+                el.device = 'stestp09/testss/s1r228'
+                el.member.memberType = 'attribute'
+                el.member.name = k
+                el.member.encoding = arr3[k][2][0]
+                dp = DecoderPool()
+                dt = el.setDecoders(dp)
+                dt = el.getData()
+                self.checkData(dt, "SCALAR", arr3[k][
+                               2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
 
     # getData test
     # \brief It tests default settings
@@ -1476,12 +1598,16 @@ class TangoSourceTest(unittest.TestCase):
         }
 
         arr3 = {
-            "ScalarEncoded": ["string", "DevEncoded", ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded": ["string", "DevEncoded",
-                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+            "ScalarEncoded": [
+                "string", "DevEncoded",
+                ("UTF8", b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+            "SpectrumEncoded": [
+                "string", "DevEncoded",
+                ('INT32',
+                 b'\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
         }
 
-        counter = self.__rnd.randint(-2, 10)
+        # counter = self.__rnd.randint(-2, 10)
 
         for k in arr1:
             self._simps.dp.write_attribute(k, arr1[k][2])
@@ -1525,36 +1651,41 @@ class TangoSourceTest(unittest.TestCase):
         for k in arr:
             dt = el[k].getData()
             self.checkData(dt, "SCALAR", arr[k][2], arr[k][1], [
-                           1, 0], None, None, arr[k][3] if len(arr[k]) > 3 else 0)
+                           1, 0], None, None, arr[k][3]
+                           if len(arr[k]) > 3 else 0)
 
         for k in arrb:
             dt = el2[k].getData()
             self.checkData(dt, "SCALAR", arrb[k][2], arrb[k][1], [
-                           1, 0], None, None, arrb[k][3] if len(arrb[k]) > 3 else 0)
+                           1, 0], None, None, arrb[k][3]
+                           if len(arrb[k]) > 3 else 0)
 
         pl.counter = 2
 
         for k in arr:
             dt = el[k].getData()
             self.checkData(dt, "SCALAR", arrb[k][2], arrb[k][1], [
-                           1, 0], None, None, arrb[k][3] if len(arrb[k]) > 3 else 0)
+                           1, 0], None, None, arrb[k][3]
+                           if len(arrb[k]) > 3 else 0)
 
         for k in arrb:
             dt = el2[k].getData()
             self.checkData(dt, "SCALAR", arr[k][2], arr[k][1], [
-                           1, 0], None, None, arr[k][3] if len(arr[k]) > 3 else 0)
+                           1, 0], None, None, arr[k][3]
+                           if len(arr[k]) > 3 else 0)
 
-        for k in arr3:
-            el = TangoSource()
-            el.device = 'stestp09/testss/s1r228'
-            el.member.memberType = 'attribute'
-            el.member.name = k
-            el.member.encoding = arr3[k][2][0]
-            dp = DecoderPool()
-            dt = el.setDecoders(dp)
-            dt = el.getData()
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
+        if not PYTG_BUG_213:
+            for k in arr3:
+                el = TangoSource()
+                el.device = 'stestp09/testss/s1r228'
+                el.member.memberType = 'attribute'
+                el.member.name = k
+                el.member.encoding = arr3[k][2][0]
+                dp = DecoderPool()
+                dt = el.setDecoders(dp)
+                dt = el.getData()
+                self.checkData(dt, "SCALAR", arr3[k][
+                               2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
 
     # getData test
     # \brief It tests default settings
@@ -1572,7 +1703,8 @@ class TangoSourceTest(unittest.TestCase):
             "SpectrumLong64": ["int64", "DevLong64", 234, [1, 0]],
             "SpectrumULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "SpectrumFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02,
+                               [1, 0], 1e-14],
             "SpectrumString": ["string", "DevString", "MyTrue", [1, 0]],
         }
 
@@ -1597,7 +1729,8 @@ class TangoSourceTest(unittest.TestCase):
             el.member.name = k
             dt = el.getData()
             self.checkData(dt, "SPECTRUM", arr[k][2], arr[k][1], arr[
-                           k][3], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                           k][3], None, None, arr[k][4]
+                           if len(arr[k]) > 4 else 0)
 
     # getData test
     # \brief It tests default settings
@@ -1606,17 +1739,28 @@ class TangoSourceTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
-            "SpectrumBoolean": ["bool", "DevBoolean", True, [1, 0], "DevBoolean", False],
-            "SpectrumUChar": ["uint8", "DevUChar", 23, [1, 0], "DevLong64", 2],
-            "SpectrumShort": ["int16", "DevShort", -123, [1, 0], "DevLong64", -13],
-            "SpectrumUShort": ["uint16", "DevUShort", 1234, [1, 0], "DevLong64", 134],
-            "SpectrumLong": ["int64", "DevLong", -124, [1, 0], "DevLong64", -1213],
-            "SpectrumULong": ["uint64", "DevULong", 234, [1, 0], "DevLong64", 23],
-            "SpectrumLong64": ["int64", "DevLong64", 234, [1, 0], "DevLong64", 24],
-            "SpectrumULong64": ["uint64", "DevULong64", 23, [1, 0], "DevLong64", 2],
-            "SpectrumFloat": ["float32", "DevFloat", 12.23, [1, 0], "DevDouble", 1.234, 1e-5],
-            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], "DevDouble", -2.4563e+02, 1e-14],
-            "SpectrumString": ["string", "DevString", "MyTrue", [1, 0], "DevString", "MyTsfdrue"],
+            "SpectrumBoolean": ["bool", "DevBoolean", True, [1, 0],
+                                "DevBoolean", False],
+            "SpectrumUChar": ["uint8", "DevUChar", 23, [1, 0],
+                              "DevLong64", 2],
+            "SpectrumShort": ["int16", "DevShort", -123, [1, 0],
+                              "DevLong64", -13],
+            "SpectrumUShort": ["uint16", "DevUShort", 1234, [1, 0],
+                               "DevLong64", 134],
+            "SpectrumLong": ["int64", "DevLong", -124, [1, 0],
+                             "DevLong64", -1213],
+            "SpectrumULong": ["uint64", "DevULong", 234, [1, 0],
+                              "DevLong64", 23],
+            "SpectrumLong64": ["int64", "DevLong64", 234, [1, 0],
+                               "DevLong64", 24],
+            "SpectrumULong64": ["uint64", "DevULong64", 23, [1, 0],
+                                "DevLong64", 2],
+            "SpectrumFloat": ["float32", "DevFloat", 12.23, [1, 0],
+                              "DevDouble", 1.234, 1e-5],
+            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02,
+                               [1, 0], "DevDouble", -2.4563e+02, 1e-14],
+            "SpectrumString": ["string", "DevString", "MyTrue", [1, 0],
+                               "DevString", "MyTsfdrue"],
         }
 
         for k in arr:
@@ -1656,24 +1800,27 @@ class TangoSourceTest(unittest.TestCase):
                 gjson = '{"data":{"%s":%s}}' % (
                     sclient, str(arr[k][5]).replace("'", "\""))
             elif k == "SpectrumBoolean":
-                gjson = '{"data":{"%s":%s}}' % (sclient,
-                                                '[' + ''.join([a + ',' for a in arr[k][5]])[:-1] + "]")
+                gjson = '{"data":{"%s":%s}}' % (
+                    sclient,
+                    '[' + ''.join([a + ',' for a in arr[k][5]])[:-1] + "]")
             else:
-                gjson = '{"data":{"%s":%s}}' % (sclient,
-                                                '[' + ''.join([str(a) + ',' for a in arr[k][5]])[:-1] + "]")
+                gjson = '{"data":{"%s":%s}}' % (
+                    sclient,
+                    '[' + ''.join([str(a) + ','
+                                   for a in arr[k][5]])[:-1] + "]")
 
             self.assertEqual(el.setJSON(json.loads(gjson)), None)
             dt = el.getData()
             if arr[k][1] == "DevBoolean":
                 self.checkData(
                     dt, "SPECTRUM", [Converters.toBool(a) for a in arr[k][5]],
-                               arr[k][4], [arr[k][3][0]],
-                               None, None, arr[k][6] if len(arr[k]) > 6 else 0)
+                    arr[k][4], [arr[k][3][0]],
+                    None, None, arr[k][6] if len(arr[k]) > 6 else 0)
 
             else:
                 self.checkData(
                     dt, "SPECTRUM", arr[k][5], arr[k][4], [arr[k][3][0]],
-                               None, None, arr[k][6] if len(arr[k]) > 6 else 0)
+                    None, None, arr[k][6] if len(arr[k]) > 6 else 0)
 
         for k in arr:
             el = TangoSource()
@@ -1686,11 +1833,14 @@ class TangoSourceTest(unittest.TestCase):
                 ljson = '{"data":{"%s":%s}}' % (
                     sclient, str(arr[k][5]).replace("'", "\""))
             elif k == "SpectrumBoolean":
-                ljson = '{"data":{"%s":%s}}' % (sclient,
-                                                '[' + ''.join([a + ',' for a in arr[k][5]])[:-1] + "]")
+                ljson = '{"data":{"%s":%s}}' % (
+                    sclient,
+                    '[' + ''.join([a + ',' for a in arr[k][5]])[:-1] + "]")
             else:
-                ljson = '{"data":{"%s":%s}}' % (sclient,
-                                                '[' + ''.join([str(a) + ',' for a in arr[k][5]])[:-1] + "]")
+                ljson = '{"data":{"%s":%s}}' % (
+                    sclient,
+                    '[' + ''.join([str(a) + ','
+                                   for a in arr[k][5]])[:-1] + "]")
 
             gjson = '{}'
             self.assertEqual(
@@ -1699,13 +1849,13 @@ class TangoSourceTest(unittest.TestCase):
             if arr[k][1] == "DevBoolean":
                 self.checkData(
                     dt, "SPECTRUM", [Converters.toBool(a) for a in arr[k][5]],
-                               arr[k][4], [arr[k][3][0]],
-                               None, None, arr[k][6] if len(arr[k]) > 6 else 0)
+                    arr[k][4], [arr[k][3][0]],
+                    None, None, arr[k][6] if len(arr[k]) > 6 else 0)
 
             else:
                 self.checkData(
                     dt, "SPECTRUM", arr[k][5], arr[k][4], [arr[k][3][0]],
-                               None, None, arr[k][6] if len(arr[k]) > 6 else 0)
+                    None, None, arr[k][6] if len(arr[k]) > 6 else 0)
 
         for k in arr:
             el = TangoSource()
@@ -1720,15 +1870,22 @@ class TangoSourceTest(unittest.TestCase):
                 ljson = '{"data":{"%s":%s}}' % (
                     sclient, str(arr[k][5]).replace("'", "\""))
             elif k == "SpectrumBoolean":
-                ljson = '{"data":{"%s":%s}}' % (sclient,
-                                                '[' + ''.join([a + ',' for a in arr[k][5]])[:-1] + "]")
-                gjson = '{"data":{"%s":%s}}' % (sclient,
-                                                '[' + ''.join([str(a).lower() + ',' for a in arr[k][2]])[:-1] + "]")
+                ljson = '{"data":{"%s":%s}}' % (
+                    sclient,
+                    '[' + ''.join([a + ',' for a in arr[k][5]])[:-1] + "]")
+                gjson = '{"data":{"%s":%s}}' % (
+                    sclient,
+                    '[' + ''.join([str(a).lower() + ','
+                                   for a in arr[k][2]])[:-1] + "]")
             else:
-                ljson = '{"data":{"%s":%s}}' % (sclient,
-                                                '[' + ''.join([str(a) + ',' for a in arr[k][5]])[:-1] + "]")
-                gjson = '{"data":{"%s":%s}}' % (sclient,
-                                                '[' + ''.join([str(a) + ',' for a in arr[k][2]])[:-1] + "]")
+                ljson = '{"data":{"%s":%s}}' % (
+                    sclient,
+                    '[' + ''.join([str(a) + ','
+                                   for a in arr[k][5]])[:-1] + "]")
+                gjson = '{"data":{"%s":%s}}' % (
+                    sclient,
+                    '[' + ''.join([str(a) + ','
+                                   for a in arr[k][2]])[:-1] + "]")
 
             self.assertEqual(
                 el.setJSON(json.loads(gjson), json.loads(ljson)), None)
@@ -1736,13 +1893,13 @@ class TangoSourceTest(unittest.TestCase):
             if arr[k][1] == "DevBoolean":
                 self.checkData(
                     dt, "SPECTRUM", [Converters.toBool(a) for a in arr[k][5]],
-                               arr[k][4], [arr[k][3][0]],
-                               None, None, arr[k][6] if len(arr[k]) > 6 else 0)
+                    arr[k][4], [arr[k][3][0]],
+                    None, None, arr[k][6] if len(arr[k]) > 6 else 0)
 
             else:
                 self.checkData(
                     dt, "SPECTRUM", arr[k][5], arr[k][4], [arr[k][3][0]],
-                               None, None, arr[k][6] if len(arr[k]) > 6 else 0)
+                    None, None, arr[k][6] if len(arr[k]) > 6 else 0)
 
     # getData test
     # \brief It tests default settings
@@ -1751,17 +1908,28 @@ class TangoSourceTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
-            "SpectrumBoolean": ["bool", "DevBoolean", True, [1, 0], "DevBoolean", False],
-            "SpectrumUChar": ["uint8", "DevUChar", 23, [1, 0], "DevLong64", 2],
-            "SpectrumShort": ["int16", "DevShort", -123, [1, 0], "DevLong64", -13],
-            "SpectrumUShort": ["uint16", "DevUShort", 1234, [1, 0], "DevLong64", 134],
-            "SpectrumLong": ["int64", "DevLong", -124, [1, 0], "DevLong64", -1213],
-            "SpectrumULong": ["uint64", "DevULong", 234, [1, 0], "DevLong64", 23],
-            "SpectrumLong64": ["int64", "DevLong64", 234, [1, 0], "DevLong64", 24],
-            "SpectrumULong64": ["uint64", "DevULong64", 23, [1, 0], "DevLong64", 2],
-            "SpectrumFloat": ["float32", "DevFloat", 12.23, [1, 0], "DevDouble", 1.234, 1e-5],
-            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], "DevDouble", -2.4563e+02, 1e-14],
-            "SpectrumString": ["string", "DevString", "MyTrue", [1, 0], "DevString", "MyTsfdrue"],
+            "SpectrumBoolean": ["bool", "DevBoolean", True, [1, 0],
+                                "DevBoolean", False],
+            "SpectrumUChar": ["uint8", "DevUChar", 23, [1, 0],
+                              "DevLong64", 2],
+            "SpectrumShort": ["int16", "DevShort", -123, [1, 0],
+                              "DevLong64", -13],
+            "SpectrumUShort": ["uint16", "DevUShort", 1234, [1, 0],
+                               "DevLong64", 134],
+            "SpectrumLong": ["int64", "DevLong", -124, [1, 0],
+                             "DevLong64", -1213],
+            "SpectrumULong": ["uint64", "DevULong", 234, [1, 0],
+                              "DevLong64", 23],
+            "SpectrumLong64": ["int64", "DevLong64", 234, [1, 0],
+                               "DevLong64", 24],
+            "SpectrumULong64": ["uint64", "DevULong64", 23, [1, 0],
+                                "DevLong64", 2],
+            "SpectrumFloat": ["float32", "DevFloat", 12.23, [1, 0],
+                              "DevDouble", 1.234, 1e-5],
+            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02,
+                               [1, 0], "DevDouble", -2.4563e+02, 1e-14],
+            "SpectrumString": ["string", "DevString", "MyTrue", [1, 0],
+                               "DevString", "MyTsfdrue"],
         }
 
         for k in arr:
@@ -1796,29 +1964,32 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
-            sclient = 'stestp09/testss/s1r228'
+            # sclient = 'stestp09/testss/s1r228'
             if k == "SpectrumString":
                 gjson = '{"data":{"%s":%s}}' % (
                     el.client, str(arr[k][5]).replace("'", "\""))
             elif k == "SpectrumBoolean":
-                gjson = '{"data":{"%s":%s}}' % (el.client,
-                                                '[' + ''.join([a + ',' for a in arr[k][5]])[:-1] + "]")
+                gjson = '{"data":{"%s":%s}}' % (
+                    el.client,
+                    '[' + ''.join([a + ',' for a in arr[k][5]])[:-1] + "]")
             else:
-                gjson = '{"data":{"%s":%s}}' % (el.client,
-                                                '[' + ''.join([str(a) + ',' for a in arr[k][5]])[:-1] + "]")
+                gjson = '{"data":{"%s":%s}}' % (
+                    el.client,
+                    '[' + ''.join([str(a) + ','
+                                   for a in arr[k][5]])[:-1] + "]")
 
             self.assertEqual(el.setJSON(json.loads(gjson)), None)
             dt = el.getData()
             if arr[k][1] == "DevBoolean":
                 self.checkData(
                     dt, "SPECTRUM", [Converters.toBool(a) for a in arr[k][5]],
-                               arr[k][4], [arr[k][3][0]],
-                               None, None, arr[k][6] if len(arr[k]) > 6 else 0)
+                    arr[k][4], [arr[k][3][0]],
+                    None, None, arr[k][6] if len(arr[k]) > 6 else 0)
 
             else:
                 self.checkData(
                     dt, "SPECTRUM", arr[k][5], arr[k][4], [arr[k][3][0]],
-                               None, None, arr[k][6] if len(arr[k]) > 6 else 0)
+                    None, None, arr[k][6] if len(arr[k]) > 6 else 0)
 
         for k in arr:
             el = TangoSource()
@@ -1826,16 +1997,19 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
-            sclient = 'stestp09/testss/s1r228'
+            # sclient = 'stestp09/testss/s1r228'
             if k == "SpectrumString":
                 ljson = '{"data":{"%s":%s}}' % (
                     el.client, str(arr[k][5]).replace("'", "\""))
             elif k == "SpectrumBoolean":
-                ljson = '{"data":{"%s":%s}}' % (el.client,
-                                                '[' + ''.join([a + ',' for a in arr[k][5]])[:-1] + "]")
+                ljson = '{"data":{"%s":%s}}' % (
+                    el.client,
+                    '[' + ''.join([a + ',' for a in arr[k][5]])[:-1] + "]")
             else:
-                ljson = '{"data":{"%s":%s}}' % (el.client,
-                                                '[' + ''.join([str(a) + ',' for a in arr[k][5]])[:-1] + "]")
+                ljson = '{"data":{"%s":%s}}' % (
+                    el.client,
+                    '[' + ''.join([str(a) + ','
+                                   for a in arr[k][5]])[:-1] + "]")
 
             gjson = '{}'
             self.assertEqual(
@@ -1844,13 +2018,13 @@ class TangoSourceTest(unittest.TestCase):
             if arr[k][1] == "DevBoolean":
                 self.checkData(
                     dt, "SPECTRUM", [Converters.toBool(a) for a in arr[k][5]],
-                               arr[k][4], [arr[k][3][0]],
-                               None, None, arr[k][6] if len(arr[k]) > 6 else 0)
+                    arr[k][4], [arr[k][3][0]],
+                    None, None, arr[k][6] if len(arr[k]) > 6 else 0)
 
             else:
                 self.checkData(
                     dt, "SPECTRUM", arr[k][5], arr[k][4], [arr[k][3][0]],
-                               None, None, arr[k][6] if len(arr[k]) > 6 else 0)
+                    None, None, arr[k][6] if len(arr[k]) > 6 else 0)
 
         for k in arr:
             el = TangoSource()
@@ -1858,22 +2032,29 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
-            sclient = 'stestp09/testss/s1r228'
+            # sclient = 'stestp09/testss/s1r228'
             if k == "SpectrumString":
                 gjson = '{"data":{"%s":%s}}' % (
                     el.client, str(arr[k][2]).replace("'", "\""))
                 ljson = '{"data":{"%s":%s}}' % (
                     el.client, str(arr[k][5]).replace("'", "\""))
             elif k == "SpectrumBoolean":
-                ljson = '{"data":{"%s":%s}}' % (el.client,
-                                                '[' + ''.join([a + ',' for a in arr[k][5]])[:-1] + "]")
-                gjson = '{"data":{"%s":%s}}' % (el.client,
-                                                '[' + ''.join([str(a).lower() + ',' for a in arr[k][2]])[:-1] + "]")
+                ljson = '{"data":{"%s":%s}}' % (
+                    el.client,
+                    '[' + ''.join([a + ',' for a in arr[k][5]])[:-1] + "]")
+                gjson = '{"data":{"%s":%s}}' % (
+                    el.client,
+                    '[' + ''.join([str(a).lower() + ','
+                                   for a in arr[k][2]])[:-1] + "]")
             else:
-                ljson = '{"data":{"%s":%s}}' % (el.client,
-                                                '[' + ''.join([str(a) + ',' for a in arr[k][5]])[:-1] + "]")
-                gjson = '{"data":{"%s":%s}}' % (el.client,
-                                                '[' + ''.join([str(a) + ',' for a in arr[k][2]])[:-1] + "]")
+                ljson = '{"data":{"%s":%s}}' % (
+                    el.client,
+                    '[' + ''.join([str(a) + ','
+                                   for a in arr[k][5]])[:-1] + "]")
+                gjson = '{"data":{"%s":%s}}' % (
+                    el.client,
+                    '[' + ''.join([str(a) + ','
+                                   for a in arr[k][2]])[:-1] + "]")
 
             self.assertEqual(
                 el.setJSON(json.loads(gjson), json.loads(ljson)), None)
@@ -1881,13 +2062,13 @@ class TangoSourceTest(unittest.TestCase):
             if arr[k][1] == "DevBoolean":
                 self.checkData(
                     dt, "SPECTRUM", [Converters.toBool(a) for a in arr[k][5]],
-                               arr[k][4], [arr[k][3][0]],
-                               None, None, arr[k][6] if len(arr[k]) > 6 else 0)
+                    arr[k][4], [arr[k][3][0]],
+                    None, None, arr[k][6] if len(arr[k]) > 6 else 0)
 
             else:
                 self.checkData(
                     dt, "SPECTRUM", arr[k][5], arr[k][4], [arr[k][3][0]],
-                               None, None, arr[k][6] if len(arr[k]) > 6 else 0)
+                    None, None, arr[k][6] if len(arr[k]) > 6 else 0)
 
     # getData test
     # \brief It tests default settings
@@ -1905,7 +2086,8 @@ class TangoSourceTest(unittest.TestCase):
             "SpectrumLong64": ["int64", "DevLong64", 234, [1, 0]],
             "SpectrumULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "SpectrumFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "SpectrumDouble": ["float64", "DevDouble",
+                               -2.456673e+02, [1, 0], 1e-14],
             "SpectrumString": ["string", "DevString", "MyTrue", [1, 0]],
         }
 
@@ -1919,7 +2101,8 @@ class TangoSourceTest(unittest.TestCase):
             "SpectrumLong64": ["int64", "DevLong64", 211, [1, 0]],
             "SpectrumULong64": ["uint64", "DevULong64", 13, [1, 0]],
             "SpectrumFloat": ["float32", "DevFloat", 11.114, [1, 0], 1e-5],
-            "SpectrumDouble": ["float64", "DevDouble", -1.416673e+02, [1, 0], 1e-14],
+            "SpectrumDouble": ["float64", "DevDouble",
+                               -1.416673e+02, [1, 0], 1e-14],
             "SpectrumString": ["string", "DevString", "My123e", [1, 0]],
         }
 
@@ -2017,7 +2200,8 @@ class TangoSourceTest(unittest.TestCase):
             "SpectrumLong64": ["int64", "DevLong64", 234, [1, 0]],
             "SpectrumULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "SpectrumFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "SpectrumDouble": ["float64", "DevDouble",
+                               -2.456673e+02, [1, 0], 1e-14],
             "SpectrumString": ["string", "DevString", "MyTrue", [1, 0]],
         }
 
@@ -2031,7 +2215,8 @@ class TangoSourceTest(unittest.TestCase):
             "SpectrumLong64": ["int64", "DevLong64", 211, [1, 0]],
             "SpectrumULong64": ["uint64", "DevULong64", 13, [1, 0]],
             "SpectrumFloat": ["float32", "DevFloat", 11.114, [1, 0], 1e-5],
-            "SpectrumDouble": ["float64", "DevDouble", -1.416673e+02, [1, 0], 1e-14],
+            "SpectrumDouble": ["float64", "DevDouble",
+                               -1.416673e+02, [1, 0], 1e-14],
             "SpectrumString": ["string", "DevString", "My123e", [1, 0]],
         }
 
@@ -2096,24 +2281,28 @@ class TangoSourceTest(unittest.TestCase):
         for k in arr:
             dt = el[k].getData()
             self.checkData(dt, "SPECTRUM", arr[k][2], arr[k][1], arr[k][3],
-                           None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                           None, None, arr[k][4]
+                           if len(arr[k]) > 4 else 0)
 
         for k in arrb:
             dt = el2[k].getData()
             self.checkData(dt, "SPECTRUM", arrb[k][2], arrb[k][1], arrb[k][3],
-                           None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
+                           None, None, arrb[k][4]
+                           if len(arrb[k]) > 4 else 0)
 
         pl.counter = 2
 
         for k in arrb:
             dt = el[k].getData()
             self.checkData(dt, "SPECTRUM", arrb[k][2], arrb[k][1], arrb[k][3],
-                           None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
+                           None, None, arrb[k][4]
+                           if len(arrb[k]) > 4 else 0)
 
         for k in arr:
             dt = el2[k].getData()
             self.checkData(dt, "SPECTRUM", arr[k][2], arr[k][1], arr[k][3],
-                           None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                           None, None, arr[k][4]
+                           if len(arr[k]) > 4 else 0)
 
     # getData test
     # \brief It tests default settings
@@ -2131,7 +2320,8 @@ class TangoSourceTest(unittest.TestCase):
             "ImageLong64": ["int64", "DevLong64", 234, [1, 0]],
             "ImageULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "ImageFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "ImageDouble": ["float64", "DevDouble", -2.456673e+02,
+                            [1, 0], 1e-14],
             "ImageString": ["string", "DevString", "MyTrue", [1, 0]],
         }
 
@@ -2141,12 +2331,14 @@ class TangoSourceTest(unittest.TestCase):
                 1, 10), self.__rnd.randint(0, 3)]
             if arr[k][1] != "DevBoolean":
                 arr[k][2] = [[arr[k][2] * self.__rnd.randint(0, 3)
-                              for r in range(mlen[1])] for c in range(mlen[0])]
+                              for r in range(mlen[1])]
+                             for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if arr[k][1] == 'DevBoolean':
                     arr[k][2] = [[(True if self.__rnd.randint(0, 1) else False)
-                                  for c in range(mlen[1])] for r in range(mlen[0])]
+                                  for c in range(mlen[1])]
+                                 for r in range(mlen[0])]
 
             arr[k][3] = [mlen[0], mlen[1]]
             self._simps.dp.write_attribute(k, arr[k][2])
@@ -2158,7 +2350,8 @@ class TangoSourceTest(unittest.TestCase):
             el.member.name = k
             dt = el.getData()
             self.checkData(dt, "IMAGE", arr[k][2], arr[k][1], arr[
-                           k][3], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                           k][3], None, None, arr[k][4]
+                           if len(arr[k]) > 4 else 0)
 
     # getData test
     # \brief It tests default settings
@@ -2167,17 +2360,28 @@ class TangoSourceTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
-            "ImageBoolean": ["bool", "DevBoolean", True, [1, 0], "DevBoolean", False],
-            "ImageUChar": ["uint8", "DevUChar", 23, [1, 0], "DevLong64", 2],
-            "ImageShort": ["int16", "DevShort", -123, [1, 0], "DevLong64", -13],
-            "ImageUShort": ["uint16", "DevUShort", 1234, [1, 0], "DevLong64", 134],
-            "ImageLong": ["int64", "DevLong", -124, [1, 0], "DevLong64", -1213],
-            "ImageULong": ["uint64", "DevULong", 234, [1, 0], "DevLong64", 23],
-            "ImageLong64": ["int64", "DevLong64", 234, [1, 0], "DevLong64", 24],
-            "ImageULong64": ["uint64", "DevULong64", 23, [1, 0], "DevLong64", 2],
-            "ImageFloat": ["float32", "DevFloat", 12.23, [1, 0], "DevDouble", 1.234, 1e-5],
-            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], "DevDouble", -2.4563e+02, 1e-14],
-            "ImageString": ["string", "DevString", "MyTrue", [1, 0], "DevString", "MyTsfdrue"],
+            "ImageBoolean": ["bool", "DevBoolean", True, [1, 0],
+                             "DevBoolean", False],
+            "ImageUChar": ["uint8", "DevUChar", 23, [1, 0],
+                           "DevLong64", 2],
+            "ImageShort": ["int16", "DevShort", -123, [1, 0],
+                           "DevLong64", -13],
+            "ImageUShort": ["uint16", "DevUShort", 1234, [1, 0],
+                            "DevLong64", 134],
+            "ImageLong": ["int64", "DevLong", -124, [1, 0],
+                          "DevLong64", -1213],
+            "ImageULong": ["uint64", "DevULong", 234, [1, 0],
+                           "DevLong64", 23],
+            "ImageLong64": ["int64", "DevLong64", 234, [1, 0],
+                            "DevLong64", 24],
+            "ImageULong64": ["uint64", "DevULong64", 23, [1, 0],
+                             "DevLong64", 2],
+            "ImageFloat": ["float32", "DevFloat", 12.23, [1, 0],
+                           "DevDouble", 1.234, 1e-5],
+            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0],
+                            "DevDouble", -2.4563e+02, 1e-14],
+            "ImageString": ["string", "DevString", "MyTrue", [1, 0],
+                            "DevString", "MyTsfdrue"],
         }
 
         for k in arr:
@@ -2193,9 +2397,12 @@ class TangoSourceTest(unittest.TestCase):
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if arr[k][1] == 'DevBoolean':
                     arr[k][2] = [[(True if self.__rnd.randint(0, 1) else False)
-                                  for c in range(mlen[1])] for r in range(mlen[0])]
-                    arr[k][5] = [[("true" if self.__rnd.randint(0, 1) else "false")
-                                  for c in range(mlen[1])] for r in range(mlen[0])]
+                                  for c in range(mlen[1])]
+                                 for r in range(mlen[0])]
+                    arr[k][5] = [[("true" if self.__rnd.randint(0, 1)
+                                   else "false")
+                                  for c in range(mlen[1])]
+                                 for r in range(mlen[0])]
 
             arr[k][3] = [mlen[0], mlen[1]]
             self._simps.dp.write_attribute(k, arr[k][2])
@@ -2222,12 +2429,14 @@ class TangoSourceTest(unittest.TestCase):
             elif k == "ImageBoolean":
                 gjson = '{"data":{"%s":%s}}' % (
                     sclient,
-                    '[' + "".join(['[' + ''.join([a + ',' for a in row])[:-1] + "],"
+                    '[' + "".join(['[' + ''.join([a + ','
+                                                  for a in row])[:-1] + "],"
                                   for row in arr[k][5]])[:-1] + ']')
             else:
                 gjson = '{"data":{"%s":%s}}' % (
                     sclient,
-                    '[' + "".join(['[' + ''.join([str(a) + ',' for a in row])[:-1] + "],"
+                    '[' + "".join(['[' + ''.join([str(a) + ','
+                                                  for a in row])[:-1] + "],"
                                   for row in arr[k][5]])[:-1] + ']')
 
             self.assertEqual(el.setJSON(json.loads(gjson)), None)
@@ -2257,12 +2466,14 @@ class TangoSourceTest(unittest.TestCase):
             elif k == "ImageBoolean":
                 gjson = '{"data":{"%s":%s}}' % (
                     sclient,
-                    '[' + "".join(['[' + ''.join([a + ',' for a in row])[:-1] + "],"
+                    '[' + "".join(['[' + ''.join([a + ','
+                                                  for a in row])[:-1] + "],"
                                   for row in arr[k][5]])[:-1] + ']')
             else:
                 gjson = '{"data":{"%s":%s}}' % (
                     sclient,
-                    '[' + "".join(['[' + ''.join([str(a) + ',' for a in row])[:-1] + "],"
+                    '[' + "".join(['[' + ''.join([str(a) + ','
+                                                  for a in row])[:-1] + "],"
                                   for row in arr[k][5]])[:-1] + ']')
 
             self.assertEqual(el.setJSON(json.loads(gjson)), None)
@@ -2292,12 +2503,14 @@ class TangoSourceTest(unittest.TestCase):
             elif k == "ImageBoolean":
                 ljson = '{"data":{"%s":%s}}' % (
                     sclient,
-                    '[' + "".join(['[' + ''.join([a + ',' for a in row])[:-1] + "],"
+                    '[' + "".join(['[' + ''.join([a + ','
+                                                  for a in row])[:-1] + "],"
                                   for row in arr[k][5]])[:-1] + ']')
             else:
                 ljson = '{"data":{"%s":%s}}' % (
                     sclient,
-                    '[' + "".join(['[' + ''.join([str(a) + ',' for a in row])[:-1] + "],"
+                    '[' + "".join(['[' + ''.join([str(a) + ','
+                                                  for a in row])[:-1] + "],"
                                   for row in arr[k][5]])[:-1] + ']')
 
             gjson = '{}'
@@ -2331,21 +2544,25 @@ class TangoSourceTest(unittest.TestCase):
             elif k == "ImageBoolean":
                 ljson = '{"data":{"%s":%s}}' % (
                     sclient,
-                    '[' + "".join(['[' + ''.join([a + ',' for a in row])[:-1] + "],"
-                                  for row in arr[k][5]])[:-1] + ']')
+                    '[' + "".join(['[' + ''.join(
+                        [a + ',' for a in row])[:-1] + "],"
+                        for row in arr[k][5]])[:-1] + ']')
                 gjson = '{"data":{"%s":%s}}' % (
                     sclient,
-                    '[' + "".join(['[' + ''.join([str(a).lower() + ',' for a in row])[:-1] + "],"
-                                  for row in arr[k][2]])[:-1] + ']')
+                    '[' + "".join(['[' + ''.join([str(a).lower() + ','
+                                                  for a in row])[:-1] + "],"
+                                   for row in arr[k][2]])[:-1] + ']')
             else:
                 ljson = '{"data":{"%s":%s}}' % (
                     sclient,
-                    '[' + "".join(['[' + ''.join([str(a) + ',' for a in row])[:-1] + "],"
-                                  for row in arr[k][5]])[:-1] + ']')
+                    '[' + "".join(['[' + ''.join([str(a) + ','
+                                                  for a in row])[:-1] + "],"
+                                   for row in arr[k][5]])[:-1] + ']')
                 gjson = '{"data":{"%s":%s}}' % (
                     sclient,
-                    '[' + "".join(['[' + ''.join([str(a) + ',' for a in row])[:-1] + "],"
-                                  for row in arr[k][2]])[:-1] + ']')
+                    '[' + "".join(['[' + ''.join([str(a) + ','
+                                                  for a in row])[:-1] + "],"
+                                   for row in arr[k][2]])[:-1] + ']')
 
             self.assertEqual(
                 el.setJSON(json.loads(gjson), json.loads(ljson)), None)
@@ -2360,7 +2577,8 @@ class TangoSourceTest(unittest.TestCase):
 
             else:
                 self.checkData(dt, "IMAGE", arr[k][5], arr[k][4], arr[k][3],
-                               None, None, arr[k][6] if len(arr[k]) > 6 else 0)
+                               None, None, arr[k][6]
+                               if len(arr[k]) > 6 else 0)
 
     # getData test
     # \brief It tests default settings
@@ -2369,17 +2587,26 @@ class TangoSourceTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
-            "ImageBoolean": ["bool", "DevBoolean", True, [1, 0], "DevBoolean", False],
+            "ImageBoolean": ["bool", "DevBoolean", True, [1, 0],
+                             "DevBoolean", False],
             "ImageUChar": ["uint8", "DevUChar", 23, [1, 0], "DevLong64", 2],
-            "ImageShort": ["int16", "DevShort", -123, [1, 0], "DevLong64", -13],
-            "ImageUShort": ["uint16", "DevUShort", 1234, [1, 0], "DevLong64", 134],
-            "ImageLong": ["int64", "DevLong", -124, [1, 0], "DevLong64", -1213],
+            "ImageShort": ["int16", "DevShort", -123, [1, 0], "DevLong64",
+                           -13],
+            "ImageUShort": ["uint16", "DevUShort", 1234, [1, 0], "DevLong64",
+                            134],
+            "ImageLong": ["int64", "DevLong", -124, [1, 0], "DevLong64",
+                          -1213],
             "ImageULong": ["uint64", "DevULong", 234, [1, 0], "DevLong64", 23],
-            "ImageLong64": ["int64", "DevLong64", 234, [1, 0], "DevLong64", 24],
-            "ImageULong64": ["uint64", "DevULong64", 23, [1, 0], "DevLong64", 2],
-            "ImageFloat": ["float32", "DevFloat", 12.23, [1, 0], "DevDouble", 1.234, 1e-5],
-            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], "DevDouble", -2.4563e+02, 1e-14],
-            "ImageString": ["string", "DevString", "MyTrue", [1, 0], "DevString", "MyTsfdrue"],
+            "ImageLong64": ["int64", "DevLong64", 234, [1, 0], "DevLong64",
+                            24],
+            "ImageULong64": ["uint64", "DevULong64", 23, [1, 0], "DevLong64",
+                             2],
+            "ImageFloat": ["float32", "DevFloat", 12.23, [1, 0], "DevDouble",
+                           1.234, 1e-5],
+            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0],
+                            "DevDouble", -2.4563e+02, 1e-14],
+            "ImageString": ["string", "DevString", "MyTrue", [1, 0],
+                            "DevString", "MyTsfdrue"],
         }
 
         for k in arr:
@@ -2395,9 +2622,12 @@ class TangoSourceTest(unittest.TestCase):
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if arr[k][1] == 'DevBoolean':
                     arr[k][2] = [[(True if self.__rnd.randint(0, 1) else False)
-                                  for c in range(mlen[1])] for r in range(mlen[0])]
-                    arr[k][5] = [[("true" if self.__rnd.randint(0, 1) else "false")
-                                  for c in range(mlen[1])] for r in range(mlen[0])]
+                                  for c in range(mlen[1])]
+                                 for r in range(mlen[0])]
+                    arr[k][5] = [[("true" if self.__rnd.randint(0, 1)
+                                   else "false")
+                                  for c in range(mlen[1])]
+                                 for r in range(mlen[0])]
 
             arr[k][3] = [mlen[0], mlen[1]]
             self._simps.dp.write_attribute(k, arr[k][2])
@@ -2417,34 +2647,38 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
-            sclient = 'stestp09/testss/s1r228'
+            # sclient = 'stestp09/testss/s1r228'
             if k == "ImageString":
                 gjson = '{"data":{"%s":%s}}' % (
                     el.client, str(arr[k][5]).replace("'", "\""))
             elif k == "ImageBoolean":
                 gjson = '{"data":{"%s":%s}}' % (
                     el.client,
-                    '[' + "".join(['[' + ''.join([a + ',' for a in row])[:-1] + "],"
-                                  for row in arr[k][5]])[:-1] + ']')
+                    '[' + "".join(
+                        ['[' + ''.join([a + ',' for a in row])[:-1] + "],"
+                         for row in arr[k][5]])[:-1] + ']')
             else:
                 gjson = '{"data":{"%s":%s}}' % (
                     el.client,
-                    '[' + "".join(['[' + ''.join([str(a) + ',' for a in row])[:-1] + "],"
-                                  for row in arr[k][5]])[:-1] + ']')
+                    '[' + "".join(
+                        ['[' + ''.join([str(a) + ',' for a in row])[:-1] + "],"
+                         for row in arr[k][5]])[:-1] + ']')
 
             self.assertEqual(el.setJSON(json.loads(gjson)), None)
             dt = el.getData()
 
             if arr[k][1] == "DevBoolean":
-                self.checkData(dt, "IMAGE",
-                               [[Converters.toBool(a) for a in row]
-                                for row in arr[k][5]],
-                               arr[k][4], arr[k][3],
-                               None, None, arr[k][6] if len(arr[k]) > 6 else 0)
+                self.checkData(
+                    dt, "IMAGE",
+                    [[Converters.toBool(a) for a in row]
+                     for row in arr[k][5]],
+                    arr[k][4], arr[k][3],
+                    None, None, arr[k][6] if len(arr[k]) > 6 else 0)
 
             else:
-                self.checkData(dt, "IMAGE", arr[k][5], arr[k][4], arr[k][3],
-                               None, None, arr[k][6] if len(arr[k]) > 6 else 0)
+                self.checkData(
+                    dt, "IMAGE", arr[k][5], arr[k][4], arr[k][3],
+                    None, None, arr[k][6] if len(arr[k]) > 6 else 0)
 
         for k in arr:
             el = TangoSource()
@@ -2452,34 +2686,38 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
-            sclient = 'stestp09/testss/s1r228'
+            # sclient = 'stestp09/testss/s1r228'
             if k == "ImageString":
                 gjson = '{"data":{"%s":%s}}' % (
                     el.client, str(arr[k][5]).replace("'", "\""))
             elif k == "ImageBoolean":
                 gjson = '{"data":{"%s":%s}}' % (
                     el.client,
-                    '[' + "".join(['[' + ''.join([a + ',' for a in row])[:-1] + "],"
-                                  for row in arr[k][5]])[:-1] + ']')
+                    '[' + "".join(['[' + ''.join(
+                        [a + ',' for a in row])[:-1] + "],"
+                        for row in arr[k][5]])[:-1] + ']')
             else:
                 gjson = '{"data":{"%s":%s}}' % (
                     el.client,
-                    '[' + "".join(['[' + ''.join([str(a) + ',' for a in row])[:-1] + "],"
-                                  for row in arr[k][5]])[:-1] + ']')
+                    '[' + "".join(['[' + ''.join(
+                        [str(a) + ',' for a in row])[:-1] + "],"
+                        for row in arr[k][5]])[:-1] + ']')
 
             self.assertEqual(el.setJSON(json.loads(gjson)), None)
             dt = el.getData()
 
             if arr[k][1] == "DevBoolean":
-                self.checkData(dt, "IMAGE",
-                               [[Converters.toBool(a) for a in row]
-                                for row in arr[k][5]],
-                               arr[k][4], arr[k][3],
-                               None, None, arr[k][6] if len(arr[k]) > 6 else 0)
+                self.checkData(
+                    dt, "IMAGE",
+                    [[Converters.toBool(a) for a in row]
+                     for row in arr[k][5]],
+                    arr[k][4], arr[k][3],
+                    None, None, arr[k][6] if len(arr[k]) > 6 else 0)
 
             else:
-                self.checkData(dt, "IMAGE", arr[k][5], arr[k][4], arr[k][3],
-                               None, None, arr[k][6] if len(arr[k]) > 6 else 0)
+                self.checkData(
+                    dt, "IMAGE", arr[k][5], arr[k][4], arr[k][3],
+                    None, None, arr[k][6] if len(arr[k]) > 6 else 0)
 
         for k in arr:
             el = TangoSource()
@@ -2487,20 +2725,22 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
-            sclient = 'stestp09/testss/s1r228'
+            # sclient = 'stestp09/testss/s1r228'
             if k == "ImageString":
                 ljson = '{"data":{"%s":%s}}' % (
                     el.client, str(arr[k][5]).replace("'", "\""))
             elif k == "ImageBoolean":
                 ljson = '{"data":{"%s":%s}}' % (
                     el.client,
-                    '[' + "".join(['[' + ''.join([a + ',' for a in row])[:-1] + "],"
-                                  for row in arr[k][5]])[:-1] + ']')
+                    '[' + "".join(['[' + ''.join(
+                        [a + ',' for a in row])[:-1] + "],"
+                        for row in arr[k][5]])[:-1] + ']')
             else:
                 ljson = '{"data":{"%s":%s}}' % (
                     el.client,
-                    '[' + "".join(['[' + ''.join([str(a) + ',' for a in row])[:-1] + "],"
-                                  for row in arr[k][5]])[:-1] + ']')
+                    '[' + "".join(['[' + ''.join(
+                        [str(a) + ',' for a in row])[:-1] + "],"
+                        for row in arr[k][5]])[:-1] + ']')
 
             gjson = '{}'
             self.assertEqual(
@@ -2524,7 +2764,7 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
-            sclient = 'stestp09/testss/s1r228'
+            # sclient = 'stestp09/testss/s1r228'
             if k == "ImageString":
                 ljson = '{"data":{"%s":%s}}' % (
                     el.client, str(arr[k][5]).replace("'", "\""))
@@ -2533,21 +2773,25 @@ class TangoSourceTest(unittest.TestCase):
             elif k == "ImageBoolean":
                 ljson = '{"data":{"%s":%s}}' % (
                     el.client,
-                    '[' + "".join(['[' + ''.join([a + ',' for a in row])[:-1] + "],"
-                                  for row in arr[k][5]])[:-1] + ']')
+                    '[' + "".join(['[' + ''.join(
+                        [a + ',' for a in row])[:-1] + "],"
+                        for row in arr[k][5]])[:-1] + ']')
                 gjson = '{"data":{"%s":%s}}' % (
                     el.client,
-                    '[' + "".join(['[' + ''.join([str(a).lower() + ',' for a in row])[:-1] + "],"
-                                  for row in arr[k][2]])[:-1] + ']')
+                    '[' + "".join(['[' + ''.join(
+                        [str(a).lower() + ',' for a in row])[:-1] + "],"
+                        for row in arr[k][2]])[:-1] + ']')
             else:
                 ljson = '{"data":{"%s":%s}}' % (
                     el.client,
-                    '[' + "".join(['[' + ''.join([str(a) + ',' for a in row])[:-1] + "],"
-                                  for row in arr[k][5]])[:-1] + ']')
+                    '[' + "".join(['[' + ''.join(
+                        [str(a) + ',' for a in row])[:-1] + "],"
+                        for row in arr[k][5]])[:-1] + ']')
                 gjson = '{"data":{"%s":%s}}' % (
                     el.client,
-                    '[' + "".join(['[' + ''.join([str(a) + ',' for a in row])[:-1] + "],"
-                                  for row in arr[k][2]])[:-1] + ']')
+                    '[' + "".join(['[' + ''.join(
+                        [str(a) + ',' for a in row])[:-1] + "],"
+                        for row in arr[k][2]])[:-1] + ']')
 
             self.assertEqual(
                 el.setJSON(json.loads(gjson), json.loads(ljson)), None)
@@ -2580,7 +2824,8 @@ class TangoSourceTest(unittest.TestCase):
             "ImageLong64": ["int64", "DevLong64", 234, [1, 0]],
             "ImageULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "ImageFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "ImageDouble": ["float64", "DevDouble", -2.456673e+02,
+                            [1, 0], 1e-14],
             "ImageString": ["string", "DevString", "MyTrue", [1, 0]],
         }
 
@@ -2594,7 +2839,8 @@ class TangoSourceTest(unittest.TestCase):
             "ImageLong64": ["int64", "DevLong64", 214, [1, 0]],
             "ImageULong64": ["uint64", "DevULong64", 13, [1, 0]],
             "ImageFloat": ["float32", "DevFloat", 11.214, [1, 0], 1e-5],
-            "ImageDouble": ["float64", "DevDouble", -1.416673e+02, [1, 0], 1e-14],
+            "ImageDouble": ["float64", "DevDouble", -1.416673e+02,
+                            [1, 0], 1e-14],
             "ImageString": ["string", "DevString", "M11rue", [1, 0]],
         }
 
@@ -2604,12 +2850,14 @@ class TangoSourceTest(unittest.TestCase):
                 1, 10), self.__rnd.randint(0, 3)]
             if arr[k][1] != "DevBoolean":
                 arr[k][2] = [[arr[k][2] * self.__rnd.randint(0, 3)
-                              for r in range(mlen[1])] for c in range(mlen[0])]
+                              for r in range(mlen[1])]
+                             for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if arr[k][1] == 'DevBoolean':
                     arr[k][2] = [[(True if self.__rnd.randint(0, 1) else False)
-                                  for c in range(mlen[1])] for r in range(mlen[0])]
+                                  for c in range(mlen[1])]
+                                 for r in range(mlen[0])]
 
             arr[k][3] = [mlen[0], mlen[1]]
             self._simps.dp.write_attribute(k, arr[k][2])
@@ -2620,12 +2868,15 @@ class TangoSourceTest(unittest.TestCase):
                 1, 10), self.__rnd.randint(0, 3)]
             if arrb[k][1] != "DevBoolean":
                 arrb[k][2] = [[arrb[k][2] * self.__rnd.randint(0, 3)
-                               for r in range(mlen[1])] for c in range(mlen[0])]
+                               for r in range(mlen[1])]
+                              for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if arrb[k][1] == 'DevBoolean':
-                    arrb[k][2] = [[(True if self.__rnd.randint(0, 1) else False)
-                                   for c in range(mlen[1])] for r in range(mlen[0])]
+                    arrb[k][2] = [[(True if self.__rnd.randint(0, 1)
+                                    else False)
+                                   for c in range(mlen[1])]
+                                  for r in range(mlen[0])]
 
             arrb[k][3] = [mlen[0], mlen[1]]
             self._simps2.dp.write_attribute(k, arrb[k][2])
@@ -2698,7 +2949,8 @@ class TangoSourceTest(unittest.TestCase):
             "ImageLong64": ["int64", "DevLong64", 234, [1, 0]],
             "ImageULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "ImageFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0],
+                            1e-14],
             "ImageString": ["string", "DevString", "MyTrue", [1, 0]],
         }
 
@@ -2712,7 +2964,8 @@ class TangoSourceTest(unittest.TestCase):
             "ImageLong64": ["int64", "DevLong64", 214, [1, 0]],
             "ImageULong64": ["uint64", "DevULong64", 13, [1, 0]],
             "ImageFloat": ["float32", "DevFloat", 11.214, [1, 0], 1e-5],
-            "ImageDouble": ["float64", "DevDouble", -1.416673e+02, [1, 0], 1e-14],
+            "ImageDouble": ["float64", "DevDouble", -1.416673e+02, [1, 0],
+                            1e-14],
             "ImageString": ["string", "DevString", "M11rue", [1, 0]],
         }
 
@@ -2722,12 +2975,14 @@ class TangoSourceTest(unittest.TestCase):
                 1, 10), self.__rnd.randint(0, 3)]
             if arr[k][1] != "DevBoolean":
                 arr[k][2] = [[arr[k][2] * self.__rnd.randint(0, 3)
-                              for r in range(mlen[1])] for c in range(mlen[0])]
+                              for r in range(mlen[1])]
+                             for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if arr[k][1] == 'DevBoolean':
                     arr[k][2] = [[(True if self.__rnd.randint(0, 1) else False)
-                                  for c in range(mlen[1])] for r in range(mlen[0])]
+                                  for c in range(mlen[1])]
+                                 for r in range(mlen[0])]
 
             arr[k][3] = [mlen[0], mlen[1]]
             self._simps.dp.write_attribute(k, arr[k][2])
@@ -2738,12 +2993,15 @@ class TangoSourceTest(unittest.TestCase):
                 1, 10), self.__rnd.randint(0, 3)]
             if arrb[k][1] != "DevBoolean":
                 arrb[k][2] = [[arrb[k][2] * self.__rnd.randint(0, 3)
-                               for r in range(mlen[1])] for c in range(mlen[0])]
+                               for r in range(mlen[1])]
+                              for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if arrb[k][1] == 'DevBoolean':
-                    arrb[k][2] = [[(True if self.__rnd.randint(0, 1) else False)
-                                   for c in range(mlen[1])] for r in range(mlen[0])]
+                    arrb[k][2] = [[(True if self.__rnd.randint(0, 1)
+                                    else False)
+                                   for c in range(mlen[1])]
+                                  for r in range(mlen[0])]
 
             arrb[k][3] = [mlen[0], mlen[1]]
             self._simps2.dp.write_attribute(k, arrb[k][2])
@@ -2818,7 +3076,8 @@ class TangoSourceTest(unittest.TestCase):
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 234],
             "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
-            "GetDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02, 1e-14],
+            "GetDouble": ["ScalarDouble", "float64", "DevDouble",
+                          -2.456673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyTrue"],
         }
 
@@ -2837,7 +3096,8 @@ class TangoSourceTest(unittest.TestCase):
             dt = el.getData()
             print("K3")
             self.checkData(dt, "SCALAR", arr[k][3], arr[k][2], [
-                           1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                           1, 0], None, None, arr[k][4]
+                           if len(arr[k]) > 4 else 0)
             print("K4")
 
     # getData test
@@ -2856,7 +3116,8 @@ class TangoSourceTest(unittest.TestCase):
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 234],
             "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
-            "GetDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02, 1e-14],
+            "GetDouble": ["ScalarDouble", "float64", "DevDouble",
+                          -2.456673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyTrue"],
         }
 
@@ -2870,7 +3131,8 @@ class TangoSourceTest(unittest.TestCase):
             el.member.name = k.lower()
             dt = el.getData()
             self.checkData(dt, "SCALAR", arr[k][3], arr[k][2], [
-                           1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                           1, 0], None, None, arr[k][4]
+                           if len(arr[k]) > 4 else 0)
 
     # getData test
     # \brief It tests default settings
@@ -2888,7 +3150,8 @@ class TangoSourceTest(unittest.TestCase):
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 234],
             "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
-            "GetDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02, 1e-14],
+            "GetDouble": ["ScalarDouble", "float64", "DevDouble",
+                          -2.456673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyTrue"],
         }
 
@@ -2902,7 +3165,8 @@ class TangoSourceTest(unittest.TestCase):
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 211],
             "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 13],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 11.134, 1e-5],
-            "GetDouble": ["ScalarDouble", "float64", "DevDouble", -1.116673e+02, 1e-14],
+            "GetDouble": ["ScalarDouble", "float64", "DevDouble",
+                          -1.116673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyT11e"],
         }
 
@@ -2981,7 +3245,8 @@ class TangoSourceTest(unittest.TestCase):
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 234],
             "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
-            "GetDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02, 1e-14],
+            "GetDouble": ["ScalarDouble", "float64", "DevDouble",
+                          -2.456673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyTrue"],
         }
 
@@ -2995,7 +3260,8 @@ class TangoSourceTest(unittest.TestCase):
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 211],
             "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 13],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 11.134, 1e-5],
-            "GetDouble": ["ScalarDouble", "float64", "DevDouble", -1.116673e+02, 1e-14],
+            "GetDouble": ["ScalarDouble", "float64", "DevDouble",
+                          -1.116673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyT11e"],
         }
 
@@ -3074,7 +3340,8 @@ class TangoSourceTest(unittest.TestCase):
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 234],
             "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
-            "GetDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02, 1e-14],
+            "GetDouble": ["ScalarDouble", "float64", "DevDouble",
+                          -2.456673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyTrue"],
         }
 
@@ -3088,7 +3355,8 @@ class TangoSourceTest(unittest.TestCase):
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 211],
             "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 13],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 11.134, 1e-5],
-            "GetDouble": ["ScalarDouble", "float64", "DevDouble", -1.116673e+02, 1e-14],
+            "GetDouble": ["ScalarDouble", "float64", "DevDouble",
+                          -1.116673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyT11e"],
         }
 
@@ -3161,33 +3429,41 @@ class TangoSourceTest(unittest.TestCase):
 
         arr = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
-            #            "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
+            #         "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
             "DeviceShort": ["ScalarShort", "int16", "DevShort", -113],
             "DeviceUShort": ["ScalarUShort", "uint16", "DevUShort", 1134],
             "DeviceLong": ["ScalarLong", "int64", "DevLong", -111],
             "DeviceULong": ["ScalarULong", "uint64", "DevULong", 1134],
-            #            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234],
-            #            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23],
-            #            "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 12.234, 1e-07],
-            #            "DeviceDouble":["ScalarDouble", "float64", "DevDouble", -1.456673e+02, 1e-14],
+            #            "DeviceLong64":["ScalarLong64", "int64",
+            #       "DevLong64", 234],
+            #            "DeviceULong64":["ScalarULong64", "uint64",
+            #                   "DevULong64", 23],
+            #            "DeviceFloat":["ScalarFloat", "float32", "DevFloat",
+            #             12.234, 1e-07],
+            #            "DeviceDouble":["ScalarDouble", "float64",
+            # "DevDouble", -1.456673e+02, 1e-14],
             "DeviceFloat": ["ScalarFloat", "float32", "DevFloat", 12.234],
-            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble", -1.45e+02],
+            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble",
+                             -1.45e+02],
             "DeviceString": ["ScalarString", "string", "DevString", "MyTrue"],
         }
 
         arrb = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", False],
-            #            "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 11],
+            #       "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 11],
             "DeviceShort": ["ScalarShort", "int16", "DevShort", -11],
             "DeviceUShort": ["ScalarUShort", "uint16", "DevUShort", 114],
             "DeviceLong": ["ScalarLong", "int64", "DevLong", -121],
             "DeviceULong": ["ScalarULong", "uint64", "DevULong", 214],
-            #            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 214],
-            #            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 21],
-            #            "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 11.134, 1e-07],
-            #            "DeviceDouble":["ScalarDouble", "float64", "DevDouble", -1.416673e+02, 1e-14],
+            #    "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 214],
+            #  "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 21],
+            #  "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 11.134,
+            # 1e-07],
+            #   "DeviceDouble":["ScalarDouble", "float64", "DevDouble",
+            # -1.416673e+02, 1e-14],
             "DeviceFloat": ["ScalarFloat", "float32", "DevFloat", 11.134],
-            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble", -1.41e+02],
+            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble",
+                             -1.41e+02],
             "DeviceString": ["ScalarString", "string", "DevString", "M11rue"],
         }
 
@@ -3239,24 +3515,28 @@ class TangoSourceTest(unittest.TestCase):
         for k in arr:
             dt = el[k].getData()
             self.checkData(dt, "SCALAR", str(arr[k][3]),
-                           'DevString', [1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                           'DevString', [1, 0], None, None, arr[k][4]
+                           if len(arr[k]) > 4 else 0)
 
         for k in arrb:
             dt = el2[k].getData()
             self.checkData(dt, "SCALAR", str(arrb[k][3]),
-                           'DevString', [1, 0], None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
+                           'DevString', [1, 0], None, None, arrb[k][4]
+                           if len(arrb[k]) > 4 else 0)
 
         pl.counter = 2
 
         for k in arrb:
             dt = el[k].getData()
             self.checkData(dt, "SCALAR", str(arrb[k][3]),
-                           'DevString', [1, 0], None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
+                           'DevString', [1, 0], None, None, arrb[k][4]
+                           if len(arrb[k]) > 4 else 0)
 
         for k in arr:
             dt = el2[k].getData()
             self.checkData(dt, "SCALAR", str(arr[k][3]),
-                           'DevString', [1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                           'DevString', [1, 0], None, None, arr[k][4]
+                           if len(arr[k]) > 4 else 0)
 
     # getData test
     # \brief It tests default settings
@@ -3266,33 +3546,39 @@ class TangoSourceTest(unittest.TestCase):
 
         arr = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
-            #            "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
+            #         "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
             "DeviceShort": ["ScalarShort", "int16", "DevShort", -113],
             "DeviceUShort": ["ScalarUShort", "uint16", "DevUShort", 1134],
             "DeviceLong": ["ScalarLong", "int64", "DevLong", -111],
             "DeviceULong": ["ScalarULong", "uint64", "DevULong", 1134],
-            #            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234],
-            #            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23],
-            #            "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 12.234, 1e-07],
-            #            "DeviceDouble":["ScalarDouble", "float64", "DevDouble", -1.456673e+02, 1e-14],
+            # "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234],
+            #  "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23],
+            # "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 12.234,
+            # 1e-07],
+            #  "DeviceDouble":["ScalarDouble", "float64", "DevDouble",
+            # -1.456673e+02, 1e-14],
             "DeviceFloat": ["ScalarFloat", "float32", "DevFloat", 12.234],
-            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble", -1.45e+02],
+            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble",
+                             -1.45e+02],
             "DeviceString": ["ScalarString", "string", "DevString", "MyTrue"],
         }
 
         arrb = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", False],
-            #            "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 11],
+            #         "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 11],
             "DeviceShort": ["ScalarShort", "int16", "DevShort", -11],
             "DeviceUShort": ["ScalarUShort", "uint16", "DevUShort", 114],
             "DeviceLong": ["ScalarLong", "int64", "DevLong", -121],
             "DeviceULong": ["ScalarULong", "uint64", "DevULong", 214],
-            #            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 214],
-            #            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 21],
-            #            "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 11.134, 1e-07],
-            #            "DeviceDouble":["ScalarDouble", "float64", "DevDouble", -1.416673e+02, 1e-14],
+            #  "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 214],
+            #  "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 21],
+            #  "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 11.134,
+            #  1e-07],
+            #  "DeviceDouble":["ScalarDouble", "float64", "DevDouble",
+            # -1.416673e+02, 1e-14],
             "DeviceFloat": ["ScalarFloat", "float32", "DevFloat", 11.134],
-            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble", -1.41e+02],
+            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble",
+                             -1.41e+02],
             "DeviceString": ["ScalarString", "string", "DevString", "M11rue"],
         }
 
@@ -3344,24 +3630,28 @@ class TangoSourceTest(unittest.TestCase):
         for k in arr:
             dt = el[k].getData()
             self.checkData(dt, "SCALAR", str(arr[k][3]),
-                           'DevString', [1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                           'DevString', [1, 0], None, None, arr[k][4]
+                           if len(arr[k]) > 4 else 0)
 
         for k in arrb:
             dt = el2[k].getData()
             self.checkData(dt, "SCALAR", str(arrb[k][3]),
-                           'DevString', [1, 0], None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
+                           'DevString', [1, 0], None, None, arrb[k][4]
+                           if len(arrb[k]) > 4 else 0)
 
         pl.counter = 2
 
         for k in arrb:
             dt = el[k].getData()
             self.checkData(dt, "SCALAR", str(arrb[k][3]),
-                           'DevString', [1, 0], None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
+                           'DevString', [1, 0], None, None, arrb[k][4]
+                           if len(arrb[k]) > 4 else 0)
 
         for k in arr:
             dt = el2[k].getData()
             self.checkData(dt, "SCALAR", str(arr[k][3]),
-                           'DevString', [1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                           'DevString', [1, 0], None, None, arr[k][4]
+                           if len(arr[k]) > 4 else 0)
 
     # getData test
     # \brief It tests default settings
@@ -3371,33 +3661,39 @@ class TangoSourceTest(unittest.TestCase):
 
         arr = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
-            #            "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
+            #     "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
             "DeviceShort": ["ScalarShort", "int16", "DevShort", -113],
             "DeviceUShort": ["ScalarUShort", "uint16", "DevUShort", 1134],
             "DeviceLong": ["ScalarLong", "int64", "DevLong", -111],
             "DeviceULong": ["ScalarULong", "uint64", "DevULong", 1134],
-            #            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234],
-            #            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23],
-            #            "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 12.234, 1e-07],
-            #            "DeviceDouble":["ScalarDouble", "float64", "DevDouble", -1.456673e+02, 1e-14],
+            #     "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234],
+            #   "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23],
+            #   "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 12.234,
+            # 1e-07],
+            #  "DeviceDouble":["ScalarDouble", "float64", "DevDouble",
+            # -1.456673e+02, 1e-14],
             "DeviceFloat": ["ScalarFloat", "float32", "DevFloat", 12.234],
-            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble", -1.45e+02],
+            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble",
+                             -1.45e+02],
             "DeviceString": ["ScalarString", "string", "DevString", "MyTrue"],
         }
 
         arrb = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", False],
-            #            "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 11],
+            #    "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 11],
             "DeviceShort": ["ScalarShort", "int16", "DevShort", -11],
             "DeviceUShort": ["ScalarUShort", "uint16", "DevUShort", 114],
             "DeviceLong": ["ScalarLong", "int64", "DevLong", -121],
             "DeviceULong": ["ScalarULong", "uint64", "DevULong", 214],
-            #            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 214],
-            #            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 21],
-            #            "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 11.134, 1e-07],
-            #            "DeviceDouble":["ScalarDouble", "float64", "DevDouble", -1.416673e+02, 1e-14],
+            #    "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 214],
+            #   "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 21],
+            #   "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 11.134,
+            # 1e-07],
+            #   "DeviceDouble":["ScalarDouble", "float64", "DevDouble",
+            # -1.416673e+02, 1e-14],
             "DeviceFloat": ["ScalarFloat", "float32", "DevFloat", 11.134],
-            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble", -1.41e+02],
+            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble",
+                             -1.41e+02],
             "DeviceString": ["ScalarString", "string", "DevString", "M11rue"],
         }
 
@@ -3450,25 +3746,31 @@ class TangoSourceTest(unittest.TestCase):
 
         for k in arr:
             dt = el[k].getData()
-            self.checkData(dt, "SCALAR", str(arr[k][3]),
-                           'DevString', [1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+            self.checkData(
+                dt, "SCALAR", str(arr[k][3]),
+                'DevString', [1, 0], None, None, arr[k][4]
+                if len(arr[k]) > 4 else 0)
 
         for k in arrb:
             dt = el2[k].getData()
             self.checkData(dt, "SCALAR", str(arrb[k][3]),
-                           'DevString', [1, 0], None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
+                           'DevString', [1, 0], None, None, arrb[k][4]
+                           if len(arrb[k]) > 4 else 0)
 
         pl.counter = 2
 
         for k in arrb:
             dt = el[k].getData()
             self.checkData(dt, "SCALAR", str(arrb[k][3]),
-                           'DevString', [1, 0], None, None, arrb[k][4] if len(arrb[k]) > 4 else 0)
+                           'DevString', [1, 0], None, None, arrb[k][4]
+                           if len(arrb[k]) > 4 else 0)
 
         for k in arr:
             dt = el2[k].getData()
-            self.checkData(dt, "SCALAR", str(arr[k][3]),
-                           'DevString', [1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+            self.checkData(
+                dt, "SCALAR", str(arr[k][3]),
+                'DevString', [1, 0], None, None, arr[k][4] if len(arr[k]) > 4
+                else 0)
 
     # getData test
     # \brief It tests default settings
@@ -3478,15 +3780,16 @@ class TangoSourceTest(unittest.TestCase):
 
         arr = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
-            #            "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
+            #           "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
             "DeviceShort": ["ScalarShort", "int16", "DevShort", -123],
             "DeviceUShort": ["ScalarUShort", "uint16", "DevUShort", 1234],
             "DeviceLong": ["ScalarLong", "int64", "DevLong", -124],
             "DeviceULong": ["ScalarULong", "uint64", "DevULong", 234],
-            #            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234],
-            #            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23],
+            #    "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234],
+            #    "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23],
             "DeviceFloat": ["ScalarFloat", "float32", "DevFloat", 12.234],
-            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02],
+            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble",
+                             -2.456673e+02],
             "DeviceString": ["ScalarString", "string", "DevString", "MyTrue"],
         }
 
@@ -3498,8 +3801,10 @@ class TangoSourceTest(unittest.TestCase):
             dt = el.getData()
             dp = PyTango.DeviceProxy(el.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
-            self.checkData(dt, "SCALAR", dp.get_property([k])[k][0],
-                           'DevString', [1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+            self.checkData(
+                dt, "SCALAR", dp.get_property([k])[k][0],
+                'DevString', [1, 0], None, None, arr[k][4]
+                if len(arr[k]) > 4 else 0)
 
     # getData test
     # \brief It tests default settings
@@ -3509,15 +3814,16 @@ class TangoSourceTest(unittest.TestCase):
 
         arr = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
-            #            "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
+            #           "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
             "DeviceShort": ["ScalarShort", "int16", "DevShort", -123],
             "DeviceUShort": ["ScalarUShort", "uint16", "DevUShort", 1234],
             "DeviceLong": ["ScalarLong", "int64", "DevLong", -124],
             "DeviceULong": ["ScalarULong", "uint64", "DevULong", 234],
-            #            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234],
-            #            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23],
+            #    "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234],
+            #    "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23],
             "DeviceFloat": ["ScalarFloat", "float32", "DevFloat", 12.234],
-            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02],
+            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble",
+                             -2.456673e+02],
             "DeviceString": ["ScalarString", "string", "DevString", "MyTrue"],
         }
 
@@ -3530,7 +3836,8 @@ class TangoSourceTest(unittest.TestCase):
             dp = PyTango.DeviceProxy(el.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
             self.checkData(dt, "SCALAR", dp.get_property([k])[k][0],
-                           'DevString', [1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+                           'DevString', [1, 0], None, None, arr[k][4]
+                           if len(arr[k]) > 4 else 0)
 
     # isValid test
     # \brief It tests default settings
@@ -3550,16 +3857,16 @@ class TangoSourceTest(unittest.TestCase):
 
         dname = 'writer'
         device = 'stestp09/testss/s1r228'
-        ctype = 'command'
+        # ctype = 'command'
         atype = 'attribute'
-        host = 'haso.desy.de'
-        port = '10000'
+        # host = 'haso.desy.de'
+        # port = '10000'
         encoding = 'UTF8'
 
         atts = {"type": "TANGO"}
-        name = "myRecord"
-        wjson = json.loads(
-            '{"datasources":{"CL":"ClientSource.ClientSource"}}')
+        # name = "myRecord"
+        # wjson = json.loads(
+        #     '{"datasources":{"CL":"ClientSource.ClientSource"}}')
         gjson = json.loads('{"data":{"myRecord":"1"}}')
 
         el = EField(self._fattrs, None)
@@ -3571,19 +3878,28 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(ds.doc, "")
         self.assertEqual(ds.last, el)
         self.assertEqual(ds.setDataSources(DataSourcePool()), None)
-        self.assertEqual(ds.store(["<datasource type='TANGO'>",
-                                   "<record name='%s'/> <device name='%s' encoding='%s'/>" % (
-                                       dname, device, encoding),
-                                   "</datasource>"], gjson), None)
+        self.assertEqual(ds.store(
+            ["<datasource type='TANGO'>",
+             "<record name='%s'/> <device name='%s' encoding='%s'/>" % (
+                 dname, device, encoding),
+             "</datasource>"], gjson), None)
         self.assertEqual(type(ds.last.source), TangoSource)
         self.assertEqual(ds.last.source.member.name, dname)
         self.assertEqual(ds.last.source.device, device)
         self.assertEqual(ds.last.source.member.encoding, encoding)
-        self.assertEqual(ds.last.source.__str__(), " TANGO Device %s : %s (%s)" %
-                         (device, dname, atype))
+        self.assertEqual(
+            ds.last.source.__str__(),
+            " TANGO Device %s : %s (%s)" % (device, dname, atype))
         self.assertEqual(len(ds.last.tagAttributes), 1)
-        self.assertEqual(ds.last.tagAttributes["nexdatas_source"], (
-            'NX_CHAR', "<datasource type='TANGO'><record name='writer'/> <device name='stestp09/testss/s1r228' encoding='UTF8'/></datasource>"))
+        self.assertEqual(
+            ds.last.tagAttributes["nexdatas_source"],
+            (
+                'NX_CHAR',
+                "<datasource type='TANGO'><record name='writer'/> "
+                "<device name='stestp09/testss/s1r228' encoding='UTF8'/>"
+                "</datasource>"
+            )
+        )
 
 
 if __name__ == '__main__':

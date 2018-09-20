@@ -165,11 +165,11 @@ class DataSourceDecodersTest(unittest.TestCase):
         arr3 = {
             "ScalarEncoded": [
                 "string", "DevEncoded",
-                ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+                ("UTF8", b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
            "SpectrumEncoded": [
                "string", "DevEncoded",
                ('INT32',
-                '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+                b'\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
         }
 
         for k in arr3:
@@ -231,11 +231,11 @@ class DataSourceDecodersTest(unittest.TestCase):
         arr3 = {
             "ScalarEncoded": [
                 "string", "DevEncoded",
-                ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+                ("UTF8", b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
            "SpectrumEncoded": [
                "string", "DevEncoded",
                ('INT32',
-                '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+                b'\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
         }
 
         for k in arr3:

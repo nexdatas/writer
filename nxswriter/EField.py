@@ -636,16 +636,20 @@ class EField(FElementWithAttr):
         """
         if self.h5Object is not None:
             if error:
+                if isinstance(error, tuple):
+                    serror = str(tuple([str(e) for e in error]))
+                else:
+                    serror = str(error)
                 if "nexdatas_canfail_error" in \
                    [at.name for at in self.h5Object.attributes]:
                     olderror = \
                         self.h5Object.attributes["nexdatas_canfail_error"][...]
-                    if olderror:
-                        error = str(olderror) + "\n" + str(error)
+                    if olderror is not None:
+                        serror = str(olderror) + "\n" + serror
                 self.h5Object.attributes.create(
                     "nexdatas_canfail_error",
                     "string",
-                    overwrite=True)[...] = str(error)
+                    overwrite=True)[...] = serror
             self.h5Object.attributes.create(
                 "nexdatas_canfail", "string", overwrite=True)[...] = "FAILED"
             if self._streams:

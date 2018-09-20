@@ -63,6 +63,25 @@ except:
 DEFAULTWRITERS = ["pni", "h5py", "h5cpp"]
 
 
+#: (:obj:`bool`) PyTango bug #213 flag related to EncodedAttributes in python3
+PYTG_BUG_213 = False
+if sys.version_info > (3,):
+    try:
+        import PyTango
+        PYTGMAJOR, PYTGMINOR, PYTGPATCH = list(
+            map(int, PyTango.__version__.split(".")[:3]))
+        if PYTGMAJOR <= 9:
+            if PYTGMAJOR == 9:
+                if PYTGMINOR < 2:
+                    PYTG_BUG_213 = True
+                elif PYTGMINOR == 2 and PYTGPATCH < 4:
+                    PYTG_BUG_213 = True
+            else:
+                PYTG_BUG_213 = True
+    except:
+        pass
+
+
 class TangoDataWriter(object):
 
     """ NeXuS data writer
@@ -152,6 +171,11 @@ class TangoDataWriter(object):
 
         #: (:obj:`bool`) skip acquisition flag
         self.skipacquisition = False
+        if PYTG_BUG_213:
+            self._streams.error(
+                "TangoDataWriter::TangoDataWriter() - "
+                "Reading Encoded Attributes for python3 and PyTango < 9.2.5"
+                " is not supported ")
 
     def __setWriter(self, writer):
         """ set method for  writer module name

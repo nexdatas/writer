@@ -23,6 +23,9 @@ import struct
 import numpy
 import sys
 
+if sys.version_info > (3,):
+    unicode = str
+
 
 class UTF8decoder(object):
 
@@ -50,7 +53,7 @@ class UTF8decoder(object):
         """ loads encoded data
 
         :param data: encoded data
-        :type data: [:obj:`str`, :obj:`str`]
+        :type data: [:obj:`str`, :obj:`bytes`]
         """
         self.__data = data
         self.format = data[0]
@@ -69,12 +72,15 @@ class UTF8decoder(object):
         """ provides the decoded data
 
         :returns: the decoded data if data was loaded
-        :rtype: :class:`numpy.ndarray`
+        :rtype: :obj:`bytes`
         """
         if not self.__data:
             return
         if not self.__value:
-            self.__value = self.__data[1]
+            if isinstance(self.__data[1], unicode):
+                self.__value = bytes(self.__data[1], 'utf8')
+            else:
+                self.__value = bytes(self.__data[1])
         return self.__value
 
 
@@ -104,7 +110,7 @@ class UINT32decoder(object):
         """ loads encoded data
 
         :param data: encoded data
-        :type data: [:obj:`str`, :obj:`str`]
+        :type data: [:obj:`str`, :obj:`bytes`]
         """
         if not hasattr(data, "__iter__"):
             raise ValueError("Wrong Data Format")

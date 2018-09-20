@@ -289,17 +289,17 @@ class DataHolderTest(unittest.TestCase):
         arr = {
             "ScalarEncoded": [
                 "UTF8", "DevEncoded",
-                ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"),
+                ("UTF8", b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"),
                 [1, 0], "SCALAR",
-                "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b", "DevString"],
-           "SpectrumEncoded": [
-               "UINT32", "DevEncoded",
-               ('INT32',
-                '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00'),
-               [4, 0], "SPECTRUM", spectrum, "DevULong"],
-           "ImageEncoded": ["LIMA_VIDEO_IMAGE", "DevEncoded",
-                            self.encodeImage(image),
-                            list(image.shape), "IMAGE", image, "DevUChar"],
+                b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b", "DevString"],
+            "SpectrumEncoded": [
+                "UINT32", "DevEncoded",
+                ('INT32',
+                 b'\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00'),
+                [4, 0], "SPECTRUM", spectrum, "DevULong"],
+            "ImageEncoded": ["LIMA_VIDEO_IMAGE", "DevEncoded",
+                             self.encodeImage(image),
+                             list(image.shape), "IMAGE", image, "DevUChar"],
         }
 
         for a in arr:
@@ -347,14 +347,14 @@ class DataHolderTest(unittest.TestCase):
         image = numpy.array([[2]], dtype='uint16')
 
         arr = {
-            "ScalarEncoded": ["UTF8", "DevEncoded", ("UTF8", "\xc3\xb3"),
-                              [1, 0], "SCALAR", "\xc3\xb3", "DevString"],
-           "SpectrumEncoded": ["UINT32", "DevEncoded",
-                               ('INT32', '\xd2\x04\x00\x00'),
-                               [1, 0], "SPECTRUM", spectrum, "DevULong"],
-           "ImageEncoded": ["LIMA_VIDEO_IMAGE", "DevEncoded",
-                            self.encodeImage(image),
-                            list(image.shape), "IMAGE", image, "DevUShort"],
+            "ScalarEncoded": ["UTF8", "DevEncoded", ("UTF8", b"\xc3\xb3"),
+                              [1, 0], "SCALAR", b"\xc3\xb3", "DevString"],
+            "SpectrumEncoded": ["UINT32", "DevEncoded",
+                                ('INT32', b'\xd2\x04\x00\x00'),
+                                [1, 0], "SPECTRUM", spectrum, "DevULong"],
+            "ImageEncoded": ["LIMA_VIDEO_IMAGE", "DevEncoded",
+                             self.encodeImage(image),
+                             list(image.shape), "IMAGE", image, "DevUShort"],
         }
 
         for a in arr:
@@ -635,7 +635,8 @@ class DataHolderTest(unittest.TestCase):
                             for i in range(len(evalue)):
                                 if types[c][it]:
                                     self.assertTrue(
-                                        abs(evalue[i] - elc[i]) <= types[c][it])
+                                        abs(evalue[i] - elc[i]) <=
+                                        types[c][it])
                                 else:
                                     self.assertEqual(evalue[i], elc[i])
                         else:

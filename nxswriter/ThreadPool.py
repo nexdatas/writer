@@ -132,10 +132,15 @@ class ThreadPool(object):
         errors = []
         for el in self.__elementList:
             if el.error:
-                mess = "ThreadPool::checkErrors() - %s" % str(el.error)
+                if isinstance(el.error, tuple):
+                    serror = str(tuple([str(e) for e in el.error]))
+                else:
+                    serror = str(el.error)
+
+                mess = "ThreadPool::checkErrors() - %s" % serror
                 if hasattr(el, "canfail") and el.canfail:
                     if hasattr(el, "markFailed"):
-                        el.markFailed(str(el.error))
+                        el.markFailed(serror)
                     if self._streams:
                         self._streams.warn(mess)
                 else:
