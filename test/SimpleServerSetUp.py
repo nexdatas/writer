@@ -126,7 +126,6 @@ class SimpleServerSetUp(object):
         db = PyTango.Database()
         db.delete_server(self.new_device_info_writer.server)
 
-        output = ""
         pipe = subprocess.Popen(
             "ps -ef | grep 'SimpleServer.py %s'" % self.instance,
             stdout=subprocess.PIPE, shell=True).stdout

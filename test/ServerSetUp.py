@@ -57,7 +57,8 @@ class ServerSetUp(object):
         if sys.version_info > (3,):
             if os.path.isfile("../NXSDataWriter"):
                 self._psub = subprocess.call(
-                    "cd ..; python3 ./NXSDataWriter %s &" % self.instance, stdout=None,
+                    "cd ..; python3 ./NXSDataWriter %s &" % self.instance,
+                    stdout=None,
                     stderr=None, shell=True)
             else:
                 self._psub = subprocess.call(
@@ -95,7 +96,6 @@ class ServerSetUp(object):
         db = PyTango.Database()
         db.delete_server(self.new_device_info_writer.server)
 
-        output = ""
         pipe = subprocess.Popen(
             "ps -ef | grep 'NXSDataWriter %s'" % self.instance,
             stdout=subprocess.PIPE, shell=True).stdout

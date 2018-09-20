@@ -49,7 +49,8 @@ finally:
     db.delete_server(new_device_info_writer.server)
     output = ""
     pipe = subprocess.Popen(
-        "ps -ef | grep 'SimpleServer.py S1'", stdout=subprocess.PIPE, shell=True).stdout
+        "ps -ef | grep 'SimpleServer.py S1'", stdout=subprocess.PIPE,
+        shell=True).stdout
 
     res = pipe.read().split("\n")
     for r in res:

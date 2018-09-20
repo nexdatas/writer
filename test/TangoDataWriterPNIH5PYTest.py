@@ -95,7 +95,8 @@ class TangoDataWriterPNIH5PYTest(unittest.TestCase):
     <field units="m" type="NX_CHAR" name="nxrootstr">
       <strategy mode="INIT"/>
       <datasource type="PYEVAL">
-        <result name='res2'>ds.res2 = commonblock["__nxroot__"].filename</result>
+        <result name='res2'>
+ds.res2 = commonblock["__nxroot__"].filename</result>
       </datasource>
     </field>
     <field units="m" type="NX_CHAR" name="nxrootpath">
@@ -434,7 +435,7 @@ ds.res2 = str(True)
         fun = sys._getframe().f_code.co_name
         print("Run: TangoDataWriterTest.test_openEntry() ")
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
-        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
+        xml = '<definition> <group type="NXentry" name="entry"/></definition>'
         try:
             tdw = TangoDataWriter()
             tdw.writer = "h5py"
@@ -496,7 +497,8 @@ ds.res2 = str(True)
                     c = ch2.open("nexus__entry__1_xml")
                     self.assertEqual(
                         c.read(),
-                        '<definition> <group type="NXentry" name="entry"/></definition>')
+                        '<definition> <group type="NXentry" name="entry"/>'
+                        '</definition>')
                     print(c.read())
                     c = ch2.open("python_version")
                     self.assertEqual(c.name, "python_version")
@@ -522,7 +524,8 @@ ds.res2 = str(True)
             os.remove(fname)
 
     # openEntryWithSAXParseException test
-    # \brief It tests validation of opening and closing entry with SAXParseException
+    # \brief It tests validation of opening and closing entry
+    #    with SAXParseException
     def test_openEntryWithSAXParseException(self):
         print("Run: TangoDataWriterTest.test_openEntryWithSAXParseException()")
         fname = "test.h5"
@@ -600,11 +603,11 @@ ds.res2 = str(True)
             tdw.xmlsettings = self._scanXml % fname
             tdw.openEntry()
 
-            tdw.record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                       + str(self._mca1) + '  } }')
+            tdw.record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                       ', "p09/mca/exp.02":' + str(self._mca1) + '  } }')
 
-            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                       + str(self._mca2) + '  } }')
+            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                       ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
 
             tdw.closeEntry()
 
