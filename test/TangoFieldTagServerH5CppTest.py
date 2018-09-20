@@ -39,7 +39,8 @@ from ProxyHelper import ProxyHelper
 # test fixture
 
 
-class TangoFieldTagServerH5CppTest(TangoFieldTagWriterH5CppTest.TangoFieldTagWriterH5CppTest):
+class TangoFieldTagServerH5CppTest(
+        TangoFieldTagWriterH5CppTest.TangoFieldTagWriterH5CppTest):
     # server counter
     serverCounter = 0
 

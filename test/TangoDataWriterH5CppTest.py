@@ -171,13 +171,15 @@ class TangoDataWriterH5CppTest(unittest.TestCase):
     <field units="m" type="NX_CHAR" name="nxrootstr">
       <strategy mode="INIT"/>
       <datasource type="PYEVAL">
-        <result name='res2'>ds.res2 = str(commonblock["__nxroot__"].link.path)</result>
+        <result name='res2'>
+ds.res2 = str(commonblock["__nxroot__"].link.path)</result>
       </datasource>
     </field>
     <field units="m" type="NX_CHAR" name="nxrootpath">
       <strategy mode="INIT"/>
       <datasource type="PYEVAL">
-        <result name='res2'>ds.res2 = (commonblock["__nxroot__"]).link.path.name</result>
+        <result name='res2'>
+ds.res2 = (commonblock["__nxroot__"]).link.path.name</result>
       </datasource>
     </field>
     <field units="m" type="NX_CHAR" name="nxrootlink">
@@ -187,7 +189,8 @@ class TangoDataWriterH5CppTest(unittest.TestCase):
 from pninexus import h5cpp
 root = commonblock["__nxroot__"]
 en = root.get_group(h5cpp.Path("entry1"))
-h5cpp.node.link(target=h5cpp.Path("/entry1/nxrootpath"), link_base=en, link_path=h5cpp.Path("mylink"))
+h5cpp.node.link(target=h5cpp.Path("/entry1/nxrootpath"),
+    link_base=en, link_path=h5cpp.Path("mylink"))
 ds.res2 = str(True)
         </result>
       </datasource>
@@ -561,7 +564,7 @@ ds.res2 = str(True)
         fun = sys._getframe().f_code.co_name
         print("Run: TangoDataWriterTest.test_openEntry() ")
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
-        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
+        xml = '<definition> <group type="NXentry" name="entry"/></definition>'
         try:
             tdw = TangoDataWriter()
             tdw.writer = "h5cpp"
@@ -625,7 +628,8 @@ ds.res2 = str(True)
                     c = ch2.open("nexus__entry__1_xml")
                     self.assertEqual(
                         c.read(),
-                        '<definition> <group type="NXentry" name="entry"/></definition>')
+                        '<definition> <group type="NXentry" name="entry"/>'
+                        '</definition>')
                     print(c.read())
                     c = ch2.open("python_version")
                     self.assertEqual(c.name, "python_version")
@@ -651,7 +655,8 @@ ds.res2 = str(True)
                 os.remove(fname)
 
     # openEntryWithSAXParseException test
-    # \brief It tests validation of opening and closing entry with SAXParseException
+    # \brief It tests validation of opening and closing entry
+    #        with SAXParseException
     def test_openEntryWithSAXParseException(self):
         print("Run: TangoDataWriterTest.test_openEntryWithSAXParseException()")
         fname = "test.h5"
@@ -740,13 +745,13 @@ ds.res2 = str(True)
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.currentfileid, 0)
 
-            tdw.record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                       + str(self._mca1) + '  } }')
+            tdw.record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                       ', "p09/mca/exp.02":' + str(self._mca1) + '  } }')
 
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.currentfileid, 0)
-            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                       + str(self._mca2) + '  } }')
+            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                       ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
 
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.currentfileid, 0)
@@ -761,13 +766,13 @@ ds.res2 = str(True)
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.currentfileid, 0)
 
-            tdw.record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                       + str(self._mca1) + '  } }')
+            tdw.record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                       ', "p09/mca/exp.02":' + str(self._mca1) + '  } }')
 
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.currentfileid, 0)
-            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                       + str(self._mca2) + '  } }')
+            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                       ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
 
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.currentfileid, 0)
@@ -1096,13 +1101,13 @@ ds.res2 = str(True)
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.currentfileid, 0)
 
-            tdw.record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                       + str(self._mca1) + '  } }')
+            tdw.record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                       ', "p09/mca/exp.02":' + str(self._mca1) + '  } }')
 
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.currentfileid, 0)
-            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                       + str(self._mca2) + '  } }')
+            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                       ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
 
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.currentfileid, 0)
@@ -1434,8 +1439,8 @@ ds.res2 = str(True)
             self.assertEqual(tdw.skipacquisition, False)
             self.assertEqual(tdw.currentfileid, 0)
 
-            tdw.record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                       + str(self._mca1) + '  } }')
+            tdw.record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                       ', "p09/mca/exp.02":' + str(self._mca1) + '  } }')
 
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.skipacquisition, False)
@@ -1462,8 +1467,8 @@ ds.res2 = str(True)
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.skipacquisition, False)
             self.assertEqual(tdw.currentfileid, 0)
-            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                       + str(self._mca2) + '  } }')
+            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                       ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.skipacquisition, False)
             self.assertEqual(tdw.currentfileid, 0)
@@ -1490,8 +1495,8 @@ ds.res2 = str(True)
             self.assertEqual(tdw.skipacquisition, False)
             self.assertEqual(tdw.currentfileid, 0)
             tdw.skipacquisition = True
-            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                       + str(self._mca2) + '  } }')
+            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                       ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
 
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.skipacquisition, False)
@@ -1961,7 +1966,13 @@ ds.res2 = str(True)
             self.assertEqual(at.dtype, "string")
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
-                at[...], "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')")
+                at[...],
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/counter1 not found. DATASOURCE: "
+                "CLIENT record exp_c01', 'Data without value')\n"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/counter1 not found. DATASOURCE: "
+                "CLIENT record exp_c01', 'Data without value')")
 
             at = cnt.attributes["type"]
             self.assertTrue(at.is_valid)
@@ -2036,7 +2047,12 @@ ds.res2 = str(True)
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')")
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
+                "record p09/mca/exp.02', 'Data without value')\n"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
+                "record p09/mca/exp.02', 'Data without value')")
 
             at = mca.attributes["type"]
             self.assertTrue(at.is_valid)
@@ -2123,7 +2139,13 @@ ds.res2 = str(True)
             self.assertEqual(at.dtype, "string")
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
-                at[...], "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')")
+                at[...],
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/counter1 not found. DATASOURCE: "
+                "CLIENT record exp_c01', 'Data without value')\n"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/counter1 not found. DATASOURCE: "
+                "CLIENT record exp_c01', 'Data without value')")
 
             at = cnt.attributes["type"]
             self.assertTrue(at.is_valid)
@@ -2188,7 +2210,12 @@ ds.res2 = str(True)
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')")
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
+                "record p09/mca/exp.02', 'Data without value')\n"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
+                "record p09/mca/exp.02', 'Data without value')")
 
             at = mca.attributes["nexdatas_strategy"]
             self.assertTrue(at.is_valid)
@@ -2391,7 +2418,13 @@ ds.res2 = str(True)
             self.assertEqual(at.dtype, "string")
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
-                at[...], "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')")
+                at[...],
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/counter1 not found. DATASOURCE: "
+                "CLIENT record exp_c01', 'Data without value')\n"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/counter1 not found. DATASOURCE: "
+                "CLIENT record exp_c01', 'Data without value')")
 
             at = cnt.attributes["type"]
             self.assertTrue(at.is_valid)
@@ -2466,7 +2499,12 @@ ds.res2 = str(True)
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')")
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
+                "record p09/mca/exp.02', 'Data without value')\n"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
+                "record p09/mca/exp.02', 'Data without value')")
 
             at = mca.attributes["type"]
             self.assertTrue(at.is_valid)
@@ -2553,7 +2591,13 @@ ds.res2 = str(True)
             self.assertEqual(at.dtype, "string")
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
-                at[...], "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')")
+                at[...],
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/counter1 not found. DATASOURCE: "
+                "CLIENT record exp_c01', 'Data without value')\n"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/counter1 not found. DATASOURCE: "
+                "CLIENT record exp_c01', 'Data without value')")
 
             at = cnt.attributes["type"]
             self.assertTrue(at.is_valid)
@@ -2618,7 +2662,12 @@ ds.res2 = str(True)
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')")
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
+                "record p09/mca/exp.02', 'Data without value')\n"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
+                "record p09/mca/exp.02', 'Data without value')")
 
             at = mca.attributes["nexdatas_strategy"]
             self.assertTrue(at.is_valid)
@@ -2821,7 +2870,13 @@ ds.res2 = str(True)
             self.assertEqual(at.dtype, "string")
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
-                at[...], "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')")
+                at[...],
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/counter1 not found. DATASOURCE: "
+                "CLIENT record exp_c01', 'Data without value')\n"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/counter1 not found. DATASOURCE: "
+                "CLIENT record exp_c01', 'Data without value')")
 
             at = cnt.attributes["type"]
             self.assertTrue(at.is_valid)
@@ -2896,7 +2951,12 @@ ds.res2 = str(True)
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')")
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
+                "record p09/mca/exp.02', 'Data without value')\n"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
+                "record p09/mca/exp.02', 'Data without value')")
 
             at = mca.attributes["type"]
             self.assertTrue(at.is_valid)
@@ -2983,7 +3043,13 @@ ds.res2 = str(True)
             self.assertEqual(at.dtype, "string")
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
-                at[...], "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')")
+                at[...],
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/counter1 not found. DATASOURCE: "
+                "CLIENT record exp_c01', 'Data without value')\n"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/counter1 not found. DATASOURCE: "
+                "CLIENT record exp_c01', 'Data without value')")
 
             at = cnt.attributes["type"]
             self.assertTrue(at.is_valid)
@@ -3048,7 +3114,12 @@ ds.res2 = str(True)
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')")
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
+                "record p09/mca/exp.02', 'Data without value')\n"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
+                "record p09/mca/exp.02', 'Data without value')")
 
             at = mca.attributes["nexdatas_strategy"]
             self.assertTrue(at.is_valid)
@@ -3806,35 +3877,35 @@ ds.res2 = str(True)
             self.assertEqual(tdw.stepsperfile, 2)
             self.assertEqual(tdw.currentfileid, 1)
 
-            tdw.record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                       + str(self._mca1) + '  } }')
+            tdw.record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                       ', "p09/mca/exp.02":' + str(self._mca1) + '  } }')
 
             self.assertEqual(tdw.stepsperfile, 2)
             self.assertEqual(tdw.currentfileid, 1)
-            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                       + str(self._mca2) + '  } }')
+            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                       ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
 
             self.assertEqual(tdw.stepsperfile, 2)
             self.assertEqual(tdw.currentfileid, 2)
 
-            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                       + str(self._mca2) + '  } }')
+            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                       ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
 
             self.assertEqual(tdw.stepsperfile, 2)
             self.assertEqual(tdw.currentfileid, 2)
-            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                       + str(self._mca2) + '  } }')
+            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                       ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
 
             self.assertEqual(tdw.stepsperfile, 2)
             self.assertEqual(tdw.currentfileid, 3)
 
-            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                       + str(self._mca2) + '  } }')
+            tdw.record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                       ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
 
             self.assertEqual(tdw.stepsperfile, 2)
             self.assertEqual(tdw.currentfileid, 3)
-            tdw.record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                       + str(self._mca1) + '  } }')
+            tdw.record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                       ', "p09/mca/exp.02":' + str(self._mca1) + '  } }')
 
             self.assertEqual(tdw.stepsperfile, 2)
             self.assertEqual(tdw.currentfileid, 4)
