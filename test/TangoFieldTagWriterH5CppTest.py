@@ -31,7 +31,6 @@ import time
 import PyTango
 
 
-
 from xml.sax import SAXParseException
 
 
@@ -49,7 +48,7 @@ try:
     from Checkers import Checker
 except:
     from .Checkers import Checker
-        
+
 try:
     import SimpleServerSetUp
 except:
@@ -67,7 +66,6 @@ IS64BIT = (struct.calcsize("P") == 8)
 PYTG_BUG_213 = False
 if sys.version_info > (3,):
     try:
-        import PyTango
         PYTGMAJOR, PYTGMINOR, PYTGPATCH = list(
             map(int, PyTango.__version__.split(".")[:3]))
         if PYTGMAJOR <= 9:
@@ -1671,7 +1669,7 @@ class TangoFieldTagWriterH5CppTest(unittest.TestCase):
   </group>
 </definition>
 """
-            
+
         xml = xml.replace("localhost", self._dbhost)
 
         self._simps.dp.ImageBoolean = self._logical2[0]
@@ -1761,7 +1759,7 @@ class TangoFieldTagWriterH5CppTest(unittest.TestCase):
             det, "InitImageULong64", "uint64", "NX_UINT64", self._pco1[0])
         self._sc.checkSingleImageField(
             det, "FinalImageFloat", "float32", "NX_FLOAT32",
-            self._fpco1[steps - 1],error=1.0e-6)
+            self._fpco1[steps - 1], error=1.0e-6)
         f.close()
         os.remove(fname)
 

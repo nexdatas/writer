@@ -78,15 +78,17 @@ class TestDataSource(DataSource):
                         "tangoDType": "DevLong", "shape": [0, 0]}
             elif numpy:
                 return {
-                    "rank": NTP.rTf[len(self.dims)], "value": numpy.ones(self.dims),
-                        "tangoDType": "DevLong", "shape": self.dims}
+                    "rank": NTP.rTf[len(self.dims)],
+                    "value": numpy.ones(self.dims),
+                    "tangoDType": "DevLong", "shape": self.dims}
             elif len(self.dims) == 1:
                 return {"rank": NTP.rTf[1], "value": ([1] * self.dims[0]),
                         "tangoDType": "DevLong", "shape": [self.dims[0], 0]}
             elif len(self.dims) == 2:
                 return {
-                    "rank": NTP.rTf[2], "value": ([[1] * self.dims[1]] * self.dims[0]),
-                        "tangoDType": "DevLong", "shape": [self.dims[0], 0]}
+                    "rank": NTP.rTf[2],
+                    "value": ([[1] * self.dims[1]] * self.dims[0]),
+                    "tangoDType": "DevLong", "shape": [self.dims[0], 0]}
 
     # checks if the data is valid
     # \returns if the data is valid

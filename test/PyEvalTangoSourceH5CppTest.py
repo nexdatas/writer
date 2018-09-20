@@ -60,7 +60,6 @@ if sys.version_info > (3,):
 PYTG_BUG_213 = False
 if sys.version_info > (3,):
     try:
-        import PyTango
         PYTGMAJOR, PYTGMINOR, PYTGPATCH = list(
             map(int, PyTango.__version__.split(".")[:3]))
         if PYTGMAJOR <= 9:
@@ -73,7 +72,7 @@ if sys.version_info > (3,):
                 PYTG_BUG_213 = True
     except:
         pass
-    
+
 
 # test fix
 class PyEvalTangoSourceH5CppTest(unittest.TestCase):
@@ -466,7 +465,7 @@ else:
             "float": [-1.223e-01, "SPECTRUM", "DevDouble", []],
             "str": ['My String', "SPECTRUM", "DevString", []],
             "unicode": ["Hello", "SPECTRUM", "DevString", []],
-            #            "unicode":[u'\x12\xf8\xff\xf4',"SPECTRUM","DevString",[]],
+            #   "unicode":[u'\x12\xf8\xff\xf4',"SPECTRUM","DevString",[]],
             "bool": ['true', "SPECTRUM", "DevBoolean", []],
         }
 
@@ -1072,9 +1071,9 @@ commonblock["myres"] = ds.res
                                 vv = v2
 
                     if type(vv).__name__ == 'ndarray':
-                            self.checkData(
-                                dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__],
-                                [len(vv)])
+                        self.checkData(
+                            dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__],
+                            [len(vv)])
                     else:
                         self.checkData(
                             dt, carr[a][1], vv, NTP.pTt[type(vv).__name__],

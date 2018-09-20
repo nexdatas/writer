@@ -69,7 +69,6 @@ else:
 PYTG_BUG_213 = False
 if sys.version_info > (3,):
     try:
-        import PyTango
         PYTGMAJOR, PYTGMINOR, PYTGPATCH = list(
             map(int, PyTango.__version__.split(".")[:3]))
         if PYTGMAJOR <= 9:
@@ -84,7 +83,6 @@ if sys.version_info > (3,):
         pass
 
 
-    
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
@@ -1430,7 +1428,8 @@ class TangoSourceTest(unittest.TestCase):
                 dt = el.setDecoders(dp)
                 dt = el.getData()
                 self.checkData(
-                    dt, "SCALAR", arr3[k][2], arr3[k][1], [1, 0], arr3[k][2][0],
+                    dt, "SCALAR", arr3[k][2], arr3[k][1], [1, 0],
+                    arr3[k][2][0],
                     dp)
 
     # getData test

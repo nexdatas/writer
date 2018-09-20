@@ -154,7 +154,7 @@ class TgDeviceTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         device = "device/%s" % self.__rnd.randint(0, 9)
-        proxy = "proxy%s" % self.__rnd.randint(0, 9)
+        # proxy = "proxy%s" % self.__rnd.randint(0, 9)
 
         dv = TgDevice(device)
         self.assertEqual(dv.device, device)
@@ -210,7 +210,8 @@ class TgDeviceTest(unittest.TestCase):
         self.assertEqual(dv.setMember(mb5), mb5)
         self.assertEqual(dv.device, device)
         self.assertEqual(
-            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4, name5: mb5})
+            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4,
+                         name5: mb5})
         self.assertEqual(dv.attributes, [name1, name2])
         self.assertEqual(dv.properties, [name5])
         self.assertEqual(dv.commands, [name3, name4])
@@ -221,7 +222,8 @@ class TgDeviceTest(unittest.TestCase):
         self.assertEqual(dv.setMember(mb6), mb6)
         self.assertEqual(dv.device, device)
         self.assertEqual(
-            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4, name5: mb5, name6: mb6})
+            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4,
+                         name5: mb5, name6: mb6})
         self.assertEqual(dv.attributes, [name1, name2])
         self.assertEqual(dv.properties, [name5, name6])
         self.assertEqual(dv.commands, [name3, name4])
@@ -232,7 +234,8 @@ class TgDeviceTest(unittest.TestCase):
         self.assertEqual(dv.setMember(mb7), mb7)
         self.assertEqual(dv.device, device)
         self.assertEqual(
-            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4, name5: mb5, name6: mb6, name7: mb7})
+            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4,
+                         name5: mb5, name6: mb6, name7: mb7})
         self.assertEqual(dv.attributes, [name1, name2, name7])
         self.assertEqual(dv.properties, [name5, name6])
         self.assertEqual(dv.commands, [name3, name4])
@@ -242,7 +245,8 @@ class TgDeviceTest(unittest.TestCase):
         self.assertEqual(dv.setMember(mb8), mb1)
         self.assertEqual(dv.device, device)
         self.assertEqual(
-            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4, name5: mb5, name6: mb6, name7: mb7})
+            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4,
+                         name5: mb5, name6: mb6, name7: mb7})
         self.assertEqual(dv.attributes, [name1, name2, name7])
         self.assertEqual(dv.properties, [name5, name6])
         self.assertEqual(dv.commands, [name3, name4])
@@ -252,7 +256,8 @@ class TgDeviceTest(unittest.TestCase):
         self.assertEqual(dv.setMember(mb9), mb2)
         self.assertEqual(dv.device, device)
         self.assertEqual(
-            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4, name5: mb5, name6: mb6, name7: mb7})
+            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4,
+                         name5: mb5, name6: mb6, name7: mb7})
         self.assertEqual(dv.attributes, [name1, name2, name7])
         self.assertEqual(dv.properties, [name5, name6])
         self.assertEqual(dv.commands, [name3, name4])
@@ -262,7 +267,8 @@ class TgDeviceTest(unittest.TestCase):
         self.assertEqual(dv.setMember(mb10), mb3)
         self.assertEqual(dv.device, device)
         self.assertEqual(
-            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4, name5: mb5, name6: mb6, name7: mb7})
+            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4,
+                         name5: mb5, name6: mb6, name7: mb7})
         self.assertEqual(dv.attributes, [name1, name2, name7])
         self.assertEqual(dv.properties, [name5, name6])
         self.assertEqual(dv.commands, [name3, name4])
@@ -272,7 +278,8 @@ class TgDeviceTest(unittest.TestCase):
         self.assertEqual(dv.setMember(mb11), mb4)
         self.assertEqual(dv.device, device)
         self.assertEqual(
-            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4, name5: mb5, name6: mb6, name7: mb7})
+            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4,
+                         name5: mb5, name6: mb6, name7: mb7})
         self.assertEqual(dv.attributes, [name1, name2, name7])
         self.assertEqual(dv.properties, [name5, name6])
         self.assertEqual(dv.commands, [name3, name4])
@@ -282,7 +289,8 @@ class TgDeviceTest(unittest.TestCase):
         self.assertEqual(dv.setMember(mb12), mb5)
         self.assertEqual(dv.device, device)
         self.assertEqual(
-            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4, name5: mb5, name6: mb6, name7: mb7})
+            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4,
+                         name5: mb5, name6: mb6, name7: mb7})
         self.assertEqual(dv.attributes, [name1, name2, name7])
         self.assertEqual(dv.properties, [name5, name6])
         self.assertEqual(dv.commands, [name3, name4])
@@ -292,7 +300,8 @@ class TgDeviceTest(unittest.TestCase):
         self.assertEqual(dv.setMember(mb13), mb6)
         self.assertEqual(dv.device, device)
         self.assertEqual(
-            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4, name5: mb5, name6: mb6, name7: mb7})
+            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4,
+                         name5: mb5, name6: mb6, name7: mb7})
         self.assertEqual(dv.attributes, [name1, name2, name7])
         self.assertEqual(dv.properties, [name5, name6])
         self.assertEqual(dv.commands, [name3, name4])
@@ -302,7 +311,8 @@ class TgDeviceTest(unittest.TestCase):
         self.assertEqual(dv.setMember(mb14), mb7)
         self.assertEqual(dv.device, device)
         self.assertEqual(
-            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4, name5: mb5, name6: mb6, name7: mb7})
+            dv.members, {name1: mb1, name2: mb2, name3: mb3, name4: mb4,
+                         name5: mb5, name6: mb6, name7: mb7})
         self.assertEqual(dv.attributes, [name1, name2, name7])
         self.assertEqual(dv.properties, [name5, name6])
         self.assertEqual(dv.commands, [name3, name4])

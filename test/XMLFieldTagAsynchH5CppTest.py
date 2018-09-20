@@ -32,7 +32,8 @@ from ProxyHelper import ProxyHelper
 
 
 # test fixture
-class XMLFieldTagAsynchH5CppTest(XMLFieldTagWriterH5CppTest.XMLFieldTagWriterH5CppTest):
+class XMLFieldTagAsynchH5CppTest(
+        XMLFieldTagWriterH5CppTest.XMLFieldTagWriterH5CppTest):
     # server counter
     serverCounter = 0
     # constructor

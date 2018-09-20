@@ -235,10 +235,10 @@ class Checker(object):
                 self._tc.assertTrue(abs(values - value) <= error)
             else:
                 self._tc.assertEqual(values, value)
-        # print type(cnt[...]), str(type(cnt[...]).__name__)# , str(cnt[...].dtype)
-        # print(str(cnt[...].dtype) if hasattr(cnt[...], "dtype") else "")
-        if not isinstance(cnt[...], numpy.string_) and self._isNumeric(cnt[...]) and not (
-                isinstance(cnt[...], numpy.ndarray) and (str(cnt[...].dtype).startswith("|S"))):
+        if not isinstance(cnt[...], numpy.string_) and \
+           self._isNumeric(cnt[...]) and \
+           not (isinstance(cnt[...], numpy.ndarray) and
+                (str(cnt[...].dtype).startswith("|S"))):
             if hasattr(cnt[...], "dtype") and str(cnt[...].dtype) == "object":
                 self._tc.assertEqual(values, cnt[...])
             elif not self._isNumeric(values):
@@ -275,12 +275,14 @@ class Checker(object):
             if isinstance(cnt[...], str) or isinstance(cnt[...], unicode):
                 self._tc.assertEqual(values[i], cnt[...])
             elif dtype != "string" and self._isNumeric(cnt[i]) and not (
-                    isinstance(cnt[...], numpy.ndarray) and str(cnt[...].dtype) == 'object'):
+                    isinstance(cnt[...], numpy.ndarray) and
+                    str(cnt[...].dtype) == 'object'):
                 if dtype == "bool":
                     self._tc.assertEqual(
                         Types.Converters.toBool(values[i]), cnt[i])
                 else:
-                    # print "CMP",name, cnt[i] , values[i] ,cnt[i] - values[i] , error
+                    # print "CMP",name, cnt[i] , values[i] ,
+                    #         cnt[i] - values[i] , error
                     self._tc.assertTrue(abs(cnt[i] - values[i]) <= error)
             else:
                 self._tc.assertEqual(values[i], cnt[i])
@@ -314,7 +316,8 @@ class Checker(object):
                     if dtype != "string" and self._isNumeric(cnt[i, 0]):
                         if dtype == "bool":
                             self._tc.assertEqual(
-                                Types.Converters.toBool(values[i][j]), cnt[i, j])
+                                Types.Converters.toBool(values[i][j]),
+                                cnt[i, j])
                         else:
                             self._tc.assertTrue(
                                 abs(cnt[i, j] - values[i][j]) <= error)
@@ -392,8 +395,11 @@ class Checker(object):
         self._tc.assertEqual(cnt.dtype, dtype)
         self._tc.assertEqual(cnt.size, len(values))
         # pninx is not supporting reading string areas
-        if (not isinstance(values[0], str) and not isinstance(values[0], unicode)
-            and not isinstance(values[0], bytes)):
+        if (
+                not isinstance(values[0], str) and
+                not isinstance(values[0], unicode) and
+                not isinstance(values[0], bytes)
+        ):
             value = cnt.read()
             for i in range(len(value)):
                 if self._isNumeric(value[i]):
@@ -444,7 +450,8 @@ class Checker(object):
     # \param values  original values
     # \param error data precision
     # \param attrs dictionary with string attributes
-    def checkSingleScalarField(self, det, name, dtype, nxtype, values, error=0,
+    def checkSingleScalarField(self, det, name, dtype, nxtype, values,
+                               error=0,
                                attrs=None):
 
         atts = {"type": nxtype, "units": "m",
@@ -501,7 +508,8 @@ class Checker(object):
     # \param values  original values
     # \param error data precision
     # \param attrs dictionary with string attributes
-    def checkPostScalarField(self, det, name, dtype, nxtype, values, error=0, attrs=None):
+    def checkPostScalarField(self, det, name, dtype, nxtype, values,
+                             error=0, attrs=None):
 
         atts = {"type": nxtype, "units": "m",
                 "postrun": None, "nexdatas_strategy": None}
@@ -540,7 +548,8 @@ class Checker(object):
     # \param values  original values
     # \param error data precision
     # \param attrs dictionary with string attributes
-    def checkXMLScalarField(self, det, name, dtype, nxtype, values, error=0, attrs=None):
+    def checkXMLScalarField(self, det, name, dtype, nxtype, values,
+                            error=0, attrs=None):
 
         atts = {"type": nxtype, "units": "m", "nexdatas_strategy": None}
         if attrs is not None:
@@ -574,7 +583,8 @@ class Checker(object):
             else:
                 self._tc.assertEqual(values, value)
         if self._isNumeric(cnt.read()) and not (
-                isinstance(cnt[...], numpy.ndarray) and str(cnt[...].dtype) == 'object'):
+                isinstance(cnt[...], numpy.ndarray) and
+                str(cnt[...].dtype) == 'object'):
             if not self._isNumeric(values):
                 self._tc.assertEqual(
                     Types.Converters.toBool(values), cnt.read())
@@ -650,7 +660,8 @@ class Checker(object):
     # \param error data precision
     # \param grows growing dimension
     # \param attrs dictionary with string attributes
-    def checkSingleSpectrumField(self, det, name, dtype, nxtype, values, error=0, grows=0, attrs=None):
+    def checkSingleSpectrumField(self, det, name, dtype, nxtype, values,
+                                 error=0, grows=0, attrs=None):
 
         atts = {"type": nxtype, "units": "",
                 "nexdatas_source": None, "nexdatas_strategy": None}
@@ -702,7 +713,8 @@ class Checker(object):
     # \param error data precision
     # \param grows growing dimension
     # \param attrs dictionary with string attributes
-    def checkXMLSpectrumField(self, det, name, dtype, nxtype, values, error=0, grows=0, attrs=None):
+    def checkXMLSpectrumField(self, det, name, dtype, nxtype, values,
+                              error=0, grows=0, attrs=None):
 
         atts = {"type": nxtype, "units": "", "nexdatas_strategy": None}
         if attrs is not None:
@@ -748,7 +760,8 @@ class Checker(object):
     # \param nxtype nexus type
     # \param values  original values
     # \param attrs dictionary with string attributes
-    def checkStringSpectrumField(self, det, name, dtype, nxtype, values, attrs=None):
+    def checkStringSpectrumField(self, det, name, dtype, nxtype, values,
+                                 attrs=None):
 
         atts = {"type": nxtype, "units": "",
                 "nexdatas_source": None, "nexdatas_strategy": None}
@@ -794,7 +807,8 @@ class Checker(object):
     # \param nxtype nexus type
     # \param values  original values
     # \param attrs dictionary with string attributes
-    def checkSingleStringSpectrumField(self, det, name, dtype, nxtype, values, attrs=None):
+    def checkSingleStringSpectrumField(self, det, name, dtype, nxtype,
+                                       values, attrs=None):
 
         atts = {"type": nxtype, "units": "",
                 "nexdatas_source": None, "nexdatas_strategy": None}
@@ -871,7 +885,8 @@ class Checker(object):
                     if self._isNumeric(cnt[i, 0, 0]):
                         if nxtype == "NX_BOOLEAN":
                             self._tc.assertEqual(
-                                Types.Converters.toBool(lvalues[i][j][k]), cnt[i, j, k])
+                                Types.Converters.toBool(lvalues[i][j][k]),
+                                cnt[i, j, k])
                         else:
                             self._tc.assertTrue(
                                 abs(lvalues[i][j][k] - cnt[i, j, k]) <= error)
@@ -902,7 +917,8 @@ class Checker(object):
     # \param error data precision
     # \param grows growing dimension
     # \param attrs dictionary with string attributes
-    def checkSingleImageField(self, det, name, dtype, nxtype, values, error=0, grows=0, attrs=None):
+    def checkSingleImageField(self, det, name, dtype, nxtype, values, error=0,
+                              grows=0, attrs=None):
 
         atts = {"type": nxtype, "units": "",
                 "nexdatas_source": None, "nexdatas_strategy": None}
@@ -955,7 +971,8 @@ class Checker(object):
     # \param error data precision
     # \param grows growing dimension
     # \param attrs dictionary with string attributes
-    def checkXMLImageField(self, det, name, dtype, nxtype, values, error=0, grows=0, attrs=None):
+    def checkXMLImageField(self, det, name, dtype, nxtype, values,
+                           error=0, grows=0, attrs=None):
 
         atts = {"type": nxtype, "units": "", "nexdatas_strategy": None}
         if attrs is not None:
@@ -1001,14 +1018,16 @@ class Checker(object):
     # \param nxtype nexus type
     # \param values  original values
     # \param attrs dictionary with string attributes
-    def checkStringImageField(self, det, name, dtype, nxtype, values, attrs=None):
+    def checkStringImageField(self, det, name, dtype, nxtype, values,
+                              attrs=None):
 
         atts = {"type": nxtype, "units": "",
                 "nexdatas_source": None, "nexdatas_strategy": None}
         if attrs is not None:
             atts = attrs
 
-        cnts = [[det.open(name + "_" + str(s1) + "_" + str(s2)) for s2 in range(len(values[0][0]))]
+        cnts = [[det.open(name + "_" + str(s1) + "_" + str(s2))
+                 for s2 in range(len(values[0][0]))]
                 for s1 in range(len(values[0]))]
 
         for s1 in range(len(values[0])):
@@ -1049,7 +1068,8 @@ class Checker(object):
     # \param nxtype nexus type
     # \param values  original values
     # \param attrs dictionary with string attributes
-    def checkSingleStringImageField(self, det, name, dtype, nxtype, values, attrs=None):
+    def checkSingleStringImageField(self, det, name, dtype, nxtype, values,
+                                    attrs=None):
 
         atts = {"type": nxtype, "units": "",
                 "nexdatas_source": None, "nexdatas_strategy": None}
@@ -1093,7 +1113,8 @@ class Checker(object):
     # \param nxtype nexus type
     # \param values  original values
     # \param attrs dictionary with string attributes
-    def checkXMLStringImageField(self, det, name, dtype, nxtype, values, attrs=None):
+    def checkXMLStringImageField(self, det, name, dtype, nxtype, values,
+                                 attrs=None):
 
         atts = {"type": nxtype, "units": ""}
         if attrs is not None:

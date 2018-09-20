@@ -61,7 +61,6 @@ if sys.version_info > (3,):
 PYTG_BUG_213 = False
 if sys.version_info > (3,):
     try:
-        import PyTango
         PYTGMAJOR, PYTGMINOR, PYTGPATCH = list(
             map(int, PyTango.__version__.split(".")[:3]))
         if PYTGMAJOR <= 9:

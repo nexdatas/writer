@@ -181,7 +181,7 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
         string = "string, string"
         tdw = self.openWriter(fname, xml)
 
-        flip = True
+        # flip = True
         for c in range(4):
             self.record(tdw, '{ }')
 
@@ -208,38 +208,39 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
                                      attrs={"type": "NX_UINT8", "units": "m"})
         self._sc.checkXMLScalarField(
             det, "ucounter16", "uint16", "NX_UINT16", uc,
-                                     attrs={"type": "NX_UINT16", "units": "m"})
+            attrs={"type": "NX_UINT16", "units": "m"})
         self._sc.checkXMLScalarField(
             det, "ucounter32", "uint32", "NX_UINT32", uc,
-                                     attrs={"type": "NX_UINT32", "units": "m"})
+            attrs={"type": "NX_UINT32", "units": "m"})
         self._sc.checkXMLScalarField(
             det, "ucounter64", "uint64", "NX_UINT64", uc,
-                                     attrs={"type": "NX_UINT64", "units": "m"})
+            attrs={"type": "NX_UINT64", "units": "m"})
 
         self._sc.checkXMLScalarField(
             det, "float", "float64", "NX_FLOAT", fc, 1.0e-14,
-                                     attrs={"type": "NX_FLOAT", "units": "m"})
+            attrs={"type": "NX_FLOAT", "units": "m"})
         self._sc.checkXMLScalarField(
             det, "float64", "float64", "NX_FLOAT64", fc, 1.0e-14,
-                                     attrs={"type": "NX_FLOAT64", "units": "m"})
+            attrs={"type": "NX_FLOAT64", "units": "m"})
         self._sc.checkXMLScalarField(
             det, "float32", "float32", "NX_FLOAT32", fc, 1.0e-06,
-                                     attrs={"type": "NX_FLOAT32", "units": "m"})
+            attrs={"type": "NX_FLOAT32", "units": "m"})
         self._sc.checkXMLScalarField(
             det, "number", "float64", "NX_NUMBER", fc, 1.0e-14,
-                                     attrs={"type": "NX_NUMBER", "units": "m"})
+            attrs={"type": "NX_NUMBER", "units": "m"})
 
         self._sc.checkXMLScalarField(
             det, "time", "string", "NX_DATE_TIME", string,
-                                     attrs={"type": "NX_DATE_TIME", "units": "m"})
+            attrs={"type": "NX_DATE_TIME", "units": "m"})
         self._sc.checkXMLScalarField(
             det, "isotime", "string", "ISO8601", string,
-                                     attrs={"type": "ISO8601", "units": "m"})
+            attrs={"type": "ISO8601", "units": "m"})
         self._sc.checkXMLScalarField(
             det, "string_time", "string", "NX_CHAR", string,
-                                     attrs={"type": "NX_CHAR", "units": "m"})
-        self._sc.checkXMLScalarField(det, "flags", "bool", "NX_BOOLEAN", True,
-                                     attrs={"type": "NX_BOOLEAN", "units": "m"})
+            attrs={"type": "NX_CHAR", "units": "m"})
+        self._sc.checkXMLScalarField(
+            det, "flags", "bool", "NX_BOOLEAN", True,
+            attrs={"type": "NX_BOOLEAN", "units": "m"})
 
         f.close()
         os.remove(fname)
@@ -499,50 +500,50 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
         det = self._sc.checkFieldTree(f, fname, 22)
         self._sc.checkXMLSpectrumField(
             det, "mca_int", "int64", "NX_INT", [1, 2, 3, 4, 5],
-                                     attrs={"type": "NX_INT", "units": ""})
+            attrs={"type": "NX_INT", "units": ""})
         self._sc.checkXMLSpectrumField(
             det, "mca_int8", "int8", "NX_INT8", [1, 2, 3, 4, 5])
         self._sc.checkXMLSpectrumField(
             det, "mca_int16", "int16", "NX_INT16", [1, 2, 3, 4, 5],
-                                     attrs={"type": "NX_INT16", "units": ""})
+            attrs={"type": "NX_INT16", "units": ""})
         self._sc.checkXMLSpectrumField(
             det, "mca_int32", "int32", "NX_INT32", [1, 2, 3, 4, 5],
-                                     attrs={"type": "NX_INT32", "units": ""})
+            attrs={"type": "NX_INT32", "units": ""})
         self._sc.checkXMLSpectrumField(
             det, "mca_int64", "int64", "NX_INT64", [1, 2, 3, 4, 5],
-                                     attrs={"type": "NX_INT64", "units": ""})
+            attrs={"type": "NX_INT64", "units": ""})
         self._sc.checkXMLSpectrumField(
             det, "mca_uint", "uint64", "NX_UINT", [1, 2, 3, 4, 5])
         self._sc.checkXMLSpectrumField(
             det, "mca_uint8", "uint8", "NX_UINT8", [1, 2, 3, 4, 5],
-                                     attrs={"type": "NX_UINT8", "units": ""})
+            attrs={"type": "NX_UINT8", "units": ""})
         self._sc.checkXMLSpectrumField(
             det, "mca_uint16", "uint16", "NX_UINT16", [1, 2, 3, 4, 5],
-                                     attrs={"type": "NX_UINT16", "units": ""})
+            attrs={"type": "NX_UINT16", "units": ""})
         self._sc.checkXMLSpectrumField(
             det, "mca_uint32", "uint32", "NX_UINT32", [1, 2, 3, 4, 5],
-                                     attrs={"type": "NX_UINT32", "units": ""})
+            attrs={"type": "NX_UINT32", "units": ""})
         self._sc.checkXMLSpectrumField(
             det, "mca_uint64", "uint64", "NX_UINT64", [1, 2, 3, 4, 5])
         self._sc.checkXMLSpectrumField(
             det, "mca_int64_dim", "int64", "NX_INT64", [1, 2, 3, 4, 5],
-                                     attrs={"type": "NX_INT64", "units": ""})
+            attrs={"type": "NX_INT64", "units": ""})
 
         self._sc.checkXMLSpectrumField(
             det, "mca_float", "float64", "NX_FLOAT", spec,
-                                    error=1.0e-14)
+            error=1.0e-14)
         self._sc.checkXMLSpectrumField(
             det, "mca_float_dim", "float64", "NX_FLOAT", spec,
-                                    error=1.0e-14)
+            error=1.0e-14)
         self._sc.checkXMLSpectrumField(
             det, "mca_float32", "float32", "NX_FLOAT32", spec,
-                                    error=1.0e-5)
+            error=1.0e-5)
         self._sc.checkXMLSpectrumField(
             det, "mca_float64", "float64", "NX_FLOAT64", spec,
-                                    error=1.0e-14)
+            error=1.0e-14)
         self._sc.checkXMLSpectrumField(
             det, "mca_number", "float64", "NX_NUMBER", spec,
-                                    error=1.0e-14)
+            error=1.0e-14)
 
         self._sc.checkXMLSpectrumField(det, "flags", "bool", "NX_BOOLEAN",
                                        [True, False, True, False])
@@ -634,14 +635,15 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
         FileWriter.writer = H5CppWriter
         f = FileWriter.open_file(fname, readonly=True)
         det, field = self._sc.checkAttributeTree(f, fname, 3, 3)
-        self._sc.checkSpectrumAttribute(det, "spectrum_float", "float64", spec,
-                                        error=1.e-14)
+        self._sc.checkSpectrumAttribute(
+            det, "spectrum_float", "float64", spec,
+            error=1.e-14)
         self._sc.checkSpectrumAttribute(
             det, "init_spectrum_int32", "int32", ins)
         self._sc.checkSpectrumAttribute(det, "spectrum_bool", "bool", ls)
         self._sc.checkSpectrumAttribute(
             field, "spectrum_float32", "float32", spec,
-                                      error=1.e-5)
+            error=1.e-5)
         self._sc.checkSpectrumAttribute(
             field, "final_spectrum_uint64", "uint64", ins)
         self._sc.checkSpectrumAttribute(
@@ -696,7 +698,8 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
             <dim value="3" index="1"/>
             <dim value="2" index="2"/>
           </dimensions>
-          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          <strategy mode="STEP" compression="true"  grows="2"
+ shuffle="false" />
           11 12
           21 22
           31 32
@@ -747,7 +750,8 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
             <dim value="3" index="1"/>
             <dim value="2" index="2"/>
           </dimensions>
-          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          <strategy mode="STEP" compression="true"
+  grows="2" shuffle="false" />
           11 12
           21 22
           31 32
@@ -896,16 +900,16 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
 
         self._sc.checkXMLImageField(
             det, "pco_float", "float64", "NX_FLOAT", fimage,
-                                    error=1.0e-14)
+            error=1.0e-14)
         self._sc.checkXMLImageField(
             det, "pco_float32", "float32", "NX_FLOAT32", fimage,
-                                    error=1.0e-5)
+            error=1.0e-5)
         self._sc.checkXMLImageField(
             det, "pco_float64", "float64", "NX_FLOAT64", fimage,
-                                    error=1.0e-14)
+            error=1.0e-14)
         self._sc.checkXMLImageField(
             det, "pco_number", "float64", "NX_NUMBER", fimage,
-                                    error=1.0e-14)
+            error=1.0e-14)
 
         self._sc.checkXMLImageField(det, "flags", "bool", "NX_BOOLEAN", bimage)
         self._sc.checkXMLImageField(

@@ -160,7 +160,7 @@ class VDEOdecoderTest(unittest.TestCase):
     # shape method test
     # \brief It tests default settings
     def test_shape(self):
-        fun = sys._getframe().f_code.co_name
+        # fun = sys._getframe().f_code.co_name
 
         data = {
             "uint8": [None, 0xff, None],
@@ -202,7 +202,8 @@ class VDEOdecoderTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         data = (
-            'VIDEO_IMAGE', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00')
+            'VIDEO_IMAGE',
+            '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00')
 
         dc = VDEOdecoder()
 

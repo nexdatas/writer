@@ -103,7 +103,7 @@ class UINT32decoderTest(unittest.TestCase):
     def test_load(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-        data = {}
+        # data = {}
         dc = UINT32decoder()
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)
@@ -119,7 +119,7 @@ class UINT32decoderTest(unittest.TestCase):
     def test_shape(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-        data = {}
+        # data = {}
         dc = UINT32decoder()
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)

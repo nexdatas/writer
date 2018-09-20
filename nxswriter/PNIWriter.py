@@ -25,7 +25,6 @@ import pni.io.nx.h5 as nx
 from . import FileWriter
 
 
-
 def open_file(filename, readonly=False, libver=None):
     """ open the new file
 

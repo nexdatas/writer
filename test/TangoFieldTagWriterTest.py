@@ -72,7 +72,6 @@ else:
 PYTG_BUG_213 = False
 if sys.version_info > (3,):
     try:
-        import PyTango
         PYTGMAJOR, PYTGMINOR, PYTGPATCH = list(
             map(int, PyTango.__version__.split(".")[:3]))
         if PYTGMAJOR <= 9:
@@ -1913,7 +1912,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         if not PYTG_BUG_213:
             self._sc.checkImageField(
-                det, "ImageEncoded_MLIMA", "uint8", "NX_UINT8", self._pco1[:steps],
+                det, "ImageEncoded_MLIMA", "uint8", "NX_UINT8",
+                self._pco1[:steps],
                 grows=3)
 
         self._sc.checkSingleImageField(
@@ -2462,9 +2462,10 @@ class TangoFieldTagWriterTest(unittest.TestCase):
                   [[numpy.iinfo(getattr(numpy, 'uint8')).max] *
                    len(self._pco1[i][0])] * len(self._pco1[i]))
                  for i in range(steps)],
-                attrs={"type": "NX_UINT8", "units": "", "nexdatas_source": None,
-                       "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                       "nexdatas_canfail_error": None},
+                attrs={
+                    "type": "NX_UINT8", "units": "", "nexdatas_source": None,
+                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                    "nexdatas_canfail_error": None},
                 grows=3)
 
         if not PYTG_BUG_213:

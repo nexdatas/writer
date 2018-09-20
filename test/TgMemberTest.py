@@ -52,13 +52,11 @@ class pool(object):
         self.lock = threading.Lock()
         self.counter = 0
 
-# test fixture
 
 #: (:obj:`bool`) PyTango bug #213 flag related to EncodedAttributes in python3
 PYTG_BUG_213 = False
 if sys.version_info > (3,):
     try:
-        import PyTango
         PYTGMAJOR, PYTGMINOR, PYTGPATCH = list(
             map(int, PyTango.__version__.split(".")[:3]))
         if PYTGMAJOR <= 9:
@@ -73,6 +71,7 @@ if sys.version_info > (3,):
         pass
 
 
+# test fixture
 class TgMemberTest(unittest.TestCase):
 
     # constructor
