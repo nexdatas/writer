@@ -30,6 +30,12 @@ from nxswriter.Errors import XMLSyntaxError
 from nxswriter.FetchNameHandler import TNObject
 
 
+if sys.version_info > (3,):
+    tobytes = lambda x: bytes(x, "utf8")
+else:
+    tobytes = bytes
+
+
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
@@ -353,8 +359,8 @@ class FetchNameHandlerTest(unittest.TestCase):
 
         # parser = sax.make_parser()
         el = FetchNameHandler()
-        sax.parseString(bytes('<group type="%s" name="%s" />' %
-                              (attr1["type"], attr1["name"]), "utf8"), el)
+        sax.parseString(tobytes('<group type="%s" name="%s" />' %
+                              (attr1["type"], attr1["name"])), el)
 
         self.assertEqual(el.groupTypes.name, "root")
         self.assertEqual(el.groupTypes.nxtype, None)
@@ -380,10 +386,10 @@ class FetchNameHandlerTest(unittest.TestCase):
         # parser = sax.make_parser()
         el = FetchNameHandler()
         sax.parseString(
-            bytes('<group type="%s" name="%s"><group type="%s" name="%s"/>'
+            tobytes('<group type="%s" name="%s"><group type="%s" name="%s"/>'
                   '</group>'
                   % (attr1["type"], attr1["name"], attr2["type"],
-                     attr2["name"]), "utf8"),
+                     attr2["name"])),
             el)
 
         self.assertEqual(el.groupTypes.name, "root")
@@ -413,10 +419,10 @@ class FetchNameHandlerTest(unittest.TestCase):
         # parser = sax.make_parser()
         el = FetchNameHandler()
         sax.parseString(
-            bytes('<group type="%s" name="%s"><field type="%s" name="%s"/>'
+            tobytes('<group type="%s" name="%s"><field type="%s" name="%s"/>'
                   '</group>'
                   % (attr1["type"], attr1["name"], attr2["type"],
-                     attr2["name"]), "utf8"),
+                     attr2["name"])),
             el)
 
         self.assertEqual(el.groupTypes.name, "root")
@@ -442,8 +448,8 @@ class FetchNameHandlerTest(unittest.TestCase):
         # parser = sax.make_parser()
         el = FetchNameHandler()
         sax.parseString(
-            bytes('<group type="%s" ><group type="%s" name="%s"/></group>'
-                  % (attr1["type"], attr2["type"], attr2["name"]), "utf8"),
+            tobytes('<group type="%s" ><group type="%s" name="%s"/></group>'
+                  % (attr1["type"], attr2["type"], attr2["name"])),
             el)
 
         self.assertEqual(el.groupTypes.name, "root")
@@ -474,8 +480,8 @@ class FetchNameHandlerTest(unittest.TestCase):
         # parser = sax.make_parser()
         el = FetchNameHandler()
         sax.parseString(
-            bytes('<group type="%s" ><group type="%s"/></group>'
-                  % (attr1["type"], attr2["type"]), "utf8"), el)
+            tobytes('<group type="%s" ><group type="%s"/></group>'
+                  % (attr1["type"], attr2["type"])), el)
 
         self.assertEqual(el.groupTypes.name, "root")
         self.assertEqual(el.groupTypes.nxtype, None)
@@ -503,7 +509,7 @@ class FetchNameHandlerTest(unittest.TestCase):
         el = FetchNameHandler()
         self.myAssertRaise(
             XMLSyntaxError, sax.parseString,
-            bytes('<group name="%s" />' % (attr1["name"]), "utf8"), el)
+            tobytes('<group name="%s" />' % (attr1["name"])), el)
 
         self.assertTrue(isinstance(el.groupTypes, TNObject))
         self.assertEqual(len(el.groupTypes.children), 1)
@@ -526,9 +532,9 @@ class FetchNameHandlerTest(unittest.TestCase):
         # parser = sax.make_parser()
         el = FetchNameHandler()
         sax.parseString(
-            bytes('<group type="%s" ><attribute name="name">'
+            tobytes('<group type="%s" ><attribute name="name">'
                   'entry1</attribute></group>'
-                  % (attr1["type"]), "utf8"), el)
+                  % (attr1["type"])), el)
 
         self.assertEqual(el.groupTypes.name, "root")
         self.assertEqual(el.groupTypes.nxtype, None)
@@ -551,10 +557,10 @@ class FetchNameHandlerTest(unittest.TestCase):
 
         # parser = sax.make_parser()
         el = FetchNameHandler()
-        sax.parseString(bytes(
+        sax.parseString(tobytes(
             '<group name="%s" ><attribute name="type">NXentry'
             '</attribute></group>'
-            % (attr1["name"]), "utf8"), el)
+            % (attr1["name"])), el)
 
         self.assertEqual(el.groupTypes.name, "root")
         self.assertEqual(el.groupTypes.nxtype, None)
