@@ -36,6 +36,22 @@ else:
     bytes = str
 
 
+def _tostr(text):
+    """ converts text  to str type
+
+    :param text: text
+    :type text: :obj:`bytes` or :obj:`unicode`
+    :returns: text in str type
+    :rtype: :obj:`str`
+    """
+    if isinstance(text, str):
+        return text
+    elif sys.version_info > (3,):
+        return str(text, "utf8")
+    else:
+        return str(text)
+
+
 def _slice2selection(t, shape):
     """ converts slice(s) to selection
 
@@ -473,7 +489,8 @@ class H5CppGroup(FileWriter.FTGroup):
         dcpl.layout = h5cpp.property.DatasetLayout.CHUNKED
         dcpl.chunk = tuple(chunk)
         field = h5cpp.node.Dataset(
-            self._h5object, h5cpp.Path(name), pTh[str(type_code)], dataspace,
+            self._h5object, h5cpp.Path(name),
+            pTh[_tostr(type_code)], dataspace,
             dcpl=dcpl)
 
         fld = H5CppField(field, self)
@@ -1065,7 +1082,7 @@ class H5CppAttributeManager(FileWriter.FTAttributeManager):
                 raise Exception("Attribute %s exists" % name)
         shape = shape or []
         if shape:
-            at = self._h5object.create(name, pTh[str(dtype)], shape)
+            at = self._h5object.create(name, pTh[_tostr(dtype)], shape)
             if dtype in ['string', b'string']:
                 emp = np.empty(shape, dtype="unicode")
                 emp[:] = ''
@@ -1073,7 +1090,7 @@ class H5CppAttributeManager(FileWriter.FTAttributeManager):
             else:
                 at.write(np.zeros(shape, dtype=dtype))
         else:
-            at = self._h5object.create(name, pTh[str(dtype)])
+            at = self._h5object.create(name, pTh[_tostr(dtype)])
             if dtype in ['string', b'string']:
                 at.write(np.array(u"", dtype="unicode"))
             else:
