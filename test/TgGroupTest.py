@@ -66,6 +66,25 @@ if sys.version_info > (3,):
     long = int
 
 
+#: (:obj:`bool`) PyTango bug #213 flag related to EncodedAttributes in python3
+PYTG_BUG_213 = False
+if sys.version_info > (3,):
+    try:
+        import PyTango
+        PYTGMAJOR, PYTGMINOR, PYTGPATCH = list(
+            map(int, PyTango.__version__.split(".")[:3]))
+        if PYTGMAJOR <= 9:
+            if PYTGMAJOR == 9:
+                if PYTGMINOR < 2:
+                    PYTG_BUG_213 = True
+                elif PYTGMINOR == 2 and PYTGPATCH < 4:
+                    PYTG_BUG_213 = True
+            else:
+                PYTG_BUG_213 = True
+    except:
+        pass
+
+
 # test pool
 class pool(object):
 
@@ -75,7 +94,6 @@ class pool(object):
         self.counter = 0
 
 # test fixture
-
 
 class TgGroupTest(unittest.TestCase):
 
@@ -297,14 +315,15 @@ class TgGroupTest(unittest.TestCase):
                 dv2.setMember(mb)
             flip = not flip
 
-        flip = True
-        for k in arr3:
-            mb = TgMember(k, encoding=arr3[k][2][0])
-            if flip:
-                dv.setMember(mb)
-            else:
-                dv2.setMember(mb)
-            flip = not flip
+        if not PYTG_BUG_213:
+            flip = True
+            for k in arr3:
+                mb = TgMember(k, encoding=arr3[k][2][0])
+                if flip:
+                    dv.setMember(mb)
+                else:
+                    dv2.setMember(mb)
+                flip = not flip
 
         print("FETCH %s" % counter)
         gr.getData(counter)
@@ -358,19 +377,20 @@ class TgGroupTest(unittest.TestCase):
                     1, 0], None, None, arr[k][3] if len(arr[k]) > 3 else 0)
             flip = not flip
 
-        dp = DecoderPool()
-        flip = True
-        for k in arr3:
-            print(k)
-            if flip:
-                print(gr.getDevice(dvn).members[k])
-                dt = (gr.getDevice(dvn).members[k]).getValue(dp)
-            else:
-                print(gr.getDevice(dvn2).members[k])
-                dt = (gr.getDevice(dvn2).members[k]).getValue(dp)
-            self.checkData(dt, "SCALAR", arr3[k][2], arr3[k][1],
-                           [1, 0], arr3[k][2][0], dp)
-            flip = not flip
+        if not PYTG_BUG_213:
+            dp = DecoderPool()
+            flip = True
+            for k in arr3:
+                print(k)
+                if flip:
+                    print(gr.getDevice(dvn).members[k])
+                    dt = (gr.getDevice(dvn).members[k]).getValue(dp)
+                else:
+                    print(gr.getDevice(dvn2).members[k])
+                    dt = (gr.getDevice(dvn2).members[k]).getValue(dp)
+                self.checkData(dt, "SCALAR", arr3[k][2], arr3[k][1],
+                               [1, 0], arr3[k][2][0], dp)
+                flip = not flip
 
     # getData test
     # \brief It tests default settings

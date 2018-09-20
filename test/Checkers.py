@@ -592,7 +592,8 @@ class Checker(object):
     # \param error data precision
     # \param grows growing dimension
     # \param attrs dictionary with string attributes
-    def checkSpectrumField(self, det, name, dtype, nxtype, values, error=0, grows=0, attrs=None):
+    def checkSpectrumField(self, det, name, dtype, nxtype, values, error=0,
+                           grows=0, attrs=None):
         atts = {"type": nxtype, "units": "",
                 "nexdatas_source": None, "nexdatas_strategy": None}
         if attrs is not None:

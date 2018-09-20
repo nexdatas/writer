@@ -430,7 +430,7 @@ class PNIField(FileWriter.FTField):
         """
         try:
             if isinstance(o, bytes) and sys.version_info > (3,):
-                 o = o.decode("utf8")
+                o = o.decode("utf8")
         except:
             pass
         self._h5object.write(o)
@@ -445,7 +445,7 @@ class PNIField(FileWriter.FTField):
         """
         try:
             if isinstance(o, bytes) and sys.version_info > (3,):
-                 o = o.decode("utf8")
+                o = o.decode("utf8")
         except:
             pass
         self._h5object.__setitem__(t, o)

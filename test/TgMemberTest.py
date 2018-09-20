@@ -54,6 +54,24 @@ class pool(object):
 
 # test fixture
 
+#: (:obj:`bool`) PyTango bug #213 flag related to EncodedAttributes in python3
+PYTG_BUG_213 = False
+if sys.version_info > (3,):
+    try:
+        import PyTango
+        PYTGMAJOR, PYTGMINOR, PYTGPATCH = list(
+            map(int, PyTango.__version__.split(".")[:3]))
+        if PYTGMAJOR <= 9:
+            if PYTGMAJOR == 9:
+                if PYTGMINOR < 2:
+                    PYTG_BUG_213 = True
+                elif PYTGMINOR == 2 and PYTGPATCH < 4:
+                    PYTG_BUG_213 = True
+            else:
+                PYTG_BUG_213 = True
+    except:
+        pass
+
 
 class TgMemberTest(unittest.TestCase):
 
@@ -273,13 +291,14 @@ class TgMemberTest(unittest.TestCase):
                 dt, "SCALAR", arr[k][2], arr[k][1], [1, 0], None, None,
                 arr[k][3] if len(arr[k]) > 3 else 0)
 
-        for k in arr3:
-            mb = TgMember(k, encoding=arr3[k][2][0])
-            mb.getData(proxy)
-            dp = DecoderPool()
-            dt = mb.getValue(dp)
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
+        if not PYTG_BUG_213:
+            for k in arr3:
+                mb = TgMember(k, encoding=arr3[k][2][0])
+                mb.getData(proxy)
+                dp = DecoderPool()
+                dt = mb.getValue(dp)
+                self.checkData(dt, "SCALAR", arr3[k][
+                               2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
 
     # getData test
     # \brief It tests default settings
@@ -500,14 +519,15 @@ class TgMemberTest(unittest.TestCase):
             self.checkData(dt, "SCALAR", arr[k][2], arr[k][1], [1, 0],
                            None, None, arr[k][3] if len(arr[k]) > 3 else 0)
 
-        for k in arr3:
-            mb = TgMember(k, encoding=arr3[k][2][0])
-            da = proxy.read_attribute(k)
-            mb.setData(da)
-            dp = DecoderPool()
-            dt = mb.getValue(dp)
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
+        if not PYTG_BUG_213:
+            for k in arr3:
+                mb = TgMember(k, encoding=arr3[k][2][0])
+                da = proxy.read_attribute(k)
+                mb.setData(da)
+                dp = DecoderPool()
+                dt = mb.getValue(dp)
+                self.checkData(dt, "SCALAR", arr3[k][
+                               2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
 
     # getData test
     # \brief It tests default settings

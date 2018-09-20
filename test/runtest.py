@@ -310,11 +310,27 @@ if PYTANGO_AVAILABLE:
             import DBFieldTagServerH5CppTest
             import DBFieldTagAsynchH5CppTest
 
-# import TestServerSetUp
+
+#: (:obj:`bool`) PyTango Bug #213 flag
+PYTG_BUG_213 = False
+if sys.version_info > (3,):
+    try:
+        import PyTango
+        PYTGMAJOR, PYTGMINOR, PYTGPATCH = list(
+            map(int, PyTango.__version__.split(".")[:3]))
+        if PYTGMAJOR <= 9:
+            if PYTGMAJOR == 9:
+                if PYTGMINOR < 2:
+                    PYTG_BUG_213 = True
+                elif PYTGMINOR == 2 and PYTGPATCH < 4:
+                    PYTG_BUG_213 = True
+            else:
+                PYTG_BUG_213 = True
+    except:
+        pass
+
 
 # main function
-
-
 def main():
 
     # test suit
@@ -354,8 +370,10 @@ def main():
         unittest.defaultTestLoader.loadTestsFromModule(DataHolderTest))
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ElementThreadTest))
-    suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(DataSourceDecodersTest))
+    if not PYTG_BUG_213:
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(
+                DataSourceDecodersTest))
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ThreadPoolTest))
     suite.addTests(

@@ -47,7 +47,7 @@ try:
     from Checkers import Checker
 except:
     from .Checkers import Checker
-        
+
 try:
     import SimpleServerSetUp
 except:
@@ -56,6 +56,24 @@ except:
 
 if sys.version_info > (3,):
     long = int
+
+#: (:obj:`bool`) PyTango bug #213 flag related to EncodedAttributes in python3
+PYTG_BUG_213 = False
+if sys.version_info > (3,):
+    try:
+        import PyTango
+        PYTGMAJOR, PYTGMINOR, PYTGPATCH = list(
+            map(int, PyTango.__version__.split(".")[:3]))
+        if PYTGMAJOR <= 9:
+            if PYTGMAJOR == 9:
+                if PYTGMINOR < 2:
+                    PYTG_BUG_213 = True
+                elif PYTGMINOR == 2 and PYTGPATCH < 4:
+                    PYTG_BUG_213 = True
+            else:
+                PYTG_BUG_213 = True
+    except:
+        pass
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -93,7 +111,7 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
             [[False, False, True, True], [
                 False, False, True, False]],
             [[True, False, True, True], [False, False, True, False]]]
-        
+
         self._sc = Checker(self)
         self._mca1 = [[self.__rnd.randint(-100, 100)
                        for e in range(256)] for i in range(3)]
@@ -123,7 +141,7 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
               "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"],
              ["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
               "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"]]]
-        
+
         self._pco1 = [[[self.__rnd.randint(0, 100) for e1 in range(8)]
                        for e2 in range(10)] for i in range(3)]
         self._fpco1 = [self._sc.nicePlot2D(20, 30, 5) for i in range(4)]
@@ -1348,7 +1366,8 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
-        xml = """<definition>
+        if not PYTG_BUG_213:
+            xml = """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
       <group type="NXdetector" name="detector">
@@ -1508,6 +1527,147 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
   </group>
 </definition>
 """
+        else:
+            xml = """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+
+
+       <field units="" type="NX_BOOLEAN" name="ImageBoolean">
+          <strategy mode="STEP"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageBoolean"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_UINT8" name="ImageUChar">
+          <strategy mode="STEP"   compression="true"  grows="2" />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageUChar"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_INT16" name="ImageShort">
+          <strategy mode="STEP"    compression="true"  grows="3" shuffle="false"/>
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageShort"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT16" name="ImageUShort">
+          <strategy mode="STEP"   grows="1"   />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageUShort"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_INT32" name="ImageLong">
+          <strategy mode="STEP"  compression="true"  grows="2" shuffle="true"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageLong"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT32" name="ImageULong">
+          <strategy mode="STEP"  grows="3"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageULong"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_INT64" name="ImageLong64">
+          <strategy mode="STEP"  compression="true"  grows="1" shuffle="false"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageLong64"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT64" name="ImageULong64">
+          <strategy mode="STEP"  compression="true"  grows="2"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageULong64"/>
+          </datasource>
+        </field>
+
+
+
+       <field units="" type="NX_FLOAT32" name="ImageFloat">
+          <strategy mode="STEP"  compression="true"  grows="3" shuffle="true"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageFloat"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_FLOAT64" name="ImageDouble">
+          <strategy mode="STEP"  compression="true"  grows="1"   />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageDouble"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_CHAR" name="ImageString">
+          <strategy mode="STEP"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageString"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_UINT64" name="InitImageULong64">
+          <strategy mode="INIT" />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageULong64"/>
+          </datasource>
+        </field>
+
+
+
+       <field units="" type="NX_FLOAT32" name="FinalImageFloat">
+          <strategy mode="FINAL"  compression="true"  shuffle="true"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageFloat"/>
+          </datasource>
+        </field>
+
+
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+
         xml = xml.replace("localhost", self._dbhost)
 
         self._simps.dp.ImageBoolean = self._logical2[0]
@@ -1552,7 +1712,7 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
 
         FileWriter.writer = H5PYWriter
         f = FileWriter.open_file(fname, readonly=True)
-        det = self._sc.checkFieldTree(f, fname, 15)
+        det = self._sc.checkFieldTree(f, fname, 15 if not PYTG_BUG_213 else 13)
         self._sc.checkImageField(
             det, "ImageBoolean", "bool", "NX_BOOLEAN", self._logical2[:steps])
         self._sc.checkImageField(
@@ -1584,13 +1744,15 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
                                  grows=1, error=1.0e-14)
         self._sc.checkImageField(
             det, "ImageString", "string", "NX_CHAR", self._dates2[:steps])
-        self._sc.checkImageField(
-            det, "ImageEncoded", "uint8", "NX_UINT8", self._pco1[:steps],
-                                 grows=3)
+        if not PYTG_BUG_213:
+            self._sc.checkImageField(
+                det, "ImageEncoded", "uint8", "NX_UINT8", self._pco1[:steps],
+                grows=3)
 
-        self._sc.checkImageField(
-            det, "ImageEncoded_MLIMA", "uint8", "NX_UINT8", self._pco1[:steps],
-                                 grows=3)
+        if not PYTG_BUG_213:
+            self._sc.checkImageField(
+                det, "ImageEncoded_MLIMA", "uint8", "NX_UINT8", self._pco1[:steps],
+                grows=3)
 
         self._sc.checkSingleImageField(
             det, "InitImageULong64", "uint64", "NX_UINT64", self._pco1[0])
@@ -1605,7 +1767,8 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
-        xml = """<definition>
+        if not PYTG_BUG_213:
+            xml = """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
       <group type="NXdetector" name="detector">
@@ -1768,6 +1931,151 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
   </group>
 </definition>
 """
+        else:
+            xml = """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+
+
+       <field units="" type="NX_BOOLEAN" name="ImageBoolean">
+          <strategy mode="STEP"  canfail="true" />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageBoolean"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_UINT8" name="ImageUChar">
+          <strategy mode="STEP"   compression="true"  grows="2"  canfail="true"/>
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageUChar"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_INT16" name="ImageShort">
+          <strategy mode="STEP"    compression="true"  grows="3" shuffle="false" canfail="true"/>
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageShort"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT16" name="ImageUShort">
+          <strategy mode="STEP"   grows="1"  canfail="true"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageUShort"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_INT32" name="ImageLong">
+          <strategy mode="STEP"  compression="true"  grows="2" shuffle="true"  canfail="true" />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageLong"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT32" name="ImageULong">
+          <strategy mode="STEP"  grows="3"  canfail="true" />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageULong"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_INT64" name="ImageLong64">
+          <strategy mode="STEP"  compression="true"  grows="1" shuffle="false"  canfail="true" />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageLong64"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT64" name="ImageULong64">
+          <strategy mode="STEP"  compression="true"  grows="2" canfail="true"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageULong64"/>
+          </datasource>
+        </field>
+
+
+
+       <field units="" type="NX_FLOAT32" name="ImageFloat">
+          <strategy mode="STEP"  compression="true"  grows="3" shuffle="true"  canfail="true"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageFloat"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_FLOAT64" name="ImageDouble">
+          <strategy mode="STEP"  compression="true"  grows="1"  canfail="true"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageDouble"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_CHAR" name="ImageString">
+          <strategy mode="STEP"  canfail="true" />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageString"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT64" name="InitImageULong64">
+          <strategy mode="INIT"  canfail="true" />
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageULong64_canfail"/>
+          </datasource>
+        </field>
+
+
+
+       <field units="" type="NX_FLOAT32" name="FinalImageFloat">
+          <strategy mode="FINAL"  compression="true"  shuffle="true"  canfail="true" />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageFloat"/>
+          </datasource>
+        </field>
+
+
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+
         xml = xml.replace("localhost", self._dbhost)
 
         self._simps.dp.ImageBoolean = self._logical2[0]
@@ -1819,10 +2127,12 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
 
         FileWriter.writer = H5PYWriter
         f = FileWriter.open_file(fname, readonly=True)
-        det = self._sc.checkFieldTree(f, fname, 15)
+        det = self._sc.checkFieldTree(f, fname, 15 if not PYTG_BUG_213 else 13)
         self._sc.checkImageField(
             det, "ImageBoolean", "bool", "NX_BOOLEAN",
-            [(self._logical2[i] if not i % 2 else [[False] * len(self._logical2[i][0])] * len(self._logical2[i]))
+            [(self._logical2[i] if not i % 2
+              else [[False] *
+                    len(self._logical2[i][0])] * len(self._logical2[i]))
              for i in range(steps)],
             attrs={
                 "type": "NX_BOOLEAN", "units": "", "nexdatas_source": None,
@@ -1832,7 +2142,8 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageUChar", "uint8", "NX_UINT8",
             [(self._pco1[i] if not i % 2 else
-              [[numpy.iinfo(getattr(numpy, 'uint8')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+              [[numpy.iinfo(getattr(numpy, 'uint8')).max] *
+               len(self._pco1[i][0])] * len(self._pco1[i]))
              for i in range(steps)],
             attrs={"type": "NX_UINT8", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -1842,7 +2153,8 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageShort", "int16", "NX_INT16",
             [(self._pco1[i] if not i % 2 else
-              [[numpy.iinfo(getattr(numpy, 'int16')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+              [[numpy.iinfo(getattr(numpy, 'int16')).max] *
+               len(self._pco1[i][0])] * len(self._pco1[i]))
              for i in range(steps)],
             attrs={"type": "NX_INT16", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -1851,7 +2163,8 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageUShort", "uint16", "NX_UINT16",
             [(self._pco1[i] if not i % 2 else
-              [[numpy.iinfo(getattr(numpy, 'uint16')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+              [[numpy.iinfo(getattr(numpy, 'uint16')).max] *
+               len(self._pco1[i][0])] * len(self._pco1[i]))
              for i in range(steps)],
             attrs={"type": "NX_UINT16", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -1861,7 +2174,8 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageLong", "int32", "NX_INT32",
             [(self._pco1[i] if not i % 2 else
-              [[numpy.iinfo(getattr(numpy, 'int32')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+              [[numpy.iinfo(getattr(numpy, 'int32')).max] *
+               len(self._pco1[i][0])] * len(self._pco1[i]))
              for i in range(steps)],
             attrs={"type": "NX_INT32", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -1870,7 +2184,8 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageULong", "uint32", "NX_UINT32",
             [(self._pco1[i] if not i % 2 else
-              [[numpy.iinfo(getattr(numpy, 'uint32')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+              [[numpy.iinfo(getattr(numpy, 'uint32')).max] *
+               len(self._pco1[i][0])] * len(self._pco1[i]))
              for i in range(steps)],
             attrs={"type": "NX_UINT32", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -1880,7 +2195,8 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageLong64", "int64", "NX_INT64",
             [(self._pco1[i] if not i % 2 else
-              [[numpy.iinfo(getattr(numpy, 'int64')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+              [[numpy.iinfo(getattr(numpy, 'int64')).max] *
+               len(self._pco1[i][0])] * len(self._pco1[i]))
              for i in range(steps)],
             attrs={"type": "NX_INT64", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -1889,7 +2205,8 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageULong64", "uint64", "NX_UINT64",
             [(self._pco1[i] if not i % 2 else
-              [[numpy.iinfo(getattr(numpy, 'int64')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+              [[numpy.iinfo(getattr(numpy, 'int64')).max] *
+               len(self._pco1[i][0])] * len(self._pco1[i]))
              for i in range(steps)],
             attrs={"type": "NX_UINT64", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -1899,7 +2216,8 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageFloat", "float32", "NX_FLOAT32",
             [(self._fpco1[i] if not i % 2 else
-              [[numpy.finfo(getattr(numpy, 'float32')).max] * len(self._fpco1[i][0])] * len(self._fpco1[i]))
+              [[numpy.finfo(getattr(numpy, 'float32')).max] *
+               len(self._fpco1[i][0])] * len(self._fpco1[i]))
              for i in range(steps)],
             attrs={
                 "type": "NX_FLOAT32", "units": "", "nexdatas_source": None,
@@ -1909,7 +2227,8 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageDouble", "float64", "NX_FLOAT64",
             [(self._fpco1[i] if not i % 2 else
-              [[numpy.finfo(getattr(numpy, 'float64')).max] * len(self._fpco1[i][0])] * len(self._fpco1[i]))
+              [[numpy.finfo(getattr(numpy, 'float64')).max] *
+               len(self._fpco1[i][0])] * len(self._fpco1[i]))
              for i in range(steps)],
             attrs={
                 "type": "NX_FLOAT64", "units": "", "nexdatas_source": None,
@@ -1926,25 +2245,28 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
 
-        self._sc.checkImageField(
-            det, "ImageEncoded", "uint8", "NX_UINT8",
-            [(self._pco1[i] if not i % 2 else
-              [[numpy.iinfo(getattr(numpy, 'uint8')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
-             for i in range(steps)],
-            attrs={"type": "NX_UINT8", "units": "", "nexdatas_source": None,
-                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                   "nexdatas_canfail_error": None},
-            grows=3)
+        if not PYTG_BUG_213:
+            self._sc.checkImageField(
+                det, "ImageEncoded", "uint8", "NX_UINT8",
+                [(self._pco1[i] if not i % 2 else
+                  [[numpy.iinfo(getattr(numpy, 'uint8')).max] *
+                   len(self._pco1[i][0])] * len(self._pco1[i]))
+                 for i in range(steps)],
+                attrs={"type": "NX_UINT8", "units": "", "nexdatas_source": None,
+                       "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                       "nexdatas_canfail_error": None},
+                grows=3)
 
-        self._sc.checkImageField(
-            det, "ImageEncoded_MLIMA", "uint8", "NX_UINT8",
-            [(self._pco1[i] if not i % 2 else
-              [[numpy.iinfo(getattr(numpy, 'uint8')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
-             for i in range(steps)],
-            attrs={"type": "NX_UINT8", "units": "", "nexdatas_source": None,
-                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                   "nexdatas_canfail_error": None},
-            grows=3)
+            self._sc.checkImageField(
+                det, "ImageEncoded_MLIMA", "uint8", "NX_UINT8",
+                [(self._pco1[i] if not i % 2 else
+                  [[numpy.iinfo(getattr(numpy, 'uint8')).max] *
+                   len(self._pco1[i][0])] * len(self._pco1[i]))
+                 for i in range(steps)],
+                attrs={"type": "NX_UINT8", "units": "", "nexdatas_source": None,
+                       "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                       "nexdatas_canfail_error": None},
+                grows=3)
 
         self._sc.checkSingleImageField(
             det, "InitImageULong64", "uint64", "NX_UINT64",

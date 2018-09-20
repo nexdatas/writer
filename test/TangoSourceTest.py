@@ -65,6 +65,26 @@ if sys.version_info > (3,):
 else:
     import thread
 
+#: (:obj:`bool`) PyTango bug #213 flag related to EncodedAttributes in python3
+PYTG_BUG_213 = False
+if sys.version_info > (3,):
+    try:
+        import PyTango
+        PYTGMAJOR, PYTGMINOR, PYTGPATCH = list(
+            map(int, PyTango.__version__.split(".")[:3]))
+        if PYTGMAJOR <= 9:
+            if PYTGMAJOR == 9:
+                if PYTGMINOR < 2:
+                    PYTG_BUG_213 = True
+                elif PYTGMINOR == 2 and PYTGPATCH < 4:
+                    PYTG_BUG_213 = True
+            else:
+                PYTG_BUG_213 = True
+    except:
+        pass
+
+
+    
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
@@ -744,17 +764,18 @@ class TangoSourceTest(unittest.TestCase):
                 arr[k][3] if len(arr[k]) > 3
                 else 0)
 
-        for k in arr3:
-            el = TangoSource()
-            el.device = 'stestp09/testss/s1r228'
-            el.member.memberType = 'attribute'
-            el.member.name = k
-            el.member.encoding = arr3[k][2][0]
-            dp = DecoderPool()
-            dt = el.setDecoders(dp)
-            dt = el.getData()
-            self.checkData(dt, "SCALAR", arr3[k][2], arr3[k][1], [1, 0],
-                           arr3[k][2][0], dp)
+        if not PYTG_BUG_213:
+            for k in arr3:
+                el = TangoSource()
+                el.device = 'stestp09/testss/s1r228'
+                el.member.memberType = 'attribute'
+                el.member.name = k
+                el.member.encoding = arr3[k][2][0]
+                dp = DecoderPool()
+                dt = el.setDecoders(dp)
+                dt = el.getData()
+                self.checkData(dt, "SCALAR", arr3[k][2], arr3[k][1], [1, 0],
+                               arr3[k][2][0], dp)
 
     # getData test
     # \brief It tests default settings
@@ -899,19 +920,20 @@ class TangoSourceTest(unittest.TestCase):
                            arr[k][3], [], None, None,
                            arr[k][5] if len(arr[k]) > 5 else 0)
 
-        for k in arr3:
-            el = TangoSource()
-            el.device = 'stestp09/testss/s1r228'
-            el.member.memberType = 'attribute'
-            el.member.name = k
-            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
-            sclient = 'stestp09/testss/s1r228/'
-            el.member.encoding = arr3[k][2][0]
-            dp = DecoderPool()
-            dt = el.setDecoders(dp)
-            dt = el.getData()
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
+        if not PYTG_BUG_213:
+            for k in arr3:
+                el = TangoSource()
+                el.device = 'stestp09/testss/s1r228'
+                el.member.memberType = 'attribute'
+                el.member.name = k
+                el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+                sclient = 'stestp09/testss/s1r228/'
+                el.member.encoding = arr3[k][2][0]
+                dp = DecoderPool()
+                dt = el.setDecoders(dp)
+                dt = el.getData()
+                self.checkData(dt, "SCALAR", arr3[k][
+                               2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
 
     # getData test
     # \brief It tests default settings
@@ -1054,18 +1076,19 @@ class TangoSourceTest(unittest.TestCase):
                 dt, "SCALAR", arr[k][4],
                 arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
 
-        for k in arr3:
-            el = TangoSource()
-            el.device = 'stestp09/testss/s1r228'
-            el.member.memberType = 'attribute'
-            el.member.name = k
-            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
-            el.member.encoding = arr3[k][2][0]
-            dp = DecoderPool()
-            dt = el.setDecoders(dp)
-            dt = el.getData()
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
+        if not PYTG_BUG_213:
+            for k in arr3:
+                el = TangoSource()
+                el.device = 'stestp09/testss/s1r228'
+                el.member.memberType = 'attribute'
+                el.member.name = k
+                el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+                el.member.encoding = arr3[k][2][0]
+                dp = DecoderPool()
+                dt = el.setDecoders(dp)
+                dt = el.getData()
+                self.checkData(dt, "SCALAR", arr3[k][
+                               2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
 
     # getData test
     # \brief It tests default settings
@@ -1206,18 +1229,19 @@ class TangoSourceTest(unittest.TestCase):
                 dt, "SCALAR", arr[k][4],
                 arr[k][3], [], None, None, arr[k][5] if len(arr[k]) > 5 else 0)
 
-        for k in arr3:
-            el = TangoSource()
-            el.device = 'stestp09/testss/s1r228'
-            el.member.memberType = 'attribute'
-            el.member.name = k
-            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
-            el.member.encoding = arr3[k][2][0]
-            dp = DecoderPool()
-            dt = el.setDecoders(dp)
-            dt = el.getData()
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
+        if not PYTG_BUG_213:
+            for k in arr3:
+                el = TangoSource()
+                el.device = 'stestp09/testss/s1r228'
+                el.member.memberType = 'attribute'
+                el.member.name = k
+                el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+                el.member.encoding = arr3[k][2][0]
+                dp = DecoderPool()
+                dt = el.setDecoders(dp)
+                dt = el.getData()
+                self.checkData(dt, "SCALAR", arr3[k][
+                               2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
 
     # getData test
     # \brief It tests default settings
@@ -1268,17 +1292,18 @@ class TangoSourceTest(unittest.TestCase):
                 dt, "SCALAR", arr[k][2], arr[k][1], [1, 0], None, None,
                 arr[k][3] if len(arr[k]) > 3 else 0)
 
-        for k in arr3:
-            el = TangoSource()
-            el.device = 'stestp09/testss/s1r228'
-            el.member.memberType = 'attribute'
-            el.member.name = k.lower()
-            el.member.encoding = arr3[k][2][0]
-            dp = DecoderPool()
-            dt = el.setDecoders(dp)
-            dt = el.getData()
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
+        if not PYTG_BUG_213:
+            for k in arr3:
+                el = TangoSource()
+                el.device = 'stestp09/testss/s1r228'
+                el.member.memberType = 'attribute'
+                el.member.name = k.lower()
+                el.member.encoding = arr3[k][2][0]
+                dp = DecoderPool()
+                dt = el.setDecoders(dp)
+                dt = el.getData()
+                self.checkData(dt, "SCALAR", arr3[k][
+                               2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
 
     # getData test
     # \brief It tests default settings
@@ -1393,19 +1418,20 @@ class TangoSourceTest(unittest.TestCase):
                 dt, "SCALAR", arr[k][2], arr[k][1], [1, 0], None, None,
                 arr[k][3] if len(arr[k]) > 3 else 0)
 
-        for k in arr3:
-            print(k)
-            el = TangoSource()
-            el.device = 'stestp09/testss/s1r228'
-            el.member.memberType = 'attribute'
-            el.member.name = k
-            el.member.encoding = arr3[k][2][0]
-            dp = DecoderPool()
-            dt = el.setDecoders(dp)
-            dt = el.getData()
-            self.checkData(
-                dt, "SCALAR", arr3[k][2], arr3[k][1], [1, 0], arr3[k][2][0],
-                dp)
+        if not PYTG_BUG_213:
+            for k in arr3:
+                print(k)
+                el = TangoSource()
+                el.device = 'stestp09/testss/s1r228'
+                el.member.memberType = 'attribute'
+                el.member.name = k
+                el.member.encoding = arr3[k][2][0]
+                dp = DecoderPool()
+                dt = el.setDecoders(dp)
+                dt = el.getData()
+                self.checkData(
+                    dt, "SCALAR", arr3[k][2], arr3[k][1], [1, 0], arr3[k][2][0],
+                    dp)
 
     # getData test
     # \brief It tests default settings
@@ -1520,17 +1546,18 @@ class TangoSourceTest(unittest.TestCase):
                 dt, "SCALAR", arr[k][2], arr[k][1], [1, 0],
                 None, None, arr[k][3] if len(arr[k]) > 3 else 0)
 
-        for k in arr3:
-            el = TangoSource()
-            el.device = 'stestp09/testss/s1r228'
-            el.member.memberType = 'attribute'
-            el.member.name = k
-            el.member.encoding = arr3[k][2][0]
-            dp = DecoderPool()
-            dt = el.setDecoders(dp)
-            dt = el.getData()
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
+        if not PYTG_BUG_213:
+            for k in arr3:
+                el = TangoSource()
+                el.device = 'stestp09/testss/s1r228'
+                el.member.memberType = 'attribute'
+                el.member.name = k
+                el.member.encoding = arr3[k][2][0]
+                dp = DecoderPool()
+                dt = el.setDecoders(dp)
+                dt = el.getData()
+                self.checkData(dt, "SCALAR", arr3[k][
+                               2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
 
     # getData test
     # \brief It tests default settings
@@ -1647,17 +1674,18 @@ class TangoSourceTest(unittest.TestCase):
                            1, 0], None, None, arr[k][3]
                            if len(arr[k]) > 3 else 0)
 
-        for k in arr3:
-            el = TangoSource()
-            el.device = 'stestp09/testss/s1r228'
-            el.member.memberType = 'attribute'
-            el.member.name = k
-            el.member.encoding = arr3[k][2][0]
-            dp = DecoderPool()
-            dt = el.setDecoders(dp)
-            dt = el.getData()
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
+        if not PYTG_BUG_213:
+            for k in arr3:
+                el = TangoSource()
+                el.device = 'stestp09/testss/s1r228'
+                el.member.memberType = 'attribute'
+                el.member.name = k
+                el.member.encoding = arr3[k][2][0]
+                dp = DecoderPool()
+                dt = el.setDecoders(dp)
+                dt = el.getData()
+                self.checkData(dt, "SCALAR", arr3[k][
+                               2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
 
     # getData test
     # \brief It tests default settings

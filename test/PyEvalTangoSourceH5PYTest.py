@@ -55,6 +55,24 @@ if sys.version_info > (3,):
     long = int
     unicode = str
 
+#: (:obj:`bool`) PyTango bug #213 flag related to EncodedAttributes in python3
+PYTG_BUG_213 = False
+if sys.version_info > (3,):
+    try:
+        import PyTango
+        PYTGMAJOR, PYTGMINOR, PYTGPATCH = list(
+            map(int, PyTango.__version__.split(".")[:3]))
+        if PYTGMAJOR <= 9:
+            if PYTGMAJOR == 9:
+                if PYTGMINOR < 2:
+                    PYTG_BUG_213 = True
+                elif PYTGMINOR == 2 and PYTGPATCH < 4:
+                    PYTG_BUG_213 = True
+            else:
+                PYTG_BUG_213 = True
+    except:
+        pass
+
 
 # test fix
 class PyEvalTangoSourceH5PYTest(unittest.TestCase):
@@ -370,55 +388,56 @@ except:
                     self.checkData(dt, carr[a][1], vv, NTP.pTt[
                         type(vv).__name__], carr[a][3], error=error)
 
-            for a2 in arr3:
-                ds = PyEvalSource()
-                self.assertTrue(isinstance(ds, DataSource))
-                self.myAssertRaise(DataSourceSetupError, ds.getData)
-                self.assertEqual(ds.setup("""
-<datasource>
-  <datasource type='CLIENT' name='inp'>
-    <record name='rinp' />
-  </datasource>
-  <datasource type='TANGO' name='inp2'>
-    <device name='%s'  encoding='%s'/>
-    <record name='%s' />
-  </datasource>
-  <result name='res'>%s</result>
-</datasource>
-""" % (self._simps.dp.dev_name(), arr3[a2][2][0], a2, script)), None)
-                if carr[a][2] == "DevString":
-                    gjson = '{"data":{"rinp":"%s"}}' % (carr[a][0])
-                else:
-                    gjson = '{"data":{"rinp":%s}}' % (carr[a][0])
+            if not PYTG_BUG_213:
+                for a2 in arr3:
+                    ds = PyEvalSource()
+                    self.assertTrue(isinstance(ds, DataSource))
+                    self.myAssertRaise(DataSourceSetupError, ds.getData)
+                    self.assertEqual(ds.setup("""
+    <datasource>
+      <datasource type='CLIENT' name='inp'>
+        <record name='rinp' />
+      </datasource>
+      <datasource type='TANGO' name='inp2'>
+        <device name='%s'  encoding='%s'/>
+        <record name='%s' />
+      </datasource>
+      <result name='res'>%s</result>
+    </datasource>
+    """ % (self._simps.dp.dev_name(), arr3[a2][2][0], a2, script)), None)
+                    if carr[a][2] == "DevString":
+                        gjson = '{"data":{"rinp":"%s"}}' % (carr[a][0])
+                    else:
+                        gjson = '{"data":{"rinp":%s}}' % (carr[a][0])
 
-                self.assertEqual(ds.setJSON(json.loads(gjson)), None)
-                self.assertEqual(ds.setDataSources(dsp), None)
-                ds.setDecoders(dcp)
-                dt = ds.getData()
-                v1 = Converters.toBool(carr[a][0]) if carr[
-                    a][2] == "DevBoolean" else carr[a][0]
-                ud = dcp.get(arr3[a2][2][0])
-                ud.load(arr3[a2][2])
-                v2 = ud.decode()
-                try:
-                    vv = v1 + v2
-                except:
+                    self.assertEqual(ds.setJSON(json.loads(gjson)), None)
+                    self.assertEqual(ds.setDataSources(dsp), None)
+                    ds.setDecoders(dcp)
+                    dt = ds.getData()
+                    v1 = Converters.toBool(carr[a][0]) if carr[
+                        a][2] == "DevBoolean" else carr[a][0]
+                    ud = dcp.get(arr3[a2][2][0])
+                    ud.load(arr3[a2][2])
+                    v2 = ud.decode()
                     try:
-                        vv = unicode(v1) + unicode(v2)
+                        vv = v1 + v2
                     except:
                         try:
-                            vv = str(unicode(v1)) + v2
+                            vv = unicode(v1) + unicode(v2)
                         except:
-                            vv = v2
+                            try:
+                                vv = str(unicode(v1)) + v2
+                            except:
+                                vv = v2
 
-                if type(vv).__name__ == 'ndarray':
-                    self.checkData(
-                        dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__],
-                        [len(vv)])
-                else:
-                    self.checkData(
-                        dt, carr[a][1], vv, NTP.pTt[type(vv).__name__],
-                        carr[a][3])
+                    if type(vv).__name__ == 'ndarray':
+                        self.checkData(
+                            dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__],
+                            [len(vv)])
+                    else:
+                        self.checkData(
+                            dt, carr[a][1], vv, NTP.pTt[type(vv).__name__],
+                            carr[a][3])
 
     # setup test
     # \brief It tests default settings
@@ -1000,74 +1019,75 @@ commonblock["myres"] = ds.res
                     self.checkData(dt, carr[a][1], vv, NTP.pTt[
                         type(vv).__name__], carr[a][3], error=error)
 
-            for a2 in arr3:
-                ds = PyEvalSource()
-                self.assertTrue(isinstance(ds, DataSource))
-                self.myAssertRaise(DataSourceSetupError, ds.getData)
-                self.assertEqual(ds.setup("""
-<datasource>
-  <datasource type='CLIENT' name='inp'>
-    <record name='rinp' />
-  </datasource>
-  <datasource type='TANGO' name='inp2'>
-    <device name='%s'  encoding='%s'/>
-    <record name='%s' />
-  </datasource>
-  <result name='res'>%s</result>
-</datasource>
-""" % (self._simps.dp.dev_name(), arr3[a2][2][0], a2, script)), None)
-                if carr[a][2] == "DevString":
-                    gjson = '{"data":{"rinp":"%s"}}' % (carr[a][0])
-                else:
-                    gjson = '{"data":{"rinp":%s}}' % (carr[a][0])
+            if not PYTG_BUG_213:
+                for a2 in arr3:
+                    ds = PyEvalSource()
+                    self.assertTrue(isinstance(ds, DataSource))
+                    self.myAssertRaise(DataSourceSetupError, ds.getData)
+                    self.assertEqual(ds.setup("""
+    <datasource>
+      <datasource type='CLIENT' name='inp'>
+        <record name='rinp' />
+      </datasource>
+      <datasource type='TANGO' name='inp2'>
+        <device name='%s'  encoding='%s'/>
+        <record name='%s' />
+      </datasource>
+      <result name='res'>%s</result>
+    </datasource>
+    """ % (self._simps.dp.dev_name(), arr3[a2][2][0], a2, script)), None)
+                    if carr[a][2] == "DevString":
+                        gjson = '{"data":{"rinp":"%s"}}' % (carr[a][0])
+                    else:
+                        gjson = '{"data":{"rinp":%s}}' % (carr[a][0])
 
-                self.assertEqual(ds.setJSON(json.loads(gjson)), None)
-                self.assertEqual(ds.setDataSources(dsp), None)
-                ds.setDecoders(dcp)
-                dt = ds.getData()
-                v1 = Converters.toBool(carr[a][0]) if carr[
-                    a][2] == "DevBoolean" else carr[a][0]
-                ud = dcp.get(arr3[a2][2][0])
-                ud.load(arr3[a2][2])
-                v2 = ud.decode()
-                try:
-                    vv = v1 + v2
-                except:
+                    self.assertEqual(ds.setJSON(json.loads(gjson)), None)
+                    self.assertEqual(ds.setDataSources(dsp), None)
+                    ds.setDecoders(dcp)
+                    dt = ds.getData()
+                    v1 = Converters.toBool(carr[a][0]) if carr[
+                        a][2] == "DevBoolean" else carr[a][0]
+                    ud = dcp.get(arr3[a2][2][0])
+                    ud.load(arr3[a2][2])
+                    v2 = ud.decode()
                     try:
-                        vv = unicode(v1) + unicode(v2)
+                        vv = v1 + v2
                     except:
                         try:
-                            vv = str(unicode(v1)) + v2
+                            vv = unicode(v1) + unicode(v2)
                         except:
-                            vv = v2
+                            try:
+                                vv = str(unicode(v1)) + v2
+                            except:
+                                vv = v2
 
-                if type(vv).__name__ == 'ndarray':
+                    if type(vv).__name__ == 'ndarray':
+                            self.checkData(
+                                dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__],
+                                [len(vv)])
+                    else:
+                        self.checkData(
+                            dt, carr[a][1], vv, NTP.pTt[type(vv).__name__],
+                            carr[a][3])
+
+                    ds2 = PyEvalSource()
+                    self.assertTrue(isinstance(ds2, DataSource))
+                    self.myAssertRaise(DataSourceSetupError, ds2.getData)
+                    self.assertEqual(ds2.setup("""
+    <datasource>
+      <result name='res2'>%s</result>
+    </datasource>
+    """ % (script2)), None)
+                    self.assertEqual(ds2.setDataSources(dsp), None)
+                    dt = ds2.getData()
+                    if type(vv).__name__ == 'ndarray':
                         self.checkData(
                             dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__],
                             [len(vv)])
-                else:
-                    self.checkData(
-                        dt, carr[a][1], vv, NTP.pTt[type(vv).__name__],
-                        carr[a][3])
-
-                ds2 = PyEvalSource()
-                self.assertTrue(isinstance(ds2, DataSource))
-                self.myAssertRaise(DataSourceSetupError, ds2.getData)
-                self.assertEqual(ds2.setup("""
-<datasource>
-  <result name='res2'>%s</result>
-</datasource>
-""" % (script2)), None)
-                self.assertEqual(ds2.setDataSources(dsp), None)
-                dt = ds2.getData()
-                if type(vv).__name__ == 'ndarray':
-                    self.checkData(
-                        dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__],
-                        [len(vv)])
-                else:
-                    self.checkData(
-                        dt, carr[a][1], vv, NTP.pTt[type(vv).__name__],
-                        carr[a][3])
+                    else:
+                        self.checkData(
+                            dt, carr[a][1], vv, NTP.pTt[type(vv).__name__],
+                            carr[a][3])
 
     # setup test
     # \brief It tests default settings
