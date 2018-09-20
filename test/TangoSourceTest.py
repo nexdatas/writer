@@ -35,12 +35,12 @@ import json
 
 try:
     import SimpleServerSetUp
-except:
+except Exception:
     from . import SimpleServerSetUp
 
 try:
     from ProxyHelper import ProxyHelper
-except:
+except Exception:
     from .ProxyHelper import ProxyHelper
 
 
@@ -79,7 +79,7 @@ if sys.version_info > (3,):
                     PYTG_BUG_213 = True
             else:
                 PYTG_BUG_213 = True
-    except:
+    except Exception:
         pass
 
 
@@ -516,7 +516,7 @@ class TangoSourceTest(unittest.TestCase):
             self.assertEqual(
                 ds.client, "%s:%s/%s/%s" %
                 (host, port, device, dname.lower()))
-        except:
+        except Exception:
             self.assertEqual(
                 ds.client, "%s:%s/%s/%s" % (
                     host.split(".")[0], port, device, dname.lower()))
@@ -537,7 +537,7 @@ class TangoSourceTest(unittest.TestCase):
         try:
             self.assertEqual(ds.client, "%s:%s/%s/%s" %
                              (host, port, device, dname.lower()))
-        except:
+        except Exception:
             self.assertEqual(ds.client, "%s:%s/%s/%s" %
                              (host.split(".")[0], port, device, dname.lower()))
         self.assertEqual(ds.member.memberType, atype)
@@ -557,7 +557,7 @@ class TangoSourceTest(unittest.TestCase):
         try:
             self.assertEqual(ds.client, "%s:%s/%s/%s" %
                              (host, port, device, dname.lower()))
-        except:
+        except Exception:
             self.assertEqual(ds.client, "%s:%s/%s/%s" %
                              (host.split('.')[0], port, device, dname.lower()))
         self.assertEqual(ds.member.memberType, atype)
@@ -576,7 +576,7 @@ class TangoSourceTest(unittest.TestCase):
         try:
             self.assertEqual(ds.client, "%s:%s/%s/%s" %
                              (host, port, device, dname.lower()))
-        except:
+        except Exception:
             self.assertEqual(ds.client, "%s:%s/%s/%s" %
                              (host.split('.')[0], port, device, dname.lower()))
 

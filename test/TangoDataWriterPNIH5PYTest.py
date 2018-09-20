@@ -209,7 +209,7 @@ ds.res2 = str(True)
         finally:
             try:
                 os.remove(fname)
-            except:
+            except Exception:
                 pass
 
     # openFile test
@@ -363,7 +363,7 @@ ds.res2 = str(True)
                 os.makedirs(directory)
                 dirCreated = True
                 dirExists = True
-            except:
+            except Exception:
                 pass
         else:
             dirExists = True

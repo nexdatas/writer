@@ -42,7 +42,7 @@ from nxswriter.Errors import DataSourceSetupError
 
 try:
     import SimpleServerSetUp
-except:
+except Exception:
     from . import SimpleServerSetUp
 
 from nxswriter.DecoderPool import DecoderPool

@@ -47,12 +47,12 @@ import nxswriter.H5PYWriter as H5PYWriter
 
 try:
     from TestDataSource import TestDataSource
-except:
+except Exception:
     from .TestDataSource import TestDataSource
 
 try:
     from Checkers import Checker
-except:
+except Exception:
     from .Checkers import Checker
 
 

@@ -31,7 +31,7 @@ except ImportError as e:
 try:
     try:
         __import__("pni.io.nx.h5")
-    except:
+    except Exception:
         __import__("pni.nx.h5")
     # if module pni avalable
     PNI_AVAILABLE = True
@@ -169,7 +169,7 @@ DB_AVAILABLE = []
 try:
     try:
         import MySQLdb
-    except:
+    except Exception:
         import pymysql
         pymysql.install_as_MySQLdb()
     # connection arguments to MYSQL DB
@@ -181,7 +181,7 @@ try:
     mydb = MySQLdb.connect(**args)
     mydb.close()
     DB_AVAILABLE.append("MYSQL")
-except:
+except Exception:
     try:
         import MySQLdb
         from os.path import expanduser
@@ -199,7 +199,7 @@ except:
         print("MYSQL not available: %s" % e)
     except Exception as e:
         print("MYSQL not available: %s" % e)
-    except:
+    except Exception:
         print("MYSQL not available")
 
 
@@ -216,7 +216,7 @@ except ImportError as e:
     print("PGSQL not available: %s" % e)
 except Exception as e:
     print("PGSQL not available: %s" % e)
-except:
+except Exception:
     print("PGSQL not available")
 
 
@@ -244,7 +244,7 @@ except ImportError as e:
     print("ORACLE not available: %s" % e)
 except Exception as e:
     print("ORACLE not available: %s" % e)
-except:
+except Exception:
     print("ORACLE not available")
 
 if "MYSQL" in DB_AVAILABLE:
@@ -326,7 +326,7 @@ if sys.version_info > (3,):
                     PYTG_BUG_213 = True
             else:
                 PYTG_BUG_213 = True
-    except:
+    except Exception:
         pass
 
 

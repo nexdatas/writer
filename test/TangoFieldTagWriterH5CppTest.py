@@ -41,17 +41,17 @@ import nxswriter.H5CppWriter as H5CppWriter
 
 try:
     from ProxyHelper import ProxyHelper
-except:
+except Exception:
     from .ProxyHelper import ProxyHelper
 
 try:
     from Checkers import Checker
-except:
+except Exception:
     from .Checkers import Checker
 
 try:
     import SimpleServerSetUp
-except:
+except Exception:
     from . import SimpleServerSetUp
 
 
@@ -76,7 +76,7 @@ if sys.version_info > (3,):
                     PYTG_BUG_213 = True
             else:
                 PYTG_BUG_213 = True
-    except:
+    except Exception:
         pass
 
 

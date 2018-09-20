@@ -38,7 +38,7 @@ import nxswriter.H5PYWriter as H5PYWriter
 
 try:
     from Checkers import Checker
-except:
+except Exception:
     from .Checkers import Checker
 
 # test fixture

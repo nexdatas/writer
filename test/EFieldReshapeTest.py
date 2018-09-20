@@ -49,17 +49,17 @@ PNIIO = False
 try:
     import pni.io.nx.h5 as nx
     PNIIO = True
-except:
+except Exception:
     import pni.nx.h5 as nx
 
 try:
     from TestDataSource import TestDataSource
-except:
+except Exception:
     from .TestDataSource import TestDataSource
 
 try:
     from Checkers import Checker
-except:
+except Exception:
     from .Checkers import Checker
 
 

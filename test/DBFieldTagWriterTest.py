@@ -41,13 +41,13 @@ try:
     from pni.io.nx.h5 import open_file
     # True if pniio installed
     PNIIO = True
-except:
+except Exception:
     from pni.nx.h5 import open_file
     PNIIO = False
 
 try:
     import MySQLdb
-except:
+except Exception:
     import pymysql
     pymysql.install_as_MySQLdb()
 
@@ -105,7 +105,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
             args["host"] = 'localhost'
             args["read_default_file"] = '/etc/my.cnf'
             self._mydb = MySQLdb.connect(**args)
-        except:
+        except Exception:
             from os.path import expanduser
             home = expanduser("~")
             args2 = {'host': u'localhost', 'db': u'tango',

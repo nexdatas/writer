@@ -430,7 +430,7 @@ class PNIField(FileWriter.FTField):
         try:
             if isinstance(o, bytes) and sys.version_info > (3,):
                 o = o.decode("utf8")
-        except:
+        except Exception:
             pass
         self._h5object.write(o)
 
@@ -445,7 +445,7 @@ class PNIField(FileWriter.FTField):
         try:
             if isinstance(o, bytes) and sys.version_info > (3,):
                 o = o.decode("utf8")
-        except:
+        except Exception:
             pass
         self._h5object.__setitem__(t, o)
 
@@ -552,7 +552,7 @@ class PNILink(FileWriter.FTLink):
         try:
             lk = [e for e in lks if e.name == self.name][0]
             self._h5object = lk
-        except:
+        except Exception:
             self._h5object = None
         FileWriter.FTLink.reopen(self)
 

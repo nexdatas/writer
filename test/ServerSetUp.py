@@ -84,7 +84,7 @@ class ServerSetUp(object):
                 time.sleep(0.01)
                 if dp.state() == PyTango.DevState.ON:
                     found = True
-            except:
+            except Exception:
                 found = False
             cnt += 1
         print("")

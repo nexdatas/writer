@@ -33,7 +33,7 @@ from xml.sax import SAXParseException
 
 try:
     from Checkers import Checker
-except:
+except Exception:
     from .Checkers import Checker
 
 

@@ -29,7 +29,7 @@ import time
 
 try:
     import SimpleServer
-except:
+except Exception:
     from . import SimpleServer
 
 
@@ -114,7 +114,7 @@ class SimpleServerSetUp(object):
                 time.sleep(0.01)
                 if self.dp.state() == PyTango.DevState.ON:
                     found = True
-            except:
+            except Exception:
                 found = False
             cnt += 1
         print("")

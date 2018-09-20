@@ -63,7 +63,7 @@ class ProxyTools(object):
             proxy = PyTango.DeviceProxy(device)
             proxy.set_source(PyTango.DevSource.DEV)
 
-        except:
+        except Exception:
             if streams:
                 streams.error(
                     "ProxyTools.proxySetup() - "
@@ -77,7 +77,7 @@ class ProxyTools(object):
             try:
                 proxy.ping()
                 found = True
-            except:
+            except Exception:
                 time.sleep(0.01)
                 found = False
             cnt += 1
@@ -98,7 +98,7 @@ class ProxyTools(object):
         try:
             proxy.ping()
             failed = False
-        except:
+        except Exception:
             failed = True
         return not failed
 
@@ -255,7 +255,7 @@ class TangoSource(DataSource):
         if hostname and port and device and client:
             try:
                 host = self.__proxy.get_db_host().split(".")[0]
-            except:
+            except Exception:
                 host = ehostname.split(".")[0]
             self.client = "%s:%s/%s/%s" % (
                 host, eport,
@@ -288,14 +288,14 @@ class TangoSource(DataSource):
                 res = self._getJSONData(
                     "tango://%s" % self.fullclient,
                     self.__globalJSON, self.__localJSON)
-            except:
+            except Exception:
                 res = None
             if not res:
                 try:
                     res = self._getJSONData(
                         self.fullclient,
                         self.__globalJSON, self.__localJSON)
-                except:
+                except Exception:
                     res = None
             if not res:
                 try:
@@ -303,7 +303,7 @@ class TangoSource(DataSource):
                     res = self._getJSONData(
                         sclient,
                         self.__globalJSON, self.__localJSON)
-                except:
+                except Exception:
                     res = None
             if not res:
                 try:
@@ -311,21 +311,21 @@ class TangoSource(DataSource):
                     res = self._getJSONData(
                         "tango://%s" % sclient,
                         self.__globalJSON, self.__localJSON)
-                except:
+                except Exception:
                     res = None
             if not res:
                 try:
                     res = self._getJSONData(
                         "tango://%s" % self.client,
                         self.__globalJSON, self.__localJSON)
-                except:
+                except Exception:
                     res = None
             if not res:
                 try:
                     res = self._getJSONData(
                         self.client,
                         self.__globalJSON, self.__localJSON)
-                except:
+                except Exception:
                     res = None
             if not res:
                 try:
@@ -333,7 +333,7 @@ class TangoSource(DataSource):
                     res = self._getJSONData(
                         sclient,
                         self.__globalJSON, self.__localJSON)
-                except:
+                except Exception:
                     res = None
             if not res:
                 try:
@@ -341,7 +341,7 @@ class TangoSource(DataSource):
                     res = self._getJSONData(
                         "tango://%s" % sclient,
                         self.__globalJSON, self.__localJSON)
-                except:
+                except Exception:
                     res = None
             if res:
                 return res

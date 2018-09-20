@@ -37,7 +37,7 @@ import h5py
 
 try:
     import pni.io.nx.h5 as nx
-except:
+except Exception:
     import pni.nx.h5 as nx
 
 

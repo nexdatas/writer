@@ -31,12 +31,12 @@ import time
 
 try:
     from ProxyHelper import ProxyHelper
-except:
+except Exception:
     from .ProxyHelper import ProxyHelper
 
 try:
     from pni.io.nx.h5 import open_file
-except:
+except Exception:
     from pni.nx.h5 import open_file
 
 
@@ -45,7 +45,7 @@ import struct
 
 try:
     import ServerSetUp
-except:
+except Exception:
     from . import ServerSetUp
 
 
@@ -347,7 +347,7 @@ class NXSDataWriterTest(unittest.TestCase):
                 os.makedirs(directory)
                 dirCreated = True
                 dirExists = True
-            except:
+            except Exception:
                 pass
         else:
             dirExists = True

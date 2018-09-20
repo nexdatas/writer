@@ -35,7 +35,7 @@ import json
 
 try:
     import SimpleServerSetUp
-except:
+except Exception:
     from . import SimpleServerSetUp
 
 
@@ -80,7 +80,7 @@ if sys.version_info > (3,):
                     PYTG_BUG_213 = True
             else:
                 PYTG_BUG_213 = True
-    except:
+    except Exception:
         pass
 
 

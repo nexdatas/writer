@@ -28,7 +28,7 @@ import struct
 
 try:
     from pni.io.nx.h5 import open_file
-except:
+except Exception:
     from pni.nx.h5 import open_file
 
 from xml.sax import SAXParseException

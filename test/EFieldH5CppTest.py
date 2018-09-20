@@ -47,13 +47,13 @@ from nxswriter.Errors import XMLSettingSyntaxError
 
 try:
     from TestDataSource import TestDataSource
-except:
+except Exception:
     from .TestDataSource import TestDataSource
 
 
 try:
     from Checkers import Checker
-except:
+except Exception:
     from .Checkers import Checker
 
 # if 64-bit machione

@@ -35,7 +35,7 @@ import nxswriter.PNIWriter as PNIWriter
 
 try:
     import pni.io.nx.h5 as nx
-except:
+except Exception:
     import pni.nx.h5 as nx
 
 

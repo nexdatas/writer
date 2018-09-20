@@ -31,7 +31,7 @@ import time
 
 try:
     from ProxyHelper import ProxyHelper
-except:
+except Exception:
     from .ProxyHelper import ProxyHelper
 
 
@@ -44,7 +44,7 @@ import nxswriter.H5PYWriter as H5PYWriter
 
 try:
     import ServerSetUp
-except:
+except Exception:
     from . import ServerSetUp
 
 # if 64-bit machione
@@ -342,7 +342,7 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
                 os.makedirs(directory)
                 dirCreated = True
                 dirExists = True
-            except:
+            except Exception:
                 pass
         else:
             dirExists = True

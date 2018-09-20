@@ -36,12 +36,12 @@ from nxswriter.TangoDataWriter import TangoDataWriter
 
 try:
     from pni.io.nx.h5 import open_file
-except:
+except Exception:
     from pni.nx.h5 import open_file
 
 try:
     from Checkers import Checker
-except:
+except Exception:
     from .Checkers import Checker
 
 # if 64-bit machione
