@@ -29,8 +29,6 @@ import binascii
 import time
 import PyTango
 
-
-
 from nxswriter import Types
 from nxswriter.TangoDataWriter import TangoDataWriter
 import nxswriter.FileWriter as FileWriter

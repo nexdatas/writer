@@ -22,8 +22,6 @@
 import unittest
 import PyTango
 
-
-
 import ServerSetUp
 import TangoFieldTagWriterH5CppTest
 from ProxyHelper import ProxyHelper

@@ -53,7 +53,12 @@ class ORACLESourceTest(unittest.TestCase):
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
-        self.__dsn = """(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))"""
+        self.__dsn = "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)" + \
+                     "(HOST=dbsrv01.desy.de)(PORT=1521))" + \
+                     "(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)" + \
+                     "(SERVICE_NAME=desy_db.desy.de)" + \
+                     "(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)" + \
+                     "(RETRIES=180)(DELAY=5))))"
 
         self.__user = "read"
         path = os.path.dirname(Checkers.__file__)
@@ -133,7 +138,8 @@ class ORACLESourceTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
-        query = 'select * from (select IDENT from telefonbuch) where ROWNUM <= 1'
+        query = 'select * from (select IDENT from telefonbuch) ' + \
+                'where ROWNUM <= 1'
         format = "SPECTRUM"
 
         cursor = self._mydb.cursor()
@@ -292,7 +298,8 @@ class ORACLESourceTest(unittest.TestCase):
             dt = ds.getData()
 
             self.checkData(
-                dt, arr[a][1], list(el for el in value[0]), arr[a][2], arr[a][3])
+                dt, arr[a][1], list(el for el in value[0]), arr[a][2],
+                arr[a][3])
 
     # setup test
     # \brief It tests default settings

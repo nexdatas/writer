@@ -30,7 +30,8 @@ from ProxyHelper import ProxyHelper
 # test fixture
 
 
-class ClientFieldTagAsynchTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest):
+class ClientFieldTagAsynchTest(
+        ClientFieldTagWriterTest.ClientFieldTagWriterTest):
     # server counter
     serverCounter = 0
 

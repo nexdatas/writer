@@ -24,7 +24,6 @@ import unittest
 import PyTango
 
 
-
 import ServerSetUp
 import ClientFieldTagWriterH5PYTest
 from ProxyHelper import ProxyHelper
@@ -32,7 +31,8 @@ from ProxyHelper import ProxyHelper
 # test fixture
 
 
-class ClientFieldTagAsynchH5PYTest(ClientFieldTagWriterH5PYTest.ClientFieldTagWriterH5PYTest):
+class ClientFieldTagAsynchH5PYTest(
+        ClientFieldTagWriterH5PYTest.ClientFieldTagWriterH5PYTest):
     # server counter
     serverCounter = 0
 
