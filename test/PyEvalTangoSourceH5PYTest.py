@@ -39,6 +39,7 @@ from nxswriter.DataSources import DataSource
 from nxswriter.PyEvalSource import PyEvalSource
 from nxswriter.DataSourcePool import DataSourcePool
 from nxswriter.Errors import DataSourceSetupError
+from nxswriter.Types import NTP, Converters
 
 import nxswriter.H5PYWriter
 
