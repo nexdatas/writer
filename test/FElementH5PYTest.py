@@ -22,24 +22,17 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
-import numpy
 import binascii
 import time
 
 
 from nxswriter.Element import Element
 from nxswriter.FElement import FElement
-from nxswriter.H5Elements import EFile
-from nxswriter.ThreadPool import ThreadPool
-from nxswriter.DataSources import DataSource
 from nxswriter.Errors import XMLSettingSyntaxError
-from nxswriter.Types import NTP
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
-from xml.sax import SAXParseException
 
 
 from TestDataSource import TestDataSource
@@ -201,34 +194,42 @@ class FElementH5PYTest(unittest.TestCase):
             el._findShape("1", lengths=lens, extraD=False), [mlen])
         for i in range(-2, 5):
             self.assertEqual(
-                el._findShape("1", lengths=lens, extraD=False, grows=i), [mlen])
+                el._findShape("1", lengths=lens, extraD=False, grows=i),
+                [mlen])
         self.assertEqual(
             el._findShape("1", lengths=lens, extraD=True), [0, mlen])
         for i in range(-2, 2):
             self.assertEqual(
-                el._findShape("1", lengths=lens, extraD=True, grows=i), [0, mlen])
+                el._findShape("1", lengths=lens, extraD=True, grows=i),
+                [0, mlen])
         for i in range(2, 5):
             self.assertEqual(
-                el._findShape("1", lengths=lens, extraD=True, grows=i), [mlen, 0])
+                el._findShape("1", lengths=lens, extraD=True, grows=i),
+                [mlen, 0])
 
         lens = {'1': str(0)}
 
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "1", lengths=lens, extraD=False)
+            XMLSettingSyntaxError, el._findShape, "1", lengths=lens,
+            extraD=False)
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "1", lengths=lens, extraD=True)
+            XMLSettingSyntaxError, el._findShape, "1", lengths=lens,
+            extraD=True)
 
         mlen = self.__rnd.randint(-10000, 0)
         lens = {'1': str(mlen)}
 
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "1", lengths=lens, extraD=False)
+            XMLSettingSyntaxError, el._findShape, "1", lengths=lens,
+            extraD=False)
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "1", lengths=lens, extraD=True)
+            XMLSettingSyntaxError, el._findShape, "1", lengths=lens,
+            extraD=True)
 
         for i in range(-2, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "1", lengths=lens, extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "1", lengths=lens,
+                extraD=True, grows=i)
 
         mlen = self.__rnd.randint(1, 1000)
         lens = {'2': str(mlen)}
@@ -238,7 +239,8 @@ class FElementH5PYTest(unittest.TestCase):
         mlen = self.__rnd.randint(1, 1000)
         lens = {'2': str(mlen)}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "1", lengths=lens, extraD=True)
+            XMLSettingSyntaxError, el._findShape, "1", lengths=lens,
+            extraD=True)
 
     # run _findShape test
     # \brief It tests _findShape method
@@ -254,52 +256,65 @@ class FElementH5PYTest(unittest.TestCase):
             el._findShape("2", lengths=lens, extraD=False), mlen)
         for i in range(-2, 5):
             self.assertEqual(
-                el._findShape("2", lengths=lens, extraD=False, grows=i), mlen)
+                el._findShape("2", lengths=lens, extraD=False, grows=i),
+                mlen)
         self.assertEqual(
             el._findShape("2", lengths=lens, extraD=True), [0] + mlen)
         for i in range(-2, 2):
             self.assertEqual(
-                el._findShape("2", lengths=lens, extraD=True, grows=i), [0] + mlen)
+                el._findShape("2", lengths=lens, extraD=True, grows=i),
+                [0] + mlen)
         self.assertEqual(
-            el._findShape("2", lengths=lens, extraD=True, grows=2), [mlen[0], 0, mlen[1]])
+            el._findShape("2", lengths=lens, extraD=True, grows=2),
+            [mlen[0], 0, mlen[1]])
         for i in range(3, 5):
             self.assertEqual(
-                el._findShape("2", lengths=lens, extraD=True, grows=i), mlen + [0])
+                el._findShape("2", lengths=lens, extraD=True, grows=i),
+                mlen + [0])
 
         lens = {'1': '0', '2': str(mlen[0])}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "2", lengths=lens, extraD=False)
+            XMLSettingSyntaxError, el._findShape, "2", lengths=lens,
+            extraD=False)
 
         lens = {'2': '0', '1': str(mlen[0])}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "2", lengths=lens, extraD=False)
+            XMLSettingSyntaxError, el._findShape, "2", lengths=lens,
+            extraD=False)
 
         lens = {'2': '0', '1': '0'}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "2", lengths=lens, extraD=False)
+            XMLSettingSyntaxError, el._findShape, "2", lengths=lens,
+            extraD=False)
 
         lens = {'1': '0', '2': str(mlen[0])}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "2", lengths=lens, extraD=True)
+            XMLSettingSyntaxError, el._findShape, "2", lengths=lens,
+            extraD=True)
 
         lens = {'2': '0', '1': str(mlen[0])}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "2", lengths=lens, extraD=True)
+            XMLSettingSyntaxError, el._findShape, "2", lengths=lens,
+            extraD=True)
 
         lens = {'1': '0', '2': '0'}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "2", lengths=lens, extraD=True)
+            XMLSettingSyntaxError, el._findShape, "2", lengths=lens,
+            extraD=True)
 
         nlen = [self.__rnd.randint(-1000, 0), self.__rnd.randint(-1000, 0)]
         lens = {'1': str(mlen[0]), '2': str(nlen[1])}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "2", lengths=lens, extraD=False)
+            XMLSettingSyntaxError, el._findShape, "2", lengths=lens,
+            extraD=False)
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "2", lengths=lens, extraD=True)
+            XMLSettingSyntaxError, el._findShape, "2", lengths=lens,
+            extraD=True)
 
         for i in range(-2, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", lengths=lens, extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", lengths=lens,
+                extraD=True, grows=i)
 
         mlen = self.__rnd.randint(1, 1000)
         lens = {'2': str(mlen), '3': str(mlen)}
@@ -309,7 +324,8 @@ class FElementH5PYTest(unittest.TestCase):
         mlen = self.__rnd.randint(1, 1000)
         lens = {'2': str(mlen)}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "2", lengths=lens, extraD=True)
+            XMLSettingSyntaxError, el._findShape, "2", lengths=lens,
+            extraD=True)
 
     # run _findShape test
     # \brief It tests _findShape method
@@ -331,58 +347,73 @@ class FElementH5PYTest(unittest.TestCase):
             el._findShape("3", lengths=lens, extraD=True), [0] + mlen)
         for i in range(-2, 2):
             self.assertEqual(
-                el._findShape("3", lengths=lens, extraD=True, grows=i), [0] + mlen)
+                el._findShape("3", lengths=lens, extraD=True, grows=i),
+                [0] + mlen)
         self.assertEqual(
             el._findShape("3", lengths=lens, extraD=True, grows=2),
-                         [mlen[0], 0, mlen[1], mlen[2]])
+            [mlen[0], 0, mlen[1], mlen[2]])
         self.assertEqual(
             el._findShape("3", lengths=lens, extraD=True, grows=3),
-                         [mlen[0], mlen[1], 0, mlen[2]])
+            [mlen[0], mlen[1], 0, mlen[2]])
         for i in range(4, 5):
             self.assertEqual(
-                el._findShape("3", lengths=lens, extraD=True, grows=i), mlen + [0])
+                el._findShape("3", lengths=lens, extraD=True, grows=i),
+                mlen + [0])
 
         lens = {'1': '0', '2': str(mlen[0]), '3': str(mlen[1])}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "3", lengths=lens, extraD=False)
+            XMLSettingSyntaxError, el._findShape, "3", lengths=lens,
+            extraD=False)
         lens = {'2': '0', '1': str(mlen[0]), '3': str(mlen[1])}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "3", lengths=lens, extraD=False)
+            XMLSettingSyntaxError, el._findShape, "3", lengths=lens,
+            extraD=False)
         lens = {'1': '0', '2': '0', '3': str(mlen[0])}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "3", lengths=lens, extraD=False)
+            XMLSettingSyntaxError, el._findShape, "3", lengths=lens,
+            extraD=False)
         lens = {'2': '0', '3': '0', '1': str(mlen[0])}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "3", lengths=lens, extraD=False)
+            XMLSettingSyntaxError, el._findShape, "3", lengths=lens,
+            extraD=False)
         lens = {'3': '0', '1': '0', '2': str(mlen[0])}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "3", lengths=lens, extraD=False)
+            XMLSettingSyntaxError, el._findShape, "3", lengths=lens,
+            extraD=False)
 
         lens = {'1': '0', '2': str(mlen[0]), '3': str(mlen[1])}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "3", lengths=lens, extraD=True)
+            XMLSettingSyntaxError, el._findShape, "3", lengths=lens,
+            extraD=True)
         lens = {'2': '0', '1': str(mlen[0]), '3': str(mlen[1])}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "3", lengths=lens, extraD=True)
+            XMLSettingSyntaxError, el._findShape, "3", lengths=lens,
+            extraD=True)
         lens = {'1': '0', '2': '0', '3': str(mlen[0])}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "3", lengths=lens, extraD=True)
+            XMLSettingSyntaxError, el._findShape, "3", lengths=lens,
+            extraD=True)
         lens = {'2': '0', '3': '0', '1': str(mlen[0])}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "3", lengths=lens, extraD=True)
+            XMLSettingSyntaxError, el._findShape, "3", lengths=lens,
+            extraD=True)
         lens = {'3': '0', '1': '0', '2': str(mlen[0])}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "3", lengths=lens, extraD=True)
+            XMLSettingSyntaxError, el._findShape, "3", lengths=lens,
+            extraD=True)
 
         nlen = [self.__rnd.randint(-100, 0), self.__rnd.randint(-100, 0)]
         lens = {'1': str(mlen[0]), '2': str(nlen[1]), '3': str(mlen[1])}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "3", lengths=lens, extraD=False)
+            XMLSettingSyntaxError, el._findShape, "3", lengths=lens,
+            extraD=False)
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "3", lengths=lens, extraD=True)
+            XMLSettingSyntaxError, el._findShape, "3", lengths=lens,
+            extraD=True)
         for i in range(-2, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "3", lengths=lens, extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "3", lengths=lens,
+                extraD=True, grows=i)
 
         mlen = self.__rnd.randint(1, 1000)
         lens = {'2': str(mlen), '3': str(mlen), '4': str(mlen)}
@@ -392,7 +423,8 @@ class FElementH5PYTest(unittest.TestCase):
         mlen = self.__rnd.randint(1, 1000)
         lens = {'2': str(mlen)}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "3", lengths=lens, extraD=True)
+            XMLSettingSyntaxError, el._findShape, "3", lengths=lens,
+            extraD=True)
 
     # run _findShape test
     # \brief It tests _findShape method
@@ -418,15 +450,18 @@ class FElementH5PYTest(unittest.TestCase):
             el._findShape("1", extraD=False, checkData=True), [mlen])
         for i in range(-2, 5):
             self.assertEqual(
-                el._findShape("1", extraD=False, grows=i, checkData=True), [mlen])
+                el._findShape("1", extraD=False, grows=i, checkData=True),
+                [mlen])
         self.assertEqual(
             el._findShape("1", extraD=True, checkData=True), [0, mlen])
         for i in range(-2, 2):
             self.assertEqual(
-                el._findShape("1", extraD=True, grows=i, checkData=True), [0, mlen])
+                el._findShape("1", extraD=True, grows=i, checkData=True),
+                [0, mlen])
         for i in range(2, 5):
             self.assertEqual(
-                el._findShape("1", extraD=True, grows=i, checkData=True), [mlen, 0])
+                el._findShape("1", extraD=True, grows=i, checkData=True),
+                [mlen, 0])
 
         mlen = self.__rnd.randint(1, 10000)
         el.source.dims = [mlen]
@@ -434,16 +469,19 @@ class FElementH5PYTest(unittest.TestCase):
             XMLSettingSyntaxError, el._findShape, "1", extraD=False)
         for i in range(-2, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "1", extraD=False, grows=i)
+                XMLSettingSyntaxError, el._findShape, "1", extraD=False,
+                grows=i)
         for i in range(-2, 5):
             self.myAssertRaise(
                 XMLSettingSyntaxError, el._findShape, "1", extraD=True)
         for i in range(-2, 2):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "1", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "1", extraD=True,
+                grows=i)
         for i in range(2, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "1", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "1", extraD=True,
+                grows=i)
 
         el.source.dims = [0]
         self.assertEqual(el._findShape("1", checkData=True), [])
@@ -459,15 +497,18 @@ class FElementH5PYTest(unittest.TestCase):
             el._findShape("1", extraD=False, checkData=True), [mlen])
         for i in range(-2, 5):
             self.assertEqual(
-                el._findShape("1", extraD=False, grows=i, checkData=True), [mlen])
+                el._findShape("1", extraD=False, grows=i, checkData=True),
+                [mlen])
         self.assertEqual(
             el._findShape("1", extraD=True, checkData=True), [0, mlen])
         for i in range(-2, 2):
             self.assertEqual(
-                el._findShape("1", extraD=True, grows=i, checkData=True), [0, mlen])
+                el._findShape("1", extraD=True, grows=i, checkData=True),
+                [0, mlen])
         for i in range(2, 5):
             self.assertEqual(
-                el._findShape("1", extraD=True, grows=i, checkData=True), [mlen, 0])
+                el._findShape("1", extraD=True, grows=i, checkData=True),
+                [mlen, 0])
 
         el.source.dims = [0]
         self.assertEqual(el._findShape("1", checkData=True), [])
@@ -478,15 +519,18 @@ class FElementH5PYTest(unittest.TestCase):
             XMLSettingSyntaxError, el._findShape, "1", extraD=False)
         for i in range(-2, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "1", extraD=False, grows=i)
+                XMLSettingSyntaxError, el._findShape, "1", extraD=False,
+                grows=i)
         self.myAssertRaise(
             XMLSettingSyntaxError, el._findShape, "1", extraD=True)
         for i in range(-2, 2):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "1", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "1", extraD=True,
+                grows=i)
         for i in range(2, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "1", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "1", extraD=True,
+                grows=i)
 
         el.source.dims = [0]
         self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "1")
@@ -507,17 +551,20 @@ class FElementH5PYTest(unittest.TestCase):
             XMLSettingSyntaxError, el._findShape, "2", extraD=False)
         for i in range(-2, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=False, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=False,
+                grows=i)
         self.myAssertRaise(
             XMLSettingSyntaxError, el._findShape, "2", extraD=True)
         for i in range(-2, 2):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i)
         self.myAssertRaise(
             XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=2)
         for i in range(3, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i)
 
         el.source.numpy = False
 
@@ -527,17 +574,20 @@ class FElementH5PYTest(unittest.TestCase):
             XMLSettingSyntaxError, el._findShape, "2", extraD=False)
         for i in range(-2, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=False, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=False,
+                grows=i)
         self.myAssertRaise(
             XMLSettingSyntaxError, el._findShape, "2", extraD=True)
         for i in range(-2, 2):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i)
         self.myAssertRaise(
             XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=2)
         for i in range(3, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i)
 
     # run _findShape test
     # \brief It tests _findShape method
@@ -555,17 +605,21 @@ class FElementH5PYTest(unittest.TestCase):
             el._findShape("2", extraD=False, checkData=True), mlen)
         for i in range(-2, 5):
             self.assertEqual(
-                el._findShape("2", extraD=False, grows=i, checkData=True), mlen)
+                el._findShape("2", extraD=False, grows=i, checkData=True),
+                mlen)
         self.assertEqual(
             el._findShape("2", extraD=True, checkData=True), [0] + mlen)
         for i in range(-2, 2):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, checkData=True), [0] + mlen)
+                el._findShape("2", extraD=True, grows=i, checkData=True),
+                [0] + mlen)
         self.assertEqual(
-            el._findShape("2", extraD=True, grows=2, checkData=True), [mlen[0], 0, mlen[1]])
+            el._findShape("2", extraD=True, grows=2, checkData=True),
+            [mlen[0], 0, mlen[1]])
         for i in range(3, 5):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, checkData=True), mlen + [0])
+                el._findShape("2", extraD=True, grows=i, checkData=True),
+                mlen + [0])
 
         el.source.numpy = False
 
@@ -575,17 +629,21 @@ class FElementH5PYTest(unittest.TestCase):
             el._findShape("2", extraD=False, checkData=True), mlen)
         for i in range(-2, 5):
             self.assertEqual(
-                el._findShape("2", extraD=False, grows=i, checkData=True), mlen)
+                el._findShape("2", extraD=False, grows=i, checkData=True),
+                mlen)
         self.assertEqual(
             el._findShape("2", extraD=True, checkData=True), [0] + mlen)
         for i in range(-2, 2):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, checkData=True), [0] + mlen)
+                el._findShape("2", extraD=True, grows=i, checkData=True),
+                [0] + mlen)
         self.assertEqual(
-            el._findShape("2", extraD=True, grows=2, checkData=True), [mlen[0], 0, mlen[1]])
+            el._findShape("2", extraD=True, grows=2, checkData=True),
+            [mlen[0], 0, mlen[1]])
         for i in range(3, 5):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, checkData=True), mlen + [0])
+                el._findShape("2", extraD=True, grows=i, checkData=True),
+                mlen + [0])
 
     # run _findShape test
     # \brief It tests _findShape method
@@ -600,40 +658,52 @@ class FElementH5PYTest(unittest.TestCase):
         mlen = [self.__rnd.randint(1, 2), self.__rnd.randint(1, 2)]
         el.source.dims = mlen
         self.assertEqual(
-            el._findShape("2", extraD=False, extends=True, checkData=True), mlen)
+            el._findShape("2", extraD=False, extends=True, checkData=True),
+            mlen)
         for i in range(-2, 5):
             self.assertEqual(
-                el._findShape("2", extraD=False, grows=i, extends=True, checkData=True), mlen)
+                el._findShape("2", extraD=False, grows=i, extends=True,
+                              checkData=True), mlen)
         self.assertEqual(
-            el._findShape("2", extraD=True, extends=True, checkData=True), [0] + mlen)
+            el._findShape("2", extraD=True, extends=True, checkData=True),
+            [0] + mlen)
         for i in range(-2, 2):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, extends=True, checkData=True), [0] + mlen)
+                el._findShape("2", extraD=True, grows=i, extends=True,
+                              checkData=True), [0] + mlen)
         self.assertEqual(
-            el._findShape("2", extraD=True, grows=2, extends=True, checkData=True), [mlen[0], 0, mlen[1]])
+            el._findShape("2", extraD=True, grows=2, extends=True,
+                          checkData=True), [mlen[0], 0, mlen[1]])
         for i in range(3, 5):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, extends=True, checkData=True), mlen + [0])
+                el._findShape("2", extraD=True, grows=i, extends=True,
+                              checkData=True), mlen + [0])
 
         el.source.numpy = False
 
         mlen = [self.__rnd.randint(2, 1000), self.__rnd.randint(2, 1000)]
         el.source.dims = mlen
         self.assertEqual(
-            el._findShape("2", extraD=False, extends=True, checkData=True), mlen)
+            el._findShape("2", extraD=False, extends=True, checkData=True),
+            mlen)
         for i in range(-2, 5):
             self.assertEqual(
-                el._findShape("2", extraD=False, grows=i, extends=True, checkData=True), mlen)
+                el._findShape("2", extraD=False, grows=i, extends=True,
+                              checkData=True), mlen)
         self.assertEqual(
-            el._findShape("2", extraD=True, extends=True, checkData=True), [0] + mlen)
+            el._findShape("2", extraD=True, extends=True, checkData=True),
+            [0] + mlen)
         for i in range(-2, 2):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, extends=True, checkData=True), [0] + mlen)
+                el._findShape("2", extraD=True, grows=i, extends=True,
+                              checkData=True), [0] + mlen)
         self.assertEqual(
-            el._findShape("2", extraD=True, grows=2, extends=True, checkData=True), [mlen[0], 0, mlen[1]])
+            el._findShape("2", extraD=True, grows=2, extends=True,
+                          checkData=True), [mlen[0], 0, mlen[1]])
         for i in range(3, 5):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, extends=True, checkData=True), mlen + [0])
+                el._findShape("2", extraD=True, grows=i, extends=True,
+                              checkData=True), mlen + [0])
 
     # run _findShape test
     # \brief It tests _findShape method
@@ -651,17 +721,22 @@ class FElementH5PYTest(unittest.TestCase):
             el._findShape("2", extraD=False, checkData=True), [mlen[0], 1])
         for i in range(-2, 5):
             self.assertEqual(
-                el._findShape("2", extraD=False, grows=i, checkData=True), [mlen[0], 1])
+                el._findShape("2", extraD=False, grows=i, checkData=True),
+                [mlen[0], 1])
         self.assertEqual(
-            el._findShape("2", extraD=True, checkData=True), [0] + [mlen[0]] + [1])
+            el._findShape("2", extraD=True, checkData=True),
+            [0] + [mlen[0]] + [1])
         for i in range(-2, 2):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, checkData=True), [0] + [mlen[0]] + [1])
+                el._findShape("2", extraD=True, grows=i, checkData=True),
+                [0] + [mlen[0]] + [1])
         self.assertEqual(
-            el._findShape("2", extraD=True, grows=2, checkData=True), [mlen[0], 0, 1])
+            el._findShape("2", extraD=True, grows=2, checkData=True),
+            [mlen[0], 0, 1])
         for i in range(3, 5):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, checkData=True), [mlen[0], 1, 0])
+                el._findShape("2", extraD=True, grows=i, checkData=True),
+                [mlen[0], 1, 0])
 
         el.source.numpy = False
 
@@ -671,17 +746,22 @@ class FElementH5PYTest(unittest.TestCase):
             el._findShape("2", extraD=False, checkData=True), [mlen[0], 1])
         for i in range(-2, 5):
             self.assertEqual(
-                el._findShape("2", extraD=False, grows=i, checkData=True), [mlen[0], 1])
+                el._findShape("2", extraD=False, grows=i, checkData=True),
+                [mlen[0], 1])
         self.assertEqual(
-            el._findShape("2", extraD=True, checkData=True), [0] + [mlen[0]] + [1])
+            el._findShape("2", extraD=True, checkData=True),
+            [0] + [mlen[0]] + [1])
         for i in range(-2, 2):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, checkData=True), [0] + [mlen[0]] + [1])
+                el._findShape("2", extraD=True, grows=i, checkData=True),
+                [0] + [mlen[0]] + [1])
         self.assertEqual(
-            el._findShape("2", extraD=True, grows=2, checkData=True), [mlen[0], 0, 1])
+            el._findShape("2", extraD=True, grows=2, checkData=True),
+            [mlen[0], 0, 1])
         for i in range(3, 5):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, checkData=True), [mlen[0]] + [1, 0])
+                el._findShape("2", extraD=True, grows=i, checkData=True),
+                [mlen[0]] + [1, 0])
 
     # run _findShape test
     # \brief It tests _findShape method
@@ -696,20 +776,26 @@ class FElementH5PYTest(unittest.TestCase):
         mlen = [1, self.__rnd.randint(2, 1000)]
         el.source.dims = mlen
         self.assertEqual(
-            el._findShape("2", extraD=False, checkData=True), [1, mlen[1]])
+            el._findShape("2", extraD=False, checkData=True),
+            [1, mlen[1]])
         for i in range(-2, 5):
             self.assertEqual(
-                el._findShape("2", extraD=False, grows=i, checkData=True), [1, mlen[1]])
+                el._findShape("2", extraD=False, grows=i, checkData=True),
+                [1, mlen[1]])
         self.assertEqual(
-            el._findShape("2", extraD=True, checkData=True), [0, 1] + [mlen[1]])
+            el._findShape("2", extraD=True, checkData=True),
+            [0, 1] + [mlen[1]])
         for i in range(-2, 2):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, checkData=True), [0, 1] + [mlen[1]])
+                el._findShape("2", extraD=True, grows=i, checkData=True),
+                [0, 1] + [mlen[1]])
         self.assertEqual(
-            el._findShape("2", extraD=True, grows=2, checkData=True), [1, 0, mlen[1]])
+            el._findShape("2", extraD=True, grows=2, checkData=True),
+            [1, 0, mlen[1]])
         for i in range(3, 5):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, checkData=True), [1] + [mlen[1]] + [0])
+                el._findShape("2", extraD=True, grows=i, checkData=True),
+                [1] + [mlen[1]] + [0])
 
         el.source.numpy = False
 
@@ -719,17 +805,22 @@ class FElementH5PYTest(unittest.TestCase):
             el._findShape("2", extraD=False, checkData=True), [1, mlen[1]])
         for i in range(-2, 5):
             self.assertEqual(
-                el._findShape("2", extraD=False, grows=i, checkData=True), [1, mlen[1]])
+                el._findShape("2", extraD=False, grows=i, checkData=True),
+                [1, mlen[1]])
         self.assertEqual(
-            el._findShape("2", extraD=True, checkData=True), [0, 1] + [mlen[1]])
+            el._findShape("2", extraD=True, checkData=True),
+            [0, 1] + [mlen[1]])
         for i in range(-2, 2):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, checkData=True), [0, 1] + [mlen[1]])
+                el._findShape("2", extraD=True, grows=i, checkData=True),
+                [0, 1] + [mlen[1]])
         self.assertEqual(
-            el._findShape("2", extraD=True, grows=2, checkData=True), [1, 0, mlen[1]])
+            el._findShape("2", extraD=True, grows=2, checkData=True),
+            [1, 0, mlen[1]])
         for i in range(3, 5):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, checkData=True), [1] + [mlen[1]] + [0])
+                el._findShape("2", extraD=True, grows=i, checkData=True),
+                [1] + [mlen[1]] + [0])
 
     # run _findShape test
     # \brief It tests _findShape method
@@ -747,37 +838,47 @@ class FElementH5PYTest(unittest.TestCase):
             el._findShape("2", extraD=False, checkData=True), [1, 1])
         for i in range(-2, 5):
             self.assertEqual(
-                el._findShape("2", extraD=False, grows=i, checkData=True), [1, 1])
+                el._findShape("2", extraD=False, grows=i, checkData=True),
+                [1, 1])
         self.assertEqual(
             el._findShape("2", extraD=True, checkData=True), [0] + [1, 1])
         for i in range(-2, 2):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, checkData=True), [0] + [1, 1])
+                el._findShape("2", extraD=True, grows=i, checkData=True),
+                [0] + [1, 1])
         self.assertEqual(
-            el._findShape("2", extraD=True, grows=2, checkData=True), [1, 0, 1])
+            el._findShape("2", extraD=True, grows=2, checkData=True),
+            [1, 0, 1])
         for i in range(3, 5):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, checkData=True), [1, 1] + [0])
+                el._findShape("2", extraD=True, grows=i, checkData=True),
+                [1, 1] + [0])
 
         el.source.numpy = False
 
         mlen = [1, 1]
         el.source.dims = mlen
         self.assertEqual(
-            el._findShape("2", extraD=False, checkData=True), [1, 1])
+            el._findShape("2", extraD=False, checkData=True),
+            [1, 1])
         for i in range(-2, 5):
             self.assertEqual(
-                el._findShape("2", extraD=False, grows=i, checkData=True), [1, 1])
+                el._findShape("2", extraD=False, grows=i, checkData=True),
+                [1, 1])
         self.assertEqual(
-            el._findShape("2", extraD=True, checkData=True), [0] + [1, 1])
+            el._findShape("2", extraD=True, checkData=True),
+            [0] + [1, 1])
         for i in range(-2, 2):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, checkData=True), [0] + [1, 1])
+                el._findShape("2", extraD=True, grows=i, checkData=True),
+                [0] + [1, 1])
         self.assertEqual(
-            el._findShape("2", extraD=True, grows=2, checkData=True), [1, 0, 1])
+            el._findShape("2", extraD=True, grows=2, checkData=True),
+            [1, 0, 1])
         for i in range(3, 5):
             self.assertEqual(
-                el._findShape("2", extraD=True, grows=i, checkData=True), [1, 1] + [0])
+                el._findShape("2", extraD=True, grows=i, checkData=True),
+                [1, 1] + [0])
 
     # run _findShape test
     # \brief It tests _findShape method
@@ -792,40 +893,52 @@ class FElementH5PYTest(unittest.TestCase):
         mlen = [self.__rnd.randint(1, 2), self.__rnd.randint(1, 2)]
         el.source.dims = mlen
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "2", extraD=False, extends=True)
+            XMLSettingSyntaxError, el._findShape, "2", extraD=False,
+            extends=True)
         for i in range(-2, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=False, grows=i, extends=True)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=False,
+                grows=i, extends=True)
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "2", extraD=True, extends=True)
+            XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+            extends=True)
         for i in range(-2, 2):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i, extends=True)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i, extends=True)
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=2, extends=True)
+            XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=2,
+            extends=True)
         for i in range(3, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i, extends=True)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i, extends=True)
 
         el.source.numpy = False
 
         mlen = [self.__rnd.randint(2, 1000), self.__rnd.randint(2, 1000)]
         el.source.dims = mlen
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "2", extraD=False, extends=True)
+            XMLSettingSyntaxError, el._findShape, "2", extraD=False,
+            extends=True)
         for i in range(-2, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=False, grows=i, extends=True)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=False,
+                grows=i, extends=True)
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "2", extraD=True, extends=True)
+            XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+            extends=True)
         for i in range(-2, 2):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i, extends=True)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i, extends=True)
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=2, extends=True)
+            XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=2,
+            extends=True)
         for i in range(3, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i, extends=True)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i, extends=True)
 
     # run _findShape test
     # \brief It tests _findShape method
@@ -843,17 +956,20 @@ class FElementH5PYTest(unittest.TestCase):
             XMLSettingSyntaxError, el._findShape, "2", extraD=False)
         for i in range(-2, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=False, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=False,
+                grows=i)
         self.myAssertRaise(
             XMLSettingSyntaxError, el._findShape, "2", extraD=True)
         for i in range(-2, 2):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i)
         self.myAssertRaise(
             XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=2)
         for i in range(3, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i)
 
         el.source.numpy = False
 
@@ -863,17 +979,20 @@ class FElementH5PYTest(unittest.TestCase):
             XMLSettingSyntaxError, el._findShape, "2", extraD=False)
         for i in range(-2, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=False, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=False,
+                grows=i)
         self.myAssertRaise(
             XMLSettingSyntaxError, el._findShape, "2", extraD=True)
         for i in range(-2, 2):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i)
         self.myAssertRaise(
             XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=2)
         for i in range(3, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i)
 
     # run _findShape test
     # \brief It tests _findShape method
@@ -891,17 +1010,20 @@ class FElementH5PYTest(unittest.TestCase):
             XMLSettingSyntaxError, el._findShape, "2", extraD=False)
         for i in range(-2, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=False, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=False,
+                grows=i)
         self.myAssertRaise(
             XMLSettingSyntaxError, el._findShape, "2", extraD=True)
         for i in range(-2, 2):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i)
         self.myAssertRaise(
             XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=2)
         for i in range(3, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i)
 
         el.source.numpy = False
 
@@ -911,17 +1033,20 @@ class FElementH5PYTest(unittest.TestCase):
             XMLSettingSyntaxError, el._findShape, "2", extraD=False)
         for i in range(-2, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=False, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=False,
+                grows=i)
         self.myAssertRaise(
             XMLSettingSyntaxError, el._findShape, "2", extraD=True)
         for i in range(-2, 2):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i)
         self.myAssertRaise(
             XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=2)
         for i in range(3, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i)
 
     # run _findShape test
     # \brief It tests _findShape method
@@ -939,17 +1064,20 @@ class FElementH5PYTest(unittest.TestCase):
             XMLSettingSyntaxError, el._findShape, "2", extraD=False)
         for i in range(-2, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=False, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=False,
+                grows=i)
         self.myAssertRaise(
             XMLSettingSyntaxError, el._findShape, "2", extraD=True)
         for i in range(-2, 2):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i)
         self.myAssertRaise(
             XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=2)
         for i in range(3, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i)
 
         el.source.numpy = False
 
@@ -959,17 +1087,20 @@ class FElementH5PYTest(unittest.TestCase):
             XMLSettingSyntaxError, el._findShape, "2", extraD=False)
         for i in range(-2, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=False, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=False,
+                grows=i)
         self.myAssertRaise(
             XMLSettingSyntaxError, el._findShape, "2", extraD=True)
         for i in range(-2, 2):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i)
         self.myAssertRaise(
             XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=2)
         for i in range(3, 5):
             self.myAssertRaise(
-                XMLSettingSyntaxError, el._findShape, "2", extraD=True, grows=i)
+                XMLSettingSyntaxError, el._findShape, "2", extraD=True,
+                grows=i)
 
     # run _findShape test
     # \brief It tests _findShape method

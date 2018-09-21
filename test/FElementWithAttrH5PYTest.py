@@ -22,7 +22,6 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
 import numpy
@@ -33,11 +32,9 @@ import time
 from nxswriter.FElement import FElementWithAttr
 from nxswriter.FElement import FElement
 from nxswriter.Element import Element
-from nxswriter.H5Elements import EFile
-from nxswriter.Types import NTP, Converters
+from nxswriter.Types import Converters
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
-from xml.sax import SAXParseException
 
 
 # if 64-bit machione

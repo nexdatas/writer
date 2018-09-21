@@ -20,19 +20,12 @@
 # unittests for field Tags running Tango Server
 #
 import unittest
-import os
 import sys
-import subprocess
-import random
 import struct
-import binascii
-import time
-import json
 
 from xml import sax
 
 from nxswriter.InnerXMLParser import InnerXMLHandler
-from nxswriter.Errors import XMLSyntaxError
 
 
 try:

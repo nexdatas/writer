@@ -22,7 +22,6 @@
 import unittest
 import os
 import sys
-import subprocess
 import struct
 import random
 import numpy
@@ -33,11 +32,9 @@ import time
 from nxswriter.FElement import FElement
 from nxswriter.EAttribute import EAttribute
 from nxswriter.EField import EField
-from nxswriter.EGroup import EGroup
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
 from nxswriter.Types import NTP, Converters
-from nxswriter.Errors import XMLSettingSyntaxError
 
 from TestDataSource import TestDataSource
 

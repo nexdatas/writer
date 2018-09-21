@@ -22,12 +22,9 @@
 import unittest
 import os
 import sys
-import subprocess
-import random
 import struct
 
 from nxswriter.H5Elements import EFile
-from nxswriter.ThreadPool import ThreadPool
 from nxswriter.Element import Element
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
