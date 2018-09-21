@@ -20,18 +20,9 @@
 # unittests for field Tags running Tango Server
 #
 import unittest
-import os
-import sys
-import subprocess
-import random
 import PyTango
-import binascii
-import time
-
-from xml.sax import SAXParseException
 
 
-from Checkers import Checker
 import ServerSetUp
 import TangoFieldTagWriterH5CppTest
 from ProxyHelper import ProxyHelper

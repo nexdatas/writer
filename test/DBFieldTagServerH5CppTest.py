@@ -21,7 +21,6 @@
 #
 
 import unittest
-import os
 import PyTango
 
 import ServerSetUp

@@ -21,7 +21,6 @@
 #
 
 import unittest
-import os
 import PyTango
 
 import ServerSetUp
@@ -31,7 +30,8 @@ from ProxyHelper import ProxyHelper
 # test fixture
 
 
-class DBFieldTagServerH5PYTest(DBFieldTagWriterH5PYTest.DBFieldTagWriterH5PYTest):
+class DBFieldTagServerH5PYTest(
+        DBFieldTagWriterH5PYTest.DBFieldTagWriterH5PYTest):
     # server counter
     serverCounter = 0
 

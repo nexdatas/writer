@@ -48,7 +48,7 @@ try:
     PNIIO = True
 except Exception:
     pass
-    
+
 try:
     from TestDataSource import TestDataSource
 except Exception:

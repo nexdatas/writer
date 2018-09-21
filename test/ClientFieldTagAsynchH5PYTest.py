@@ -20,17 +20,10 @@
 # unittests for field Tags running Tango Server in asynchronous mode
 #
 import unittest
-import os
-import sys
-import subprocess
-import random
-import time
 
 import PyTango
 
-from xml.sax import SAXParseException
 
-from Checkers import Checker
 
 import ServerSetUp
 import ClientFieldTagWriterH5PYTest

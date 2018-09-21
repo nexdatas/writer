@@ -21,9 +21,7 @@
 #
 
 import unittest
-import os
 import PyTango
-import time
 
 import ServerSetUp
 import DBFieldTagWriterH5CppTest
@@ -32,7 +30,8 @@ from ProxyHelper import ProxyHelper
 # test fixture
 
 
-class DBFieldTagAsynchH5CppTest(DBFieldTagWriterH5CppTest.DBFieldTagWriterH5CppTest):
+class DBFieldTagAsynchH5CppTest(
+        DBFieldTagWriterH5CppTest.DBFieldTagWriterH5CppTest):
     # server counter
     serverCounter = 0
 
