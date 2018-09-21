@@ -22,11 +22,8 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
-import numpy
-from xml.dom import minidom
 import json
 import binascii
 import time
@@ -37,7 +34,6 @@ except Exception:
     from . import SimpleServerSetUp
 import PyTango
 
-from nxswriter import DataSources
 from nxswriter.DecoderPool import DecoderPool
 from nxswriter.DataSources import DataSource
 from nxswriter.PyEvalSource import PyEvalSource
@@ -46,8 +42,6 @@ from nxswriter.Errors import DataSourceSetupError
 from nxswriter.Types import Converters, NTP
 
 import nxswriter.PNIWriter
-
-from pni.io.nx.h5 import create_file
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

@@ -22,27 +22,19 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
-import numpy
 import binascii
 import time
 
 
 from nxswriter.Element import Element
 from nxswriter.FElement import FElement
-from nxswriter.H5Elements import EFile
-from nxswriter.ThreadPool import ThreadPool
-from nxswriter.DataSources import DataSource
 from nxswriter.Errors import XMLSettingSyntaxError
-from nxswriter.Types import NTP
 import nxswriter.FileWriter as FileWriter
 import nxswriter.PNIWriter as PNIWriter
 
 from TestDataSource import TestDataSource
-
-from xml.sax import SAXParseException
 
 
 # if 64-bit machione

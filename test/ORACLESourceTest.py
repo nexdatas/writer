@@ -22,22 +22,16 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
-import numpy
-from xml.dom import minidom
-import json
 import binascii
 import time
 import Checkers
 
 import cx_Oracle
 
-from nxswriter.DataSources import DataSource
 from nxswriter.DBaseSource import DBaseSource
-from nxswriter.Errors import DataSourceSetupError, PackageError
-from nxswriter.Types import Converters
+from nxswriter.Errors import PackageError
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

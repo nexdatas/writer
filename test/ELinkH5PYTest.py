@@ -22,9 +22,7 @@
 import unittest
 import os
 import sys
-import subprocess
 import struct
-import numpy
 
 from TestDataSource import TestDataSource
 
@@ -35,7 +33,6 @@ from nxswriter.EField import EField
 from nxswriter.EGroup import EGroup
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
-from nxswriter.Types import NTP, Converters
 from nxswriter.Errors import XMLSettingSyntaxError
 from nxswriter.FetchNameHandler import TNObject
 

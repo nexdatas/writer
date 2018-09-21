@@ -20,9 +20,6 @@
 # unittests for field Tags running Tango Server in asynchronous mode
 #
 import unittest
-import os
-import sys
-import time
 
 import PyTango
 

@@ -22,7 +22,6 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import numpy
 import struct
@@ -40,8 +39,6 @@ try:
     from pni.io.nx.h5 import open_file
 except Exception:
     from pni.nx.h5 import open_file
-
-from xml.sax import SAXParseException
 
 
 from nxswriter import Types

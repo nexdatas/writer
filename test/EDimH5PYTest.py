@@ -22,17 +22,14 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
 import binascii
-import numpy
 
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
 
 
-from nxswriter.FElement import FElement
 from nxswriter.EField import EField
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile

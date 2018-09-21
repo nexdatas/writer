@@ -22,18 +22,13 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
 import binascii
 import time
 import numpy
 
-from xml.sax import SAXParseException
-
-from nxswriter import Types
 from nxswriter.TangoDataWriter import TangoDataWriter
-from nxswriter.Errors import ThreadError
 from Checkers import Checker
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter

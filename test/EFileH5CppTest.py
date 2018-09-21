@@ -22,10 +22,7 @@
 import unittest
 import os
 import sys
-import subprocess
-import random
 import struct
-import numpy
 
 
 from nxswriter.H5Elements import FElement

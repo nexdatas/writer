@@ -22,7 +22,6 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import numpy
 import struct
@@ -30,7 +29,6 @@ import binascii
 import time
 import PyTango
 
-from xml.sax import SAXParseException
 
 
 from nxswriter import Types

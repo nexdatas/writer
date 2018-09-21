@@ -22,13 +22,9 @@
 import unittest
 import os
 import sys
-import subprocess
-import random
 import struct
-import numpy
 
 
-from nxswriter.H5Elements import FElement
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
 from nxswriter.H5Elements import EDoc

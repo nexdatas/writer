@@ -22,21 +22,17 @@
 import unittest
 import os
 import sys
-import subprocess
 import json
 import numpy
+import struct
 
 import PyTango
-import time
 
 try:
     from ProxyHelper import ProxyHelper
 except Exception:
     from .ProxyHelper import ProxyHelper
 
-
-from xml.sax import SAXParseException
-import struct
 
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter

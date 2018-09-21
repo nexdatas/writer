@@ -22,11 +22,8 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
-import numpy
-from xml.dom import minidom
 import PyTango
 import binascii
 import time
@@ -55,7 +52,6 @@ from nxswriter.EField import EField
 from nxswriter.DataSourceFactory import DataSourceFactory
 from nxswriter.Errors import DataSourceSetupError
 from nxswriter.DataSourcePool import DataSourcePool
-from nxswriter import DataSources
 from nxswriter.Types import Converters
 
 import threading

@@ -22,15 +22,11 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
-import numpy
-from xml.dom import minidom
 import PyTango
 import binascii
 import time
-import json
 
 
 try:
@@ -39,18 +35,9 @@ except Exception:
     from . import SimpleServerSetUp
 
 
-from nxswriter.DataSources import DataSource
-from nxswriter.TangoSource import TangoSource
 from nxswriter.TangoSource import TgMember
 from nxswriter.TangoSource import TgGroup
-from nxswriter.TangoSource import TgDevice
 from nxswriter.DecoderPool import DecoderPool
-from nxswriter.Element import Element
-from nxswriter.EField import EField
-from nxswriter.DataSourceFactory import DataSourceFactory
-from nxswriter.Errors import DataSourceSetupError
-from nxswriter.DataSourcePool import DataSourcePool
-from nxswriter import DataSources
 
 import threading
 

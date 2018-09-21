@@ -21,7 +21,6 @@
 #
 import os
 import random
-import unittest
 import binascii
 import time
 import numpy

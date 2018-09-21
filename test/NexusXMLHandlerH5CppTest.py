@@ -22,8 +22,6 @@
 import unittest
 import os
 import sys
-import subprocess
-import random
 import struct
 import json
 from nxswriter.ThreadPool import ThreadPool
@@ -50,9 +48,6 @@ try:
     from cStringIO import StringIO
 except ImportError:
     from io import StringIO
-
-
-from xml.sax import SAXParseException
 
 
 from nxswriter.NexusXMLHandler import NexusXMLHandler

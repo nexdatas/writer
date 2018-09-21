@@ -20,25 +20,16 @@
 # unittests for field Tags running Tango Server
 #
 import unittest
-import os
 import sys
-import subprocess
-import random
 import struct
 import json
-import numpy
-from xml.dom import minidom
 
 
 from nxswriter.DataSourceFactory import DataSourceFactory
-from nxswriter.DataSources import DataSource
 from nxswriter import TangoSource
-from nxswriter import ClientSource
 from nxswriter.DataSourcePool import DataSourcePool
 from nxswriter.Element import Element
 from nxswriter.EField import EField
-from nxswriter import DataSources
-from nxswriter.Errors import DataSourceSetupError
 
 try:
     import SimpleServerSetUp
