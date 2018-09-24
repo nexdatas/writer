@@ -144,23 +144,24 @@ class DataSourceDecodersTest(unittest.TestCase):
 
         device = 'stestp09/testss/s1r228'
         atype = 'attribute'
-        encoding = 'UTF8'
-        decoders = DecoderPool()
+        # encoding = 'UTF8'
+        # decoders =
+        DecoderPool()
 
         atts = {"type": "TANGO"}
-        name = "myRecord"
-        wjson = json.loads(
-            '{"datasources":{"CL":"ClientSource.ClientSource"}}')
+        # name = "myRecord"
+        # wjson = json.loads(
+        #     '{"datasources":{"CL":"ClientSource.ClientSource"}}')
         gjson = json.loads('{"data":{"myRecord":"1"}}')
 
         arr3 = {
             "ScalarEncoded": [
                 "string", "DevEncoded",
                 ("UTF8", b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded": [
-               "string", "DevEncoded",
-               ('INT32',
-                b'\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+            "SpectrumEncoded": [
+                "string", "DevEncoded",
+                ('INT32',
+                 b'\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
         }
 
         for k in arr3:
@@ -210,23 +211,25 @@ class DataSourceDecodersTest(unittest.TestCase):
 
         device = 'stestp09/testss/s1r228'
         atype = 'attribute'
-        encoding = 'UTF8'
-        decoders = DecoderPool()
+        # encoding = 'UTF8'
+        # decoders =
+        DecoderPool()
 
         atts = {"type": "TANGO"}
-        name = "myRecord"
-        wjson = json.loads(
-            '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}')
+        # name = "myRecord"
+        # wjson = json.loads(
+        #     '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}')
         gjson = json.loads('{"data":{"myRecord":"1"}}')
 
         arr3 = {
             "ScalarEncoded": [
                 "string", "DevEncoded",
-                ("UTF8", b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded": [
-               "string", "DevEncoded",
-               ('INT32',
-                b'\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+                ("UTF8",
+                 b"Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+            "SpectrumEncoded": [
+                "string", "DevEncoded",
+                ('INT32',
+                 b'\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
         }
 
         for k in arr3:
@@ -258,7 +261,8 @@ class DataSourceDecodersTest(unittest.TestCase):
                 "<datasource type='TANGO'><record name='%s'/> "
                 "<device name='stestp09/testss/s1r228' encoding='%s'/>"
                 "</datasource>" % (k, arr3[k][2][0])))
-            dp = DecoderPool()
+            # dp =
+            DecoderPool()
             self.assertEqual(ds.setDecoders(None), None)
             dt = ds.last.source.getData()
             self.checkData(dt, "SCALAR", arr3[k][2], arr3[k][1],

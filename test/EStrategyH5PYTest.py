@@ -173,7 +173,8 @@ class EStrategyH5PYTest(unittest.TestCase):
         self.assertEqual(st.last.trigger, attrs["trigger"])
         self.assertEqual(el.trigger, attrs["trigger"])
         self.assertEqual(
-            st.last.grows, int(attrs["grows"]) if int(attrs["grows"]) > 0 else 1)
+            st.last.grows,
+            int(attrs["grows"]) if int(attrs["grows"]) > 0 else 1)
         self.assertEqual(
             el.grows, int(attrs["grows"]) if int(attrs["grows"]) > 0 else 1)
         self.assertEqual(
@@ -225,7 +226,7 @@ class EStrategyH5PYTest(unittest.TestCase):
     def test_store(self):
         print("Run: %s.test_store() " % self.__class__.__name__)
 
-        attrs = {"mode": "STEP"}
+        # attrs = {"mode": "STEP"}
         el = EField(self._fattrs, None)
         st = EStrategy({"mode": "STEP"}, el)
         self.assertEqual(st.content, [])

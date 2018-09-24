@@ -123,10 +123,10 @@ class EDimensionsH5PYTest(unittest.TestCase):
         nxFile = None
         eFile = None
 
-        gname = "testGroup"
-        gtype = "NXentry"
-        fdname = "testField"
-        fdtype = "int64"
+        # gname = "testGroup"
+        # gtype = "NXentry"
+        # fdname = "testField"
+        # fdtype = "int64"
 
         # file handle
         FileWriter.writer = H5PYWriter
@@ -158,10 +158,10 @@ class EDimensionsH5PYTest(unittest.TestCase):
         nxFile = None
         eFile = None
 
-        gname = "testGroup"
-        gtype = "NXentry"
-        fdname = "testField"
-        fdtype = "int64"
+        # gname = "testGroup"
+        # gtype = "NXentry"
+        # fdname = "testField"
+        # fdtype = "int64"
 
         # file handle
         FileWriter.writer = H5PYWriter

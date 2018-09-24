@@ -180,7 +180,8 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(ds.last, el)
         self.assertEqual(ds.setDataSources(DataSourcePool()), None)
         self.myAssertRaise(
-            DataSourceSetupError, ds.store, ["<datasource>", "", "</datasource>"])
+            DataSourceSetupError, ds.store,
+            ["<datasource>", "", "</datasource>"])
         self.assertTrue(not hasattr(ds.last, "tagAttributes"))
 
         atts = {"type": "CLIENT"}
@@ -193,8 +194,9 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(ds.doc, "")
         self.assertEqual(ds.last, el)
         self.assertEqual(ds.setDataSources(DataSourcePool()), None)
-        self.myAssertRaise(DataSourceSetupError, ds.store, [
-                           "<datasource type='CLIENT'>", "<record/>", "</datasource>"])
+        self.myAssertRaise(
+            DataSourceSetupError, ds.store, [
+                "<datasource type='CLIENT'>", "<record/>", "</datasource>"])
         self.assertTrue(not hasattr(ds.last, "tagAttributes"))
 
         atts = {"type": "CLIENT"}
@@ -239,11 +241,14 @@ class DataSourceFactoryTest(unittest.TestCase):
                          % (name))
         self.assertEqual(len(ds.last.tagAttributes), 1)
         self.assertEqual(ds.last.tagAttributes["nexdatas_source"], (
-            'NX_CHAR', '<datasource type=\'CLIENT\'><record name="myRecord"/></datasource>'))
+            'NX_CHAR',
+            '<datasource type=\'CLIENT\'><record name="myRecord"/>'
+            '</datasource>'))
 
         atts = {"type": "CLIENT"}
         name = "myRecord"
-        wjson = json.loads('{"datasources":{"CL":"DataSources.ClientSource"}}')
+        # wjson = json.loads('{"datasources":
+        #  {"CL":"DataSources.ClientSource"}}')
         gjson = json.loads('{"data":{"myRecord":"1"}}')
 
         el = EField(self._fattrs, None)
@@ -265,14 +270,16 @@ class DataSourceFactoryTest(unittest.TestCase):
                          % (name))
         self.assertEqual(len(ds.last.tagAttributes), 1)
         self.assertEqual(ds.last.tagAttributes["nexdatas_source"], (
-            'NX_CHAR', '<datasource type=\'CLIENT\'><record name="myRecord"/></datasource>'))
+            'NX_CHAR',
+            '<datasource type=\'CLIENT\'><record name="myRecord"/>'
+            '</datasource>'))
         dt = ds.last.source.getData()
         self.checkData(dt, "SCALAR", '1', "DevString", [])
 
         atts = {"type": "PYEVAL"}
         name = "myRecord"
-        wjson = json.loads(
-            '{"datasources":{"CL":"ClientSource.ClientSource"}}')
+        # wjson = json.loads(
+        #     '{"datasources":{"CL":"ClientSource.ClientSource"}}')
         gjson = json.loads('{"data":{"myRecord":1123}}')
         el = EField(self._fattrs, None)
         ds = DataSourceFactory(atts, el)
@@ -298,7 +305,12 @@ ds.result = ds.myclient + 1
                          " PYEVAL \nds.result = ds.myclient + 1\n")
         self.assertEqual(len(ds.last.tagAttributes), 1)
         self.assertEqual(ds.last.tagAttributes["nexdatas_source"], (
-            'NX_CHAR', '<datasource type=\'PYEVAL\'>\n<datasource type="CLIENT" name="myclient">\n  <record name="myRecord"/>\n</datasource>\n<result>\nds.result = ds.myclient + 1\n</result>\n</datasource>'))
+            'NX_CHAR',
+            '<datasource type=\'PYEVAL\'>\n'
+            '<datasource type="CLIENT" name="myclient">\n  '
+            '<record name="myRecord"/>\n</datasource>\n'
+            '<result>\nds.result = ds.myclient + 1\n</result>\n'
+            '</datasource>'))
         dt = ds.last.source.getData()
         self.checkData(dt, "SCALAR", 1124, "DevLong64", [])
 
@@ -338,7 +350,12 @@ ds.result = ds.myclient + 1
         self.assertEqual(len(td.stack), 7)
         self.assertEqual(td.stack[0], "setup")
         self.assertEqual(
-            td.stack[1], '<datasource type=\'CL\'>\n<datasource type="CLIENT" name="myclient">\n  <record name="myRecord"/>\n</datasource>\n<result>\nds.result = ds.myclient + 1\n</result>\n</datasource>')
+            td.stack[1],
+            '<datasource type=\'CL\'>\n'
+            '<datasource type="CLIENT" name="myclient">\n  '
+            '<record name="myRecord"/>\n</datasource>\n'
+            '<result>\nds.result = ds.myclient + 1\n</result>\n'
+            '</datasource>')
         self.assertEqual(td.stack[2], 'setJSON')
         self.assertEqual(td.stack[3], {u'data': {u'myRecord': 1123}})
         self.assertEqual(td.stack[4], None)
@@ -356,7 +373,11 @@ ds.result = ds.myclient + 1
         self.assertEqual(td.stack[10], '__str__')
         self.assertEqual(len(ds.last.tagAttributes), 1)
         self.assertEqual(ds.last.tagAttributes["nexdatas_source"], (
-            'NX_CHAR', '<datasource type=\'CL\'>\n<datasource type="CLIENT" name="myclient">\n  <record name="myRecord"/>\n</datasource>\n<result>\nds.result = ds.myclient + 1\n</result>\n</datasource>'))
+            'NX_CHAR',
+            '<datasource type=\'CL\'>\n<datasource type="CLIENT" '
+            'name="myclient">\n  <record name="myRecord"/>\n'
+            '</datasource>\n<result>\nds.result = ds.myclient + 1\n</result>'
+            '\n</datasource>'))
         dt = ds.last.source.getData()
         self.assertEqual(len(td.stack), 12)
         self.assertEqual(td.stack[11], 'getData')
