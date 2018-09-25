@@ -22,7 +22,6 @@
 import unittest
 import os
 import sys
-import subprocess
 import struct
 import random
 import numpy
@@ -33,11 +32,9 @@ import time
 from nxswriter.FElement import FElement
 from nxswriter.EAttribute import EAttribute
 from nxswriter.EField import EField
-from nxswriter.EGroup import EGroup
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
 from nxswriter.Types import NTP, Converters
-from nxswriter.Errors import XMLSettingSyntaxError
 
 from TestDataSource import TestDataSource
 
@@ -127,7 +124,8 @@ class EAttributeH5PYTest(unittest.TestCase):
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
-        eFile = EFile({}, None, self._nxFile)
+        # eFile =
+        EFile({}, None, self._nxFile)
         at = EAttribute({}, None)
         self.assertTrue(isinstance(at, Element))
         self.assertTrue(isinstance(at, FElement))
@@ -153,7 +151,8 @@ class EAttributeH5PYTest(unittest.TestCase):
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
-        eFile = EFile({}, None, self._nxFile)
+        # eFile =
+        EFile({}, None, self._nxFile)
         at = EAttribute({}, None)
         self.assertTrue(isinstance(at, Element))
         self.assertTrue(isinstance(at, FElement))
@@ -430,14 +429,16 @@ class EAttributeH5PYTest(unittest.TestCase):
             if attrs[k][2] != "bool":
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(0, 3)]
                 attrs[k][0] = [
-                    attrs[k][0] * self.__rnd.randint(0, 3) for c in range(mlen[0])]
+                    attrs[k][0] * self.__rnd.randint(0, 3)
+                    for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10)]
                 if k == 'bool':
                     attrs[k][0] = [bool(self.__rnd.randint(0, 1))
                                    for c in range(mlen[0])]
                 else:
-                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1) else "false")
+                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1)
+                                    else "false")
                                    for c in range(mlen[0])]
 
             attrs[k][3] = (mlen[0],)
@@ -503,11 +504,11 @@ class EAttributeH5PYTest(unittest.TestCase):
             elif attrs[k][2] != "bool":
                 attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(0, 3)]]
             else:
-                mlen = [1]
                 if k == 'bool':
                     attrs[k][0] = [[bool(self.__rnd.randint(0, 1))]]
                 else:
-                    attrs[k][0] = [[("true" if self.__rnd.randint(0, 1) else "false")
+                    attrs[k][0] = [[("true" if self.__rnd.randint(0, 1)
+                                     else "false")
                                     ]]
 
             attrs[k][3] = (1, 1)
@@ -571,17 +572,19 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             if attrs[k][2] == "string":
                 attrs[k][0] = [
-                    [attrs[k][0] * self.__rnd.randint(1, 3) for c in range(self.__rnd.randint(2, 10))]]
+                    [attrs[k][0] * self.__rnd.randint(1, 3)
+                     for c in range(self.__rnd.randint(2, 10))]]
             elif attrs[k][2] != "bool":
                 attrs[k][0] = [
-                    [attrs[k][0] * self.__rnd.randint(0, 3) for c in range(self.__rnd.randint(2, 10))]]
+                    [attrs[k][0] * self.__rnd.randint(0, 3)
+                     for c in range(self.__rnd.randint(2, 10))]]
             else:
-                mlen = [1]
                 if k == 'bool':
                     attrs[k][0] = [[bool(self.__rnd.randint(0, 1))
                                     for c in range(self.__rnd.randint(2, 10))]]
                 else:
-                    attrs[k][0] = [[("true" if self.__rnd.randint(0, 1) else "false")
+                    attrs[k][0] = [[("true" if self.__rnd.randint(0, 1)
+                                     else "false")
                                     for c in range(self.__rnd.randint(2, 10))]]
 
             attrs[k][3] = (1, len(attrs[k][0][0]))
@@ -650,12 +653,12 @@ class EAttributeH5PYTest(unittest.TestCase):
                 attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(0, 3)]
                                for c in range(self.__rnd.randint(2, 10))]
             else:
-                mlen = [1]
                 if k == 'bool':
                     attrs[k][0] = [[bool(self.__rnd.randint(0, 1))]
                                    for c in range(self.__rnd.randint(2, 10))]
                 else:
-                    attrs[k][0] = [[("true" if self.__rnd.randint(0, 1) else "false")]
+                    attrs[k][0] = [[("true" if self.__rnd.randint(0, 1)
+                                     else "false")]
                                    for c in range(self.__rnd.randint(2, 10))]
 
             attrs[k][3] = (len(attrs[k][0]), 1)
@@ -720,18 +723,24 @@ class EAttributeH5PYTest(unittest.TestCase):
             mlen = self.__rnd.randint(2, 10)
             if attrs[k][2] == "string":
 
-                attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(1, 3) for c in range(mlen)]
+                attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(1, 3)
+                                for c in range(mlen)]
                                for c2 in range(self.__rnd.randint(2, 10))]
             elif attrs[k][2] != "bool":
-                attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(0, 3) for c in range(mlen)]
+                attrs[k][0] = [[
+                    attrs[k][0] * self.__rnd.randint(0, 3)
+                    for c in range(mlen)]
                                for c2 in range(self.__rnd.randint(2, 10))]
             else:
                 if k == 'bool':
-                    attrs[k][0] = [[bool(self.__rnd.randint(0, 1)) for c in range(mlen)]
-                                   for c2 in range(self.__rnd.randint(2, 10))]
+                    attrs[k][0] = [[
+                        bool(self.__rnd.randint(0, 1)) for c in range(mlen)]
+                                for c2 in range(self.__rnd.randint(2, 10))]
                 else:
-                    attrs[k][0] = [[("true" if self.__rnd.randint(0, 1) else "false")
-                                    for c in range(mlen)] for c2 in range(self.__rnd.randint(2, 10))]
+                    attrs[k][0] = [[
+                        ("true" if self.__rnd.randint(0, 1) else "false")
+                        for c in range(mlen)]
+                                   for c2 in range(self.__rnd.randint(2, 10))]
 
             attrs[k][3] = (len(attrs[k][0]), len(attrs[k][0][0]))
 
@@ -880,11 +889,12 @@ class EAttributeH5PYTest(unittest.TestCase):
             el[k]._createAttributes()
 #            at = el[k].h5Attribute(k)
             at = el[k].h5Object.attributes[k]
-#            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]],
+#            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2],
+# [attrs[k][0]],
 # attrs[k][3] if len(attrs[k])>3 else 0)
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                            attrs[k][3] if len(attrs[k]) > 3 else 0)
+                attrs[k][3] if len(attrs[k]) > 3 else 0)
 
         self._nxFile.close()
 
@@ -938,7 +948,10 @@ class EAttributeH5PYTest(unittest.TestCase):
             ds = TestDataSource()
             ds.valid = True
             ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape": [0, 0]}
+                        "tangoDType":
+                        NTP.pTt[(attrs[k][2])
+                                if attrs[k][2] else "string"],
+                        "shape": [0, 0]}
             el[k].source = ds
             el[k].strategy = 'STEP'
 
@@ -1019,9 +1032,11 @@ class EAttributeH5PYTest(unittest.TestCase):
             el[k].tagAttributes[k] = (attrs[k][1], '')
             ds = TestDataSource()
             ds.valid = True
-            ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0] if attrs[k][2] != "bool"
+            ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0]
+                        if attrs[k][2] != "bool"
                         else Converters.toBool(attrs[k][0]),
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                              else "string"],
                         "shape": [0, 0]}
             ea[k].source = ds
             el[k].strategy = 'STEP'
@@ -1046,7 +1061,7 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                          attrs[k][3] if len(attrs[k]) > 3 else 0)
+                attrs[k][3] if len(attrs[k]) > 3 else 0)
 
         self._nxFile.close()
 
@@ -1064,22 +1079,38 @@ class EAttributeH5PYTest(unittest.TestCase):
             "string": ["", "NX_CHAR", "string"],
             "datetime": ["", "NX_DATE_TIME", "string"],
             "iso8601": ["", "ISO8601", "string"],
-            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT", "int64"],
-            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8", "int8"],
-            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16", "int16"],
-            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32", "int32"],
-            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64", "int64"],
-            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT", "uint64"],
-            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64"],
-            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max, "NX_UINT8", "uint8"],
-            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max, "NX_UINT16", "uint16"],
-            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max, "NX_UINT32", "uint32"],
-            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64"],
-            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64"],
-            "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", 1.e-14],
-            "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", 1.e-5],
-            "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", 1.e-14],
+            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT",
+                    "int64"],
+            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8",
+                     "int8"],
+            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16",
+                      "int16"],
+            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32",
+                      "int32"],
+            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64",
+                      "int64"],
+            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT",
+                     "uint64"],
+            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT", "uint64"],
+            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max,
+                      "NX_UINT8", "uint8"],
+            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max,
+                       "NX_UINT16", "uint16"],
+            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max,
+                       "NX_UINT32", "uint32"],
+            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT64", "uint64"],
+            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max,
+                       "NX_UINT64", "uint64"],
+            "float": [numpy.finfo(getattr(numpy, 'float64')).max,
+                      "NX_FLOAT", "float64", 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max,
+                       "NX_NUMBER", "float64", 1.e-14],
+            "float32": [numpy.finfo(getattr(numpy, 'float32')).max,
+                        "NX_FLOAT32", "float32", 1.e-5],
+            "float64": [numpy.finfo(getattr(numpy, 'float64')).max,
+                        "NX_FLOAT64", "float64", 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool"],
         }
 
@@ -1099,9 +1130,11 @@ class EAttributeH5PYTest(unittest.TestCase):
             el[k].tagAttributes[k] = (attrs[k][1], '')
             ds = TestDataSource()
             ds.valid = True
-            ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0] if attrs[k][2] != "bool"
+            ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0]
+                        if attrs[k][2] != "bool"
                         else Converters.toBool(attrs[k][0]),
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                              else "string"],
                         "shape": [0, 0]}
             ea[k].source = ds
             el[k].strategy = 'STEP'
@@ -1182,9 +1215,11 @@ class EAttributeH5PYTest(unittest.TestCase):
             el[k].tagAttributes[k] = (attrs[k][1], '')
             ds = TestDataSource()
             ds.valid = True
-            ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0] if attrs[k][2] != "bool"
+            ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0]
+                        if attrs[k][2] != "bool"
                         else Converters.toBool(attrs[k][0]),
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "tangoDType": NTP.pTt[(attrs[k][2])
+                                              if attrs[k][2] else "string"],
                         "shape": [1, 0]}
             ea[k].source = ds
             el[k].strategy = 'STEP'
@@ -1209,7 +1244,7 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                          attrs[k][3] if len(attrs[k]) > 3 else 0)
+                attrs[k][3] if len(attrs[k]) > 3 else 0)
 
         self._nxFile.close()
 
@@ -1227,22 +1262,38 @@ class EAttributeH5PYTest(unittest.TestCase):
             "string": ["", "NX_CHAR", "string"],
             "datetime": ["", "NX_DATE_TIME", "string"],
             "iso8601": ["", "ISO8601", "string"],
-            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT", "int64"],
-            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8", "int8"],
-            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16", "int16"],
-            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32", "int32"],
-            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64", "int64"],
-            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT", "uint64"],
-            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64"],
-            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max, "NX_UINT8", "uint8"],
-            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max, "NX_UINT16", "uint16"],
-            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max, "NX_UINT32", "uint32"],
-            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64"],
-            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64"],
-            "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", 1.e-14],
-            "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", 1.e-5],
-            "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", 1.e-14],
+            "int": [numpy.iinfo(getattr(numpy, 'int64')).max,
+                    "NX_INT", "int64"],
+            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max,
+                     "NX_INT8", "int8"],
+            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max,
+                      "NX_INT16", "int16"],
+            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max,
+                      "NX_INT32", "int32"],
+            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max,
+                      "NX_INT64", "int64"],
+            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max,
+                     "NX_UINT", "uint64"],
+            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT", "uint64"],
+            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max,
+                      "NX_UINT8", "uint8"],
+            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max,
+                       "NX_UINT16", "uint16"],
+            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max,
+                       "NX_UINT32", "uint32"],
+            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT64", "uint64"],
+            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max,
+                       "NX_UINT64", "uint64"],
+            "float": [numpy.finfo(getattr(numpy, 'float64')).max,
+                      "NX_FLOAT", "float64", 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max,
+                       "NX_NUMBER", "float64", 1.e-14],
+            "float32": [numpy.finfo(getattr(numpy, 'float32')).max,
+                        "NX_FLOAT32", "float32", 1.e-5],
+            "float64": [numpy.finfo(getattr(numpy, 'float64')).max,
+                        "NX_FLOAT64", "float64", 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool"],
         }
 
@@ -1262,9 +1313,11 @@ class EAttributeH5PYTest(unittest.TestCase):
             el[k].tagAttributes[k] = (attrs[k][1], '')
             ds = TestDataSource()
             ds.valid = True
-            ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0] if attrs[k][2] != "bool"
+            ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0]
+                        if attrs[k][2] != "bool"
                         else Converters.toBool(attrs[k][0]),
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                              else "string"],
                         "shape": [1, 0]}
             ea[k].source = ds
             el[k].strategy = 'STEP'
@@ -1291,7 +1344,7 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                          attrs[k][3] if len(attrs[k]) > 3 else 0)
+                attrs[k][3] if len(attrs[k]) > 3 else 0)
 
         self._nxFile.close()
 
@@ -1348,9 +1401,11 @@ class EAttributeH5PYTest(unittest.TestCase):
                 el[k].tagAttributes[k] = (attrs[k][1], '',)
             ds = TestDataSource()
             ds.valid = True
-            ds.value = {"rank": NTP.rTf[1], "value": [attrs[k][0]] if attrs[k][2] != "bool"
+            ds.value = {"rank": NTP.rTf[1], "value": [attrs[k][0]]
+                        if attrs[k][2] != "bool"
                         else [Converters.toBool(attrs[k][0])],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                              else "string"],
                         "shape": [1, 0]}
             ea[k].source = ds
             el[k].strategy = 'STEP'
@@ -1369,11 +1424,11 @@ class EAttributeH5PYTest(unittest.TestCase):
             if attrs[k][2] and attrs[k][2] != 'string':
                 self._sc.checkSpectrumAttribute(
                     el[k].h5Object, k, attrs[k][2], [attrs[k][0]],
-                                                attrs[k][4] if len(attrs[k]) > 4 else 0)
+                    attrs[k][4] if len(attrs[k]) > 4 else 0)
             else:
                 self._sc.checkScalarAttribute(
                     el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                              attrs[k][4] if len(attrs[k]) > 4 else 0)
+                    attrs[k][4] if len(attrs[k]) > 4 else 0)
 
         self._nxFile.close()
 
@@ -1391,22 +1446,38 @@ class EAttributeH5PYTest(unittest.TestCase):
             "string": ["", "NX_CHAR", "string", (1,)],
             "datetime": ["", "NX_DATE_TIME", "string", (1,)],
             "iso8601": ["", "ISO8601", "string", (1,)],
-            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT", "int64", (1,)],
-            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8", "int8", (1,)],
-            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16", "int16", (1,)],
-            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32", "int32", (1,)],
-            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64", "int64", (1,)],
-            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT", "uint64", (1,)],
-            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
-            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max, "NX_UINT8", "uint8", (1,)],
-            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max, "NX_UINT16", "uint16", (1,)],
-            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max, "NX_UINT32", "uint32", (1,)],
-            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
-            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
-            "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
-            "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
-            "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
+            "int": [numpy.iinfo(getattr(numpy, 'int64')).max,
+                    "NX_INT", "int64", (1,)],
+            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max,
+                     "NX_INT8", "int8", (1,)],
+            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max,
+                      "NX_INT16", "int16", (1,)],
+            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max,
+                      "NX_INT32", "int32", (1,)],
+            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max,
+                      "NX_INT64", "int64", (1,)],
+            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT",
+                     "uint64", (1,)],
+            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT", "uint64", (1,)],
+            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max,
+                      "NX_UINT8", "uint8", (1,)],
+            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max,
+                       "NX_UINT16", "uint16", (1,)],
+            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max,
+                       "NX_UINT32", "uint32", (1,)],
+            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max,
+                       "NX_UINT64", "uint64", (1,)],
+            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT64", "uint64", (1,)],
+            "float": [numpy.finfo(getattr(numpy, 'float64')).max,
+                      "NX_FLOAT", "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max,
+                       "NX_NUMBER", "float64", (1,), 1.e-14],
+            "float32": [numpy.finfo(getattr(numpy, 'float32')).max,
+                        "NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64": [numpy.finfo(getattr(numpy, 'float64')).max,
+                        "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
         }
 
@@ -1509,14 +1580,16 @@ class EAttributeH5PYTest(unittest.TestCase):
             if attrs[k][2] != "bool":
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(0, 3)]
                 attrs[k][0] = [
-                    attrs[k][0] * self.__rnd.randint(0, 3) for c in range(mlen[0])]
+                    attrs[k][0] * self.__rnd.randint(0, 3)
+                    for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10)]
                 if k == 'bool':
                     attrs[k][0] = [bool(self.__rnd.randint(0, 1))
                                    for c in range(mlen[0])]
                 else:
-                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1) else "false")
+                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1)
+                                    else "false")
                                    for c in range(mlen[0])]
 
             attrs[k][3] = (mlen[0],)
@@ -1531,9 +1604,11 @@ class EAttributeH5PYTest(unittest.TestCase):
             ds = TestDataSource()
             ds.valid = True
 
-            ds.value = {"rank": NTP.rTf[1], "value": attrs[k][0] if attrs[k][2] != "bool"
+            ds.value = {"rank": NTP.rTf[1], "value": attrs[k][0]
+                        if attrs[k][2] != "bool"
                         else [Converters.toBool(c) for c in attrs[k][0]],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                              else "string"],
                         "shape": [attrs[k][3][0], 0]}
             ea[k].source = ds
             el[k].strategy = stt
@@ -1550,7 +1625,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             self.assertEqual(ea[k].h5Object.name, k)
             self._sc.checkSpectrumAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                                attrs[k][4] if len(attrs[k]) > 4 else 0)
+                attrs[k][4] if len(attrs[k]) > 4 else 0)
 
         self._nxFile.close()
 
@@ -1568,22 +1643,38 @@ class EAttributeH5PYTest(unittest.TestCase):
             "string": ["", "NX_CHAR", "string", (1,)],
             "datetime": ["", "NX_DATE_TIME", "string", (1,)],
             "iso8601": ["", "ISO8601", "string", (1,)],
-            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT", "int64", (1,)],
-            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8", "int8", (1,)],
-            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16", "int16", (1,)],
-            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32", "int32", (1,)],
-            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64", "int64", (1,)],
-            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT", "uint64", (1,)],
-            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
-            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max, "NX_UINT8", "uint8", (1,)],
-            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max, "NX_UINT16", "uint16", (1,)],
-            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max, "NX_UINT32", "uint32", (1,)],
-            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
-            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
-            "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
-            "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
-            "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
+            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT",
+                    "int64", (1,)],
+            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8",
+                     "int8", (1,)],
+            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16",
+                      "int16", (1,)],
+            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32",
+                      "int32", (1,)],
+            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64",
+                      "int64", (1,)],
+            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT",
+                     "uint64", (1,)],
+            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT", "uint64", (1,)],
+            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max,
+                      "NX_UINT8", "uint8", (1,)],
+            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max,
+                       "NX_UINT16", "uint16", (1,)],
+            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max,
+                       "NX_UINT32", "uint32", (1,)],
+            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64",
+                       "uint64", (1,)],
+            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT64", "uint64", (1,)],
+            "float": [numpy.finfo(getattr(numpy, 'float64')).max,
+                      "NX_FLOAT", "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max,
+                       "NX_NUMBER", "float64", (1,), 1.e-14],
+            "float32": [numpy.finfo(getattr(numpy, 'float32')).max,
+                        "NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64": [numpy.finfo(getattr(numpy, 'float64')).max,
+                        "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
         }
 
@@ -1619,9 +1710,11 @@ class EAttributeH5PYTest(unittest.TestCase):
             ds = TestDataSource()
             ds.valid = True
 
-            ds.value = {"rank": NTP.rTf[1], "value": attrs[k][0] if attrs[k][2] != "bool"
+            ds.value = {"rank": NTP.rTf[1], "value": attrs[k][0]
+                        if attrs[k][2] != "bool"
                         else [Converters.toBool(c) for c in attrs[k][0]],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                              else "string"],
                         "shape": [attrs[k][3][0], 0]}
             ea[k].source = ds
             el[k].strategy = stt
@@ -1638,7 +1731,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             self.assertEqual(ea[k].h5Object.name, k)
             self._sc.checkSpectrumAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                                attrs[k][5] if len(attrs[k]) > 5 else 0)
+                attrs[k][5] if len(attrs[k]) > 5 else 0)
 
         self._nxFile.close()
 
@@ -1693,11 +1786,11 @@ class EAttributeH5PYTest(unittest.TestCase):
             elif attrs[k][2] != "bool":
                 attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(0, 3)]]
             else:
-                mlen = [1]
                 if k == 'bool':
                     attrs[k][0] = [[bool(self.__rnd.randint(0, 1))]]
                 else:
-                    attrs[k][0] = [[("true" if self.__rnd.randint(0, 1) else "false")
+                    attrs[k][0] = [[("true" if self.__rnd.randint(0, 1)
+                                     else "false")
                                     ]]
 
             attrs[k][3] = (1, 1)
@@ -1713,9 +1806,11 @@ class EAttributeH5PYTest(unittest.TestCase):
             ds = TestDataSource()
             ds.valid = True
 
-            ds.value = {"rank": NTP.rTf[2], "value": attrs[k][0] if attrs[k][2] != "bool"
+            ds.value = {"rank": NTP.rTf[2], "value": attrs[k][0]
+                        if attrs[k][2] != "bool"
                         else [[Converters.toBool(c) for c in attrs[k][0][0]]],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                              else "string"],
                         "shape": [attrs[k][3][0], attrs[k][3][1]]}
             ea[k].source = ds
             el[k].strategy = stt
@@ -1732,7 +1827,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             self.assertEqual(ea[k].h5Object.name, k)
             self._sc.checkImageAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                                attrs[k][4] if len(attrs[k]) > 4 else 0)
+                attrs[k][4] if len(attrs[k]) > 4 else 0)
 
         self._nxFile.close()
 
@@ -1749,22 +1844,38 @@ class EAttributeH5PYTest(unittest.TestCase):
             "string": ["", "NX_CHAR", "string", (1,)],
             "datetime": ["", "NX_DATE_TIME", "string", (1,)],
             "iso8601": ["", "ISO8601", "string", (1,)],
-            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT", "int64", (1,)],
-            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8", "int8", (1,)],
-            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16", "int16", (1,)],
-            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32", "int32", (1,)],
-            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64", "int64", (1,)],
-            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT", "uint64", (1,)],
-            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
-            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max, "NX_UINT8", "uint8", (1,)],
-            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max, "NX_UINT16", "uint16", (1,)],
-            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max, "NX_UINT32", "uint32", (1,)],
-            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
-            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
-            "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
-            "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
-            "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
+            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT",
+                    "int64", (1,)],
+            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8",
+                     "int8", (1,)],
+            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16",
+                      "int16", (1,)],
+            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32",
+                      "int32", (1,)],
+            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64",
+                      "int64", (1,)],
+            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT",
+                     "uint64", (1,)],
+            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT", "uint64", (1,)],
+            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max,
+                      "NX_UINT8", "uint8", (1,)],
+            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max,
+                       "NX_UINT16", "uint16", (1,)],
+            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max,
+                       "NX_UINT32", "uint32", (1,)],
+            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max,
+                       "NX_UINT64", "uint64", (1,)],
+            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT64", "uint64", (1,)],
+            "float": [numpy.finfo(getattr(numpy, 'float64')).max,
+                      "NX_FLOAT", "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max,
+                       "NX_NUMBER", "float64", (1,), 1.e-14],
+            "float32": [numpy.finfo(getattr(numpy, 'float32')).max,
+                        "NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64": [numpy.finfo(getattr(numpy, 'float64')).max,
+                        "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
         }
 
@@ -1795,9 +1906,11 @@ class EAttributeH5PYTest(unittest.TestCase):
             ds = TestDataSource()
             ds.valid = True
 
-            ds.value = {"rank": NTP.rTf[2], "value": attrs[k][0] if attrs[k][2] != "bool"
+            ds.value = {"rank": NTP.rTf[2],
+                        "value": attrs[k][0] if attrs[k][2] != "bool"
                         else [[Converters.toBool(c) for c in attrs[k][0][0]]],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                              else "string"],
                         "shape": [attrs[k][3][0], attrs[k][3][1]]}
             ea[k].source = ds
             el[k].strategy = stt
@@ -1866,18 +1979,21 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             if attrs[k][2] == "string":
                 attrs[k][0] = [
-                    [attrs[k][0] * self.__rnd.randint(1, 3) for c in range(self.__rnd.randint(2, 10))]]
+                    [attrs[k][0] * self.__rnd.randint(1, 3)
+                     for c in range(self.__rnd.randint(2, 10))]]
             elif attrs[k][2] != "bool":
                 attrs[k][0] = [
-                    [attrs[k][0] * self.__rnd.randint(0, 3) for c in range(self.__rnd.randint(2, 10))]]
+                    [attrs[k][0] * self.__rnd.randint(0, 3)
+                     for c in range(self.__rnd.randint(2, 10))]]
             else:
-                mlen = [1]
                 if k == 'bool':
-                    attrs[k][0] = [[bool(self.__rnd.randint(0, 1))
-                                    for c in range(self.__rnd.randint(2, 10))]]
+                    attrs[k][0] = [[
+                        bool(self.__rnd.randint(0, 1))
+                        for c in range(self.__rnd.randint(2, 10))]]
                 else:
-                    attrs[k][0] = [[("true" if self.__rnd.randint(0, 1) else "false")
-                                    for c in range(self.__rnd.randint(2, 10))]]
+                    attrs[k][0] = [[
+                        ("true" if self.__rnd.randint(0, 1) else "false")
+                        for c in range(self.__rnd.randint(2, 10))]]
 
             attrs[k][3] = (1, len(attrs[k][0][0]))
 
@@ -1892,9 +2008,11 @@ class EAttributeH5PYTest(unittest.TestCase):
             ds = TestDataSource()
             ds.valid = True
 
-            ds.value = {"rank": NTP.rTf[2], "value": attrs[k][0] if attrs[k][2] != "bool"
+            ds.value = {"rank": NTP.rTf[2],
+                        "value": attrs[k][0] if attrs[k][2] != "bool"
                         else [[Converters.toBool(c) for c in attrs[k][0][0]]],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                              else "string"],
                         "shape": [attrs[k][3][0], attrs[k][3][1]]}
             ea[k].source = ds
             el[k].strategy = stt
@@ -1929,22 +2047,38 @@ class EAttributeH5PYTest(unittest.TestCase):
             "string": ["", "NX_CHAR", "string", (1,)],
             "datetime": ["", "NX_DATE_TIME", "string", (1,)],
             "iso8601": ["", "ISO8601", "string", (1,)],
-            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT", "int64", (1,)],
-            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8", "int8", (1,)],
-            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16", "int16", (1,)],
-            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32", "int32", (1,)],
-            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64", "int64", (1,)],
-            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT", "uint64", (1,)],
-            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
-            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max, "NX_UINT8", "uint8", (1,)],
-            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max, "NX_UINT16", "uint16", (1,)],
-            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max, "NX_UINT32", "uint32", (1,)],
-            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
-            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
-            "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
-            "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
-            "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
+            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT",
+                    "int64", (1,)],
+            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8",
+                     "int8", (1,)],
+            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16",
+                      "int16", (1,)],
+            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32",
+                      "int32", (1,)],
+            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64",
+                      "int64", (1,)],
+            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT",
+                     "uint64", (1,)],
+            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT", "uint64", (1,)],
+            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max,
+                      "NX_UINT8", "uint8", (1,)],
+            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max,
+                       "NX_UINT16", "uint16", (1,)],
+            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max,
+                       "NX_UINT32", "uint32", (1,)],
+            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max,
+                       "NX_UINT64", "uint64", (1,)],
+            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT64", "uint64", (1,)],
+            "float": [numpy.finfo(getattr(numpy, 'float64')).max,
+                      "NX_FLOAT", "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max,
+                       "NX_NUMBER", "float64", (1,), 1.e-14],
+            "float32": [numpy.finfo(getattr(numpy, 'float32')).max,
+                        "NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64": [numpy.finfo(getattr(numpy, 'float64')).max,
+                        "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
         }
 
@@ -1975,9 +2109,11 @@ class EAttributeH5PYTest(unittest.TestCase):
             ds = TestDataSource()
             ds.valid = True
 
-            ds.value = {"rank": NTP.rTf[2], "value": attrs[k][0] if attrs[k][2] != "bool"
+            ds.value = {"rank": NTP.rTf[2],
+                        "value": attrs[k][0] if attrs[k][2] != "bool"
                         else [[Converters.toBool(c) for c in attrs[k][0][0]]],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "tangoDType": NTP.pTt[(attrs[k][2])
+                                              if attrs[k][2] else "string"],
                         "shape": [attrs[k][3][0], attrs[k][3][1]]}
             ea[k].source = ds
             el[k].strategy = stt
@@ -2051,12 +2187,13 @@ class EAttributeH5PYTest(unittest.TestCase):
                 attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(0, 3)]
                                for c in range(self.__rnd.randint(2, 10))]
             else:
-                mlen = [1]
+                # mlen = [1]
                 if k == 'bool':
                     attrs[k][0] = [[bool(self.__rnd.randint(0, 1))]
                                    for c in range(self.__rnd.randint(2, 10))]
                 else:
-                    attrs[k][0] = [[("true" if self.__rnd.randint(0, 1) else "false")]
+                    attrs[k][0] = [[
+                        ("true" if self.__rnd.randint(0, 1) else "false")]
                                    for c in range(self.__rnd.randint(2, 10))]
 
             attrs[k][3] = (len(attrs[k][0]), 1)
@@ -2073,10 +2210,13 @@ class EAttributeH5PYTest(unittest.TestCase):
             ds.valid = True
 
             print
-            ds.value = {"rank": NTP.rTf[2], "value": attrs[k][0] if attrs[k][2] != "bool"
-                        else [[Converters.toBool(c[0])] for c in attrs[k][0]],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
-                        "shape": [attrs[k][3][0], attrs[k][3][1]]}
+            ds.value = {
+                "rank": NTP.rTf[2],
+                "value": attrs[k][0] if attrs[k][2] != "bool"
+                else [[Converters.toBool(c[0])] for c in attrs[k][0]],
+                "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                      else "string"],
+                "shape": [attrs[k][3][0], attrs[k][3][1]]}
             ea[k].source = ds
             el[k].strategy = stt
 
@@ -2109,22 +2249,38 @@ class EAttributeH5PYTest(unittest.TestCase):
             "string": ["", "NX_CHAR", "string", (1,)],
             "datetime": ["", "NX_DATE_TIME", "string", (1,)],
             "iso8601": ["", "ISO8601", "string", (1,)],
-            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT", "int64", (1,)],
-            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8", "int8", (1,)],
-            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16", "int16", (1,)],
-            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32", "int32", (1,)],
-            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64", "int64", (1,)],
-            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT", "uint64", (1,)],
-            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
-            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max, "NX_UINT8", "uint8", (1,)],
-            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max, "NX_UINT16", "uint16", (1,)],
-            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max, "NX_UINT32", "uint32", (1,)],
-            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
-            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
-            "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
-            "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
-            "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
+            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT",
+                    "int64", (1,)],
+            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8",
+                     "int8", (1,)],
+            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16",
+                      "int16", (1,)],
+            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32",
+                      "int32", (1,)],
+            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64",
+                      "int64", (1,)],
+            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT",
+                     "uint64", (1,)],
+            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT", "uint64", (1,)],
+            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max, "NX_UINT8",
+                      "uint8", (1,)],
+            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max, "NX_UINT16",
+                       "uint16", (1,)],
+            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max, "NX_UINT32",
+                       "uint32", (1,)],
+            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64",
+                       "uint64", (1,)],
+            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT64", "uint64", (1,)],
+            "float": [numpy.finfo(getattr(numpy, 'float64')).max,
+                      "NX_FLOAT", "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max,
+                       "NX_NUMBER", "float64", (1,), 1.e-14],
+            "float32": [numpy.finfo(getattr(numpy, 'float32')).max,
+                        "NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64": [numpy.finfo(getattr(numpy, 'float64')).max,
+                        "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
         }
 
@@ -2157,10 +2313,13 @@ class EAttributeH5PYTest(unittest.TestCase):
             ds.valid = True
 
             print
-            ds.value = {"rank": NTP.rTf[2], "value": attrs[k][0] if attrs[k][2] != "bool"
-                        else [[Converters.toBool(c[0])] for c in attrs[k][0]],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
-                        "shape": [attrs[k][3][0], attrs[k][3][1]]}
+            ds.value = {
+                "rank": NTP.rTf[2],
+                "value": attrs[k][0] if attrs[k][2] != "bool"
+                else [[Converters.toBool(c[0])] for c in attrs[k][0]],
+                "tangoDType": NTP.pTt[(attrs[k][2])
+                                      if attrs[k][2] else "string"],
+                "shape": [attrs[k][3][0], attrs[k][3][1]]}
             ea[k].source = ds
             el[k].strategy = stt
 

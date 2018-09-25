@@ -20,8 +20,6 @@
 # unittests for field Tags running Tango Server
 #
 import unittest
-import os
-import sys
 
 import PyTango
 

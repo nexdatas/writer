@@ -22,23 +22,19 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
-import numpy
-from xml.dom import minidom
 import json
 import binascii
 import time
 
 try:
     import SimpleServerSetUp
-except:
+except Exception:
     from . import SimpleServerSetUp
 
 import PyTango
 
-from nxswriter import DataSources
 from nxswriter.DecoderPool import DecoderPool
 from nxswriter.DataSources import DataSource
 from nxswriter.PyEvalSource import PyEvalSource
@@ -70,7 +66,7 @@ if sys.version_info > (3,):
                     PYTG_BUG_213 = True
             else:
                 PYTG_BUG_213 = True
-    except:
+    except Exception:
         pass
 
 
@@ -292,13 +288,13 @@ class PyEvalTangoSourceH5CppTest(unittest.TestCase):
 try:
     ds.res = ds.inp + ds.inp2
     print("BNB")
-except:
+except Exception:
     try:
        ds.res = unicode(ds.inp) + unicode(ds.inp2)
-    except:
+    except Exception:
         try:
             ds.res = str(unicode(ds.inp))+ ds.inp2
-        except:
+        except Exception:
             ds.res = ds.inp2
 
 """
@@ -376,11 +372,11 @@ except:
                 try:
                     vv = v1 + v2
                     error = (arr[a2][3] if len(arr[a2]) > 3 else 0)
-                except:
+                except Exception:
                     error = 0
                     try:
                         vv = unicode(v1) + unicode(v2)
-                    except:
+                    except Exception:
                         vv = str(unicode(v1)) + v2
                 if not ((a in ['str', 'unicode'] and
                          a2 in ['ScalarFloat', 'ScalarDouble']) or
@@ -423,13 +419,13 @@ except:
                     v2 = ud.decode()
                     try:
                         vv = v1 + v2
-                    except:
+                    except Exception:
                         try:
                             vv = unicode(v1) + unicode(v2)
-                        except:
+                        except Exception:
                             try:
                                 vv = str(unicode(v1)) + v2
-                            except:
+                            except Exception:
                                 vv = v2
 
                     if type(vv).__name__ == 'ndarray':
@@ -912,13 +908,13 @@ ds.res = commonblock["myres"]
 try:
     ds.res = ds.inp + ds.inp2
     print("BNB")
-except:
+except Exception:
     try:
        ds.res = unicode(ds.inp) + unicode(ds.inp2)
-    except:
+    except Exception:
         try:
             ds.res = str(unicode(ds.inp))+ ds.inp2
-        except:
+        except Exception:
             ds.res = ds.inp2
 commonblock["myres"] = ds.res
 """
@@ -996,11 +992,11 @@ commonblock["myres"] = ds.res
                 try:
                     vv = v1 + v2
                     error = (arr[a2][3] if len(arr[a2]) > 3 else 0)
-                except:
+                except Exception:
                     error = 0
                     try:
                         vv = unicode(v1) + unicode(v2)
-                    except:
+                    except Exception:
                         vv = str(unicode(v1)) + v2
                 if not ((a in ['str', 'unicode'] and
                          a2 in ['ScalarFloat', 'ScalarDouble']) or
@@ -1061,13 +1057,13 @@ commonblock["myres"] = ds.res
                     v2 = ud.decode()
                     try:
                         vv = v1 + v2
-                    except:
+                    except Exception:
                         try:
                             vv = unicode(v1) + unicode(v2)
-                        except:
+                        except Exception:
                             try:
                                 vv = str(unicode(v1)) + v2
-                            except:
+                            except Exception:
                                 vv = v2
 
                     if type(vv).__name__ == 'ndarray':

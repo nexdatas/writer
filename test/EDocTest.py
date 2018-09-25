@@ -22,13 +22,9 @@
 import unittest
 import os
 import sys
-import subprocess
-import random
 import struct
-import numpy
 
 
-from nxswriter.H5Elements import FElement
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
 from nxswriter.H5Elements import EDoc
@@ -137,7 +133,7 @@ class EDocTest(unittest.TestCase):
         # element file objects
         eFile = EFile([], None, nxFile)
         group = nxFile.create_group(gname, gtype)
-        field = group.create_field(fdname, fdtype)
+        group.create_field(fdname, fdtype)
 
         el = Element(self._tfname, self._fattrs, eFile)
         el2 = EDoc(self._fattrs, el)

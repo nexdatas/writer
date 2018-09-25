@@ -94,7 +94,7 @@ class ELink(FElement):
                     elif dh.value:
                         target = dh.cast('string')
                         self.createLink(self.__groupTypes, target)
-        except:
+        except Exception:
             message = self.setMessage(sys.exc_info()[1].__str__())
             self.error = message
         #            self.error = sys.exc_info()
@@ -127,7 +127,7 @@ class ELink(FElement):
                         self.__target,
                         self._lastObject(),
                         name)
-                except:
+                except Exception:
                     if self._streams:
                         self._streams.error(
                             "ELink::createLink() - "

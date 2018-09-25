@@ -20,18 +20,14 @@
 # unittests for field Tags running Tango Server
 #
 import unittest
-import os
 import sys
-import subprocess
-import random
 import struct
 import json
-import numpy
-from xml.dom import minidom
 
 import nxswriter
 
-from nxswriter.DecoderPool import DecoderPool, UTF8decoder, UINT32decoder, VDEOdecoder
+from nxswriter.DecoderPool import (
+    DecoderPool, UTF8decoder, UINT32decoder, VDEOdecoder)
 
 
 # if 64-bit machione

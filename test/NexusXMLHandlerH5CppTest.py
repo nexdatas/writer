@@ -22,8 +22,6 @@
 import unittest
 import os
 import sys
-import subprocess
-import random
 import struct
 import json
 from nxswriter.ThreadPool import ThreadPool
@@ -50,9 +48,6 @@ try:
     from cStringIO import StringIO
 except ImportError:
     from io import StringIO
-
-
-from xml.sax import SAXParseException
 
 
 from nxswriter.NexusXMLHandler import NexusXMLHandler
@@ -256,7 +251,8 @@ class InnerTagDSDC(object):
         self.json = myjson
         self.stored = True
         if InnerTagDC.trigger:
-            self.strategy, self.trigger = InnerTagDC.strategy, InnerTagDC.trigger
+            self.strategy, self.trigger = (
+                InnerTagDC.strategy, InnerTagDC.trigger)
             return InnerTagDC.strategy, InnerTagDC.trigger
         if InnerTagDC.strategy:
             self.strategy = InnerTagDC.strategy
@@ -318,7 +314,8 @@ class InnerTagDS(object):
         self.json = myjson
         self.stored = True
         if InnerTagDS.trigger:
-            self.strategy, self.trigger = InnerTagDS.strategy, InnerTagDS.trigger
+            self.strategy, self.trigger = (
+                InnerTagDS.strategy, InnerTagDS.trigger)
             return InnerTagDS.strategy, InnerTagDS.trigger
         if InnerTagDS.strategy:
             self.strategy = InnerTagDS.strategy
@@ -375,7 +372,8 @@ class InnerTagDC(object):
         self.json = myjson
         self.stored = True
         if InnerTagDC.trigger:
-            self.strategy, self.trigger = InnerTagDC.strategy, InnerTagDC.trigger
+            self.strategy, self.trigger = (
+                InnerTagDC.strategy, InnerTagDC.trigger)
             return InnerTagDC.strategy, InnerTagDC.trigger
         if InnerTagDC.strategy:
             self.strategy = InnerTagDC.strategy
@@ -561,11 +559,11 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertEqual(
             nh.elementClass, {
                 'group': EGroup, 'field': EField, 'attribute': EAttribute,
-                                           'link': ELink,
-                                           'symbols': Element, 'symbol': ESymbol,
-                                           'dimensions': EDimensions,
-                                           'dim': EDim, 'enumeration': Element, 'item': Element,
-                                           'strategy': EStrategy
+                'link': ELink,
+                'symbols': Element, 'symbol': ESymbol,
+                'dimensions': EDimensions,
+                'dim': EDim, 'enumeration': Element, 'item': Element,
+                'strategy': EStrategy
             })
         self.assertEqual(nh.transparentTags, ['definition'])
         self.assertEqual(nh.close(), None)
@@ -593,7 +591,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
 
         attr1 = {"name": "entry", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         self.assertEqual(el.startElement("group", attr1), None)
         self.assertEqual(el.endElement("group"), None)
@@ -639,13 +637,12 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
 
         attr1 = {"name": "entry", "type": "NXentry", "shortname": "myentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
         st = ''
         for a in attr1:
             st += ' %s ="%s"' % (a, attr1[a])
         xml = '<group%s/>' % (st)
 
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -703,10 +700,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "instrument", "type": "NXinstrument"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         self.assertEqual(el.startElement("group", attr1), None)
         self.assertEqual(el.startElement("group", attr2), None)
@@ -772,10 +769,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "instrument", "type": "NXinstrument", "signal": "1"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
         st = ''
         for a in attr1:
             st += ' %s="%s"' % (a, attr1[a])
@@ -787,7 +784,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '<group%s/>' % (st)
         xml += '</group>'
 
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -862,7 +858,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
 
         attr1 = {"name": "counter", "type": "NX_CHAR", "axis": 1}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         value = 'myfield'
         st = ''
@@ -871,7 +867,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml = '<field%s>' % (st)
         xml += value
         xml += '</field>'
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -933,7 +928,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
 
         attr1 = {"name": "counter", "type": "NX_CHAR"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         self.assertEqual(el.startElement("field", attr1), None)
         self.assertEqual(el.characters("field"), None)
@@ -985,7 +980,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
 
         attr1 = {"name": "counter", "type": "NX_CHAR"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         self.assertEqual(el.startElement("field", attr1), None)
         self.assertEqual(el.characters(""), None)
@@ -1038,7 +1033,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
 
         attr1 = {"name": "counter", "type": "NX_CHAR"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         value = ''
         st = ''
@@ -1047,7 +1042,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml = '<field%s>' % (st)
         xml += value
         xml += '</field>'
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -1101,7 +1095,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
 
         attr1 = {"name": "counter", "type": "NX_INT"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         self.assertEqual(el.startElement("field", attr1), None)
         self.assertEqual(el.characters(""), None)
@@ -1128,7 +1122,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         el = NexusXMLHandler(self._eFile)
 
         attr1 = {"name": "counter", "type": "NX_INT"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         value = ''
         st = ''
@@ -1137,7 +1131,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml = '<field%s>' % (st)
         xml += value
         xml += '</field>'
-        parser = sax.make_parser()
         self.myAssertRaise(ValueError, sax.parseString, xml, el)
 
         self.assertEqual(el.close(), None)
@@ -1165,10 +1158,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         self.assertEqual(el.startElement("group", attr1), None)
         self.assertEqual(el.startElement("field", attr2), None)
@@ -1238,10 +1231,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         value = '1234'
         st = ''
@@ -1256,7 +1249,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</field>'
         xml += '</group>'
 
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -1324,10 +1316,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT32"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         value = '1234'
         st = ''
@@ -1342,7 +1334,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</attribute>'
         xml += '</group>'
 
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -1400,10 +1391,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT32"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         self.assertEqual(el.startElement("group", attr1), None)
         self.assertEqual(el.startElement("attribute", attr2), None)
@@ -1463,10 +1454,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
 
         attr1 = {"name": "entry1", "type": "NX_CHAR"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT32"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         value1 = '1234'
         value2 = '34'
@@ -1483,7 +1474,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</attribute>'
         xml += '</field>'
 
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -1545,10 +1535,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
 
         attr1 = {"name": "entry1", "type": "NX_INT"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT32"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         self.assertEqual(el.startElement("field", attr1), None)
         self.assertEqual(el.characters("12"), None)
@@ -1619,7 +1609,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         el.elementClass = {"field": TElement}
 
         attr1 = {"name": "counter", "type": "NX_CHAR", "axis": 1}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         value = 'myfield'
         st = ''
@@ -1628,7 +1618,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml = '<field%s>' % (st)
         xml += value
         xml += '</field>'
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -1678,7 +1667,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         el.elementClass = {"field": TElementOS}
 
         attr1 = {"name": "counter", "type": "NX_CHAR", "axis": 1}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         value = 'myfield'
         st = ''
@@ -1687,7 +1676,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml = '<field%s>' % (st)
         xml += value
         xml += '</field>'
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -1733,7 +1721,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         el.elementClass = {"field": TElementOL}
 
         attr1 = {"name": "counter", "type": "NX_CHAR", "axis": 1}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         value = 'myfield'
         st = ''
@@ -1742,7 +1730,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml = '<field%s>' % (st)
         xml += value
         xml += '</field>'
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -1788,7 +1775,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         el.elementClass = {"field": TElementOF}
 
         attr1 = {"name": "counter", "type": "NX_CHAR", "axis": 1}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         value = 'myfield'
         st = ''
@@ -1797,7 +1784,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml = '<field%s>' % (st)
         xml += value
         xml += '</field>'
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -1842,14 +1828,14 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         TElement.strategy = None
         TElement.trigger = None
         TElement.groupTypes = TNObject()
-        ch = TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
+        TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
         el.elementClass = {"field": TElement, "group": TElementOS}
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         value = '1234'
         st = ''
@@ -1864,7 +1850,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</field>'
         xml += '</group>'
 
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -1934,14 +1919,14 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         TElement.strategy = None
         TElement.trigger = None
         TElement.groupTypes = TNObject()
-        ch = TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
+        TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
         el.elementClass = {"field": TElement, "group": TElementOS}
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         value = '1234'
         st = ''
@@ -1956,7 +1941,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</field>'
         xml += '</group>'
 
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -2030,14 +2014,14 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         TElement.strategy = None
         TElement.trigger = None
         TElement.groupTypes = TNObject()
-        ch = TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
+        TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
         el.elementClass = {"field": TElement, "group": TElementOS}
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         value = '1234'
         st = ''
@@ -2052,7 +2036,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</field>'
         xml += '</group>'
 
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -2122,11 +2105,11 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         TElement.trigger = None
         TElement.strategy = 'INIT'
         TElement.groupTypes = TNObject()
-        ch = TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
+        TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
         el.elementClass = {"field": TElement}
 
         attr1 = {"name": "counter", "type": "NX_CHAR", "axis": 1}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         value = 'myfield'
         st = ''
@@ -2135,7 +2118,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml = '<field%s>' % (st)
         xml += value
         xml += '</field>'
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -2196,15 +2178,16 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         TElement.trigger = None
         TElement.strategy = 'INIT'
         TElement.groupTypes = TNObject()
-        ch = TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
+        TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
         el.elementClass = {"field": TElement, "strategy": SElement}
 
         attr1 = {"name": "counter", "type": "NX_CHAR", "axis": 1}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         strtag = '<strategy mode="INIT" />'
-        dsvalue = '<device member="attribute">Something </device><record name="myrecord"></record>'
-        dsend = '</datasource>'
+        # dsvalue = '<device member="attribute">Something </device>
+        # <record name="myrecord"></record>'
+        # dsend = '</datasource>'
         value = 'myfield'
         st = ''
         for a in attr1:
@@ -2213,7 +2196,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += strtag
         xml += '</field>'
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -2278,11 +2260,11 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         TElement.trigger = None
         TElement.strategy = 'INIT'
         TElement.groupTypes = TNObject()
-        ch = TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
+        TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
         el.elementClass = {"field": TElement, "strategy": SElement}
 
         attr1 = {"name": "counter", "type": "NX_CHAR", "axis": 1}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         strtag = '<strategy mode="INIT" />'
 
@@ -2294,7 +2276,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += strtag
         xml += '</field>'
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -2354,13 +2335,13 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertTrue(isinstance(el.finalPool, ThreadPool))
         self.assertEqual(el.triggerPools, {})
         TElement.groupTypes = TNObject()
-        ch = TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
+        TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
         TElement.instance = None
         TElement.strategy = 'STEP'
         el.elementClass = {"field": TElement}
 
         attr1 = {"name": "counter", "type": "NX_CHAR", "axis": 1}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         value = 'myfield'
         st = ''
@@ -2369,7 +2350,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml = '<field%s>' % (st)
         xml += value
         xml += '</field>'
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -2429,12 +2409,12 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         TElement.instance = None
         TElement.strategy = 'FINAL'
         TElement.groupTypes = TNObject()
-        ch = TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
+        TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
 
         el.elementClass = {"field": TElement}
 
         attr1 = {"name": "counter", "type": "NX_CHAR", "axis": 1}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         value = 'myfield'
         st = ''
@@ -2443,7 +2423,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml = '<field%s>' % (st)
         xml += value
         xml += '</field>'
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -2502,11 +2481,11 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         TElement.strategy = 'STEP'
         TElement.trigger = 'mytrigger'
         TElement.groupTypes = TNObject()
-        ch = TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
+        TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
         el.elementClass = {"field": TElement}
 
         attr1 = {"name": "counter", "type": "NX_CHAR", "axis": 1}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         value = 'myfield'
         st = ''
@@ -2515,7 +2494,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml = '<field%s>' % (st)
         xml += value
         xml += '</field>'
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -2577,15 +2555,15 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         TElement.strategy = None
         TElement.trigger = None
         TElement.groupTypes = TNObject()
-        ch = TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
+        TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
         self.assertTrue('definition' in el.transparentTags)
         el.elementClass = {"field": TElement, "group": TElementOS}
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         value = '1234'
         st = ''
@@ -2601,7 +2579,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</field>'
         xml += '</group>'
 
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -2670,15 +2647,15 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         TElement.strategy = None
         TElement.trigger = None
         TElement.groupTypes = TNObject()
-        ch = TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
+        TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
         el.elementClass = {"field": TElement, "group": TElementOS}
         self.assertTrue('definition' in el.transparentTags)
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         value = '1234'
         st = ''
@@ -2694,7 +2671,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</field>'
         xml += '</group>'
 
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -2763,15 +2739,15 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         TElement.strategy = None
         TElement.trigger = None
         TElement.groupTypes = TNObject()
-        ch = TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
+        TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
         el.elementClass = {"field": TElement, "group": TElementOS}
         self.assertTrue('definition' in el.transparentTags)
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         value = '1234'
         st = ''
@@ -2788,7 +2764,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</definition>'
         xml += '</group>'
 
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -2857,15 +2832,15 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         TElement.strategy = None
         TElement.trigger = None
         TElement.groupTypes = TNObject()
-        ch = TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
+        TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
         el.elementClass = {"field": TElement, "group": TElementOS}
         el.transparentTags = ['mydefinition']
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         value = '1234'
         st = ''
@@ -2882,7 +2857,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
         xml += '</mydefinition>'
 
-        parser = sax.make_parser()
         if sys.version_info > (3,):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
@@ -2956,10 +2930,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertTrue('definition' in el.transparentTags)
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         value = '1234'
         st = ''
@@ -2976,7 +2950,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
         xml += '</mydefinition>'
 
-        parser = sax.make_parser()
         self.assertTrue(el.raiseUnsupportedTag)
         self.myAssertRaise(UnsupportedTagError, sax.parseString, xml, el)
 
@@ -3009,10 +2982,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         self.assertTrue('definition' in el.transparentTags)
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         value = '1234'
         st = ''
@@ -3029,7 +3002,6 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
         xml += '</mydefinition>'
 
-        parser = sax.make_parser()
         el.raiseUnsupportedTag = False
         self.assertTrue(not el.raiseUnsupportedTag)
         if sys.version_info > (3,):
@@ -3068,20 +3040,21 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         TElement.strategy = None
         TElement.trigger = None
         TElement.groupTypes = TNObject()
-        ch = TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
+        TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
         el.elementClass = {"group": TElementOS, "field": TElement}
         el.withXMLinput = {"datasource": InnerTag}
         self.assertTrue('definition' in el.transparentTags)
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         value = '1234'
         dsstart = '<datasource myname="testdatasource">'
-        dsvalue = '<device member="attribute">Something </device><record name="myrecord"></record>'
+        dsvalue = '<device member="attribute">Something </device>' + \
+                  '<record name="myrecord"></record>'
         dsend = '</datasource>'
 
         st = ''
@@ -3185,20 +3158,21 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         TElement.strategy = None
         TElement.trigger = None
         TElement.groupTypes = TNObject()
-        ch = TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
+        TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
         el.elementClass = {"group": TElementOS, "field": TElement}
         el.withXMLinput = {"datasource": InnerTagDSDC}
         self.assertTrue('definition' in el.transparentTags)
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         value = '1234'
         dsstart = '<datasource myname="testdatasource">'
-        dsvalue = '<device member="attribute">Something </device><record name="myrecord"></record>'
+        dsvalue = '<device member="attribute">Something </device>' + \
+                  '<record name="myrecord"></record>'
         dsend = '</datasource>'
 
         st = ''
@@ -3293,7 +3267,8 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         decoders = "SOMETHING2"
         gjson = json.loads('{"data":{"myrecord":"1"}}')
         el = NexusXMLHandler(
-            self._eFile, parser=parser, globalJSON=gjson, datasources=datasources, decoders=decoders)
+            self._eFile, parser=parser, globalJSON=gjson,
+            datasources=datasources, decoders=decoders)
 
         parser.setContentHandler(el)
         parser.setErrorHandler(errorHandler)
@@ -3306,20 +3281,21 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         TElement.strategy = None
         TElement.trigger = None
         TElement.groupTypes = TNObject()
-        ch = TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
+        TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
         el.elementClass = {"group": TElementOS, "field": TElement}
         el.withXMLinput = {"datasource": InnerTagDSDC}
         self.assertTrue('definition' in el.transparentTags)
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         value = '1234'
         dsstart = '<datasource myname="testdatasource">'
-        dsvalue = '<device member="attribute">Something </device><record name="myrecord"></record>'
+        dsvalue = '<device member="attribute">Something </device>' + \
+                  '<record name="myrecord"></record>'
         dsend = '</datasource>'
 
         st = ''
@@ -3414,7 +3390,8 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         decoders = "SOMETHING2"
         gjson = json.loads('{"data":{"myrecord":"1"}}')
         el = NexusXMLHandler(
-            self._eFile, parser=parser, globalJSON=gjson, datasources=datasources, decoders=decoders)
+            self._eFile, parser=parser, globalJSON=gjson,
+            datasources=datasources, decoders=decoders)
 
         parser.setContentHandler(el)
         parser.setErrorHandler(errorHandler)
@@ -3427,20 +3404,21 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         TElement.strategy = None
         TElement.trigger = None
         TElement.groupTypes = TNObject()
-        ch = TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
+        TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
         el.elementClass = {"group": TElementOS, "field": TElement}
         el.withXMLinput = {"datasource": InnerTagDS}
         self.assertTrue('definition' in el.transparentTags)
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         value = '1234'
         dsstart = '<datasource myname="testdatasource">'
-        dsvalue = '<device member="attribute">Something </device><record name="myrecord"></record>'
+        dsvalue = '<device member="attribute">Something </device>' + \
+                  '<record name="myrecord"></record>'
         dsend = '</datasource>'
 
         st = ''
@@ -3535,7 +3513,8 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         decoders = "SOMETHING2"
         gjson = json.loads('{"data":{"myrecord":"1"}}')
         el = NexusXMLHandler(
-            self._eFile, parser=parser, globalJSON=gjson, datasources=datasources, decoders=decoders)
+            self._eFile, parser=parser, globalJSON=gjson,
+            datasources=datasources, decoders=decoders)
 
         parser.setContentHandler(el)
         parser.setErrorHandler(errorHandler)
@@ -3548,20 +3527,22 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         TElement.strategy = None
         TElement.trigger = None
         TElement.groupTypes = TNObject()
-        ch = TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
+        # ch =
+        TNObject("mmyentry1", "NXmmyentry", TElement.groupTypes)
         el.elementClass = {"group": TElementOS, "field": TElement}
         el.withXMLinput = {"datasource": InnerTagDC}
         self.assertTrue('definition' in el.transparentTags)
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "counter", "type": "NX_INT"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         value = '1234'
         dsstart = '<datasource myname="testdatasource">'
-        dsvalue = '<device member="attribute">Something </device><record name="myrecord"></record>'
+        dsvalue = '<device member="attribute">Something </device>' + \
+                  '<record name="myrecord"></record>'
         dsend = '</datasource>'
 
         st = ''

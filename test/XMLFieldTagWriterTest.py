@@ -22,19 +22,14 @@
 import unittest
 import os
 import sys
-import subprocess
-import random
 import struct
 
 try:
     from pni.io.nx.h5 import open_file
-except:
+except Exception:
     from pni.nx.h5 import open_file
 
-from xml.sax import SAXParseException
 
-
-from nxswriter import Types
 from nxswriter.TangoDataWriter import TangoDataWriter
 from Checkers import Checker
 

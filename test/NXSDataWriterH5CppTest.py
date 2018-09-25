@@ -28,7 +28,7 @@ import numpy
 import PyTango
 try:
     from ProxyHelper import ProxyHelper
-except:
+except Exception:
     from .ProxyHelper import ProxyHelper
 
 import struct
@@ -38,7 +38,7 @@ import nxswriter.H5CppWriter as H5CppWriter
 
 try:
     import ServerSetUp
-except:
+except Exception:
     from . import ServerSetUp
 
 # if 64-bit machione
@@ -337,7 +337,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
                 os.makedirs(directory)
                 dirCreated = True
                 dirExists = True
-            except:
+            except Exception:
                 pass
         else:
             dirExists = True

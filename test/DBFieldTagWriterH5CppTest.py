@@ -35,7 +35,7 @@ import nxswriter.H5CppWriter as H5CppWriter
 
 try:
     import MySQLdb
-except:
+except Exception:
     import pymysql
     pymysql.install_as_MySQLdb()
 
@@ -95,7 +95,7 @@ class DBFieldTagWriterH5CppTest(unittest.TestCase):
             args["host"] = 'localhost'
             args["read_default_file"] = '/etc/my.cnf'
             self._mydb = MySQLdb.connect(**args)
-        except:
+        except Exception:
             from os.path import expanduser
             home = expanduser("~")
             args2 = {'host': u'localhost', 'db': u'tango',

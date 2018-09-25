@@ -21,22 +21,15 @@
 #
 import unittest
 import os
-import sys
-import subprocess
-import random
 import struct
-import numpy
 
 
 from nxswriter.EStrategy import EStrategy
-from nxswriter.FElement import FElement
 from nxswriter.EField import EField
 from nxswriter.Element import Element
-from nxswriter.H5Elements import EFile
-from nxswriter.Types import NTP, Converters
+from nxswriter.Types import Converters
 import nxswriter.FileWriter as FileWriter
 import nxswriter.PNIWriter as PNIWriter
-from xml.sax import SAXParseException
 
 
 # if 64-bit machione
@@ -180,7 +173,8 @@ class EStrategyTest(unittest.TestCase):
         self.assertEqual(st.last.trigger, attrs["trigger"])
         self.assertEqual(el.trigger, attrs["trigger"])
         self.assertEqual(
-            st.last.grows, int(attrs["grows"]) if int(attrs["grows"]) > 0 else 1)
+            st.last.grows, int(attrs["grows"])
+            if int(attrs["grows"]) > 0 else 1)
         self.assertEqual(
             el.grows, int(attrs["grows"]) if int(attrs["grows"]) > 0 else 1)
         self.assertEqual(
@@ -232,7 +226,7 @@ class EStrategyTest(unittest.TestCase):
     def test_store(self):
         print("Run: %s.test_store() " % self.__class__.__name__)
 
-        attrs = {"mode": "STEP"}
+        # attrs = {"mode": "STEP"}
         el = EField(self._fattrs, None)
         st = EStrategy({"mode": "STEP"}, el)
         self.assertEqual(st.content, [])

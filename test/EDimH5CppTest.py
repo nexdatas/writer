@@ -22,17 +22,14 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
 import binascii
-import numpy
 
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5CppWriter as H5CppWriter
 
 
-from nxswriter.FElement import FElement
 from nxswriter.EField import EField
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
@@ -151,10 +148,10 @@ class EDimTest(unittest.TestCase):
         nxFile = None
         eFile = None
 
-        gname = "testGroup"
-        gtype = "NXentry"
-        fdname = "testField"
-        fdtype = "int64"
+        # gname = "testGroup"
+        # gtype = "NXentry"
+        # fdname = "testField"
+        # fdtype = "int64"
 
         # file handle
         nxFile = FileWriter.create_file(fname, overwrite=True).root()
@@ -185,10 +182,10 @@ class EDimTest(unittest.TestCase):
         nxFile = None
         eFile = None
 
-        gname = "testGroup"
-        gtype = "NXentry"
-        fdname = "testField"
-        fdtype = "int64"
+        # gname = "testGroup"
+        # gtype = "NXentry"
+        # fdname = "testField"
+        # fdtype = "int64"
 
         # file handle
         nxFile = FileWriter.create_file(fname, overwrite=True).root()
@@ -223,10 +220,10 @@ class EDimTest(unittest.TestCase):
         nxFile = None
         eFile = None
 
-        gname = "testGroup"
-        gtype = "NXentry"
-        fdname = "testField"
-        fdtype = "int64"
+        # gname = "testGroup"
+        # gtype = "NXentry"
+        # fdname = "testField"
+        # fdtype = "int64"
 
         # file handle
         nxFile = FileWriter.create_file(fname, overwrite=True).root()
@@ -237,7 +234,7 @@ class EDimTest(unittest.TestCase):
         fi = EField(self._fattrs2, el)
         el2 = EDimensions(self._fattrs3, fi)
         el3 = EDim(self._attrs1, el2)
-        el4 = EDim(self._attrs2, el2)
+        EDim(self._attrs2, el2)
         self.assertEqual(fi.tagName, "field")
         self.assertEqual(fi.content, [])
         self.assertEqual(fi._tagAttrs, self._fattrs2)
@@ -262,10 +259,10 @@ class EDimTest(unittest.TestCase):
         nxFile = None
         eFile = None
 
-        gname = "testGroup"
-        gtype = "NXentry"
-        fdname = "testField"
-        fdtype = "int64"
+        # gname = "testGroup"
+        # gtype = "NXentry"
+        # fdname = "testField"
+        # fdtype = "int64"
 
         # file handle
         nxFile = FileWriter.create_file(fname, overwrite=True).root()
@@ -300,10 +297,10 @@ class EDimTest(unittest.TestCase):
         nxFile = None
         eFile = None
 
-        gname = "testGroup"
-        gtype = "NXentry"
-        fdname = "testField"
-        fdtype = "int64"
+        # gname = "testGroup"
+        # gtype = "NXentry"
+        # fdname = "testField"
+        # fdtype = "int64"
 
         # file handle
         nxFile = FileWriter.create_file(fname, overwrite=True).root()
@@ -338,10 +335,10 @@ class EDimTest(unittest.TestCase):
         nxFile = None
         eFile = None
 
-        gname = "testGroup"
-        gtype = "NXentry"
-        fdname = "testField"
-        fdtype = "int64"
+        # gname = "testGroup"
+        # gtype = "NXentry"
+        # fdname = "testField"
+        # fdtype = "int64"
 
         # file handle
         nxFile = FileWriter.create_file(fname, overwrite=True).root()
@@ -381,10 +378,10 @@ class EDimTest(unittest.TestCase):
         nxFile = None
         eFile = None
 
-        gname = "testGroup"
-        gtype = "NXentry"
-        fdname = "testField"
-        fdtype = "int64"
+        # gname = "testGroup"
+        # gtype = "NXentry"
+        # fdname = "testField"
+        # fdtype = "int64"
 
         # file handle
         nxFile = FileWriter.create_file(fname, overwrite=True).root()
@@ -431,10 +428,10 @@ class EDimTest(unittest.TestCase):
         nxFile = None
         eFile = None
 
-        gname = "testGroup"
-        gtype = "NXentry"
-        fdname = "testField"
-        fdtype = "int64"
+        # gname = "testGroup"
+        # gtype = "NXentry"
+        # fdname = "testField"
+        # fdtype = "int64"
 
         # file handle
         nxFile = FileWriter.create_file(fname, overwrite=True).root()
@@ -448,7 +445,7 @@ class EDimTest(unittest.TestCase):
         ds = TestDataSource()
         ds.value0d = self.__rnd.randint(1, 10)
         el3.source = ds
-        el4 = EDim(self._attrs2, el2)
+        EDim(self._attrs2, el2)
         el3.store()
 
         self.assertEqual(fi.tagName, "field")
@@ -477,10 +474,10 @@ class EDimTest(unittest.TestCase):
         nxFile = None
         eFile = None
 
-        gname = "testGroup"
-        gtype = "NXentry"
-        fdname = "testField"
-        fdtype = "int64"
+        # gname = "testGroup"
+        # gtype = "NXentry"
+        # fdname = "testField"
+        # fdtype = "int64"
 
         # file handle
         nxFile = FileWriter.create_file(fname, overwrite=True).root()
@@ -521,10 +518,10 @@ class EDimTest(unittest.TestCase):
         nxFile = None
         eFile = None
 
-        gname = "testGroup"
-        gtype = "NXentry"
-        fdname = "testField"
-        fdtype = "int64"
+        # gname = "testGroup"
+        # gtype = "NXentry"
+        # fdname = "testField"
+        # fdtype = "int64"
 
         # file handle
         nxFile = FileWriter.create_file(fname, overwrite=True).root()

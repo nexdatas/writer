@@ -28,7 +28,7 @@ import struct
 import binascii
 try:
     from cStringIO import StringIO
-except:
+except Exception:
     from io import StringIO
 
 from nxswriter import StreamSet

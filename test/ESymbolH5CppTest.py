@@ -22,16 +22,12 @@
 import unittest
 import os
 import sys
-import subprocess
-import random
 import struct
-import numpy
 
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5CppWriter as H5CppWriter
 
 
-from nxswriter.H5Elements import FElement
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
 from nxswriter.H5Elements import ESymbol
@@ -141,7 +137,8 @@ class ESymbolH5CppTest(unittest.TestCase):
         # element file objects
         eFile = EFile([], None, nxFile)
         group = nxFile.create_group(gname, gtype)
-        field = group.create_field(fdname, fdtype)
+        # field =
+        group.create_field(fdname, fdtype)
 
         el = Element(self._tfname, self._fattrs2, eFile)
         el2 = ESymbol(self._fattrs2, el)

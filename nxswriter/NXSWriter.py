@@ -82,7 +82,7 @@ class CommandThread(Thread):
         except (PyTango.DevFailed, BaseException):
             self.__failed()
             raise
-        except:
+        except Exception:
             self.__failed()
             PyTango.Except.throw_exception(
                 str(sys.exc_info()[0]),
@@ -158,7 +158,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 try:
                     self.tdw.closeFile()
                     del self.tdw
-                except:
+                except Exception:
                     pass
             self.tdw = None
         self.set_state(PyTango.DevState.OFF)
@@ -183,7 +183,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
                         ]:
                             self.tdw.closeFile()
                         del self.tdw
-                    except:
+                    except Exception:
                         pass
                 self.tdw = None
             self.tdw = TDW(self)
@@ -191,7 +191,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         except (PyTango.DevFailed, BaseException):
             self.__failed()
             raise
-        except:
+        except Exception:
             self.__failed()
             PyTango.Except.throw_exception(
                 str(sys.exc_info()[0]),
@@ -548,7 +548,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         if state in [PyTango.DevState.OPEN]:
             try:
                 self.CloseFile()
-            except:
+            except Exception:
                 pass
         self.set_state(PyTango.DevState.RUNNING)
         with self.lock:
@@ -560,7 +560,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         except (PyTango.DevFailed, BaseException):
             self.__failed()
             raise
-        except:
+        except Exception:
             self.__failed()
             PyTango.Except.throw_exception(
                 str(sys.exc_info()[0]),
@@ -596,7 +596,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         except (PyTango.DevFailed, BaseException):
             self.__failed()
             raise
-        except:
+        except Exception:
             self.__failed()
             PyTango.Except.throw_exception(
                 str(sys.exc_info()[0]),
@@ -633,7 +633,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         except (PyTango.DevFailed, BaseException):
             self.__failed()
             raise
-        except:
+        except Exception:
             self.__failed()
             PyTango.Except.throw_exception(
                 str(sys.exc_info()[0]),
@@ -671,7 +671,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         except (PyTango.DevFailed, BaseException):
             self.__failed()
             raise
-        except:
+        except Exception:
             self.__failed()
             PyTango.Except.throw_exception(
                 str(sys.exc_info()[0]),
@@ -792,7 +792,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         except (PyTango.DevFailed, BaseException):
             self.__failed()
             raise
-        except:
+        except Exception:
             self.__failed()
             PyTango.Except.throw_exception(
                 str(sys.exc_info()[0]),

@@ -22,7 +22,6 @@
 import unittest
 import os
 import sys
-import subprocess
 import struct
 import random
 import binascii

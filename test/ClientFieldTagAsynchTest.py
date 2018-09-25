@@ -20,17 +20,8 @@
 # unittests for field Tags running Tango Server in asynchronous mode
 #
 import unittest
-import os
-import sys
-import subprocess
-import random
-import time
 
 import PyTango
-
-from xml.sax import SAXParseException
-
-from Checkers import Checker
 
 import ServerSetUp
 import ClientFieldTagWriterTest
@@ -39,7 +30,8 @@ from ProxyHelper import ProxyHelper
 # test fixture
 
 
-class ClientFieldTagAsynchTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest):
+class ClientFieldTagAsynchTest(
+        ClientFieldTagWriterTest.ClientFieldTagWriterTest):
     # server counter
     serverCounter = 0
 

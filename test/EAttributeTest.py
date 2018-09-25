@@ -22,7 +22,6 @@
 import unittest
 import os
 import sys
-import subprocess
 import struct
 import random
 import numpy
@@ -33,11 +32,9 @@ import time
 from nxswriter.FElement import FElement
 from nxswriter.EAttribute import EAttribute
 from nxswriter.EField import EField
-from nxswriter.EGroup import EGroup
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
 from nxswriter.Types import NTP, Converters
-from nxswriter.Errors import XMLSettingSyntaxError
 
 from TestDataSource import TestDataSource
 
@@ -127,7 +124,7 @@ class EAttributeTest(unittest.TestCase):
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
-        eFile = EFile({}, None, self._nxFile)
+        EFile({}, None, self._nxFile)
         at = EAttribute({}, None)
         self.assertTrue(isinstance(at, Element))
         self.assertTrue(isinstance(at, FElement))
@@ -153,7 +150,7 @@ class EAttributeTest(unittest.TestCase):
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
-        eFile = EFile({}, None, self._nxFile)
+        EFile({}, None, self._nxFile)
         at = EAttribute({}, None)
         self.assertTrue(isinstance(at, Element))
         self.assertTrue(isinstance(at, FElement))
@@ -505,7 +502,7 @@ class EAttributeTest(unittest.TestCase):
             elif attrs[k][2] != "bool":
                 attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(0, 3)]]
             else:
-                mlen = [1]
+                # mlen = [1]
                 if k == 'bool':
                     attrs[k][0] = [[bool(self.__rnd.randint(0, 1))]]
                 else:
@@ -581,7 +578,7 @@ class EAttributeTest(unittest.TestCase):
                     [attrs[k][0] * self.__rnd.randint(0, 3)
                      for c in range(self.__rnd.randint(2, 10))]]
             else:
-                mlen = [1]
+                # mlen = [1]
                 if k == 'bool':
                     attrs[k][0] = [[bool(self.__rnd.randint(0, 1))
                                     for c in range(self.__rnd.randint(2, 10))]]
@@ -656,7 +653,7 @@ class EAttributeTest(unittest.TestCase):
                 attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(0, 3)]
                                for c in range(self.__rnd.randint(2, 10))]
             else:
-                mlen = [1]
+                # mlen = [1]
                 if k == 'bool':
                     attrs[k][0] = [[bool(self.__rnd.randint(0, 1))]
                                    for c in range(self.__rnd.randint(2, 10))]
@@ -890,7 +887,7 @@ class EAttributeTest(unittest.TestCase):
             at = el[k].h5Object.attributes[k]
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                            attrs[k][3] if len(attrs[k]) > 3
+                attrs[k][3] if len(attrs[k]) > 3
                 else 0)
 
         self._nxFile.close()
@@ -1212,7 +1209,8 @@ class EAttributeTest(unittest.TestCase):
             el[k].tagAttributes[k] = (attrs[k][1], '')
             ds = TestDataSource()
             ds.valid = True
-            ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0] if attrs[k][2] != "bool"
+            ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0]
+                        if attrs[k][2] != "bool"
                         else Converters.toBool(attrs[k][0]),
                         "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
                                               else "string"],
@@ -1781,7 +1779,7 @@ class EAttributeTest(unittest.TestCase):
             elif attrs[k][2] != "bool":
                 attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(0, 3)]]
             else:
-                mlen = [1]
+                # mlen = [1]
                 if k == 'bool':
                     attrs[k][0] = [[bool(self.__rnd.randint(0, 1))]]
                 else:
@@ -1984,7 +1982,7 @@ class EAttributeTest(unittest.TestCase):
                     [attrs[k][0] * self.__rnd.randint(0, 3)
                      for c in range(self.__rnd.randint(2, 10))]]
             else:
-                mlen = [1]
+                # mlen = [1]
                 if k == 'bool':
                     attrs[k][0] = [[
                         bool(self.__rnd.randint(0, 1))
@@ -2187,7 +2185,7 @@ class EAttributeTest(unittest.TestCase):
                 attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(0, 3)]
                                for c in range(self.__rnd.randint(2, 10))]
             else:
-                mlen = [1]
+                # mlen = [1]
                 if k == 'bool':
                     attrs[k][0] = [[bool(self.__rnd.randint(0, 1))]
                                    for c in range(self.__rnd.randint(2, 10))]
@@ -2442,7 +2440,7 @@ class EAttributeTest(unittest.TestCase):
 
             self._sc.checkImageAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                         attrs[k][4] if len(attrs[k]) > 4
+                attrs[k][4] if len(attrs[k]) > 4
                 else 0)
         self._nxFile.close()
 

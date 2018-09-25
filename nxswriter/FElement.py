@@ -189,7 +189,7 @@ class FElement(Element):
 
                 if extraD:
                     shape.insert(exDim - 1, 0)
-            except:
+            except Exception:
                 if sys.version_info > (3,):
                     val = ("".join(self.content)).strip()
                 else:
@@ -444,7 +444,7 @@ class FElementWithAttr(FElement):
                                 self.h5Object.attributes[
                                     ekey].dtype
                             ](self._tagAttrs[key].strip().encode())
-                        except:
+                        except Exception:
                             h5att[...] = self._tagAttrs[key].strip().encode()
                     else:
                         try:
@@ -452,7 +452,7 @@ class FElementWithAttr(FElement):
                                 self.h5Object.attributes[
                                     ekey].dtype
                             ](self._tagAttrs[key])
-                        except:
+                        except Exception:
                             h5att[...] = self._tagAttrs[key]
 
                 elif key in NTP.aTnv.keys():
@@ -473,7 +473,7 @@ class FElementWithAttr(FElement):
                                 shape,
                                 overwrite=True
                             )[...] = dh.cast(NTP.nTnp[NTP.aTnv[key]].encode())
-                    except:
+                    except Exception:
                         sarr = self._tagAttrs[key].split()
                         if sys.version_info > (3,):
                             self.h5Object.attributes.create(

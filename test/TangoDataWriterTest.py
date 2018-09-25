@@ -480,7 +480,7 @@ ds.res2 = str(root.is_valid)
                 os.makedirs(directory)
                 dirCreated = True
                 dirExists = True
-            except:
+            except Exception:
                 pass
         else:
             dirExists = True

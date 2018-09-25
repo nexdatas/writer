@@ -36,6 +36,22 @@ else:
     bytes = str
 
 
+def _tostr(text):
+    """ converts text  to str type
+
+    :param text: text
+    :type text: :obj:`bytes` or :obj:`unicode`
+    :returns: text in str type
+    :rtype: :obj:`str`
+    """
+    if isinstance(text, str):
+        return text
+    elif sys.version_info > (3,):
+        return str(text, "utf8")
+    else:
+        return str(text)
+
+
 def _slice2selection(t, shape):
     """ converts slice(s) to selection
 
@@ -94,42 +110,24 @@ def _slice2selection(t, shape):
 
 
 pTh = {
-    u"long": h5cpp.datatype.Integer,
-    u"str": h5cpp.datatype.kVariableString,
-    u"unicode": h5cpp.datatype.kVariableString,
-    u"bool": h5cpp.datatype.kEBool,
-    u"int": h5cpp.datatype.kInt64,
-    u"int64": h5cpp.datatype.kInt64,
-    u"int32": h5cpp.datatype.kInt32,
-    u"int16": h5cpp.datatype.kInt16,
-    u"int8": h5cpp.datatype.kInt8,
-    u"uint": h5cpp.datatype.kInt64,
-    u"uint64": h5cpp.datatype.kUInt64,
-    u"uint32": h5cpp.datatype.kUInt32,
-    u"uint16": h5cpp.datatype.kUInt16,
-    u"uint8": h5cpp.datatype.kUInt8,
-    u"float": h5cpp.datatype.kFloat32,
-    u"float64": h5cpp.datatype.kFloat64,
-    u"float32": h5cpp.datatype.kFloat32,
-    u"string": h5cpp.datatype.kVariableString,
-    b"long": h5cpp.datatype.Integer,
-    b"str": h5cpp.datatype.kVariableString,
-    b"unicode": h5cpp.datatype.kVariableString,
-    b"bool": h5cpp.datatype.kEBool,
-    b"int": h5cpp.datatype.kInt64,
-    b"int64": h5cpp.datatype.kInt64,
-    b"int32": h5cpp.datatype.kInt32,
-    b"int16": h5cpp.datatype.kInt16,
-    b"int8": h5cpp.datatype.kInt8,
-    b"uint": h5cpp.datatype.kInt64,
-    b"uint64": h5cpp.datatype.kUInt64,
-    b"uint32": h5cpp.datatype.kUInt32,
-    b"uint16": h5cpp.datatype.kUInt16,
-    b"uint8": h5cpp.datatype.kUInt8,
-    b"float": h5cpp.datatype.kFloat32,
-    b"float64": h5cpp.datatype.kFloat64,
-    b"float32": h5cpp.datatype.kFloat32,
-    b"string": h5cpp.datatype.kVariableString
+    "long": h5cpp.datatype.Integer,
+    "str": h5cpp.datatype.kVariableString,
+    "unicode": h5cpp.datatype.kVariableString,
+    "bool": h5cpp.datatype.kEBool,
+    "int": h5cpp.datatype.kInt64,
+    "int64": h5cpp.datatype.kInt64,
+    "int32": h5cpp.datatype.kInt32,
+    "int16": h5cpp.datatype.kInt16,
+    "int8": h5cpp.datatype.kInt8,
+    "uint": h5cpp.datatype.kInt64,
+    "uint64": h5cpp.datatype.kUInt64,
+    "uint32": h5cpp.datatype.kUInt32,
+    "uint16": h5cpp.datatype.kUInt16,
+    "uint8": h5cpp.datatype.kUInt8,
+    "float": h5cpp.datatype.kFloat32,
+    "float64": h5cpp.datatype.kFloat64,
+    "float32": h5cpp.datatype.kFloat32,
+    "string": h5cpp.datatype.kVariableString,
 }
 
 
@@ -334,7 +332,7 @@ class H5CppFile(FileWriter.FTFile):
                         | h5cpp.file.AccessFlags.SWMRREAD
             else:
                 return flag
-        except:
+        except Exception:
             return None
 
     def reopen(self, readonly=False, swmr=False, libver=None):
@@ -491,7 +489,8 @@ class H5CppGroup(FileWriter.FTGroup):
         dcpl.layout = h5cpp.property.DatasetLayout.CHUNKED
         dcpl.chunk = tuple(chunk)
         field = h5cpp.node.Dataset(
-            self._h5object, h5cpp.Path(name), pTh[type_code], dataspace,
+            self._h5object, h5cpp.Path(name),
+            pTh[_tostr(type_code)], dataspace,
             dcpl=dcpl)
 
         fld = H5CppField(field, self)
@@ -661,7 +660,7 @@ class H5CppField(FileWriter.FTField):
         try:
             self._h5object = self._tparent.h5object.get_dataset(
                 h5cpp.Path(self.name))
-        except Exception as e:
+        except Exception:
             self._h5object = [lk for lk in self._tparent.h5object.links
                               if lk.path.name == self.name][0]
 
@@ -704,7 +703,7 @@ class H5CppField(FileWriter.FTField):
                 v = self._h5object.read()
             try:
                 v = v.decode('UTF-8')
-            except:
+            except Exception:
                 pass
         else:
             v = self._h5object.read()
@@ -768,7 +767,7 @@ class H5CppField(FileWriter.FTField):
                     v = self._h5object.read()
                 try:
                     v = v.decode('UTF-8')
-                except:
+                except Exception:
                     pass
             else:
                 v = self._h5object.read()
@@ -806,7 +805,7 @@ class H5CppField(FileWriter.FTField):
         if self.dtype in ['string', b'string']:
             try:
                 v = v.decode('UTF-8')
-            except:
+            except Exception:
                 pass
         return v
 
@@ -931,7 +930,7 @@ class H5CppLink(FileWriter.FTLink):
         """
         try:
             return self._h5object.node.is_valid
-        except:
+        except Exception:
             return False
 
     def refresh(self):
@@ -978,7 +977,7 @@ class H5CppLink(FileWriter.FTLink):
             lk = [e for e in lks
                   if e.path.name == self.name][0]
             self._h5object = lk
-        except:
+        except Exception:
             self._h5object = None
         FileWriter.FTLink.reopen(self)
 
@@ -1083,7 +1082,7 @@ class H5CppAttributeManager(FileWriter.FTAttributeManager):
                 raise Exception("Attribute %s exists" % name)
         shape = shape or []
         if shape:
-            at = self._h5object.create(name, pTh[dtype], shape)
+            at = self._h5object.create(name, pTh[_tostr(dtype)], shape)
             if dtype in ['string', b'string']:
                 emp = np.empty(shape, dtype="unicode")
                 emp[:] = ''
@@ -1091,7 +1090,7 @@ class H5CppAttributeManager(FileWriter.FTAttributeManager):
             else:
                 at.write(np.zeros(shape, dtype=dtype))
         else:
-            at = self._h5object.create(name, pTh[dtype])
+            at = self._h5object.create(name, pTh[_tostr(dtype)])
             if dtype in ['string', b'string']:
                 at.write(np.array(u"", dtype="unicode"))
             else:
@@ -1182,7 +1181,7 @@ class H5CppAttribute(FileWriter.FTAttribute):
         if self.dtype in ['string', b'string']:
             try:
                 vl = vl.decode('UTF-8')
-            except:
+            except Exception:
                 pass
         return vl
 
@@ -1223,7 +1222,7 @@ class H5CppAttribute(FileWriter.FTAttribute):
                 var = var.astype(dtype)
             try:
                 self._h5object.write(var)
-            except:
+            except Exception:
                 dtype = np.unicode_
                 tvar = np.array(var, dtype=dtype)
                 self._h5object[0][self.name] = tvar
@@ -1294,7 +1293,7 @@ class H5CppAttribute(FileWriter.FTAttribute):
         if self.dtype in ['string', b'string']:
             try:
                 v = v.decode('UTF-8')
-            except:
+            except Exception:
                 pass
         return v
 

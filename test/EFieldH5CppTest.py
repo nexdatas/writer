@@ -22,23 +22,19 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import binascii
 import struct
 import numpy
 import time
 
-from xml.sax import SAXParseException
 
 from nxswriter.FElement import FElementWithAttr
 from nxswriter.FElement import FElement
 from nxswriter.EField import EField
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
-from nxswriter.EGroup import EGroup
 from nxswriter.Types import NTP, Converters
-from nxswriter.DataSources import DataSource
 
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5CppWriter as H5CppWriter
@@ -47,13 +43,13 @@ from nxswriter.Errors import XMLSettingSyntaxError
 
 try:
     from TestDataSource import TestDataSource
-except:
+except Exception:
     from .TestDataSource import TestDataSource
 
 
 try:
     from Checkers import Checker
-except:
+except Exception:
     from .Checkers import Checker
 
 # if 64-bit machione

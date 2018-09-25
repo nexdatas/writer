@@ -22,16 +22,12 @@
 import unittest
 import os
 import sys
-import subprocess
-import random
 import struct
-import numpy
 
 import nxswriter.FileWriter as FileWriter
 import nxswriter.PNIWriter as PNIWriter
 
 
-from nxswriter.FElement import FElement
 from nxswriter.EField import EField
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
@@ -127,10 +123,10 @@ class EDimensionsTest(unittest.TestCase):
         nxFile = None
         eFile = None
 
-        gname = "testGroup"
-        gtype = "NXentry"
-        fdname = "testField"
-        fdtype = "int64"
+        # gname = "testGroup"
+        # gtype = "NXentry"
+        # fdname = "testField"
+        # fdtype = "int64"
 
         # file handle
         FileWriter.writer = PNIWriter
@@ -162,10 +158,10 @@ class EDimensionsTest(unittest.TestCase):
         nxFile = None
         eFile = None
 
-        gname = "testGroup"
-        gtype = "NXentry"
-        fdname = "testField"
-        fdtype = "int64"
+        # gname = "testGroup"
+        # gtype = "NXentry"
+        # fdname = "testField"
+        # fdtype = "int64"
 
         # file handle
         FileWriter.writer = PNIWriter

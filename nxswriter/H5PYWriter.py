@@ -431,7 +431,7 @@ class H5PYGroup(FileWriter.FTGroup):
         """
         try:
             return self._h5object.name is not None
-        except:
+        except Exception:
             return False
 
     def reopen(self):
@@ -573,7 +573,7 @@ class H5PYField(FileWriter.FTField):
         """
         try:
             return self._h5object.name is not None
-        except:
+        except Exception:
             return False
 
     def close(self):
@@ -654,7 +654,7 @@ class H5PYLink(FileWriter.FTLink):
 
             self.parent.h5object[self.name]
             return True
-        except:
+        except Exception:
             return False
 
     def refresh(self):
@@ -995,7 +995,7 @@ class H5PYAttribute(FileWriter.FTAttribute):
                 var = var.astype(dtype)
             try:
                 self._h5object[0][self.name] = var
-            except:
+            except Exception:
                 dtype = h5py.special_dtype(vlen=unicode)
                 tvar = np.array(var, dtype=dtype)
                 self._h5object[0][self.name] = tvar
@@ -1054,7 +1054,7 @@ class H5PYAttribute(FileWriter.FTAttribute):
         """
         try:
             return self.name in self._h5object[0].keys()
-        except:
+        except Exception:
             return False
 
     @property

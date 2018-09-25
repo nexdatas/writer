@@ -162,7 +162,7 @@ class DataHolder(object):
             else:
                 try:
                     return numpy.array(self.value, dtype=nptype(dtype))
-                except:
+                except Exception:
                     return numpy.array(
                         NTP().createArray(self.value, NTP.convert[dtype]),
                         dtype=nptype(dtype))

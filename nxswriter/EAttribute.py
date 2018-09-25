@@ -119,7 +119,7 @@ class EAttribute(FElement):
                         self.error = message
                     else:
                         self.h5Object[...] = dh.cast(self.h5Object.dtype)
-        except:
+        except Exception:
             message = self.setMessage(sys.exc_info()[1].__str__())
             self.error = message
         #            self.error = sys.exc_info()
@@ -154,11 +154,11 @@ class EAttribute(FElement):
                     value = numpy.iinfo(getattr(numpy, 'int64')).max
                 else:
                     value = numpy.iinfo(getattr(numpy, nptype)).max
-            except:
+            except Exception:
                 try:
                     value = numpy.asscalar(
                         numpy.finfo(getattr(numpy, nptype)).max)
-                except:
+                except Exception:
                     value = 0
         else:
             nptype = "str"

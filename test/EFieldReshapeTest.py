@@ -22,7 +22,6 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
 import numpy
@@ -34,32 +33,28 @@ from nxswriter.FElement import FElement
 from nxswriter.EField import EField
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
-from nxswriter.EGroup import EGroup
 from nxswriter.Types import NTP, Converters
-from nxswriter.DataSources import DataSource
 
-from nxswriter.Errors import XMLSettingSyntaxError
 import nxswriter.FileWriter as FileWriter
 import nxswriter.PNIWriter as PNIWriter
-from xml.sax import SAXParseException
 
 
 # True if pniio installed
 PNIIO = False
 try:
-    import pni.io.nx.h5 as nx
+    __import__("pni.io.nx.h5")
     PNIIO = True
-except:
-    import pni.nx.h5 as nx
+except Exception:
+    pass
 
 try:
     from TestDataSource import TestDataSource
-except:
+except Exception:
     from .TestDataSource import TestDataSource
 
 try:
     from Checkers import Checker
-except:
+except Exception:
     from .Checkers import Checker
 
 

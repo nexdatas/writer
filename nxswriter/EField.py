@@ -185,7 +185,7 @@ class EField(FElementWithAttr):
                 else:
                     f = self._lastObject().create_field(
                         name, dtype, mshape, [1])
-        except:
+        except Exception:
             info = sys.exc_info()
             import traceback
             message = str(info[1].__str__()) + "\n " + (" ").join(
@@ -547,7 +547,7 @@ class EField(FElementWithAttr):
                                 self.canfail):
                             self.__growshape(dh.shape)
                         self.__writeGrowingData(dh)
-        except:
+        except Exception:
             info = sys.exc_info()
             import traceback
             message = self.setMessage(
@@ -597,11 +597,11 @@ class EField(FElementWithAttr):
                     value = numpy.iinfo(getattr(numpy, 'int64')).max
                 else:
                     value = numpy.iinfo(getattr(numpy, nptype)).max
-            except:
+            except Exception:
                 try:
                     value = numpy.asscalar(
                         numpy.finfo(getattr(numpy, nptype)).max)
-                except:
+                except Exception:
                     value = 0
         else:
             nptype = "str"

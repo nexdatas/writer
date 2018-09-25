@@ -47,18 +47,18 @@ WRITERS = {}
 try:
     from . import PNIWriter
     WRITERS["pni"] = PNIWriter
-except:
+except Exception:
     pass
 try:
     from . import H5PYWriter
     WRITERS["h5py"] = H5PYWriter
-except:
+except Exception:
     pass
 
 try:
     from . import H5CppWriter
     WRITERS["h5cpp"] = H5CppWriter
-except:
+except Exception:
     pass
 DEFAULTWRITERS = ["pni", "h5py", "h5cpp"]
 
@@ -78,7 +78,7 @@ if sys.version_info > (3,):
                     PYTG_BUG_213 = True
             else:
                 PYTG_BUG_213 = True
-    except:
+    except Exception:
         pass
 
 

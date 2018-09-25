@@ -22,25 +22,19 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
-import numpy
-from xml.dom import minidom
-import json
 import binascii
 import time
 
 try:
     import MySQLdb
-except:
+except Exception:
     import pymysql
     pymysql.install_as_MySQLdb()
 
-from nxswriter.DataSources import DataSource
 from nxswriter.DBaseSource import DBaseSource
-from nxswriter.Errors import DataSourceSetupError, PackageError
-from nxswriter.Types import Converters
+from nxswriter.Errors import PackageError
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -89,7 +83,7 @@ class MYSQLSourceTest(unittest.TestCase):
             args["host"] = 'localhost'
             args["read_default_file"] = '/etc/my.cnf'
             self._mydb = MySQLdb.connect(**args)
-        except:
+        except Exception:
             from os.path import expanduser
             home = expanduser("~")
             args2 = {'host': u'localhost', 'db': u'tango',

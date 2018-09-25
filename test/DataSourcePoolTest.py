@@ -169,7 +169,8 @@ class DataSourcePoolTest(unittest.TestCase):
 
         el = DataSourcePool(
             json.loads(
-                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
+                '{"datasources":{"CL":'
+                '"nxswriter.ClientSource.ClientSource"}}'))
 
     # hasDataSource test
     # \brief It tests default settings
@@ -190,7 +191,8 @@ class DataSourcePoolTest(unittest.TestCase):
 
         el = DataSourcePool(
             json.loads(
-                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
+                '{"datasources":{"CL":'
+                '"nxswriter.ClientSource.ClientSource"}}'))
         self.assertTrue(el.hasDataSource("TANGO"))
         self.assertTrue(el.hasDataSource("CLIENT"))
         self.assertTrue(el.hasDataSource("DB"))
@@ -215,7 +217,8 @@ class DataSourcePoolTest(unittest.TestCase):
 
         el = DataSourcePool(
             json.loads(
-                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
+                '{"datasources":{"CL":'
+                '"nxswriter.ClientSource.ClientSource"}}'))
         ds = el.get("TANGO")()
         self.assertTrue(isinstance(ds, TangoSource))
         ds = el.get("DB")()

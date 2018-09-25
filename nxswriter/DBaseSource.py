@@ -34,7 +34,7 @@ DB_AVAILABLE = []
 try:
     try:
         import MySQLdb
-    except:
+    except Exception:
         import pymysql
         pymysql.install_as_MySQLdb()
     DB_AVAILABLE.append("MYSQL")

@@ -21,7 +21,6 @@
 #
 import os
 import random
-import unittest
 import binascii
 import time
 import numpy
@@ -82,7 +81,7 @@ class Checker(object):
         try:
             self._tc.assertEqual(len(at.shape), 1)
             self._tc.assertEqual(at.shape, (1,))
-        except:
+        except Exception:
             self._tc.assertEqual(len(at.shape), 0)
 
         self._tc.assertEqual(at.dtype, "string")
@@ -101,7 +100,7 @@ class Checker(object):
         try:
             self._tc.assertEqual(len(at.shape), 1)
             self._tc.assertEqual(at.shape, (1,))
-        except:
+        except Exception:
             self._tc.assertEqual(len(at.shape), 0)
         self._tc.assertEqual(at.dtype, "string")
         self._tc.assertEqual(at.name, "NX_class")
@@ -119,7 +118,7 @@ class Checker(object):
         try:
             self._tc.assertEqual(len(at.shape), 1)
             self._tc.assertEqual(at.shape, (1,))
-        except:
+        except Exception:
             self._tc.assertEqual(len(at.shape), 0)
         self._tc.assertEqual(at.dtype, "string")
         self._tc.assertEqual(at.name, "NX_class")
@@ -153,7 +152,7 @@ class Checker(object):
         try:
             self._tc.assertEqual(len(at.shape), 1)
             self._tc.assertEqual(at.shape, (1,))
-        except:
+        except Exception:
             self._tc.assertEqual(len(at.shape), 0)
         self._tc.assertEqual(at.dtype, "string")
         self._tc.assertEqual(at.name, "NX_class")
@@ -171,7 +170,7 @@ class Checker(object):
         try:
             self._tc.assertEqual(len(at.shape), 1)
             self._tc.assertEqual(at.shape, (1,))
-        except:
+        except Exception:
             self._tc.assertEqual(len(at.shape), 0)
         self._tc.assertEqual(at.dtype, "string")
         self._tc.assertEqual(at.name, "NX_class")
@@ -200,7 +199,7 @@ class Checker(object):
         try:
             self._tc.assertEqual(len(at.shape), 1)
             self._tc.assertEqual(at.shape, (1,))
-        except:
+        except Exception:
             self._tc.assertEqual(len(at.shape), 0)
         self._tc.assertEqual(at.dtype, "string")
         self._tc.assertEqual(at.name, "NX_class")
@@ -224,7 +223,7 @@ class Checker(object):
         try:
             self._tc.assertEqual(len(cnt.shape), 1)
             self._tc.assertEqual(cnt.shape, (1,))
-        except:
+        except Exception:
             self._tc.assertEqual(len(cnt.shape), 0)
         self._tc.assertEqual(cnt.dtype, dtype)
         # pninx is not supporting reading string areas
@@ -435,7 +434,7 @@ class Checker(object):
             try:
                 self._tc.assertEqual(len(at.shape), 1)
                 self._tc.assertEqual(at.shape, (1,))
-            except:
+            except Exception:
                 self._tc.assertEqual(len(at.shape), 0)
             self._tc.assertEqual(at.dtype, "string")
             self._tc.assertEqual(at.name, a)
@@ -493,7 +492,7 @@ class Checker(object):
             try:
                 self._tc.assertEqual(len(at.shape), 1)
                 self._tc.assertEqual(at.shape, (1,))
-            except:
+            except Exception:
                 self._tc.assertEqual(len(at.shape), 0)
             self._tc.assertEqual(at.dtype, "string")
             self._tc.assertEqual(at.name, a)
@@ -533,7 +532,7 @@ class Checker(object):
             try:
                 self._tc.assertEqual(len(at.shape), 1)
                 self._tc.assertEqual(at.shape, (1,))
-            except:
+            except Exception:
                 self._tc.assertEqual(len(at.shape), 0)
             self._tc.assertEqual(at.dtype, "string")
             self._tc.assertEqual(at.name, a)
@@ -644,7 +643,7 @@ class Checker(object):
             try:
                 self._tc.assertEqual(len(at.shape), 1)
                 self._tc.assertEqual(at.shape, (1,))
-            except:
+            except Exception:
                 self._tc.assertEqual(len(at.shape), 0)
             self._tc.assertEqual(at.dtype, "string")
             self._tc.assertEqual(at.name, a)
@@ -697,7 +696,7 @@ class Checker(object):
             try:
                 self._tc.assertEqual(len(at.shape), 1)
                 self._tc.assertEqual(at.shape, (1,))
-            except:
+            except Exception:
                 self._tc.assertEqual(len(at.shape), 0)
             self._tc.assertEqual(at.dtype, "string")
             self._tc.assertEqual(at.name, a)
@@ -901,7 +900,7 @@ class Checker(object):
             try:
                 self._tc.assertEqual(len(at.shape), 1)
                 self._tc.assertEqual(at.shape, (1,))
-            except:
+            except Exception:
                 self._tc.assertEqual(len(at.shape), 0)
             self._tc.assertEqual(at.dtype, "string")
             self._tc.assertEqual(at.name, a)
@@ -955,7 +954,7 @@ class Checker(object):
             try:
                 self._tc.assertEqual(len(at.shape), 1)
                 self._tc.assertEqual(at.shape, (1,))
-            except:
+            except Exception:
                 self._tc.assertEqual(len(at.shape), 0)
             self._tc.assertEqual(at.dtype, "string")
             self._tc.assertEqual(at.name, a)

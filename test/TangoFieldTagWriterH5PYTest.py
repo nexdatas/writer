@@ -22,16 +22,12 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import numpy
 import struct
 import binascii
 import time
 import PyTango
-
-from xml.sax import SAXParseException
-
 
 from nxswriter import Types
 from nxswriter.TangoDataWriter import TangoDataWriter
@@ -40,17 +36,17 @@ import nxswriter.H5PYWriter as H5PYWriter
 
 try:
     from ProxyHelper import ProxyHelper
-except:
+except Exception:
     from .ProxyHelper import ProxyHelper
 
 try:
     from Checkers import Checker
-except:
+except Exception:
     from .Checkers import Checker
 
 try:
     import SimpleServerSetUp
-except:
+except Exception:
     from . import SimpleServerSetUp
 
 
@@ -71,7 +67,7 @@ if sys.version_info > (3,):
                     PYTG_BUG_213 = True
             else:
                 PYTG_BUG_213 = True
-    except:
+    except Exception:
         pass
 
 # if 64-bit machione

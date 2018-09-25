@@ -20,16 +20,9 @@
 # unittests for field Tags running Tango Server
 #
 import unittest
-import os
-import sys
-import subprocess
-import random
 
 import PyTango
 
-from xml.sax import SAXParseException
-
-from Checkers import Checker
 from ProxyHelper import ProxyHelper
 
 import ServerSetUp

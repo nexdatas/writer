@@ -22,15 +22,11 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
-import numpy
-from xml.dom import minidom
 import PyTango
 import binascii
 import time
-import json
 import threading
 
 

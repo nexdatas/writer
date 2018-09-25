@@ -1,7 +1,6 @@
 import PyTango
 import subprocess
 import time
-import os
 import sys
 
 new_device_info_writer = PyTango.DbDevInfo()

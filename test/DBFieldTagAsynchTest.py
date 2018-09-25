@@ -21,9 +21,7 @@
 #
 
 import unittest
-import os
 import PyTango
-import time
 
 import ServerSetUp
 import DBFieldTagWriterTest

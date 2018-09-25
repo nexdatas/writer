@@ -22,12 +22,9 @@
 import unittest
 import os
 import sys
-import subprocess
-import random
 import struct
 
 from nxswriter.H5Elements import EFile
-from nxswriter.ThreadPool import ThreadPool
 from nxswriter.Element import Element
 import nxswriter.FileWriter as FileWriter
 import nxswriter.PNIWriter as PNIWriter
@@ -87,7 +84,8 @@ class ElementTest(unittest.TestCase):
         # element file objects
         eFile = EFile([], None, nxFile)
         group = nxFile.create_group(gname, gtype)
-        field = group.create_field(fdname, fdtype)
+        # field =
+        group.create_field(fdname, fdtype)
 
         el = Element(self._tfname, self._fattrs, eFile)
         el2 = Element(self._tfname, self._fattrs, el)

@@ -22,14 +22,8 @@
 import unittest
 import os
 import sys
-import subprocess
-import random
 import struct
 
-from xml.sax import SAXParseException
-
-
-from nxswriter import Types
 from nxswriter.TangoDataWriter import TangoDataWriter
 from Checkers import Checker
 

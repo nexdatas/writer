@@ -22,7 +22,6 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import numpy
 import struct
@@ -32,16 +31,14 @@ import PyTango
 
 try:
     from ProxyHelper import ProxyHelper
-except:
+except Exception:
     from .ProxyHelper import ProxyHelper
 
 
 try:
     from pni.io.nx.h5 import open_file
-except:
+except Exception:
     from pni.nx.h5 import open_file
-
-from xml.sax import SAXParseException
 
 
 from nxswriter import Types
@@ -49,13 +46,13 @@ from nxswriter.TangoDataWriter import TangoDataWriter
 
 try:
     from Checkers import Checker
-except:
+except Exception:
     from .Checkers import Checker
 
 
 try:
     import SimpleServerSetUp
-except:
+except Exception:
     from . import SimpleServerSetUp
 
 
@@ -82,7 +79,7 @@ if sys.version_info > (3,):
                     PYTG_BUG_213 = True
             else:
                 PYTG_BUG_213 = True
-    except:
+    except Exception:
         pass
 
 
