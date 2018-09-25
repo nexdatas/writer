@@ -833,14 +833,16 @@ class EFieldH5PYTest(unittest.TestCase):
             if attrs[k][2] != "bool":
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(0, 3)]
                 attrs[k][0] = [
-                    attrs[k][0] * self.__rnd.randint(0, 3) for r in range(mlen[0])]
+                    attrs[k][0] * self.__rnd.randint(0, 3)
+                    for r in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10)]
                 if k == 'bool':
                     attrs[k][0] = [bool(self.__rnd.randint(0, 1))
                                    for c in range(mlen[0])]
                 else:
-                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1) else "false")
+                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1)
+                                    else "false")
                                    for c in range(mlen[0])]
 
             attrs[k][3] = (mlen[0],)
@@ -946,14 +948,16 @@ class EFieldH5PYTest(unittest.TestCase):
             if attrs[k][2] != "bool":
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(0, 3)]
                 attrs[k][0] = [
-                    attrs[k][0] * self.__rnd.randint(0, 3) for c in range(mlen[0])]
+                    attrs[k][0] * self.__rnd.randint(0, 3)
+                    for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10)]
                 if k == 'bool':
                     attrs[k][0] = [bool(self.__rnd.randint(0, 1))
                                    for c in range(mlen[0])]
                 else:
-                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1) else "false")
+                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1)
+                                    else "false")
                                    for c in range(mlen[0])]
 
             attrs[k][3] = (mlen[0],)
@@ -1046,14 +1050,16 @@ class EFieldH5PYTest(unittest.TestCase):
             if attrs[k][2] != "bool":
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(0, 3)]
                 attrs[k][0] = [
-                    attrs[k][0] * self.__rnd.randint(0, 3) for c in range(mlen[0])]
+                    attrs[k][0] * self.__rnd.randint(0, 3)
+                    for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10)]
                 if k == 'bool':
                     attrs[k][0] = [bool(self.__rnd.randint(0, 1))
                                    for c in range(mlen[0])]
                 else:
-                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1) else "false")
+                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1)
+                                    else "false")
                                    for c in range(mlen[0])]
 
             attrs[k][3] = (mlen[0],)
@@ -1139,15 +1145,18 @@ class EFieldH5PYTest(unittest.TestCase):
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(
                     1, 10), self.__rnd.randint(0, 3)]
                 attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(0, 3)
-                                for c in range(mlen[1])] for i in range(mlen[0])]
+                                for c in range(mlen[1])]
+                               for i in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if k == 'bool':
-                    attrs[k][0] = [[bool(self.__rnd.randint(0, 1))
-                                    for c in range(mlen[1])] for r in range(mlen[0])]
+                    attrs[k][0] = [[
+                        bool(self.__rnd.randint(0, 1))
+                        for c in range(mlen[1])] for r in range(mlen[0])]
                 else:
-                    attrs[k][0] = [[("True" if self.__rnd.randint(0, 1) else "False")
-                                    for c in range(mlen[1])] for r in range(mlen[0])]
+                    attrs[k][0] = [[
+                        ("True" if self.__rnd.randint(0, 1) else "False")
+                        for c in range(mlen[1])] for r in range(mlen[0])]
 
             attrs[k][3] = (mlen[0], mlen[1])
 
@@ -1179,7 +1188,8 @@ class EFieldH5PYTest(unittest.TestCase):
             self.assertEqual(el[k].content, [])
             self.assertEqual(el[k].rank, "2")
             self.assertEqual(
-                el[k].lengths, {"1": str(attrs[k][3][0]), "2": str(attrs[k][3][1])})
+                el[k].lengths,
+                {"1": str(attrs[k][3][0]), "2": str(attrs[k][3][1])})
             self.assertEqual(el[k].strategy, 'STEP')
             self.assertEqual(el[k].source, ds)
             self.assertEqual(el[k].trigger, None)
@@ -1252,15 +1262,18 @@ class EFieldH5PYTest(unittest.TestCase):
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(
                     1, 10), self.__rnd.randint(0, 3)]
                 attrs[k][0] = [
-                    [[attrs[k][0] * self.__rnd.randint(0, 3)] for r in range(mlen[1])] for c in range(mlen[0])]
+                    [[attrs[k][0] * self.__rnd.randint(0, 3)]
+                     for r in range(mlen[1])] for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if k == 'bool':
-                    attrs[k][0] = [[bool(self.__rnd.randint(0, 1))
-                                    for c in range(mlen[1])] for r in range(mlen[0])]
+                    attrs[k][0] = [[
+                        bool(self.__rnd.randint(0, 1))
+                        for c in range(mlen[1])] for r in range(mlen[0])]
                 else:
-                    attrs[k][0] = [[("True" if self.__rnd.randint(0, 1) else "False")
-                                    for c in range(mlen[1])] for r in range(mlen[0])]
+                    attrs[k][0] = [[
+                        ("True" if self.__rnd.randint(0, 1) else "False")
+                        for c in range(mlen[1])] for r in range(mlen[0])]
 
             attrs[k][3] = (mlen[0], mlen[1])
 
@@ -1274,7 +1287,7 @@ class EFieldH5PYTest(unittest.TestCase):
         for k in attrs:
             flip = not flip
             quin = (quin + 1) % 5
-            grow = quin - 1 if quin else None
+            # grow = quin - 1 if quin else None
             stt = 'INIT' if flip else 'FINAL'
 
             el[k] = EField(
@@ -1294,7 +1307,8 @@ class EFieldH5PYTest(unittest.TestCase):
             self.assertEqual(el[k].content, [])
             self.assertEqual(el[k].rank, "2")
             self.assertEqual(
-                el[k].lengths, {"1": str(attrs[k][3][0]), "2": str(attrs[k][3][1])})
+                el[k].lengths,
+                {"1": str(attrs[k][3][0]), "2": str(attrs[k][3][1])})
             self.assertEqual(el[k].strategy, stt)
             self.assertEqual(el[k].source, ds)
             self.assertEqual(el[k].trigger, None)
@@ -1362,15 +1376,19 @@ class EFieldH5PYTest(unittest.TestCase):
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(
                     1, 10), self.__rnd.randint(0, 3)]
                 attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(0, 3)
-                                for r in range(mlen[1])] for c in range(mlen[0])]
+                                for r in range(mlen[1])]
+                               for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if k == 'bool':
                     attrs[k][0] = [[bool(self.__rnd.randint(0, 1))
-                                    for c in range(mlen[1])] for r in range(mlen[0])]
+                                    for c in range(mlen[1])]
+                                   for r in range(mlen[0])]
                 else:
-                    attrs[k][0] = [[("True" if self.__rnd.randint(0, 1) else "False")
-                                    for c in range(mlen[1])] for r in range(mlen[0])]
+                    attrs[k][0] = [[("True" if self.__rnd.randint(0, 1)
+                                     else "False")
+                                    for c in range(mlen[1])]
+                                   for r in range(mlen[0])]
 
             attrs[k][3] = (mlen[0], mlen[1])
 
@@ -1384,7 +1402,7 @@ class EFieldH5PYTest(unittest.TestCase):
         for k in attrs:
             flip = not flip
             quin = (quin + 1) % 5
-            grow = quin - 1 if quin else None
+            # grow = quin - 1 if quin else None
             stt = 'INIT' if flip else 'FINAL'
 
             el[k] = EField(
@@ -1406,7 +1424,8 @@ class EFieldH5PYTest(unittest.TestCase):
             self.assertEqual(el[k].content, [])
             self.assertEqual(el[k].rank, "2")
             self.assertEqual(
-                el[k].lengths, {"1": str(attrs[k][3][0]), "2": str(attrs[k][3][1])})
+                el[k].lengths,
+                {"1": str(attrs[k][3][0]), "2": str(attrs[k][3][1])})
             self.assertEqual(el[k].strategy, stt)
             self.assertEqual(el[k].source, ds)
             self.assertEqual(el[k].trigger, None)
@@ -1611,7 +1630,8 @@ class EFieldH5PYTest(unittest.TestCase):
 
             for k in attrs.keys():
                 #   if attrs[k][2] == 'string':
-                #      "writing multi-dimensional string is not supported by pninx"
+                #      "writing multi-dimensional string is not supported
+                #        by pninx"
                 #       continue
                 el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [1])
                 el[k]._createAttributes()
@@ -1622,7 +1642,7 @@ class EFieldH5PYTest(unittest.TestCase):
                 # attrs[k][3] if len(attrs[k])>3 else 0)
                 self._sc.checkScalarAttribute(
                     el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                                attrs[k][3] if len(attrs[k]) > 3 else 0)
+                    attrs[k][3] if len(attrs[k]) > 3 else 0)
 
             self._nxFile.close()
 
@@ -1681,11 +1701,13 @@ class EFieldH5PYTest(unittest.TestCase):
             el[k].strategy = 'STEP'
 
             el[k].store()
-            at = el[k].h5Object.attributes[k]
+            # at =
+            el[k].h5Object.attributes[k]
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                            attrs[k][4] if len(attrs[k]) > 4 else 0)
-#            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]] ,
+                attrs[k][4] if len(attrs[k]) > 4 else 0)
+#            self._sc.checkSpectrumAttribute(el[k].h5Object, k,
+# attrs[k][2], [attrs[k][0]] ,
 # attrs[k][3] if len(attrs[k])>3 else 0)
 
         self._nxFile.close()
@@ -1730,20 +1752,23 @@ class EFieldH5PYTest(unittest.TestCase):
                     mlen = [
                         self.__rnd.randint(1, 10), self.__rnd.randint(1, 3)]
                     attrs[k][0] = [
-                        attrs[k][0] * self.__rnd.randint(1, 3) for r in range(mlen[0])]
+                        attrs[k][0] * self.__rnd.randint(1, 3)
+                        for r in range(mlen[0])]
                 elif attrs[k][2] != "bool":
                     mlen = [
                         self.__rnd.randint(1, 10), self.__rnd.randint(0, 3)]
                     attrs[k][0] = [
-                        attrs[k][0] * self.__rnd.randint(0, 3) for r in range(mlen[0])]
+                        attrs[k][0] * self.__rnd.randint(0, 3)
+                        for r in range(mlen[0])]
                 else:
                     mlen = [self.__rnd.randint(1, 10)]
                     if k == 'bool':
                         attrs[k][0] = [bool(self.__rnd.randint(0, 1))
                                        for c in range(mlen[0])]
                     else:
-                        attrs[k][0] = [("true" if self.__rnd.randint(0, 1) else "false")
-                                       for c in range(mlen[0])]
+                        attrs[k][0] = [
+                            ("true" if self.__rnd.randint(0, 1) else "false")
+                            for c in range(mlen[0])]
 
                 attrs[k][3] = (mlen[0],)
 
@@ -1769,11 +1794,12 @@ class EFieldH5PYTest(unittest.TestCase):
 
                 el[k].store()
 
-                at = el[k].h5Object.attributes[k]
+                # at =
+                el[k].h5Object.attributes[k]
                 # print(at)
                 self._sc.checkSpectrumAttribute(
                     el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                                attrs[k][4] if len(attrs[k]) > 4 else 0)
+                    attrs[k][4] if len(attrs[k]) > 4 else 0)
 
             self._nxFile.close()
             os.remove(self._fname)
@@ -1814,24 +1840,29 @@ class EFieldH5PYTest(unittest.TestCase):
 
             for k in attrs.keys():
                 if attrs[k][2] == "string":
-                    mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(
-                        1, 10), self.__rnd.randint(0, 3)]
+                    mlen = [self.__rnd.randint(1, 10),
+                            self.__rnd.randint(1, 10),
+                            self.__rnd.randint(0, 3)]
                     attrs[k][0] = [
-                        [attrs[k][0] * self.__rnd.randint(1, 3) for r in range(mlen[1])] for c in range(mlen[0])]
+                        [attrs[k][0] * self.__rnd.randint(1, 3)
+                         for r in range(mlen[1])] for c in range(mlen[0])]
                 elif attrs[k][2] != "bool":
                     mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(
                         1, 10), self.__rnd.randint(0, 3)]
                     attrs[k][0] = [
-                        [attrs[k][0] * self.__rnd.randint(0, 3) for r in range(mlen[1])] for c in range(mlen[0])]
+                        [attrs[k][0] * self.__rnd.randint(0, 3)
+                         for r in range(mlen[1])] for c in range(mlen[0])]
                 else:
                     mlen = [
                         self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                     if k == 'bool':
-                        attrs[k][0] = [[bool(self.__rnd.randint(0, 1))
-                                        for c in range(mlen[1])] for r in range(mlen[0])]
+                        attrs[k][0] = [[
+                            bool(self.__rnd.randint(0, 1))
+                            for c in range(mlen[1])] for r in range(mlen[0])]
                     else:
-                        attrs[k][0] = [[("True" if self.__rnd.randint(0, 1) else "False")
-                                        for c in range(mlen[1])]for r in range(mlen[0])]
+                        attrs[k][0] = [[
+                            ("True" if self.__rnd.randint(0, 1) else "False")
+                            for c in range(mlen[1])]for r in range(mlen[0])]
 
                 attrs[k][3] = (mlen[0], mlen[1])
 
@@ -1846,11 +1877,12 @@ class EFieldH5PYTest(unittest.TestCase):
                     {"name": k, "type": attrs[k][1], "units": "m"}, eFile)
 
                 self.assertEqual(el[k].tagAttributes, {})
-                el[k].tagAttributes[k] = (attrs[k][1],
-                                          "".join(["".join([str(it) + " " for it in sub]
-                                                           ) + "\n" for sub in attrs[k][0]]),
-                                          attrs[k][3]
-                                          )
+                el[k].tagAttributes[k] = (
+                    attrs[k][1],
+                    "".join(["".join([str(it) + " " for it in sub]) +
+                             "\n" for sub in attrs[k][0]]),
+                    attrs[k][3]
+                )
 
                 ds = TestDataSource()
                 ds.valid = True
@@ -1863,20 +1895,22 @@ class EFieldH5PYTest(unittest.TestCase):
 #                print k, attrs[k][0],el[k].h5Object.attributes[k].read()
                 self._sc.checkImageAttribute(
                     el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                                attrs[k][4] if len(attrs[k]) > 4 else 0)
+                    attrs[k][4] if len(attrs[k]) > 4 else 0)
 
                 self.assertEqual(at.dtype, attrs[k][2])
                 if attrs[k][2] == "bool":
                     for i in range(len(attrs[k][0])):
                         for j in range(len(attrs[k][0][i])):
                             self.assertEqual(
-                                Converters.toBool(str(attrs[k][0][i][j])), at[i, j])
+                                Converters.toBool(str(attrs[k][0][i][j])),
+                                at[i, j])
                     pass
                 elif len(attrs[k]) > 4:
                     for i in range(len(attrs[k][0])):
                         for j in range(len(attrs[k][0][i])):
                             self.assertTrue(
-                                abs(at[i, j] - attrs[k][0][i][j]) <= attrs[k][4])
+                                abs(at[i, j] - attrs[k][0][i][j]) <=
+                                attrs[k][4])
                 else:
                     for i in range(len(attrs[k][0])):
                         for j in range(len(attrs[k][0][i])):
@@ -1956,18 +1990,16 @@ class EFieldH5PYTest(unittest.TestCase):
             if stt != 'POSTRUN':
                 self._sc.checkXMLScalarField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                             attrs[k][1], attrs[k][0],
-                                             attrs[k][3] if len(
-                                                 attrs[k]) > 3 else 0,
-                                             attrs={"type": attrs[k][1], "units": "m"})
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][3] if len(attrs[k]) > 3 else 0,
+                    attrs={"type": attrs[k][1], "units": "m"})
             else:
                 self._sc.checkXMLScalarField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                             attrs[k][1], attrs[k][0],
-                                             attrs[k][3] if len(
-                                                 attrs[k]) > 3 else 0,
-                                             attrs={
-                                                 "type": attrs[k][1], "units": "m", "postrun": None}
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][3] if len(attrs[k]) > 3 else 0,
+                    attrs={
+                        "type": attrs[k][1], "units": "m", "postrun": None}
                 )
 
         self._nxFile.close()
@@ -2027,7 +2059,8 @@ class EFieldH5PYTest(unittest.TestCase):
                 if k == 'bool':
                     attrs[k][0] = [bool(self.__rnd.randint(0, 1))]
                 else:
-                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1) else "false")
+                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1)
+                                    else "false")
                                    ]
 
             attrs[k][3] = (mlen[0],)
@@ -2065,18 +2098,16 @@ class EFieldH5PYTest(unittest.TestCase):
             if stt != 'POSTRUN':
                 self._sc.checkXMLSpectrumField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                               attrs[k][1], attrs[k][0],
-                                               attrs[k][4] if len(
-                                                   attrs[k]) > 4 else 0,
-                                               attrs={"type": attrs[k][1], "units": ""})
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={"type": attrs[k][1], "units": ""})
             else:
                 self._sc.checkXMLSpectrumField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                               attrs[k][1], attrs[k][0],
-                                               attrs[k][4] if len(
-                                                   attrs[k]) > 4 else 0,
-                                               attrs={
-                                                   "type": attrs[k][1], "units": "", "postrun": None}
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={
+                        "type": attrs[k][1], "units": "", "postrun": None}
                 )
 
         self._nxFile.close()
@@ -2128,19 +2159,22 @@ class EFieldH5PYTest(unittest.TestCase):
             if attrs[k][2] == "string":
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 3)]
                 attrs[k][0] = [
-                    attrs[k][0] * self.__rnd.randint(1, 3) for r in range(mlen[0])]
+                    attrs[k][0] * self.__rnd.randint(1, 3)
+                    for r in range(mlen[0])]
             elif attrs[k][2] != "bool":
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(0, 3)]
                 attrs[k][0] = [
-                    attrs[k][0] * self.__rnd.randint(0, 3) for r in range(mlen[0])]
+                    attrs[k][0] * self.__rnd.randint(0, 3)
+                    for r in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10)]
                 if k == 'bool':
                     attrs[k][0] = [bool(self.__rnd.randint(0, 1))
                                    for c in range(mlen[0])]
                 else:
-                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1) else "false")
-                                   for c in range(mlen[0])]
+                    attrs[k][0] = [
+                        ("true" if self.__rnd.randint(0, 1) else "false")
+                        for c in range(mlen[0])]
 
             attrs[k][3] = (mlen[0],)
 
@@ -2176,18 +2210,16 @@ class EFieldH5PYTest(unittest.TestCase):
             if stt != 'POSTRUN':
                 self._sc.checkXMLSpectrumField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                               attrs[k][1], attrs[k][0],
-                                               attrs[k][4] if len(
-                                                   attrs[k]) > 4 else 0,
-                                               attrs={"type": attrs[k][1], "units": ""})
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={"type": attrs[k][1], "units": ""})
             else:
                 self._sc.checkXMLSpectrumField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                               attrs[k][1], attrs[k][0],
-                                               attrs[k][4] if len(
-                                                   attrs[k]) > 4 else 0,
-                                               attrs={
-                                                   "type": attrs[k][1], "units": "", "postrun": None}
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={
+                        "type": attrs[k][1], "units": "", "postrun": None}
                 )
 
         self._nxFile.close()
@@ -2229,21 +2261,25 @@ class EFieldH5PYTest(unittest.TestCase):
         for k in attrs.keys():
             if attrs[k][2] == "string":
                 mlen = [self.__rnd.randint(1, 10), 1, self.__rnd.randint(1, 3)]
-                attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(1, 3)
-                                for c in range(mlen[1])] for i in range(mlen[0])]
+                attrs[k][0] = [[
+                    attrs[k][0] * self.__rnd.randint(1, 3)
+                    for c in range(mlen[1])] for i in range(mlen[0])]
             elif attrs[k][2] != "bool":
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(
                     1, 10), self.__rnd.randint(0, 3)]
-                attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(0, 3)
-                                for c in range(mlen[1])] for i in range(mlen[0])]
+                attrs[k][0] = [[
+                    attrs[k][0] * self.__rnd.randint(0, 3)
+                    for c in range(mlen[1])] for i in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if k == 'bool':
-                    attrs[k][0] = [[bool(self.__rnd.randint(0, 1))
-                                    for c in range(mlen[1])] for r in range(mlen[0])]
+                    attrs[k][0] = [[
+                        bool(self.__rnd.randint(0, 1))
+                        for c in range(mlen[1])] for r in range(mlen[0])]
                 else:
-                    attrs[k][0] = [[("True" if self.__rnd.randint(0, 1) else "False")
-                                    for c in range(mlen[1])] for r in range(mlen[0])]
+                    attrs[k][0] = [[
+                        ("True" if self.__rnd.randint(0, 1) else "False")
+                        for c in range(mlen[1])] for r in range(mlen[0])]
 
             attrs[k][3] = (mlen[0], mlen[1])
 
@@ -2276,11 +2312,13 @@ class EFieldH5PYTest(unittest.TestCase):
             self.assertTrue(isinstance(el[k], FElement))
             self.assertTrue(isinstance(el[k], FElementWithAttr))
             self.assertEqual(el[k].tagName, "field")
-            self.assertEqual(el[k].content, ["".join(["".join([str(it) + " " for it in sub])
-                                                      + "\n" for sub in attrs[k][0]])])
+            self.assertEqual(el[k].content,
+                             ["".join(["".join([str(it) + " " for it in sub])
+                                       + "\n" for sub in attrs[k][0]])])
             self.assertEqual(el[k].rank, "2")
             self.assertEqual(
-                el[k].lengths, {"1": str(attrs[k][3][0]), "2": str(attrs[k][3][1])})
+                el[k].lengths,
+                {"1": str(attrs[k][3][0]), "2": str(attrs[k][3][1])})
             self.assertEqual(el[k].strategy, stt)
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
@@ -2292,41 +2330,37 @@ class EFieldH5PYTest(unittest.TestCase):
             if attrs[k][2] == 'string_old':
                 self.assertEqual(el[k].grows, None)
                 if stt != 'POSTRUN':
-                    self._sc.checkXMLSpectrumField(self._nxFile, k,
-                                                   attrs[k][2] if attrs[
-                                                       k][2] else 'string',
-                                                   attrs[k][1], [
-                                                       it[0] for it in attrs[k][0]],
-                                                   attrs={
-                                                       "type": attrs[k][1], "units": ""}
-                                                   )
+                    self._sc.checkXMLSpectrumField(
+                        self._nxFile, k,
+                        attrs[k][2] if attrs[k][2] else 'string',
+                        attrs[k][1], [it[0] for it in attrs[k][0]],
+                        attrs={
+                            "type": attrs[k][1], "units": ""}
+                    )
                 else:
-                    self._sc.checkXMLSpectrumField(self._nxFile, k,
-                                                   attrs[k][2] if attrs[
-                                                       k][2] else 'string',
-                                                   attrs[k][1], [
-                                                       it[0] for it in attrs[k][0]],
-                                                   attrs={
-                                                       "type": attrs[k][1], "units": "", "postrun": None}
-                                                   )
+                    self._sc.checkXMLSpectrumField(
+                        self._nxFile, k,
+                        attrs[k][2] if attrs[k][2] else 'string',
+                        attrs[k][1], [it[0] for it in attrs[k][0]],
+                        attrs={
+                            "type": attrs[k][1], "units": "", "postrun": None}
+                    )
 
             elif stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkXMLImageField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                            attrs[k][1], attrs[k][0],
-                                            attrs[k][4] if len(
-                                                attrs[k]) > 4 else 0,
-                                            attrs={"type": attrs[k][1], "units": ""})
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={"type": attrs[k][1], "units": ""})
             else:
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkXMLImageField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                            attrs[k][1], attrs[k][0],
-                                            attrs[k][4] if len(
-                                                attrs[k]) > 4 else 0,
-                                            attrs={
-                                                "type": attrs[k][1], "units": "", "postrun": None}
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={
+                        "type": attrs[k][1], "units": "", "postrun": None}
                 )
 
         self._nxFile.close()
@@ -2369,21 +2403,25 @@ class EFieldH5PYTest(unittest.TestCase):
             if attrs[k][2] == "string":
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(
                     2, 10), self.__rnd.randint(1, 3)]
-                attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(1, 3)
-                                for c in range(mlen[1])] for i in range(mlen[0])]
+                attrs[k][0] = [[
+                    attrs[k][0] * self.__rnd.randint(1, 3)
+                    for c in range(mlen[1])] for i in range(mlen[0])]
             elif attrs[k][2] != "bool":
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(
                     1, 10), self.__rnd.randint(0, 3)]
-                attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(0, 3)
-                                for c in range(mlen[1])] for i in range(mlen[0])]
+                attrs[k][0] = [[
+                    attrs[k][0] * self.__rnd.randint(0, 3)
+                    for c in range(mlen[1])] for i in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if k == 'bool':
-                    attrs[k][0] = [[bool(self.__rnd.randint(0, 1))
-                                    for c in range(mlen[1])] for r in range(mlen[0])]
+                    attrs[k][0] = [[
+                        bool(self.__rnd.randint(0, 1))
+                        for c in range(mlen[1])] for r in range(mlen[0])]
                 else:
-                    attrs[k][0] = [[("True" if self.__rnd.randint(0, 1) else "False")
-                                    for c in range(mlen[1])] for r in range(mlen[0])]
+                    attrs[k][0] = [[
+                        ("True" if self.__rnd.randint(0, 1) else "False")
+                        for c in range(mlen[1])] for r in range(mlen[0])]
 
             attrs[k][3] = (mlen[0], mlen[1])
 
@@ -2416,11 +2454,13 @@ class EFieldH5PYTest(unittest.TestCase):
             self.assertTrue(isinstance(el[k], FElement))
             self.assertTrue(isinstance(el[k], FElementWithAttr))
             self.assertEqual(el[k].tagName, "field")
-            self.assertEqual(el[k].content, ["".join(["".join([str(it) + " " for it in sub])
-                                                      + "\n" for sub in attrs[k][0]])])
+            self.assertEqual(el[k].content,
+                             ["".join(["".join([str(it) + " " for it in sub])
+                                       + "\n" for sub in attrs[k][0]])])
             self.assertEqual(el[k].rank, "2")
             self.assertEqual(
-                el[k].lengths, {"1": str(attrs[k][3][0]), "2": str(attrs[k][3][1])})
+                el[k].lengths, {"1": str(attrs[k][3][0]),
+                                "2": str(attrs[k][3][1])})
             self.assertEqual(el[k].strategy, stt)
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
@@ -2432,30 +2472,28 @@ class EFieldH5PYTest(unittest.TestCase):
             if attrs[k][2] == 'string_old':
                 self.assertEqual(el[k].grows, None)
 #                self.assertEqual(el[k].grows, 1 if stt == 'STEP' else None)
-                self._sc.checkXMLStringImageField(self._nxFile, k,
-                                                  attrs[k][2] if attrs[
-                                                      k][2] else 'string',
-                                                  attrs[k][1], attrs[k][0],
-                                                  attrs={
-                                                      "type": attrs[k][1], "units": ""}
+                self._sc.checkXMLStringImageField(
+                    self._nxFile, k,
+                    attrs[k][2] if attrs[k][2] else 'string',
+                    attrs[k][1], attrs[k][0],
+                    attrs={
+                        "type": attrs[k][1], "units": ""}
                                                   )
             elif stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkXMLImageField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                            attrs[k][1], attrs[k][0],
-                                            attrs[k][4] if len(
-                                                attrs[k]) > 4 else 0,
-                                            attrs={"type": attrs[k][1], "units": ""})
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={"type": attrs[k][1], "units": ""})
             else:
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkXMLImageField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                               attrs[k][1], attrs[k][0],
-                                               attrs[k][4] if len(
-                                                   attrs[k]) > 4 else 0,
-                                               attrs={
-                                                   "type": attrs[k][1], "units": "", "postrun": None}
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={
+                        "type": attrs[k][1], "units": "", "postrun": None}
                 )
 
         self._nxFile.close()
@@ -2496,13 +2534,15 @@ class EFieldH5PYTest(unittest.TestCase):
         self.assertEqual(el.run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
         self.assertEqual(
-            el.error[0], 'Data for unnamed object not found. DATASOURCE:Test DataSource')
+            el.error[0],
+            'Data for unnamed object not found. DATASOURCE:Test DataSource')
         self.assertEqual(el.error[1], 'H5 Object not created')
         ds.valid = False
         self.assertEqual(el.run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
         self.assertEqual(
-            el.error[0], 'Data for unnamed object not found. DATASOURCE:Test DataSource')
+            el.error[0],
+            'Data for unnamed object not found. DATASOURCE:Test DataSource')
         self.assertEqual(el.error[1], 'Data without value')
         self._nxFile.close()
         os.remove(self._fname)
@@ -2560,7 +2600,8 @@ class EFieldH5PYTest(unittest.TestCase):
             el[k].strategy = stt
             ds = TestDataSource()
             ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape": [0, 0]}
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                              else "string"], "shape": [0, 0]}
             el[k].source = ds
             el[k].grows = grow
 
@@ -2586,19 +2627,17 @@ class EFieldH5PYTest(unittest.TestCase):
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleScalarField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                                attrs[k][1], attrs[k][0],
-                                                attrs[k][3] if len(
-                                                    attrs[k]) > 3 else 0,
-                                                attrs={"type": attrs[k][1], "units": "m"})
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][3] if len(attrs[k]) > 3 else 0,
+                    attrs={"type": attrs[k][1], "units": "m"})
             else:
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleScalarField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                          attrs[k][1], attrs[k][0],
-                                          attrs[k][3] if len(
-                                              attrs[k]) > 3 else 0,
-                                          attrs={
-                                              "type": attrs[k][1], "units": "m", "postrun": None}
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][3] if len(attrs[k]) > 3 else 0,
+                    attrs={
+                        "type": attrs[k][1], "units": "m", "postrun": None}
                 )
             self.assertEqual(el[k].error, None)
 
@@ -2618,22 +2657,38 @@ class EFieldH5PYTest(unittest.TestCase):
             "string2": ["", "NX_CHAR", ""],
             "datetime": ["", "NX_DATE_TIME", "string"],
             "iso8601": ["", "ISO8601", "string"],
-            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT", "int64"],
-            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8", "int8"],
-            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16", "int16"],
-            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32", "int32"],
-            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64", "int64"],
-            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT", "uint64"],
-            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64"],
-            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max, "NX_UINT8", "uint8"],
-            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max, "NX_UINT16", "uint16"],
-            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max, "NX_UINT32", "uint32"],
-            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64"],
-            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64"],
-            "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", 1.e-14],
-            "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", 1.e-5],
-            "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", 1.e-14],
+            "int": [numpy.iinfo(getattr(numpy, 'int64')).max,
+                    "NX_INT", "int64"],
+            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max,
+                     "NX_INT8", "int8"],
+            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max,
+                      "NX_INT16", "int16"],
+            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max,
+                      "NX_INT32", "int32"],
+            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max,
+                      "NX_INT64", "int64"],
+            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max,
+                     "NX_UINT", "uint64"],
+            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT", "uint64"],
+            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max,
+                      "NX_UINT8", "uint8"],
+            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max,
+                       "NX_UINT16", "uint16"],
+            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max,
+                       "NX_UINT32", "uint32"],
+            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max,
+                       "NX_UINT64", "uint64"],
+            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT64", "uint64"],
+            "float": [numpy.finfo(getattr(numpy, 'float64')).max,
+                      "NX_FLOAT", "float64", 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max,
+                       "NX_NUMBER", "float64", 1.e-14],
+            "float32": [numpy.finfo(getattr(numpy, 'float32')).max,
+                        "NX_FLOAT32", "float32", 1.e-5],
+            "float64": [numpy.finfo(getattr(numpy, 'float64')).max,
+                        "NX_FLOAT64", "float64", 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool"],
         }
 
@@ -2659,8 +2714,11 @@ class EFieldH5PYTest(unittest.TestCase):
 
             el[k].strategy = stt
             ds = TestDataSource()
-            ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape": [0, 0]}
+            ds.value = {
+                "rank": NTP.rTf[0], "value": attrs[k][0],
+                "tangoDType":
+                NTP.pTt[(attrs[k][2])
+                        if attrs[k][2] else "string"], "shape": [0, 0]}
             el[k].source = ds
             el[k].grows = grow
 
@@ -2686,19 +2744,19 @@ class EFieldH5PYTest(unittest.TestCase):
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleScalarField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                                attrs[k][1], attrs[k][0],
-                                                attrs[k][3] if len(
-                                                    attrs[k]) > 3 else 0,
-                                                attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][3] if len(attrs[k]) > 3 else 0,
+                    attrs={"type": attrs[k][1], "units": "m",
+                           "nexdatas_canfail": "FAILED"})
             else:
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleScalarField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                          attrs[k][1], attrs[k][0],
-                                          attrs[k][3] if len(
-                                              attrs[k]) > 3 else 0,
-                                          attrs={
-                                              "type": attrs[k][1], "units": "m", "postrun": None, "nexdatas_canfail": "FAILED"}
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][3] if len(attrs[k]) > 3 else 0,
+                    attrs={
+                        "type": attrs[k][1], "units": "m", "postrun": None,
+                        "nexdatas_canfail": "FAILED"}
                 )
             self.assertEqual(el[k].error, None)
 
@@ -2758,22 +2816,26 @@ class EFieldH5PYTest(unittest.TestCase):
 
             if attrs[k][2] == "string":
                 attrs[k][0] = [
-                    attrs[k][0] * self.__rnd.randint(1, 3) for r in range(steps)]
+                    attrs[k][0] * self.__rnd.randint(1, 3)
+                    for r in range(steps)]
             elif attrs[k][2] != "bool":
                 attrs[k][0] = [
-                    attrs[k][0] * self.__rnd.randint(0, 3) for r in range(steps)]
+                    attrs[k][0] * self.__rnd.randint(0, 3)
+                    for r in range(steps)]
             else:
                 if k == 'bool':
                     attrs[k][0] = [bool(self.__rnd.randint(0, 1))
                                    for c in range(steps)]
                 else:
-                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1) else "false")
+                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1)
+                                    else "false")
                                    for c in range(steps)]
 
             el[k].strategy = stt
             ds = TestDataSource()
             ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0][0],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape": [0, 0]}
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                              else "string"], "shape": [0, 0]}
             el[k].source = ds
             el[k].grows = grow
 
@@ -2793,17 +2855,19 @@ class EFieldH5PYTest(unittest.TestCase):
             el[k].store()
 #            self.assertEqual(el[k].store(), None)
             for i in range(steps):
-                ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0][i],
-                            "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape": [0, 0]}
+                ds.value = {
+                    "rank": NTP.rTf[0], "value": attrs[k][0][i],
+                    "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                          else "string"], "shape": [0, 0]}
                 self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
 #            self.assertEqual(el[k].grows, (grow if grow and grow else 1))
             self._sc.checkScalarField(
                 self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                      attrs[k][1], attrs[k][0],
-                                      attrs[k][3] if len(attrs[k]) > 3 else 0,
-                                      attrs={
-                                          "type": attrs[k][1], "units": "m"}
+                attrs[k][1], attrs[k][0],
+                attrs[k][3] if len(attrs[k]) > 3 else 0,
+                attrs={
+                    "type": attrs[k][1], "units": "m"}
             )
 
             self.assertEqual(el[k].error, None)
@@ -2824,22 +2888,38 @@ class EFieldH5PYTest(unittest.TestCase):
             "string2": ["My string", "NX_CHAR", "", ""],
             "datetime": ["12:34:34", "NX_DATE_TIME", "string", ""],
             "iso8601": ["12:34:34", "ISO8601", "string", ""],
-            "int": [-132, "NX_INT", "int64", numpy.iinfo(getattr(numpy, 'int64')).max],
-            "int8": [13, "NX_INT8", "int8", numpy.iinfo(getattr(numpy, 'int8')).max],
-            "int16": [-223, "NX_INT16", "int16", numpy.iinfo(getattr(numpy, 'int16')).max],
-            "int32": [13235, "NX_INT32", "int32", numpy.iinfo(getattr(numpy, 'int32')).max],
-            "int64": [-12425, "NX_INT64", "int64", numpy.iinfo(getattr(numpy, 'int64')).max],
-            "uint": [123, "NX_UINT", "uint64", numpy.iinfo(getattr(numpy, 'int64')).max],
-            #            "uint":[123,"NX_UINT", "uint64",numpy.iinfo(getattr(numpy, 'uint64')).max],
-            "uint8": [65, "NX_UINT8", "uint8", numpy.iinfo(getattr(numpy, 'uint8')).max],
-            "uint16": [453, "NX_UINT16", "uint16", numpy.iinfo(getattr(numpy, 'uint16')).max],
-            "uint32": [12235, "NX_UINT32", "uint32", numpy.iinfo(getattr(numpy, 'uint32')).max],
-            "uint64": [14345, "NX_UINT64", "uint64", numpy.iinfo(getattr(numpy, 'int64')).max],
-            #            "uint64":[14345,"NX_UINT64", "uint64",numpy.iinfo(getattr(numpy, 'uint64')).max],
-            "float": [-16.345, "NX_FLOAT", "float64", numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
-            "number": [-2.345e+2, "NX_NUMBER", "float64", numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
-            "float32": [-4.355e-1, "NX_FLOAT32", "float32", numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
-            "float64": [-2.345, "NX_FLOAT64", "float64", numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
+            "int": [-132, "NX_INT", "int64",
+                    numpy.iinfo(getattr(numpy, 'int64')).max],
+            "int8": [13, "NX_INT8", "int8",
+                     numpy.iinfo(getattr(numpy, 'int8')).max],
+            "int16": [-223, "NX_INT16", "int16",
+                      numpy.iinfo(getattr(numpy, 'int16')).max],
+            "int32": [13235, "NX_INT32", "int32",
+                      numpy.iinfo(getattr(numpy, 'int32')).max],
+            "int64": [-12425, "NX_INT64", "int64",
+                      numpy.iinfo(getattr(numpy, 'int64')).max],
+            "uint": [123, "NX_UINT", "uint64",
+                     numpy.iinfo(getattr(numpy, 'int64')).max],
+            #            "uint":[123,"NX_UINT",
+            # "uint64",numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint8": [65, "NX_UINT8", "uint8",
+                      numpy.iinfo(getattr(numpy, 'uint8')).max],
+            "uint16": [453, "NX_UINT16", "uint16",
+                       numpy.iinfo(getattr(numpy, 'uint16')).max],
+            "uint32": [12235, "NX_UINT32", "uint32",
+                       numpy.iinfo(getattr(numpy, 'uint32')).max],
+            "uint64": [14345, "NX_UINT64", "uint64",
+                       numpy.iinfo(getattr(numpy, 'int64')).max],
+            #            "uint64":[14345,"NX_UINT64",
+            #  "uint64",numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "float": [-16.345, "NX_FLOAT", "float64",
+                      numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
+            "number": [-2.345e+2, "NX_NUMBER", "float64",
+                       numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
+            "float32": [-4.355e-1, "NX_FLOAT32", "float32",
+                        numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
+            "float64": [-2.345, "NX_FLOAT64", "float64",
+                        numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", False],
         }
 
@@ -2877,7 +2957,9 @@ class EFieldH5PYTest(unittest.TestCase):
             el[k].strategy = stt
             ds = TestDataSource()
             ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0][0],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape": [0, 0]}
+                        "tangoDType": NTP.pTt[(attrs[k][2])
+                                              if attrs[k][2] else "string"],
+                        "shape": [0, 0]}
             el[k].source = ds
             el[k].grows = grow
 
@@ -2897,21 +2979,25 @@ class EFieldH5PYTest(unittest.TestCase):
             el[k].store()
 #            self.assertEqual(el[k].store(), None)
             for i in range(steps):
-                ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0][i],
-                            "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape": [0, 0]}
+                ds.value = {
+                    "rank": NTP.rTf[0], "value": attrs[k][0][i],
+                    "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                          else "string"], "shape": [0, 0]}
                 if i % 2:
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow and grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if grow and grow > 0
+                                            else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self._sc.checkScalarField(
                 self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                      attrs[k][1], attrs[k][0],
-                                      attrs[k][4] if len(attrs[k]) > 4 else 0,
-                                      attrs={
-                                          "type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"}
+                attrs[k][1], attrs[k][0],
+                attrs[k][4] if len(attrs[k]) > 4 else 0,
+                attrs={
+                    "type": attrs[k][1], "units": "m",
+                    "nexdatas_canfail": "FAILED"}
             )
 
             self.assertEqual(el[k].error, None)
@@ -2977,7 +3063,8 @@ class EFieldH5PYTest(unittest.TestCase):
                 if k == 'bool':
                     attrs[k][0] = [bool(self.__rnd.randint(0, 1))]
                 else:
-                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1) else "false")
+                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1)
+                                    else "false")
                                    ]
 
             attrs[k][3] = (mlen[0],)
@@ -2992,8 +3079,10 @@ class EFieldH5PYTest(unittest.TestCase):
             el[k].strategy = stt
             ds = TestDataSource()
             ds.value = {"rank": NTP.rTf[1],
-                        "value": (attrs[k][0] if attrs[k][2] != "bool" else [Converters.toBool(attrs[k][0][0])]),
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "value": (attrs[k][0] if attrs[k][2] != "bool"
+                                  else [Converters.toBool(attrs[k][0][0])]),
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                              else "string"],
                         "shape": [attrs[k][3][0], 0]}
             el[k].source = ds
             el[k].rank = "1"
@@ -3020,27 +3109,26 @@ class EFieldH5PYTest(unittest.TestCase):
                 if stt != 'POSTRUN':
                     self.assertEqual(el[k].grows, None)
                     self._sc.checkSingleSpectrumField(
-                        self._nxFile, k, attrs[k][
-                            2] if attrs[k][2] else 'string',
-                                                      attrs[k][1], attrs[k][0],
-                                                      attrs[k][4] if len(
-                                                          attrs[k]) > 4 else 0,
-                                                      attrs={"type": attrs[k][1], "units": "m"})
+                        self._nxFile, k, attrs[k][2] if attrs[k][2]
+                        else 'string',
+                        attrs[k][1], attrs[k][0],
+                        attrs[k][4] if len(attrs[k]) > 4 else 0,
+                        attrs={"type": attrs[k][1], "units": "m"})
                 else:
                     self.assertEqual(el[k].grows, None)
                     self._sc.checkSingleSpectrumField(
                         self._nxFile, k, attrs[k][
                             2] if attrs[k][2] else 'string',
-                                                      attrs[k][1], attrs[k][0],
-                                                      attrs[k][4] if len(
-                                                          attrs[k]) > 4 else 0,
-                                                      attrs={
-                                                          "type": attrs[k][1], "units": "m", "postrun": None}
+                        attrs[k][1], attrs[k][0],
+                        attrs[k][4] if len(attrs[k]) > 4 else 0,
+                        attrs={
+                            "type": attrs[k][1], "units": "m", "postrun": None}
                     )
 
             else:
                 self.assertEqual(
-                    el[k].error[0], 'Data for %s on Test DataSource not found' % k)
+                    el[k].error[0],
+                    'Data for %s on Test DataSource not found' % k)
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -3057,22 +3145,38 @@ class EFieldH5PYTest(unittest.TestCase):
             "string": ["", "NX_CHAR", "string", (1,)],
             "datetime": ["", "NX_DATE_TIME", "string", (1,)],
             "iso8601": ["", "ISO8601", "string", (1,)],
-            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT", "int64", (1,)],
-            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8", "int8", (1,)],
-            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16", "int16", (1,)],
-            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32", "int32", (1,)],
-            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64", "int64", (1,)],
-            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT", "uint64", (1,)],
-            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
-            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max, "NX_UINT8", "uint8", (1,)],
-            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max, "NX_UINT16", "uint16", (1,)],
-            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max, "NX_UINT32", "uint32", (1,)],
-            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
-            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
-            "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
-            "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
-            "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
+            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT",
+                    "int64", (1,)],
+            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8",
+                     "int8", (1,)],
+            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16",
+                      "int16", (1,)],
+            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32",
+                      "int32", (1,)],
+            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64",
+                      "int64", (1,)],
+            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT",
+                     "uint64", (1,)],
+            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT", "uint64", (1,)],
+            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max,
+                      "NX_UINT8", "uint8", (1,)],
+            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max,
+                       "NX_UINT16", "uint16", (1,)],
+            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max,
+                       "NX_UINT32", "uint32", (1,)],
+            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT64", "uint64", (1,)],
+            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max,
+                       "NX_UINT64", "uint64", (1,)],
+            "float": [numpy.finfo(getattr(numpy, 'float64')).max,
+                      "NX_FLOAT", "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max,
+                       "NX_NUMBER", "float64", (1,), 1.e-14],
+            "float32": [numpy.finfo(getattr(numpy, 'float32')).max,
+                        "NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64": [numpy.finfo(getattr(numpy, 'float64')).max,
+                        "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
             "bool2": ["FaLse", "NX_BOOLEAN", "bool", (1,)],
             "bool3": ["false", "NX_BOOLEAN", "bool", (1,)],
@@ -3119,10 +3223,13 @@ class EFieldH5PYTest(unittest.TestCase):
 
             el[k].strategy = stt
             ds = TestDataSource()
-            ds.value = {"rank": NTP.rTf[1],
-                        "value": (attrs[k][0] if attrs[k][2] != "bool" else [Converters.toBool(attrs[k][0][0])]),
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
-                        "shape": [attrs[k][3][0], 0]}
+            ds.value = {
+                "rank": NTP.rTf[1],
+                "value": (attrs[k][0] if attrs[k][2] != "bool"
+                          else [Converters.toBool(attrs[k][0][0])]),
+                "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                      else "string"],
+                "shape": [attrs[k][3][0], 0]}
             el[k].source = ds
             el[k].rank = "1"
             el[k].grows = grow
@@ -3151,25 +3258,27 @@ class EFieldH5PYTest(unittest.TestCase):
                     self._sc.checkSingleSpectrumField(
                         self._nxFile, k, attrs[k][
                             2] if attrs[k][2] else 'string',
-                                                      attrs[k][1], attrs[k][0],
-                                                      attrs[k][4] if len(
-                                                          attrs[k]) > 4 else 0,
-                                                      attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
+                        attrs[k][1], attrs[k][0],
+                        attrs[k][4] if len(attrs[k]) > 4 else 0,
+                        attrs={"type": attrs[k][1], "units": "m",
+                               "nexdatas_canfail": "FAILED"})
                 else:
                     self.assertEqual(el[k].grows, None)
                     self._sc.checkSingleSpectrumField(
-                        self._nxFile, k, attrs[k][
-                            2] if attrs[k][2] else 'string',
-                                                      attrs[k][1], attrs[k][0],
-                                                      attrs[k][4] if len(
-                                                          attrs[k]) > 4 else 0,
-                                                      attrs={
-                                                          "type": attrs[k][1], "units": "m", "postrun": None, "nexdatas_canfail": "FAILED"}
+                        self._nxFile, k, attrs[k][2] if attrs[k][2]
+                        else 'string',
+                        attrs[k][1], attrs[k][0],
+                        attrs[k][4] if len(
+                            attrs[k]) > 4 else 0,
+                        attrs={
+                            "type": attrs[k][1], "units": "m",
+                            "postrun": None, "nexdatas_canfail": "FAILED"}
                     )
 
             else:
                 self.assertEqual(
-                    el[k].error[0], 'Data for %s on Test DataSource not found' % k)
+                    el[k].error[0],
+                    'Data for %s on Test DataSource not found' % k)
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -3224,13 +3333,15 @@ class EFieldH5PYTest(unittest.TestCase):
 
             if attrs[k][2] != "bool":
                 attrs[k][0] = [
-                    [attrs[k][0] * self.__rnd.randint(0, 3)] for r in range(steps)]
+                    [attrs[k][0] * self.__rnd.randint(0, 3)]
+                    for r in range(steps)]
             else:
                 if k == 'bool':
                     attrs[k][0] = [[bool(self.__rnd.randint(0, 1))]
                                    for r in range(steps)]
                 else:
-                    attrs[k][0] = [[("true" if self.__rnd.randint(0, 1) else "false")]
+                    attrs[k][0] = [[("true" if self.__rnd.randint(0, 1)
+                                     else "false")]
                                    for r in range(steps)]
 
             attrs[k][3] = (1,)
@@ -3246,8 +3357,10 @@ class EFieldH5PYTest(unittest.TestCase):
             ds = TestDataSource()
 
             ds.value = {"rank": NTP.rTf[1],
-                        "value": (attrs[k][0][0] if attrs[k][2] != "bool" else [Converters.toBool(attrs[k][0][0][0])]),
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "value": (attrs[k][0][0] if attrs[k][2] != "bool"
+                                  else [Converters.toBool(attrs[k][0][0][0])]),
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                              else "string"],
                         "shape": [attrs[k][3][0], 0]}
 
             el[k].rank = "1"
@@ -3271,12 +3384,14 @@ class EFieldH5PYTest(unittest.TestCase):
 
             self.assertEqual(el[k].error, None)
             for i in range(steps):
-                ds.value = {"rank": NTP.rTf[1],
-                            "value": (attrs[k][0][i] if attrs[k][2] != "bool"
-                                      else [Converters.toBool(
-                                            attrs[k][0][i][0])]),
-                            "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
-                            "shape": [attrs[k][3][0], 0]}
+                ds.value = {
+                    "rank": NTP.rTf[1],
+                    "value": (attrs[k][0][i] if attrs[k][2] != "bool"
+                              else [Converters.toBool(
+                                      attrs[k][0][i][0])]),
+                    "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                          else "string"],
+                    "shape": [attrs[k][3][0], 0]}
                 self.assertEqual(el[k].run(), None)
 
             self.assertEqual(el[k].error, None)
@@ -3284,9 +3399,9 @@ class EFieldH5PYTest(unittest.TestCase):
                 val = [a[0] for a in attrs[k][0]]
                 self._sc.checkSingleStringSpectrumField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                            attrs[k][1], val,
-                                            attrs={
-                                                "type": attrs[k][1], "units": "m"}
+                    attrs[k][1], val,
+                    attrs={
+                        "type": attrs[k][1], "units": "m"}
                 )
             else:
 
@@ -3296,18 +3411,18 @@ class EFieldH5PYTest(unittest.TestCase):
                     val = attrs[k][0]
                 self._sc.checkSpectrumField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                            attrs[k][1], val,
-                                            attrs[k][4] if len(
-                                                attrs[k]) > 4 else 0,
-                                            attrs={
-                                                "type": attrs[k][1], "units": "m"}
+                    attrs[k][1], val,
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={
+                        "type": attrs[k][1], "units": "m"}
                 )
 
 
-#            self._sc.checkSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-#                                        attrs[k][1], attrs[k][0],
-#                                        attrs[k][3] if len(attrs[k])> 3 else 0,
-#                                        attrs = {"type":attrs[k][1], "units":"m"}
+#            self._sc.checkSpectrumField(
+# self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
+#                                 attrs[k][1], attrs[k][0],
+#                       attrs[k][3] if len(attrs[k])> 3 else 0,
+#                     attrs = {"type":attrs[k][1], "units":"m"}
 #                                    )
 
         self._nxFile.close()
@@ -3325,22 +3440,38 @@ class EFieldH5PYTest(unittest.TestCase):
             "string": ["Mystring", "NX_CHAR", "string", (1,), ""],
             "datetime": ["12:34:34", "NX_DATE_TIME", "string", (1,), ""],
             "iso8601": ["12:34:34", "ISO8601", "string", (1,), ""],
-            "int": [-123, "NX_INT", "int64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
-            "int8": [12, "NX_INT8", "int8", (1,), numpy.iinfo(getattr(numpy, 'int8')).max],
-            "int16": [-123, "NX_INT16", "int16", (1,), numpy.iinfo(getattr(numpy, 'int16')).max],
-            "int32": [12345, "NX_INT32", "int32", (1,), numpy.iinfo(getattr(numpy, 'int32')).max],
-            "int64": [-12345, "NX_INT64", "int64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
-            "uint": [123, "NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
-            #            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
-            "uint8": [12, "NX_UINT8", "uint8", (1,), numpy.iinfo(getattr(numpy, 'uint8')).max],
-            "uint16": [123, "NX_UINT16", "uint16", (1,), numpy.iinfo(getattr(numpy, 'uint16')).max],
-            "uint32": [12345, "NX_UINT32", "uint32", (1,), numpy.iinfo(getattr(numpy, 'uint32')).max],
-            "uint64": [12345, "NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
-            #            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
-            "float": [-12.345, "NX_FLOAT", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
-            "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
-            "float64": [-12.345, "NX_FLOAT64", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
+            "int": [-123, "NX_INT", "int64", (1,),
+                    numpy.iinfo(getattr(numpy, 'int64')).max],
+            "int8": [12, "NX_INT8", "int8", (1,),
+                     numpy.iinfo(getattr(numpy, 'int8')).max],
+            "int16": [-123, "NX_INT16", "int16", (1,),
+                      numpy.iinfo(getattr(numpy, 'int16')).max],
+            "int32": [12345, "NX_INT32", "int32", (1,),
+                      numpy.iinfo(getattr(numpy, 'int32')).max],
+            "int64": [-12345, "NX_INT64", "int64", (1,),
+                      numpy.iinfo(getattr(numpy, 'int64')).max],
+            "uint": [123, "NX_UINT", "uint64", (1,),
+                     numpy.iinfo(getattr(numpy, 'int64')).max],
+            #            "uint":[123,"NX_UINT", "uint64", (1,),
+            # numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint8": [12, "NX_UINT8", "uint8", (1,),
+                      numpy.iinfo(getattr(numpy, 'uint8')).max],
+            "uint16": [123, "NX_UINT16", "uint16", (1,),
+                       numpy.iinfo(getattr(numpy, 'uint16')).max],
+            "uint32": [12345, "NX_UINT32", "uint32", (1,),
+                       numpy.iinfo(getattr(numpy, 'uint32')).max],
+            "uint64": [12345, "NX_UINT64", "uint64", (1,),
+                       numpy.iinfo(getattr(numpy, 'int64')).max],
+            #            "uint64":[12345,"NX_UINT64", "uint64", (1,),
+            #  numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "float": [-12.345, "NX_FLOAT", "float64", (1,),
+                      numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,),
+                       numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
+            "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,),
+                        numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
+            "float64": [-12.345, "NX_FLOAT64", "float64", (1,),
+                        numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,), False],
         }
 
@@ -3377,7 +3508,8 @@ class EFieldH5PYTest(unittest.TestCase):
 
             ds.value = {"rank": NTP.rTf[1],
                         "value": attrs[k][0][0],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                              else "string"],
                         "shape": [attrs[k][3][0], 0]}
 
             el[k].rank = "1"
@@ -3404,13 +3536,16 @@ class EFieldH5PYTest(unittest.TestCase):
                             "value": (attrs[k][0][i] if attrs[k][2] != "bool"
                                       else [Converters.toBool(
                                             attrs[k][0][i][0])]),
-                            "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                            "tangoDType": NTP.pTt[(attrs[k][2])
+                                                  if attrs[k][2]
+                                                  else "string"],
                             "shape": [attrs[k][3][0], 0]}
                 if i % 2:
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow and grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if grow and grow > 0
+                                            else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self.assertEqual(el[k].error, None)
@@ -3418,9 +3553,10 @@ class EFieldH5PYTest(unittest.TestCase):
                 val = [a[0] for a in attrs[k][0]]
                 self._sc.checkSingleStringSpectrumField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                            attrs[k][1], val,
-                                            attrs={
-                                                "type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"}
+                    attrs[k][1], val,
+                    attrs={
+                        "type": attrs[k][1], "units": "m",
+                        "nexdatas_canfail": "FAILED"}
                 )
             else:
 
@@ -3430,11 +3566,11 @@ class EFieldH5PYTest(unittest.TestCase):
                     val = attrs[k][0]
                 self._sc.checkSpectrumField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                            attrs[k][1], val,
-                                            attrs[k][5] if len(
-                                                attrs[k]) > 5 else 0,
-                                            attrs={
-                                                "type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"}
+                    attrs[k][1], val,
+                    attrs[k][5] if len(attrs[k]) > 5 else 0,
+                    attrs={
+                        "type": attrs[k][1], "units": "m",
+                        "nexdatas_canfail": "FAILED"}
                 )
 
         self._nxFile.close()
@@ -3492,12 +3628,13 @@ class EFieldH5PYTest(unittest.TestCase):
                 attrs[k][0] = [attrs[k][0] * self.__rnd.randint(0, 3)
                                for c in range(self.__rnd.randint(2, 10))]
             else:
-                mlen = [1]
+                # mlen = [1]
                 if k == 'bool':
                     attrs[k][0] = [bool(self.__rnd.randint(0, 1))
                                    for c in range(self.__rnd.randint(2, 10))]
                 else:
-                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1) else "false")
+                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1)
+                                    else "false")
                                    for c in range(self.__rnd.randint(2, 10))]
 
             attrs[k][3] = (len(attrs[k][0]),)
@@ -3512,8 +3649,11 @@ class EFieldH5PYTest(unittest.TestCase):
             el[k].strategy = stt
             ds = TestDataSource()
             ds.value = {"rank": NTP.rTf[1],
-                        "value": (attrs[k][0] if attrs[k][2] != "bool" else [Converters.toBool(c) for c in attrs[k][0]]),
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "value": (attrs[k][0] if attrs[k][2] != "bool"
+                                  else [Converters.toBool(c)
+                                        for c in attrs[k][0]]),
+                        "tangoDType": NTP.pTt[(attrs[k][2])
+                                              if attrs[k][2] else "string"],
                         "shape": [attrs[k][3][0], 0]}
             el[k].source = ds
             el[k].rank = "1"
@@ -3544,19 +3684,17 @@ class EFieldH5PYTest(unittest.TestCase):
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleSpectrumField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                                attrs[k][1], attrs[k][0],
-                                                attrs[k][4] if len(
-                                                    attrs[k]) > 4 else 0,
-                                                attrs={"type": attrs[k][1], "units": "m"})
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={"type": attrs[k][1], "units": "m"})
             else:
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleSpectrumField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                          attrs[k][1], attrs[k][0],
-                                          attrs[k][4] if len(
-                                              attrs[k]) > 4 else 0,
-                                          attrs={
-                                              "type": attrs[k][1], "units": "m", "postrun": None}
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={
+                        "type": attrs[k][1], "units": "m", "postrun": None}
                 )
 
         self._nxFile.close()
@@ -3614,13 +3752,15 @@ class EFieldH5PYTest(unittest.TestCase):
                 attrs[k][0] = [attrs[k][0] * self.__rnd.randint(0, 3)
                                for c in range(self.__rnd.randint(2, 10))]
             else:
-                mlen = [1]
+                # mlen = [1]
                 if k == 'bool':
-                    attrs[k][0] = [bool(self.__rnd.randint(0, 1))
-                                   for c in range(self.__rnd.randint(2, 10))]
+                    attrs[k][0] = [
+                        bool(self.__rnd.randint(0, 1))
+                        for c in range(self.__rnd.randint(2, 10))]
                 else:
-                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1) else "false")
-                                   for c in range(self.__rnd.randint(2, 10))]
+                    attrs[k][0] = [
+                        ("true" if self.__rnd.randint(0, 1) else "false")
+                        for c in range(self.__rnd.randint(2, 10))]
 
             attrs[k][3] = (len(attrs[k][0]),)
 
@@ -3653,8 +3793,11 @@ class EFieldH5PYTest(unittest.TestCase):
             el[k].store()
             self.assertEqual(el[k].error, None)
             ds.value = {"rank": NTP.rTf[1],
-                        "value": (attrs[k][0] if attrs[k][2] != "bool" else [Converters.toBool(c) for c in attrs[k][0]]),
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "value": (attrs[k][0] if attrs[k][2] != "bool"
+                                  else [Converters.toBool(c)
+                                        for c in attrs[k][0]]),
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                              else "string"],
                         "shape": [attrs[k][3][0], 0]}
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].run(), None)
@@ -3665,19 +3808,17 @@ class EFieldH5PYTest(unittest.TestCase):
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleSpectrumField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                                attrs[k][1], attrs[k][0],
-                                                attrs[k][4] if len(
-                                                    attrs[k]) > 4 else 0,
-                                                attrs={"type": attrs[k][1], "units": "m"})
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={"type": attrs[k][1], "units": "m"})
             else:
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleSpectrumField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                          attrs[k][1], attrs[k][0],
-                                          attrs[k][4] if len(
-                                              attrs[k]) > 4 else 0,
-                                          attrs={
-                                              "type": attrs[k][1], "units": "m", "postrun": None}
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={
+                        "type": attrs[k][1], "units": "m", "postrun": None}
                 )
 
         self._nxFile.close()
@@ -3695,22 +3836,38 @@ class EFieldH5PYTest(unittest.TestCase):
             "string": ["", "NX_CHAR", "string", (1,)],
             "datetime": ["", "NX_DATE_TIME", "string", (1,)],
             "iso8601": ["", "ISO8601", "string", (1,)],
-            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT", "int64", (1,)],
-            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8", "int8", (1,)],
-            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16", "int16", (1,)],
-            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32", "int32", (1,)],
-            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64", "int64", (1,)],
-            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT", "uint64", (1,)],
-            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
-            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max, "NX_UINT8", "uint8", (1,)],
-            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max, "NX_UINT16", "uint16", (1,)],
-            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max, "NX_UINT32", "uint32", (1,)],
-            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
-            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
-            "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
-            "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
-            "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
+            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT",
+                    "int64", (1,)],
+            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8",
+                     "int8", (1,)],
+            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16",
+                      "int16", (1,)],
+            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32",
+                      "int32", (1,)],
+            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64",
+                      "int64", (1,)],
+            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT",
+                     "uint64", (1,)],
+            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT", "uint64", (1,)],
+            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max,
+                      "NX_UINT8", "uint8", (1,)],
+            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max,
+                       "NX_UINT16", "uint16", (1,)],
+            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max,
+                       "NX_UINT32", "uint32", (1,)],
+            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max,
+                       "NX_UINT64", "uint64", (1,)],
+            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT64", "uint64", (1,)],
+            "float": [numpy.finfo(getattr(numpy, 'float64')).max,
+                      "NX_FLOAT", "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max,
+                       "NX_NUMBER", "float64", (1,), 1.e-14],
+            "float32": [numpy.finfo(getattr(numpy, 'float32')).max,
+                        "NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64": [numpy.finfo(getattr(numpy, 'float64')).max,
+                        "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
             "bool2": ["FaLse", "NX_BOOLEAN", "bool", (1,)],
             "bool3": ["false", "NX_BOOLEAN", "bool", (1,)],
@@ -3737,7 +3894,7 @@ class EFieldH5PYTest(unittest.TestCase):
                 attrs[k][0] = [attrs[k][0]
                                for c in range(self.__rnd.randint(2, 10))]
             else:
-                mlen = [1]
+                # mlen = [1]
                 if k == 'bool':
                     attrs[k][0] = [
                         False for c in range(self.__rnd.randint(2, 10))]
@@ -3757,8 +3914,11 @@ class EFieldH5PYTest(unittest.TestCase):
             el[k].strategy = stt
             ds = TestDataSource()
             ds.value = {"rank": NTP.rTf[1],
-                        "value": (attrs[k][0] if attrs[k][2] != "bool" else [Converters.toBool(c) for c in attrs[k][0]]),
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "value": (attrs[k][0] if attrs[k][2] != "bool"
+                                  else [Converters.toBool(c)
+                                        for c in attrs[k][0]]),
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                              else "string"],
                         "shape": [attrs[k][3][0], 0]}
             el[k].source = ds
             el[k].rank = "1"
@@ -3789,19 +3949,19 @@ class EFieldH5PYTest(unittest.TestCase):
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleSpectrumField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                                attrs[k][1], [attrs[k][0][0]],
-                                                attrs[k][4] if len(
-                                                    attrs[k]) > 4 else 0,
-                                                attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
+                    attrs[k][1], [attrs[k][0][0]],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={"type": attrs[k][1], "units": "m",
+                           "nexdatas_canfail": "FAILED"})
             else:
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleSpectrumField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                          attrs[k][1], [attrs[k][0][0]],
-                                          attrs[k][4] if len(
-                                              attrs[k]) > 4 else 0,
-                                          attrs={
-                                              "type": attrs[k][1], "units": "m", "postrun": None, "nexdatas_canfail": "FAILED"}
+                    attrs[k][1], [attrs[k][0][0]],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={
+                        "type": attrs[k][1], "units": "m", "postrun": None,
+                        "nexdatas_canfail": "FAILED"}
                 )
 
         self._nxFile.close()
@@ -3867,12 +4027,14 @@ class EFieldH5PYTest(unittest.TestCase):
             else:
                 if k == 'bool':
                     mlen = self.__rnd.randint(2, 10)
-                    attrs[k][0] = [[bool(self.__rnd.randint(0, 1))
-                                    for c in range(mlen)] for r in range(steps)]
+                    attrs[k][0] = [[
+                        bool(self.__rnd.randint(0, 1))
+                        for c in range(mlen)] for r in range(steps)]
                 else:
                     mlen = self.__rnd.randint(2, 10)
-                    attrs[k][0] = [[("true" if self.__rnd.randint(0, 1) else "false")
-                                    for c in range(mlen)] for r in range(steps)]
+                    attrs[k][0] = [[
+                        ("true" if self.__rnd.randint(0, 1) else "false")
+                        for c in range(mlen)] for r in range(steps)]
 
             attrs[k][3] = (len(attrs[k][0][0]),)
 #            sys.stdout.write("b.")k ,attrs[k][0][0]
@@ -3885,10 +4047,14 @@ class EFieldH5PYTest(unittest.TestCase):
 
             el[k].strategy = stt
             ds = TestDataSource()
-            ds.value = {"rank": NTP.rTf[1],
-                        "value": (attrs[k][0][0] if attrs[k][2] != "bool" else [Converters.toBool(c) for c in attrs[k][0][0]]),
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
-                        "shape": [attrs[k][3][0], 0]}
+            ds.value = {
+                "rank": NTP.rTf[1],
+                "value": (attrs[k][0][0] if attrs[k][2] != "bool"
+                          else [Converters.toBool(c)
+                                for c in attrs[k][0][0]]),
+                "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                      else "string"],
+                "shape": [attrs[k][3][0], 0]}
             el[k].source = ds
             el[k].rank = "1"
             el[k].grows = grow
@@ -3909,10 +4075,14 @@ class EFieldH5PYTest(unittest.TestCase):
             el[k].store()
 
             for i in range(steps):
-                ds.value = {"rank": NTP.rTf[1],
-                            "value": (attrs[k][0][i] if attrs[k][2] != "bool" else [Converters.toBool(c) for c in attrs[k][0][i]]),
-                            "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
-                            "shape": [attrs[k][3][0], 0]}
+                ds.value = {
+                    "rank": NTP.rTf[1],
+                    "value": (attrs[k][0][i] if attrs[k][2] != "bool"
+                              else [Converters.toBool(c)
+                                    for c in attrs[k][0][i]]),
+                    "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                          else "string"],
+                    "shape": [attrs[k][3][0], 0]}
                 self.assertEqual(el[k].run(), None)
 
             self.assertEqual(el[k].error, None)
@@ -3922,16 +4092,17 @@ class EFieldH5PYTest(unittest.TestCase):
 #            self.myAssertRaise(ValueError, el[k].store)
 #            print "nn", k
             if attrs[k][2] == "string_old" or not attrs[k][2]:
-                self._sc.checkStringSpectrumField(self._nxFile, k, 'string',
-                                                  attrs[k][1], attrs[k][0],
-                                                  attrs={"type": attrs[k][1], "units": "m"})
+                self._sc.checkStringSpectrumField(
+                    self._nxFile, k, 'string',
+                    attrs[k][1], attrs[k][0],
+                    attrs={"type": attrs[k][1], "units": "m"})
             else:
-                self._sc.checkSpectrumField(self._nxFile, k, attrs[k][2],
-                                            attrs[k][1], attrs[k][0],
-                                            attrs[k][4] if len(
-                                                attrs[k]) > 4 else 0,
-                                            grows=grow,
-                                            attrs={"type": attrs[k][1], "units": "m"})
+                self._sc.checkSpectrumField(
+                    self._nxFile, k, attrs[k][2],
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    grows=grow,
+                    attrs={"type": attrs[k][1], "units": "m"})
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -3948,22 +4119,38 @@ class EFieldH5PYTest(unittest.TestCase):
             "string": ["Mystring", "NX_CHAR", "string", (1,), ""],
             "datetime": ["12:34:34", "NX_DATE_TIME", "string", (1,), ""],
             "iso8601": ["12:34:34", "ISO8601", "string", (1,), ""],
-            "int": [-123, "NX_INT", "int64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
-            "int8": [12, "NX_INT8", "int8", (1,), numpy.iinfo(getattr(numpy, 'int8')).max],
-            "int16": [-123, "NX_INT16", "int16", (1,), numpy.iinfo(getattr(numpy, 'int16')).max],
-            "int32": [12345, "NX_INT32", "int32", (1,), numpy.iinfo(getattr(numpy, 'int32')).max],
-            "int64": [-12345, "NX_INT64", "int64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
-            "uint": [123, "NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
-            #            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
-            "uint8": [12, "NX_UINT8", "uint8", (1,), numpy.iinfo(getattr(numpy, 'uint8')).max],
-            "uint16": [123, "NX_UINT16", "uint16", (1,), numpy.iinfo(getattr(numpy, 'uint16')).max],
-            "uint32": [12345, "NX_UINT32", "uint32", (1,), numpy.iinfo(getattr(numpy, 'uint32')).max],
-            "uint64": [12345, "NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
-            #            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
-            "float": [-12.345, "NX_FLOAT", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
-            "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
-            "float64": [-12.345, "NX_FLOAT64", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
+            "int": [-123, "NX_INT", "int64", (1,),
+                    numpy.iinfo(getattr(numpy, 'int64')).max],
+            "int8": [12, "NX_INT8", "int8", (1,),
+                     numpy.iinfo(getattr(numpy, 'int8')).max],
+            "int16": [-123, "NX_INT16", "int16", (1,),
+                      numpy.iinfo(getattr(numpy, 'int16')).max],
+            "int32": [12345, "NX_INT32", "int32", (1,),
+                      numpy.iinfo(getattr(numpy, 'int32')).max],
+            "int64": [-12345, "NX_INT64", "int64", (1,),
+                      numpy.iinfo(getattr(numpy, 'int64')).max],
+            "uint": [123, "NX_UINT", "uint64", (1,),
+                     numpy.iinfo(getattr(numpy, 'int64')).max],
+            #            "uint":[123,"NX_UINT", "uint64", (1,),
+            #  numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint8": [12, "NX_UINT8", "uint8", (1,),
+                      numpy.iinfo(getattr(numpy, 'uint8')).max],
+            "uint16": [123, "NX_UINT16", "uint16", (1,),
+                       numpy.iinfo(getattr(numpy, 'uint16')).max],
+            "uint32": [12345, "NX_UINT32", "uint32", (1,),
+                       numpy.iinfo(getattr(numpy, 'uint32')).max],
+            "uint64": [12345, "NX_UINT64", "uint64", (1,),
+                       numpy.iinfo(getattr(numpy, 'int64')).max],
+            #            "uint64":[12345,"NX_UINT64", "uint64", (1,),
+            #  numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "float": [-12.345, "NX_FLOAT", "float64", (1,),
+                      numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,),
+                       numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
+            "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,),
+                        numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
+            "float64": [-12.345, "NX_FLOAT64", "float64", (1,),
+                        numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,), False],
         }
 
@@ -4000,8 +4187,11 @@ class EFieldH5PYTest(unittest.TestCase):
             el[k].strategy = stt
             ds = TestDataSource()
             ds.value = {"rank": NTP.rTf[1],
-                        "value": (attrs[k][0][0] if attrs[k][2] != "bool" else [Converters.toBool(c) for c in attrs[k][0][0]]),
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "value": (attrs[k][0][0] if attrs[k][2] != "bool"
+                                  else [Converters.toBool(c)
+                                        for c in attrs[k][0][0]]),
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                              else "string"],
                         "shape": [attrs[k][3][0], 0]}
             el[k].source = ds
             el[k].rank = "1"
@@ -4111,7 +4301,7 @@ class EFieldH5PYTest(unittest.TestCase):
             elif attrs[k][2] != "bool":
                 attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(0, 3)]]
             else:
-                mlen = [1]
+                # mlen = [1]
                 if k == 'bool':
                     attrs[k][0] = [[bool(self.__rnd.randint(0, 1))]]
                 else:
