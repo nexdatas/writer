@@ -412,7 +412,7 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
     def test_openEntry(self):
         print("Run: NXSDataWriterTest.test_openEntry() ")
         fname = '%s/test2.h5' % os.getcwd()
-        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
+        xml = '<definition> <group type="NXentry" name="entry"/></definition>'
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
@@ -482,7 +482,8 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
                         if c.name == "nexus__entry__1_xml":
                             self.assertEqual(
                                 c.read(),
-                                '<definition> <group type="NXentry" name="entry"/></definition>')
+                                '<definition> <group type="NXentry" '
+                                'name="entry"/></definition>')
                             print(c.read())
                         else:
                             self.assertEqual(c.name, "python_version")
@@ -508,7 +509,8 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
                 os.remove(fname)
 
     # openEntryWithSAXParseException test
-    # \brief It tests validation of opening and closing entry with SAXParseException
+    # \brief It tests validation of opening and closing entry with
+    #               SAXParseException
     def test_openEntryWithSAXParseException(self):
         print("Run: NXSDataWriterTest.test_openEntryWithSAXParseException() ")
         fname = '%s/test2.h5' % os.getcwd()
@@ -593,7 +595,6 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
     def test_scanRecord_twoentries(self):
         print("Run: NXSDataWriterTest.test_scanRecord() ")
         fname = '%s/scantest2.h5' % os.getcwd()
-        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
@@ -625,14 +626,14 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                      + str(self._mca1) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":' + str(self._mca1) + '  } }')
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -658,14 +659,14 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                      + str(self._mca1) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":' + str(self._mca1) + '  } }')
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -981,7 +982,6 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
     def test_scanRecord(self):
         print("Run: NXSDataWriterTest.test_scanRecord() ")
         fname = '%s/scantest2.h5' % os.getcwd()
-        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
@@ -1013,14 +1013,14 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                      + str(self._mca1) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":' + str(self._mca1) + '  } }')
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -1340,7 +1340,6 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
     def test_scanRecord_skipacq(self):
         print("Run: NXSDataWriterTest.test_scanRecord() ")
         fname = '%s/scantest2.h5' % os.getcwd()
-        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
@@ -1376,8 +1375,8 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                      + str(self._mca1) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":' + str(self._mca1) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -1438,8 +1437,8 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertEqual(dp.currentfileid, 0)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -1498,8 +1497,8 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
             dp.skipacquisition = True
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -1822,7 +1821,6 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
     def test_scanRecord_canfail(self):
         print("Run: NXSDataWriterTest.test_scanRecord() ")
         fname = '%s/scantest2.h5' % os.getcwd()
-        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
@@ -1993,7 +1991,13 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertEqual(at.dtype, "string")
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
-                at[...], "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')")
+                at[...],
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/counter1 not found. DATASOURCE: "
+                "CLIENT record exp_c01', 'Data without value')\n"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/counter1 not found. DATASOURCE: "
+                "CLIENT record exp_c01', 'Data without value')")
 
             at = cnt.attributes["type"]
             self.assertTrue(at.is_valid)
@@ -2066,7 +2070,12 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')")
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/mca not found. DATASOURCE: CLIENT"
+                " record p09/mca/exp.02', 'Data without value')\n"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/mca not found. DATASOURCE: CLIENT"
+                " record p09/mca/exp.02', 'Data without value')")
 
             at = mca.attributes["type"]
             self.assertTrue(at.is_valid)
@@ -2154,7 +2163,13 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertEqual(at.dtype, "string")
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
-                at[...], "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')")
+                at[...],
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/counter1 not found. DATASOURCE: "
+                "CLIENT record exp_c01', 'Data without value')\n"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/counter1 not found. DATASOURCE: "
+                "CLIENT record exp_c01', 'Data without value')")
 
             at = cnt.attributes["type"]
             self.assertTrue(at.is_valid)
@@ -2248,7 +2263,12 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')")
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/mca not found. DATASOURCE: CLIENT"
+                " record p09/mca/exp.02', 'Data without value')\n"
+                "('Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/mca not found. DATASOURCE: CLIENT"
+                " record p09/mca/exp.02', 'Data without value')")
 
             at = mca.attributes["nexdatas_source"]
             self.assertTrue(at.is_valid)
@@ -2267,7 +2287,6 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
     def test_scanRecord_canfail_false(self):
         print("Run: NXSDataWriterTest.test_scanRecord() ")
         fname = '%s/scantest2.h5' % os.getcwd()
-        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
@@ -2403,7 +2422,8 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
 #            self.assertEqual(cnt.shape, (1,))
             self.assertEqual(cnt.dtype, "float64")
 #            self.assertEqual(cnt.size, 1)
-            value = cnt.read()
+            # value =
+            cnt.read()
 #            value = cnt[:]
 #            for i in range(len(value)):
 #                self.assertEqual(self._counter[i], value[i])
@@ -2523,7 +2543,8 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertEqual(cnt.dtype, "float64")
             #     self.assertEqual(cnt.size, 2)
             #     print(cnt.read())
-            value = cnt[:]
+            # value =
+            cnt[:]
             #    for i in range(len(value)):
             #        self.assertEqual(self._counter[i], value[i])
 
@@ -2573,7 +2594,8 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
 #            self.assertEqual(mca.shape, (2,2048))
             self.assertEqual(mca.dtype, "float64")
 #            self.assertEqual(mca.size, 4096)
-            value = mca.read()
+            # value =
+            mca.read()
 #            for i in range(len(value[0])):
 #                self.assertEqual(self._mca1[i], value[0][i])
 #            for i in range(len(value[0])):
@@ -2626,7 +2648,6 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
     def test_scanRecordGrow2(self):
         print("Run: NXSDataWriterTest.test_scanRecord() ")
         fname = '%s/scantest2.h5' % os.getcwd()
-        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
@@ -3011,42 +3032,44 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                      + str(self._mca1) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":' + str(self._mca1) + '  } }')
             self.assertEqual(dp.stepsperfile, 2)
             self.assertEqual(dp.currentfileid, 1)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 2)
             self.assertEqual(dp.currentfileid, 2)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
             self.assertEqual(dp.stepsperfile, 2)
             self.assertEqual(dp.currentfileid, 2)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 2)
             self.assertEqual(dp.currentfileid, 3)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record(
+                '{"data": {"exp_c01":' + str(self._counter[1]) +
+                ', "p09/mca/exp.02":' + str(self._mca2) + '  } }')
             self.assertEqual(dp.stepsperfile, 2)
             self.assertEqual(dp.currentfileid, 3)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                      + str(self._mca1) + '  } }')
+            dp.Record(
+                '{"data": {"exp_c01":' + str(self._counter[0]) +
+                ', "p09/mca/exp.02":' + str(self._mca1) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 2)
             self.assertEqual(dp.currentfileid, 4)

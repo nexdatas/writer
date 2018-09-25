@@ -465,21 +465,21 @@ $mycnf/>
             det, "init_pid_scalar_string", "string", "NX_CHAR", scalar)
         self._sc.checkSingleScalarField(
             det, "final_pid_scalar_float32", "float32", "NX_FLOAT32",
-                                        float(scalar), error=1e-6)
+            float(scalar), error=1e-6)
         self._sc.checkSingleScalarField(
             det, "final_pid_scalar_float64", "float64", "NX_FLOAT64",
-                                        float(scalar), error=1e-14)
+            float(scalar), error=1e-14)
         self._sc.checkSingleImageField(
             det, "final_pid_scalar_string", "string", "NX_CHAR",
-                                          [[str(scalar)]],
-                                    attrs={"type": "NX_CHAR", "units": "m",
-                                           "nexdatas_source": None, "nexdatas_strategy": "FINAL"})
+            [[str(scalar)]],
+            attrs={"type": "NX_CHAR", "units": "m",
+                   "nexdatas_source": None, "nexdatas_strategy": "FINAL"})
         self._sc.checkSingleScalarField(
             det, "final_pid2_scalar_string", "string", "NX_CHAR",
-                                        str(scalar))
+            str(scalar))
         self._sc.checkSingleScalarField(
             det, "final_pid3_scalar_string", "string", "NX_CHAR",
-                                        str(scalar))
+            str(scalar))
 
         f.close()
         os.remove(fname)
@@ -693,7 +693,8 @@ $mycnf/>
 
         cursor = self._mydb.cursor()
         cursor.execute("SELECT pid FROM device limit 1")
-        scalar = str(cursor.fetchone()[0])
+        # scalar =
+        str(cursor.fetchone()[0])
         cursor.close()
 
         tdw = self.openWriter(fname, xml)
@@ -755,7 +756,7 @@ $mycnf/>
                 "type": "NX_FLOAT32", "units": "m", "nexdatas_source": None,
                 "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                 "nexdatas_canfail_error": None},
-                                  error=1e-5)
+            error=1e-5)
         self._sc.checkScalarField(
             det, "pid2_image_string", "string", "NX_CHAR", [''] * 3,
             attrs={"type": "NX_CHAR", "units": "m", "nexdatas_source": None,
@@ -787,7 +788,7 @@ $mycnf/>
                 "type": "NX_FLOAT32", "units": "m", "nexdatas_source": None,
                 "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
                 "nexdatas_canfail_error": None},
-                                        error=1e-6)
+            error=1e-6)
         self._sc.checkSingleScalarField(
             det, "final_pid_scalar_float64", "float64", "NX_FLOAT64",
             numpy.finfo(
@@ -796,7 +797,7 @@ $mycnf/>
                 "type": "NX_FLOAT64", "units": "m", "nexdatas_source": None,
                 "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
                 "nexdatas_canfail_error": None},
-                                         error=1e-14)
+            error=1e-14)
         self._sc.checkSingleScalarField(
             det, "final_pid_scalar_string", "string", "NX_CHAR", '',
             attrs={"type": "NX_CHAR", "units": "m", "nexdatas_source": None,
@@ -986,7 +987,8 @@ $mycnf/>
           <dimensions rank="1" />
           <strategy mode="INIT"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -1001,7 +1003,8 @@ $mycnf/>
           </dimensions>
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -1013,7 +1016,8 @@ $mycnf/>
           <dimensions rank="1" />
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -1089,7 +1093,7 @@ $mycnf/>
             [str(sub[0]) for sub in spectrum])
         self._sc.checkSingleSpectrumField(
             det, "final_pid_scalar_string", "string", "NX_CHAR",
-                                                [scalar])
+            [scalar])
         self._sc.checkSingleImageField(
             det, "final_pid_image_string", "string", "NX_CHAR",
             [[str(sub[0])] for sub in spectrum])
@@ -1321,7 +1325,8 @@ $mycnf/>
 
         cursor = self._mydb.cursor()
         cursor.execute("SELECT pid FROM device limit 1")
-        scalar = str(cursor.fetchone()[0])
+        # scalar =
+        str(cursor.fetchone()[0])
         cursor.close()
 
         cursor = self._mydb.cursor()
@@ -1497,12 +1502,14 @@ $mycnf/>
 
         cursor = self._mydb.cursor()
         cursor.execute("SELECT pid FROM device limit 6")
-        spectrum = cursor.fetchall()
+        # spectrum =
+        cursor.fetchall()
         cursor.close()
 
         cursor = self._mydb.cursor()
         cursor.execute("SELECT name FROM device limit 6")
-        name = cursor.fetchall()
+        # name =
+        cursor.fetchall()
         cursor.close()
 
         tdw = self.openWriter(fname, xml)
@@ -1519,10 +1526,10 @@ $mycnf/>
         det = self._sc.checkFieldTree(f, fname, 2)
         self._sc.checkSingleSpectrumField(
             det, "init_pid_scalar_int64", "int64", "NX_INT64",
-                                          [int(scalar)])
+            [int(scalar)])
         self._sc.checkSingleSpectrumField(
             det, "final_pid_scalar_float32", "float32", "NX_FLOAT32",
-                                          [float(scalar)])
+            [float(scalar)])
         f.close()
         os.remove(fname)
 
@@ -2267,12 +2274,14 @@ $mycnf/>
 
         cursor = self._mydb.cursor()
         cursor.execute("SELECT pid, exported FROM device limit 6")
-        pid_exported = cursor.fetchall()
+        # pid_exported =
+        cursor.fetchall()
         cursor.close()
 
         cursor = self._mydb.cursor()
         cursor.execute("SELECT pid FROM device limit 1")
-        scalar = str(cursor.fetchone()[0])
+        # scalar =
+        str(cursor.fetchone()[0])
         cursor.close()
 
         cursor = self._mydb.cursor()

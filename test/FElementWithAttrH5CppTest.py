@@ -252,9 +252,9 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
         self.assertEqual(el2.tagAttributes, {})
 
         attrs = {
-            #            "string":["My string","NX_CHAR", "string" , (1,)],
-            #            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-            #            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            #        "string":["My string","NX_CHAR", "string" , (1,)],
+            #        "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            #        "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int": [-123, "NX_INT", "int64", (1,)],
             "int8": [12, "NX_INT8", "int8", (1,)],
             "int16": [-123, "NX_INT16", "int16", (1,)],
@@ -310,9 +310,9 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
         self.assertEqual(el2.tagAttributes, {})
 
         attrs = {
-            #            "string":["My string","NX_CHAR", "string" , (1,)],
-            #            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-            #            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            #        "string":["My string","NX_CHAR", "string" , (1,)],
+            #        "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            #        "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int": [-123, "NX_INT", "int64", (1,)],
             "int8": [12, "NX_INT8", "int8", (1,)],
             "int16": [-123, "NX_INT16", "int16", (1,)],
@@ -337,14 +337,16 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
             if attrs[nm][2] != "bool":
                 mlen = [1]
                 attrs[nm][0] = [
-                    attrs[nm][0] * self.__rnd.randint(0, 3) for r in range(mlen[0])]
+                    attrs[nm][0] * self.__rnd.randint(0, 3)
+                    for r in range(mlen[0])]
             else:
                 mlen = [1]
                 if nm == 'bool':
                     attrs[nm][0] = [bool(self.__rnd.randint(0, 1))
                                     for c in range(mlen[0])]
                 else:
-                    attrs[nm][0] = [("true" if self.__rnd.randint(0, 1) else "false")
+                    attrs[nm][0] = [("true" if self.__rnd.randint(0, 1)
+                                     else "false")
                                     for c in range(mlen[0])]
 
             attrs[nm][3] = (mlen[0],)
@@ -384,9 +386,9 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
         self.assertEqual(el2.tagAttributes, {})
 
         attrs = {
-            #            "string":["My string","NX_CHAR", "string" , (1,)],
-            #            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-            #            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            #        "string":["My string","NX_CHAR", "string" , (1,)],
+            #        "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            #        "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int": [-123, "NX_INT", "int64", (1,)],
             "int8": [12, "NX_INT8", "int8", (1,)],
             "int16": [-123, "NX_INT16", "int16", (1,)],
@@ -411,14 +413,16 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
             if attrs[nm][2] != "bool":
                 mlen = [self.__rnd.randint(2, 10), self.__rnd.randint(0, 3)]
                 attrs[nm][0] = [
-                    attrs[nm][0] * self.__rnd.randint(0, 3) for r in range(mlen[0])]
+                    attrs[nm][0] * self.__rnd.randint(0, 3)
+                    for r in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(2, 10)]
                 if nm == 'bool':
                     attrs[nm][0] = [bool(self.__rnd.randint(0, 1))
                                     for c in range(mlen[0])]
                 else:
-                    attrs[nm][0] = [("true" if self.__rnd.randint(0, 1) else "false")
+                    attrs[nm][0] = [("true" if self.__rnd.randint(0, 1)
+                                     else "false")
                                     for c in range(mlen[0])]
 
             attrs[nm][3] = (mlen[0],)
@@ -470,9 +474,9 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
         self.assertEqual(el2.tagAttributes, {})
 
         attrs = {
-            #            "string":["My string","NX_CHAR", "string" , (1,)],
-            #            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-            #            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            #        "string":["My string","NX_CHAR", "string" , (1,)],
+            #        "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            #        "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int": [-123, "NX_INT", "int64", (1,)],
             "int8": [12, "NX_INT8", "int8", (1,)],
             "int16": [-123, "NX_INT16", "int16", (1,)],
@@ -497,24 +501,28 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
             if attrs[nm][2] != "bool":
                 mlen = [1, 1]
                 attrs[nm][0] = [
-                    [attrs[nm][0] * self.__rnd.randint(0, 3) for r in range(mlen[1])] for c in range(mlen[0])]
+                    [attrs[nm][0] * self.__rnd.randint(0, 3)
+                     for r in range(mlen[1])] for c in range(mlen[0])]
             else:
                 mlen = [1, 1]
                 if nm == 'bool':
-                    attrs[nm][0] = [[bool(self.__rnd.randint(0, 1))
-                                     for c in range(mlen[1])] for r in range(mlen[0])]
+                    attrs[nm][0] = [[
+                        bool(self.__rnd.randint(0, 1))
+                        for c in range(mlen[1])] for r in range(mlen[0])]
                 else:
-                    attrs[nm][0] = [[("True" if self.__rnd.randint(0, 1) else "False")
-                                     for c in range(mlen[1])] for r in range(mlen[0])]
+                    attrs[nm][0] = [[
+                        ("True" if self.__rnd.randint(0, 1) else "False")
+                        for c in range(mlen[1])] for r in range(mlen[0])]
 
             attrs[nm][3] = (mlen[0], mlen[1])
 
         for nm in attrs.keys():
-            el2.tagAttributes[nm] = (attrs[nm][1],
-                                     "".join(["".join([str(it) + " " for it in sub]
-                                                      ) + "\n" for sub in attrs[nm][0]]),
-                                     attrs[nm][3]
-                                     )
+            el2.tagAttributes[nm] = (
+                attrs[nm][1],
+                "".join(["".join([str(it) + " " for it in sub]) +
+                         "\n" for sub in attrs[nm][0]]),
+                attrs[nm][3]
+            )
             el2._createAttributes()
             at = el2.h5Attribute(nm)
             self.assertEqual(at.dtype, attrs[nm][2])
@@ -522,7 +530,8 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
                         self.assertEqual(
-                            Converters.toBool(str(attrs[nm][0][i][j])), at[...])
+                            Converters.toBool(
+                                str(attrs[nm][0][i][j])), at[...])
                 pass
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
@@ -547,9 +556,9 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
         self.assertEqual(el2.tagAttributes, {})
 
         attrs = {
-            #            "string":["My string","NX_CHAR", "string" , (1,)],
-            #            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-            #            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            #        "string":["My string","NX_CHAR", "string" , (1,)],
+            #        "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            #        "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int": [-123, "NX_INT", "int64", (1,)],
             "int8": [12, "NX_INT8", "int8", (1,)],
             "int16": [-123, "NX_INT16", "int16", (1,)],
@@ -576,24 +585,28 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
                         (2 << numpy.dtype(attrs[nm][2]).itemsize)]
 #                print "SH",nm,mlen[2]
                 attrs[nm][0] = [
-                    [attrs[nm][0] * self.__rnd.randint(0, 3) for r in range(mlen[1])] for c in range(mlen[0])]
+                    [attrs[nm][0] * self.__rnd.randint(0, 3)
+                     for r in range(mlen[1])] for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(2, 10), self.__rnd.randint(2, 10)]
                 if nm == 'bool':
-                    attrs[nm][0] = [[bool(self.__rnd.randint(0, 1))
-                                     for c in range(mlen[1])] for r in range(mlen[0])]
+                    attrs[nm][0] = [[
+                        bool(self.__rnd.randint(0, 1))
+                        for c in range(mlen[1])] for r in range(mlen[0])]
                 else:
-                    attrs[nm][0] = [[("True" if self.__rnd.randint(0, 1) else "False")
-                                     for c in range(mlen[1])] for r in range(mlen[0])]
+                    attrs[nm][0] = [[
+                        ("True" if self.__rnd.randint(0, 1) else "False")
+                        for c in range(mlen[1])] for r in range(mlen[0])]
 
             attrs[nm][3] = (mlen[0], mlen[1])
 
         for nm in attrs.keys():
-            el2.tagAttributes[nm] = (attrs[nm][1],
-                                     "".join(["".join([str(it) + " " for it in sub]
-                                                      ) + "\n" for sub in attrs[nm][0]]),
-                                     attrs[nm][3]
-                                     )
+            el2.tagAttributes[nm] = (
+                attrs[nm][1],
+                "".join(["".join([str(it) + " " for it in sub]) +
+                         "\n" for sub in attrs[nm][0]]),
+                attrs[nm][3]
+            )
             el2._createAttributes()
             at = el2.h5Attribute(nm)
             self.assertEqual(at.dtype, attrs[nm][2])
@@ -601,7 +614,8 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
                         self.assertEqual(
-                            Converters.toBool(str(attrs[nm][0][i][j])), at[i, j])
+                            Converters.toBool(
+                                str(attrs[nm][0][i][j])), at[i, j])
                 pass
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
@@ -626,9 +640,9 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
         self.assertEqual(el2.tagAttributes, {})
 
         attrs = {
-            #            "string":["My string","NX_CHAR", "string" , (1,)],
-            #            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-            #            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            #        "string":["My string","NX_CHAR", "string" , (1,)],
+            #        "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            #        "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int": [-123, "NX_INT", "int64", (1,)],
             "int8": [12, "NX_INT8", "int8", (1,)],
             "int16": [-123, "NX_INT16", "int16", (1,)],
@@ -655,24 +669,28 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
                         (2 << numpy.dtype(attrs[nm][2]).itemsize)]
 #                print "SH",nm,mlen[2]
                 attrs[nm][0] = [
-                    [attrs[nm][0] * self.__rnd.randint(0, 3) for r in range(mlen[1])] for c in range(mlen[0])]
+                    [attrs[nm][0] * self.__rnd.randint(0, 3)
+                     for r in range(mlen[1])] for c in range(mlen[0])]
             else:
                 mlen = [1, self.__rnd.randint(2, 10)]
                 if nm == 'bool':
-                    attrs[nm][0] = [[bool(self.__rnd.randint(0, 1))
-                                     for c in range(mlen[1])] for r in range(mlen[0])]
+                    attrs[nm][0] = [[
+                        bool(self.__rnd.randint(0, 1))
+                        for c in range(mlen[1])] for r in range(mlen[0])]
                 else:
-                    attrs[nm][0] = [[("True" if self.__rnd.randint(0, 1) else "False")
-                                     for c in range(mlen[1])] for r in range(mlen[0])]
+                    attrs[nm][0] = [[
+                        ("True" if self.__rnd.randint(0, 1) else "False")
+                        for c in range(mlen[1])] for r in range(mlen[0])]
 
             attrs[nm][3] = (mlen[0], mlen[1])
 
         for nm in attrs.keys():
-            el2.tagAttributes[nm] = (attrs[nm][1],
-                                     "".join(["".join([str(it) + " " for it in sub]
-                                                      ) + "\n" for sub in attrs[nm][0]]),
-                                     attrs[nm][3]
-                                     )
+            el2.tagAttributes[nm] = (
+                attrs[nm][1],
+                "".join(["".join([str(it) + " " for it in sub]) +
+                         "\n" for sub in attrs[nm][0]]),
+                attrs[nm][3]
+            )
             el2._createAttributes()
             at = el2.h5Attribute(nm)
             self.assertEqual(at.dtype, attrs[nm][2])
@@ -680,7 +698,8 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
                         self.assertEqual(
-                            Converters.toBool(str(attrs[nm][0][i][j])), at[i, j])
+                            Converters.toBool(str(attrs[nm][0][i][j])),
+                            at[i, j])
                 pass
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
@@ -705,9 +724,9 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
         self.assertEqual(el2.tagAttributes, {})
 
         attrs = {
-            #            "string":["My string","NX_CHAR", "string" , (1,)],
-            #            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-            #            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            #         "string":["My string","NX_CHAR", "string" , (1,)],
+            #         "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            #         "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int": [-123, "NX_INT", "int64", (1,)],
             "int8": [12, "NX_INT8", "int8", (1,)],
             "int16": [-123, "NX_INT16", "int16", (1,)],
@@ -732,24 +751,28 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
             if attrs[nm][2] != "bool":
                 mlen = [self.__rnd.randint(2, 10), 1]
                 attrs[nm][0] = [
-                    [attrs[nm][0] * self.__rnd.randint(0, 3) for r in range(mlen[1])] for c in range(mlen[0])]
+                    [attrs[nm][0] * self.__rnd.randint(0, 3)
+                     for r in range(mlen[1])] for c in range(mlen[0])]
             else:
                 mlen = [self.__rnd.randint(2, 10), 1]
                 if nm == 'bool':
-                    attrs[nm][0] = [[bool(self.__rnd.randint(0, 1))
-                                     for c in range(mlen[1])] for r in range(mlen[0])]
+                    attrs[nm][0] = [[
+                        bool(self.__rnd.randint(0, 1))
+                        for c in range(mlen[1])] for r in range(mlen[0])]
                 else:
-                    attrs[nm][0] = [[("True" if self.__rnd.randint(0, 1) else "False")
-                                     for c in range(mlen[1])] for r in range(mlen[0])]
+                    attrs[nm][0] = [[
+                        ("True" if self.__rnd.randint(0, 1) else "False")
+                        for c in range(mlen[1])] for r in range(mlen[0])]
 
             attrs[nm][3] = (mlen[0], mlen[1])
 
         for nm in attrs.keys():
-            el2.tagAttributes[nm] = (attrs[nm][1],
-                                     "".join(["".join([str(it) + " " for it in sub]
-                                                      ) + "\n" for sub in attrs[nm][0]]),
-                                     attrs[nm][3]
-                                     )
+            el2.tagAttributes[nm] = (
+                attrs[nm][1],
+                "".join(["".join([str(it) + " " for it in sub]) +
+                         "\n" for sub in attrs[nm][0]]),
+                attrs[nm][3]
+            )
             el2._createAttributes()
             at = el2.h5Attribute(nm)
             self.assertEqual(at.dtype, attrs[nm][2])
@@ -757,7 +780,8 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
                         self.assertEqual(
-                            Converters.toBool(str(attrs[nm][0][i][j])), at[i, j])
+                            Converters.toBool(str(attrs[nm][0][i][j])),
+                            at[i, j])
                 pass
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):

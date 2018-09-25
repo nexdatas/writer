@@ -133,7 +133,8 @@ class EDocTest(unittest.TestCase):
         # element file objects
         eFile = EFile([], None, nxFile)
         group = nxFile.create_group(gname, gtype)
-        field = group.create_field(fdname, fdtype)
+        # field =
+        group.create_field(fdname, fdtype)
 
         el = Element(self._tfname, self._fattrs, eFile)
         el2 = EDoc(self._fattrs, el)
