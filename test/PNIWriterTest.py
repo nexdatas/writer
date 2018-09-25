@@ -2310,7 +2310,6 @@ class PNIWriterTest(unittest.TestCase):
 
             nx.link("/entry12345/instrument/detector/intimage",
                     dt.h5object, "lkintimage")
-            e = None
             lk = [e for e in nx.get_links(dt.h5object)
                   if e.name == "lkintimage"][0]
             lkintimage = PNIWriter.PNILink(lk, dt)
@@ -2330,8 +2329,8 @@ class PNIWriterTest(unittest.TestCase):
             lk = [e for e in nx.get_links(dt.h5object) if e.name == "lkno"][0]
             lkno = PNIWriter.PNILink(lk, dt)
             lk = None
-            self.assertTrue(e is not None)
             e = None
+            self.assertTrue(not e)
 
             self.assertTrue(isinstance(lkintimage, PNIWriter.PNILink))
             self.assertTrue(isinstance(lkintimage.h5object, nx._nxh5.nxlink))
