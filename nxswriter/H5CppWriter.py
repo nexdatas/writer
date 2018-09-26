@@ -25,7 +25,7 @@ import sys
 import numpy as np
 from pninexus import h5cpp
 
-from . import FileWriter
+from . import filewriter
 from .Types import nptype
 
 
@@ -66,14 +66,19 @@ def _slice2selection(t, shape):
     if t is Ellipsis:
         return None
     elif isinstance(t, slice):
+        start = t.start or 0
+        stop = t.stop or shape[0]
+        if start < 0:
+            start == shape[0] + start
+        if stop < 0:
+            stop == shape[0] + stop
         if t.step in [None, 1]:
             return h5cpp.dataspace.Hyperslab(
-                offset=(t.start or 0,),
-                block=((t.stop or shape[0]) - (t.start or 0),))
+                offset=(start,), block=((stop - start),))
         else:
             return h5cpp.dataspace.Hyperslab(
-                offset=(t.start,),
-                count=int(math.ceil((t.stop - t.start) / float(t.step))),
+                offset=(start,),
+                count=int(math.ceil((stop - start) / float(t.step))),
                 stride=(t.step - 1,))
     elif isinstance(t, (int, long)):
         return h5cpp.dataspace.Hyperslab(
@@ -85,13 +90,20 @@ def _slice2selection(t, shape):
         stride = []
         for it, tel in enumerate(t):
             if isinstance(tel, (int, long)):
-                offset.append(tel)
+                if tel < 0:
+                    offset.append(shape[it] + tel)
+                else:
+                    offset.append(tel)
                 block.append(1)
                 count.append(1)
                 stride.append(1)
             elif isinstance(tel, slice):
                 start = tel.start if tel.start is not None else 0
                 stop = tel.stop if tel.stop is not None else shape[it]
+                if start < 0:
+                    start == shape[it] + start
+                if stop < 0:
+                    stop == shape[it] + stop
                 if tel.step in [None, 1]:
                     offset.append(start)
                     block.append(stop - start)
@@ -437,7 +449,7 @@ class H5CppGroup(FileWriter.FTGroup):
                      if lk.path.name == name][0], self)
 
         except Exception as e:
-            print(e)
+            print(str(e))
             return H5CppLink(
                 [lk for lk in self._h5object.links
                  if lk.path.name == name][0], self)
