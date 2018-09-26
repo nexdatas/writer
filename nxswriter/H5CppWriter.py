@@ -25,7 +25,7 @@ import sys
 import numpy as np
 from pninexus import h5cpp
 
-from . import filewriter
+from . import FileWriter
 from .Types import nptype
 
 
