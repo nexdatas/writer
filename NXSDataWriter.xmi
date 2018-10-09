@@ -10,7 +10,7 @@
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
       <DefaultPropValue>100</DefaultPropValue>
     </deviceProperties>
-    <deviceProperties name="Writer" description="writer module: `pni` or `h5py`">
+    <deviceProperties name="Writer" description="writer module: `pni` or `h5py` or `h5cpp`">
       <type xsi:type="pogoDsl:StringType"/>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
     </deviceProperties>
