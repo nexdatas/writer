@@ -377,7 +377,7 @@ class H5CppFile(FileWriter.FTFile):
                        | h5cpp.file.AccessFlags.SWMRWRITE
             else:
                 flag = h5cpp.file.AccessFlags.READONLY \
-                       | h5cpp.file.AccessFlags.SWMRWRITE
+                       | h5cpp.file.AccessFlags.SWMRREAD
 
         elif readonly:
             flag = h5cpp.file.AccessFlags.READONLY
