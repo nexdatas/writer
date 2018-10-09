@@ -5,18 +5,18 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nxswriter.NexusXMLHandler &mdash; NXSDataWriter 2.15.0 documentation</title>
+    <title>nxswriter.NexusXMLHandler &#8212; NXSDataWriter 2.21.1 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.15.0',
+        VERSION:     '2.21.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,9 +27,11 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.15.0 documentation" href="../../index.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="NXSDataWriter 2.21.1 documentation" href="../../index.html" />
     <link rel="up" title="nxswriter" href="../nxswriter.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -37,7 +39,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -50,7 +52,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.15</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.21</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -146,45 +148,45 @@
     <div class="col-md-12 content">
       
   <h1>Source code for nxswriter.NexusXMLHandler</h1><div class="highlight"><pre>
-<span class="c">#!/usr/bin/env python</span>
-<span class="c">#   This file is part of nexdatas - Tango Server for NeXus data writer</span>
-<span class="c">#</span>
-<span class="c">#    Copyright (C) 2012-2017 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;</span>
-<span class="c">#</span>
-<span class="c">#    nexdatas is free software: you can redistribute it and/or modify</span>
-<span class="c">#    it under the terms of the GNU General Public License as published by</span>
-<span class="c">#    the Free Software Foundation, either version 3 of the License, or</span>
-<span class="c">#    (at your option) any later version.</span>
-<span class="c">#</span>
-<span class="c">#    nexdatas is distributed in the hope that it will be useful,</span>
-<span class="c">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="c">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-<span class="c">#    GNU General Public License for more details.</span>
-<span class="c">#</span>
-<span class="c">#    You should have received a copy of the GNU General Public License</span>
-<span class="c">#    along with nexdatas.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
-<span class="c">#</span>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">#   This file is part of nexdatas - Tango Server for NeXus data writer</span>
+<span class="c1">#</span>
+<span class="c1">#    Copyright (C) 2012-2017 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;</span>
+<span class="c1">#</span>
+<span class="c1">#    nexdatas is free software: you can redistribute it and/or modify</span>
+<span class="c1">#    it under the terms of the GNU General Public License as published by</span>
+<span class="c1">#    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1">#    (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1">#    nexdatas is distributed in the hope that it will be useful,</span>
+<span class="c1">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#    GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#    You should have received a copy of the GNU General Public License</span>
+<span class="c1">#    along with nexdatas.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
 
 <span class="sd">&quot;&quot;&quot; SAX parser for interpreting content of  XML configuration string &quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">xml</span> <span class="kn">import</span> <span class="n">sax</span>
+<span class="kn">from</span> <span class="nn">xml</span> <span class="k">import</span> <span class="n">sax</span>
 
-<span class="kn">from</span> <span class="nn">.StreamSet</span> <span class="kn">import</span> <span class="n">StreamSet</span>
+<span class="kn">from</span> <span class="nn">.StreamSet</span> <span class="k">import</span> <span class="n">StreamSet</span>
 
-<span class="kn">from</span> <span class="nn">.Element</span> <span class="kn">import</span> <span class="n">Element</span>
-<span class="kn">from</span> <span class="nn">.FElement</span> <span class="kn">import</span> <span class="n">FElement</span>
-<span class="kn">from</span> <span class="nn">.EGroup</span> <span class="kn">import</span> <span class="n">EGroup</span>
-<span class="kn">from</span> <span class="nn">.EField</span> <span class="kn">import</span> <span class="n">EField</span>
-<span class="kn">from</span> <span class="nn">.EAttribute</span> <span class="kn">import</span> <span class="n">EAttribute</span>
-<span class="kn">from</span> <span class="nn">.EStrategy</span> <span class="kn">import</span> <span class="n">EStrategy</span>
-<span class="kn">from</span> <span class="nn">.ELink</span> <span class="kn">import</span> <span class="n">ELink</span>
-<span class="kn">from</span> <span class="nn">.H5Elements</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">.Element</span> <span class="k">import</span> <span class="n">Element</span>
+<span class="kn">from</span> <span class="nn">.FElement</span> <span class="k">import</span> <span class="n">FElement</span>
+<span class="kn">from</span> <span class="nn">.EGroup</span> <span class="k">import</span> <span class="n">EGroup</span>
+<span class="kn">from</span> <span class="nn">.EField</span> <span class="k">import</span> <span class="n">EField</span>
+<span class="kn">from</span> <span class="nn">.EAttribute</span> <span class="k">import</span> <span class="n">EAttribute</span>
+<span class="kn">from</span> <span class="nn">.EStrategy</span> <span class="k">import</span> <span class="n">EStrategy</span>
+<span class="kn">from</span> <span class="nn">.ELink</span> <span class="k">import</span> <span class="n">ELink</span>
+<span class="kn">from</span> <span class="nn">.H5Elements</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">EDoc</span><span class="p">,</span> <span class="n">ESymbol</span><span class="p">,</span> <span class="n">EDimensions</span><span class="p">,</span> <span class="n">EDim</span><span class="p">,</span> <span class="n">EFile</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.DataSourceFactory</span> <span class="kn">import</span> <span class="n">DataSourceFactory</span>
-<span class="kn">from</span> <span class="nn">.ThreadPool</span> <span class="kn">import</span> <span class="n">ThreadPool</span>
-<span class="kn">from</span> <span class="nn">.InnerXMLParser</span> <span class="kn">import</span> <span class="n">InnerXMLHandler</span>
-<span class="kn">from</span> <span class="nn">.Errors</span> <span class="kn">import</span> <span class="n">UnsupportedTagError</span>
-<span class="kn">from</span> <span class="nn">.FetchNameHandler</span> <span class="kn">import</span> <span class="n">TNObject</span>
+<span class="kn">from</span> <span class="nn">.DataSourceFactory</span> <span class="k">import</span> <span class="n">DataSourceFactory</span>
+<span class="kn">from</span> <span class="nn">.ThreadPool</span> <span class="k">import</span> <span class="n">ThreadPool</span>
+<span class="kn">from</span> <span class="nn">.InnerXMLParser</span> <span class="k">import</span> <span class="n">InnerXMLHandler</span>
+<span class="kn">from</span> <span class="nn">.Errors</span> <span class="k">import</span> <span class="n">UnsupportedTagError</span>
+<span class="kn">from</span> <span class="nn">.FetchNameHandler</span> <span class="k">import</span> <span class="n">TNObject</span>
 
 
 <div class="viewcode-block" id="NexusXMLHandler"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NexusXMLHandler.NexusXMLHandler">[docs]</a><span class="k">class</span> <span class="nc">NexusXMLHandler</span><span class="p">(</span><span class="n">sax</span><span class="o">.</span><span class="n">ContentHandler</span><span class="p">):</span>
@@ -192,9 +194,9 @@
     <span class="sd">&quot;&quot;&quot; SAX2 parser</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileElement</span><span class="p">,</span> <span class="n">datasources</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">decoders</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                 <span class="n">groupTypes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">globalJSON</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                 <span class="n">streams</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">reloadmode</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileElement</span><span class="p">,</span> <span class="n">datasources</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">decoders</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">groupTypes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">globalJSON</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">streams</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reloadmode</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; constructor</span>
 
 <span class="sd">        :brief: It constructs parser and defines the H5 output file</span>
@@ -216,97 +218,97 @@
 <span class="sd">        :param reloadmode: reload mode</span>
 <span class="sd">        :type reloadmode: :obj: `bool`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">sax</span><span class="o">.</span><span class="n">ContentHandler</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">sax</span><span class="o">.</span><span class="n">ContentHandler</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-        <span class="c">#: (:class:`nxswriter.TNObject`) map of NXclass : name</span>
+        <span class="c1">#: (:class:`nxswriter.TNObject`) map of NXclass : name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__groupTypes</span> <span class="o">=</span> <span class="n">TNObject</span><span class="p">()</span>
-        <span class="c">#: (:obj:`bool`) if name fetching required</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__fetching</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="c1">#: (:obj:`bool`) if name fetching required</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__fetching</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="n">groupTypes</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__groupTypes</span> <span class="o">=</span> <span class="n">groupTypes</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__fetching</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__fetching</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="c">#: (:obj:`list` &lt;:class:`nxswriter.Element.Element`&gt;) \</span>
-        <span class="c">#:      stack with open tag elements</span>
+        <span class="c1">#: (:obj:`list` &lt;:class:`nxswriter.Element.Element`&gt;) \</span>
+        <span class="c1">#:      stack with open tag elements</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__stack</span> <span class="o">=</span> <span class="p">[</span><span class="n">fileElement</span><span class="p">]</span>
 
-        <span class="c">#: (:obj:`str`) traced unsupported tag name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__unsupportedTag</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
-        <span class="c">#: (:obj:`bool`) True if raise exception on unsupported tag</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">raiseUnsupportedTag</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="c1">#: (:obj:`str`) traced unsupported tag name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__unsupportedTag</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="c1">#: (:obj:`bool`) True if raise exception on unsupported tag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raiseUnsupportedTag</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="c">#: (:class:`xml.sax.xmlreader.XMLReader`) xmlreader</span>
+        <span class="c1">#: (:class:`xml.sax.xmlreader.XMLReader`) xmlreader</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__parser</span> <span class="o">=</span> <span class="n">parser</span>
-        <span class="c">#: (:class:`nxswriter.InnerXMLHandler.InnerXMLHandler`) \</span>
-        <span class="c">#:     inner xml handler</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__innerHandler</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1">#: (:class:`nxswriter.InnerXMLHandler.InnerXMLHandler`) \</span>
+        <span class="c1">#:     inner xml handler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__innerHandler</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="c">#: (:obj:`dict` &lt;:obj:`str`, :obj:`dict` &lt;:obj:`str`, any&gt;&gt;) \</span>
-        <span class="c">#:    global json string</span>
+        <span class="c1">#: (:obj:`dict` &lt;:obj:`str`, :obj:`dict` &lt;:obj:`str`, any&gt;&gt;) \</span>
+        <span class="c1">#:    global json string</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__json</span> <span class="o">=</span> <span class="n">globalJSON</span>
 
-        <span class="c">#: (:obj:`dict` &lt;:obj:`str`: :class:`nxswriter.Element.Element` &gt; ) \</span>
-        <span class="c">#:     tags with inner xml as its input</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">withXMLinput</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;datasource&#39;</span><span class="p">:</span> <span class="n">DataSourceFactory</span><span class="p">,</span>
-                             <span class="s">&#39;doc&#39;</span><span class="p">:</span> <span class="n">EDoc</span><span class="p">}</span>
-        <span class="c">#: (:obj:`dict` &lt;:obj:`str`, :obj:`str`&gt;) stored attributes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__storedAttrs</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: (:obj:`str`) stored name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__storedName</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1">#: (:obj:`dict` &lt;:obj:`str`: :class:`nxswriter.Element.Element` &gt; ) \</span>
+        <span class="c1">#:     tags with inner xml as its input</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">withXMLinput</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;datasource&#39;</span><span class="p">:</span> <span class="n">DataSourceFactory</span><span class="p">,</span>
+                             <span class="s1">&#39;doc&#39;</span><span class="p">:</span> <span class="n">EDoc</span><span class="p">}</span>
+        <span class="c1">#: (:obj:`dict` &lt;:obj:`str`, :obj:`str`&gt;) stored attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__storedAttrs</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: (:obj:`str`) stored name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__storedName</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="c">#: (:obj:`bool`) reload mode</span>
+        <span class="c1">#: (:obj:`bool`) reload mode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__reloadmode</span> <span class="o">=</span> <span class="n">reloadmode</span>
 
-        <span class="c">#: (:obj:`dict` &lt;:obj:`str`, :obj:`type` &gt; ) \</span>
-        <span class="c">#: map of tag names to related classes</span>
+        <span class="c1">#: (:obj:`dict` &lt;:obj:`str`, :obj:`type` &gt; ) \</span>
+        <span class="c1">#: map of tag names to related classes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">elementClass</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s">&#39;group&#39;</span><span class="p">:</span> <span class="n">EGroup</span><span class="p">,</span> <span class="s">&#39;field&#39;</span><span class="p">:</span> <span class="n">EField</span><span class="p">,</span>
-            <span class="s">&#39;attribute&#39;</span><span class="p">:</span> <span class="n">EAttribute</span><span class="p">,</span> <span class="s">&#39;link&#39;</span><span class="p">:</span> <span class="n">ELink</span><span class="p">,</span>
-            <span class="s">&#39;symbols&#39;</span><span class="p">:</span> <span class="n">Element</span><span class="p">,</span> <span class="s">&#39;symbol&#39;</span><span class="p">:</span> <span class="n">ESymbol</span><span class="p">,</span>
-            <span class="s">&#39;dimensions&#39;</span><span class="p">:</span> <span class="n">EDimensions</span><span class="p">,</span> <span class="s">&#39;dim&#39;</span><span class="p">:</span> <span class="n">EDim</span><span class="p">,</span>
-            <span class="s">&#39;enumeration&#39;</span><span class="p">:</span> <span class="n">Element</span><span class="p">,</span> <span class="s">&#39;item&#39;</span><span class="p">:</span> <span class="n">Element</span><span class="p">,</span>
-            <span class="s">&#39;strategy&#39;</span><span class="p">:</span> <span class="n">EStrategy</span>
+            <span class="s1">&#39;group&#39;</span><span class="p">:</span> <span class="n">EGroup</span><span class="p">,</span> <span class="s1">&#39;field&#39;</span><span class="p">:</span> <span class="n">EField</span><span class="p">,</span>
+            <span class="s1">&#39;attribute&#39;</span><span class="p">:</span> <span class="n">EAttribute</span><span class="p">,</span> <span class="s1">&#39;link&#39;</span><span class="p">:</span> <span class="n">ELink</span><span class="p">,</span>
+            <span class="s1">&#39;symbols&#39;</span><span class="p">:</span> <span class="n">Element</span><span class="p">,</span> <span class="s1">&#39;symbol&#39;</span><span class="p">:</span> <span class="n">ESymbol</span><span class="p">,</span>
+            <span class="s1">&#39;dimensions&#39;</span><span class="p">:</span> <span class="n">EDimensions</span><span class="p">,</span> <span class="s1">&#39;dim&#39;</span><span class="p">:</span> <span class="n">EDim</span><span class="p">,</span>
+            <span class="s1">&#39;enumeration&#39;</span><span class="p">:</span> <span class="n">Element</span><span class="p">,</span> <span class="s1">&#39;item&#39;</span><span class="p">:</span> <span class="n">Element</span><span class="p">,</span>
+            <span class="s1">&#39;strategy&#39;</span><span class="p">:</span> <span class="n">EStrategy</span>
         <span class="p">}</span>
 
-        <span class="c">#: (:obj:`dict` &lt;:obj:`str`, :obj:`type` &gt; ) \</span>
-        <span class="c">#: map of tag names to related classes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">withAttr</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;group&#39;</span><span class="p">,</span> <span class="s">&#39;field&#39;</span><span class="p">]</span>
+        <span class="c1">#: (:obj:`dict` &lt;:obj:`str`, :obj:`type` &gt; ) \</span>
+        <span class="c1">#: map of tag names to related classes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">withAttr</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="s1">&#39;field&#39;</span><span class="p">]</span>
 
-        <span class="c">#: (:obj:`list` &lt;:obj:`str`&gt;) transparent tags</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transparentTags</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;definition&#39;</span><span class="p">]</span>
+        <span class="c1">#: (:obj:`list` &lt;:obj:`str`&gt;) transparent tags</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transparentTags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;definition&#39;</span><span class="p">]</span>
 
-        <span class="c">#: (:class:`nxswriter.ThreadPool.ThreadPool`) \</span>
-        <span class="c">#:       thread pool with INIT elements</span>
+        <span class="c1">#: (:class:`nxswriter.ThreadPool.ThreadPool`) \</span>
+        <span class="c1">#:       thread pool with INIT elements</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initPool</span> <span class="o">=</span> <span class="n">ThreadPool</span><span class="p">(</span><span class="n">streams</span><span class="o">=</span><span class="n">StreamSet</span><span class="p">(</span><span class="n">streams</span><span class="p">))</span>
-        <span class="c">#: (:class:`nxswriter.ThreadPool.ThreadPool`) \</span>
-        <span class="c">#:       thread pool with STEP elements</span>
+        <span class="c1">#: (:class:`nxswriter.ThreadPool.ThreadPool`) \</span>
+        <span class="c1">#:       thread pool with STEP elements</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stepPool</span> <span class="o">=</span> <span class="n">ThreadPool</span><span class="p">(</span><span class="n">streams</span><span class="o">=</span><span class="n">StreamSet</span><span class="p">(</span><span class="n">streams</span><span class="p">))</span>
-        <span class="c">#: (:class:`nxswriter.ThreadPool.ThreadPool`) \</span>
-        <span class="c">#:      thread pool with FINAL elements</span>
+        <span class="c1">#: (:class:`nxswriter.ThreadPool.ThreadPool`) \</span>
+        <span class="c1">#:      thread pool with FINAL elements</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">finalPool</span> <span class="o">=</span> <span class="n">ThreadPool</span><span class="p">(</span><span class="n">streams</span><span class="o">=</span><span class="n">StreamSet</span><span class="p">(</span><span class="n">streams</span><span class="p">))</span>
 
-        <span class="c">#: (:obj:`dict` \</span>
-        <span class="c">#:  &lt;:obj:`str`, :class:`nxswriter.ThreadPool.ThreadPool`&gt; ) \</span>
-        <span class="c">#:  map of pool names to related classes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__poolMap</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;INIT&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">initPool</span><span class="p">,</span>
-                          <span class="s">&#39;STEP&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepPool</span><span class="p">,</span>
-                          <span class="s">&#39;FINAL&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">finalPool</span><span class="p">}</span>
-        <span class="c">#: (:obj:`dict` &lt;:obj:`str`, \</span>
-        <span class="c">#:  :class:`nxswriter.ThreadPool.ThreadPool`&gt; ) \</span>
-        <span class="c">#:     collection of thread pool with triggered STEP elements</span>
+        <span class="c1">#: (:obj:`dict` \</span>
+        <span class="c1">#:  &lt;:obj:`str`, :class:`nxswriter.ThreadPool.ThreadPool`&gt; ) \</span>
+        <span class="c1">#:  map of pool names to related classes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__poolMap</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;INIT&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">initPool</span><span class="p">,</span>
+                          <span class="s1">&#39;STEP&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepPool</span><span class="p">,</span>
+                          <span class="s1">&#39;FINAL&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">finalPool</span><span class="p">}</span>
+        <span class="c1">#: (:obj:`dict` &lt;:obj:`str`, \</span>
+        <span class="c1">#:  :class:`nxswriter.ThreadPool.ThreadPool`&gt; ) \</span>
+        <span class="c1">#:     collection of thread pool with triggered STEP elements</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">triggerPools</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="c">#: (:class:`nxswriter.DecoderPool.DecoderPool`) pool with decoders</span>
+        <span class="c1">#: (:class:`nxswriter.DecoderPool.DecoderPool`) pool with decoders</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__decoders</span> <span class="o">=</span> <span class="n">decoders</span>
 
-        <span class="c">#: (:class:`nxswriter.DataSourcePool.DataSourcePool`) \</span>
-        <span class="c">#:     pool with datasources</span>
+        <span class="c1">#: (:class:`nxswriter.DataSourcePool.DataSourcePool`) \</span>
+        <span class="c1">#:     pool with datasources</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__datasources</span> <span class="o">=</span> <span class="n">datasources</span>
 
-        <span class="c">#: (:obj:`bool`) if innerparse was running</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__inner</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="c1">#: (:obj:`bool`) if innerparse was running</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__inner</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="c">#: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set</span>
+        <span class="c1">#: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span> <span class="o">=</span> <span class="n">streams</span>
 
     <span class="k">def</span> <span class="nf">__last</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -318,7 +320,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stack</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">None</span>
+            <span class="k">return</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="NexusXMLHandler.characters"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NexusXMLHandler.NexusXMLHandler.characters">[docs]</a>    <span class="k">def</span> <span class="nf">characters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; adds the tag content</span>
@@ -326,12 +328,12 @@
 <span class="sd">        :param content: partial content of the tag</span>
 <span class="sd">        :type content: :obj:`str`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inner</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inner</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__createInnerTag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__innerHandler</span><span class="o">.</span><span class="n">xml</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__inner</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__inner</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__unsupportedTag</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__last</span><span class="p">()</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-</div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__last</span><span class="p">()</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">content</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="NexusXMLHandler.startElement"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NexusXMLHandler.NexusXMLHandler.startElement">[docs]</a>    <span class="k">def</span> <span class="nf">startElement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; parses the opening tag</span>
 
@@ -340,10 +342,10 @@
 <span class="sd">        :param attrs: attribute dictionary</span>
 <span class="sd">        :type attrs: :obj:`dict` &lt;:obj:`str`, :obj:`str`&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inner</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__innerHandler</span><span class="p">,</span> <span class="s">&quot;xml&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inner</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__innerHandler</span><span class="p">,</span> <span class="s2">&quot;xml&quot;</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__createInnerTag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__innerHandler</span><span class="o">.</span><span class="n">xml</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__inner</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__inner</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__unsupportedTag</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__parser</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">withXMLinput</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__storedAttrs</span> <span class="o">=</span> <span class="n">attrs</span>
@@ -351,7 +353,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">__innerHandler</span> <span class="o">=</span> <span class="n">InnerXMLHandler</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">__parser</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__parser</span><span class="o">.</span><span class="n">setContentHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__innerHandler</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">__inner</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__inner</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">withAttr</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">elementClass</span><span class="p">[</span><span class="n">name</span><span class="p">](</span>
@@ -363,55 +365,56 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">elementClass</span><span class="p">[</span><span class="n">name</span><span class="p">](</span>
                         <span class="n">attrs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__last</span><span class="p">(),</span>
                         <span class="n">streams</span><span class="o">=</span><span class="n">StreamSet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">)))</span>
-                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__datasources</span><span class="p">,</span> <span class="s">&quot;canfail&quot;</span><span class="p">)</span> \
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__datasources</span><span class="p">,</span> <span class="s2">&quot;canfail&quot;</span><span class="p">)</span> \
                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__datasources</span><span class="o">.</span><span class="n">canfail</span> \
-                   <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s">&quot;setCanFail&quot;</span><span class="p">):</span>
+                   <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;setCanFail&quot;</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">__stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">setCanFail</span><span class="p">()</span>
-
             <span class="k">elif</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transparentTags</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">raiseUnsupportedTag</span><span class="p">:</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                            <span class="s">&quot;NexusXMLHandler::startElement() - &quot;</span>
-                            <span class="s">&quot;Unsupported tag: </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s"> &quot;</span>
-                            <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attrs</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
-                            <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                            <span class="s2">&quot;NexusXMLHandler::startElement() - &quot;</span>
+                            <span class="s2">&quot;Unsupported tag: </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2"> &quot;</span>
+                            <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">attrs</span><span class="o">.</span><span class="n">keys</span><span class="p">())),</span>
+                            <span class="n">std</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-                    <span class="k">raise</span> <span class="n">UnsupportedTagError</span><span class="p">(</span><span class="s">&quot;Unsupported tag: </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s"> &quot;</span>
-                                              <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attrs</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+                    <span class="k">raise</span> <span class="n">UnsupportedTagError</span><span class="p">(</span>
+                        <span class="s2">&quot;Unsupported tag: </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span>
+                        <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">attrs</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                        <span class="s">&quot;NexusXMLHandler::startElement() - &quot;</span>
-                        <span class="s">&quot;Unsupported tag: </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attrs</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+                        <span class="s2">&quot;NexusXMLHandler::startElement() - &quot;</span>
+                        <span class="s2">&quot;Unsupported tag: </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span>
+                        <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">attrs</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">__unsupportedTag</span> <span class="o">=</span> <span class="n">name</span>
-</div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__unsupportedTag</span> <span class="o">=</span> <span class="n">name</span></div>
+
 <div class="viewcode-block" id="NexusXMLHandler.endElement"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NexusXMLHandler.NexusXMLHandler.endElement">[docs]</a>    <span class="k">def</span> <span class="nf">endElement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; parses the closing tag</span>
 
 <span class="sd">        :param name: tag name</span>
 <span class="sd">        :type name: :obj:`str`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inner</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inner</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__createInnerTag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__innerHandler</span><span class="o">.</span><span class="n">xml</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__inner</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__inner</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__unsupportedTag</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__parser</span> \
                 <span class="ow">and</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">withXMLinput</span><span class="p">:</span>
             <span class="k">pass</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__unsupportedTag</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elementClass</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__last</span><span class="p">(),</span> <span class="s">&quot;store&quot;</span><span class="p">)</span> \
-                    <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__last</span><span class="p">()</span><span class="o">.</span><span class="n">store</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__last</span><span class="p">(),</span> <span class="s2">&quot;store&quot;</span><span class="p">)</span> \
+                    <span class="ow">and</span> <span class="n">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__last</span><span class="p">()</span><span class="o">.</span><span class="n">store</span><span class="p">):</span>
                 <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__last</span><span class="p">()</span><span class="o">.</span><span class="n">store</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">res</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">__addToPool</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__last</span><span class="p">())</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__last</span><span class="p">(),</span> <span class="s">&quot;createLink&quot;</span><span class="p">)</span> <span class="ow">and</span> \
-               <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__last</span><span class="p">()</span><span class="o">.</span><span class="n">createLink</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__reloadmode</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__last</span><span class="p">(),</span> <span class="s2">&quot;createLink&quot;</span><span class="p">)</span> <span class="ow">and</span> \
+               <span class="n">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__last</span><span class="p">()</span><span class="o">.</span><span class="n">createLink</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__reloadmode</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__last</span><span class="p">()</span><span class="o">.</span><span class="n">createLink</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__groupTypes</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
         <span class="k">elif</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transparentTags</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__unsupportedTag</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">__unsupportedTag</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
-</div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__unsupportedTag</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></div>
+
     <span class="k">def</span> <span class="nf">__addToPool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; addding to pool</span>
 
@@ -420,17 +423,17 @@
 <span class="sd">        :param task: Element with inner xml</span>
 <span class="sd">        :type task: :class:`nxswriter.Element.Element`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">trigger</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="n">strategy</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">trigger</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">strategy</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">res</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s">&quot;__iter__&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s2">&quot;__iter__&quot;</span><span class="p">):</span>
                 <span class="n">strategy</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="n">trigger</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">strategy</span> <span class="o">=</span> <span class="n">res</span>
 
-        <span class="k">if</span> <span class="n">trigger</span> <span class="ow">and</span> <span class="n">strategy</span> <span class="o">==</span> <span class="s">&#39;STEP&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">trigger</span> <span class="ow">and</span> <span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;STEP&#39;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">trigger</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">triggerPools</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">triggerPools</span><span class="p">[</span><span class="n">trigger</span><span class="p">]</span> <span class="o">=</span> <span class="n">ThreadPool</span><span class="p">(</span>
                     <span class="n">streams</span><span class="o">=</span><span class="n">StreamSet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">))</span>
@@ -445,16 +448,16 @@
 <span class="sd">        :type xml: :obj:`str`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__storedName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">withXMLinput</span><span class="p">:</span>
-            <span class="n">res</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">inner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">withXMLinput</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__storedName</span><span class="p">](</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__storedAttrs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__last</span><span class="p">(),</span>
                 <span class="n">streams</span><span class="o">=</span><span class="n">StreamSet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">))</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">inner</span><span class="p">,</span> <span class="s">&quot;setDataSources&quot;</span><span class="p">)</span> \
-                    <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="n">inner</span><span class="o">.</span><span class="n">setDataSources</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">inner</span><span class="p">,</span> <span class="s2">&quot;setDataSources&quot;</span><span class="p">)</span> \
+                    <span class="ow">and</span> <span class="n">callable</span><span class="p">(</span><span class="n">inner</span><span class="o">.</span><span class="n">setDataSources</span><span class="p">):</span>
                 <span class="n">inner</span><span class="o">.</span><span class="n">setDataSources</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__datasources</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">inner</span><span class="p">,</span> <span class="s">&quot;store&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="n">inner</span><span class="o">.</span><span class="n">store</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">inner</span><span class="p">,</span> <span class="s2">&quot;store&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">callable</span><span class="p">(</span><span class="n">inner</span><span class="o">.</span><span class="n">store</span><span class="p">):</span>
                 <span class="n">res</span> <span class="o">=</span> <span class="n">inner</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">xml</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__json</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">inner</span><span class="p">,</span> <span class="s">&quot;setDecoders&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="n">inner</span><span class="o">.</span><span class="n">setDecoders</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">inner</span><span class="p">,</span> <span class="s2">&quot;setDecoders&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">callable</span><span class="p">(</span><span class="n">inner</span><span class="o">.</span><span class="n">setDecoders</span><span class="p">):</span>
                 <span class="n">inner</span><span class="o">.</span><span class="n">setDecoders</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__decoders</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">res</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__addToPool</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">inner</span><span class="p">)</span>
@@ -466,7 +469,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stack</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">FElement</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">EFile</span><span class="p">):</span>
-                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">h5Object</span><span class="p">,</span> <span class="s">&quot;close&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">h5Object</span><span class="o">.</span><span class="n">close</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">h5Object</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">callable</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">h5Object</span><span class="o">.</span><span class="n">close</span><span class="p">):</span>
                     <span class="n">s</span><span class="o">.</span><span class="n">h5Object</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
 </pre></div>
 
@@ -484,7 +487,7 @@
         &copy; Copyright 2012-2017 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;
 
 GNU GENERAL PUBLIC LICENSE, version 3.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.<br/>
     </p>
   </div>
 </footer>

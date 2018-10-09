@@ -5,18 +5,18 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nxswriter.TangoDataWriter &mdash; NXSDataWriter 2.15.0 documentation</title>
+    <title>nxswriter.TangoDataWriter &#8212; NXSDataWriter 2.21.1 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.15.0',
+        VERSION:     '2.21.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,9 +27,11 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.15.0 documentation" href="../../index.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="NXSDataWriter 2.21.1 documentation" href="../../index.html" />
     <link rel="up" title="nxswriter" href="../nxswriter.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -37,7 +39,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -50,7 +52,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.15</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.21</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -146,62 +148,88 @@
     <div class="col-md-12 content">
       
   <h1>Source code for nxswriter.TangoDataWriter</h1><div class="highlight"><pre>
-<span class="c">#!/usr/bin/env python</span>
-<span class="c">#   This file is part of nexdatas - Tango Server for NeXus data writer</span>
-<span class="c">#</span>
-<span class="c">#    Copyright (C) 2012-2017 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;</span>
-<span class="c">#</span>
-<span class="c">#    nexdatas is free software: you can redistribute it and/or modify</span>
-<span class="c">#    it under the terms of the GNU General Public License as published by</span>
-<span class="c">#    the Free Software Foundation, either version 3 of the License, or</span>
-<span class="c">#    (at your option) any later version.</span>
-<span class="c">#</span>
-<span class="c">#    nexdatas is distributed in the hope that it will be useful,</span>
-<span class="c">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="c">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-<span class="c">#    GNU General Public License for more details.</span>
-<span class="c">#</span>
-<span class="c">#    You should have received a copy of the GNU General Public License</span>
-<span class="c">#    along with nexdatas.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
-<span class="c">#</span>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">#   This file is part of nexdatas - Tango Server for NeXus data writer</span>
+<span class="c1">#</span>
+<span class="c1">#    Copyright (C) 2012-2017 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;</span>
+<span class="c1">#</span>
+<span class="c1">#    nexdatas is free software: you can redistribute it and/or modify</span>
+<span class="c1">#    it under the terms of the GNU General Public License as published by</span>
+<span class="c1">#    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1">#    (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1">#    nexdatas is distributed in the hope that it will be useful,</span>
+<span class="c1">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#    GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#    You should have received a copy of the GNU General Public License</span>
+<span class="c1">#    along with nexdatas.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
 
 <span class="sd">&quot;&quot;&quot; Tango Data Writer implementation &quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">.NexusXMLHandler</span> <span class="kn">import</span> <span class="n">NexusXMLHandler</span>
-<span class="kn">from</span> <span class="nn">.FetchNameHandler</span> <span class="kn">import</span> <span class="n">FetchNameHandler</span>
-<span class="kn">from</span> <span class="nn">.StreamSet</span> <span class="kn">import</span> <span class="n">StreamSet</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">FileWriter</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 
-
-<span class="n">WRITERS</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">PNIWriter</span>
-    <span class="n">WRITERS</span><span class="p">[</span><span class="s">&quot;pni&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">PNIWriter</span>
-<span class="k">except</span><span class="p">:</span>
-    <span class="k">pass</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">H5PYWriter</span>
-    <span class="n">WRITERS</span><span class="p">[</span><span class="s">&quot;h5py&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">H5PYWriter</span>
-<span class="k">except</span><span class="p">:</span>
-    <span class="k">pass</span>
-
-
-<span class="kn">from</span> <span class="nn">xml</span> <span class="kn">import</span> <span class="n">sax</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">cStringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
-
+<span class="kn">from</span> <span class="nn">xml</span> <span class="k">import</span> <span class="n">sax</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">gc</span>
 
-<span class="kn">from</span> <span class="nn">.H5Elements</span> <span class="kn">import</span> <span class="n">EFile</span>
-<span class="kn">from</span> <span class="nn">.DecoderPool</span> <span class="kn">import</span> <span class="n">DecoderPool</span>
-<span class="kn">from</span> <span class="nn">.DataSourcePool</span> <span class="kn">import</span> <span class="n">DataSourcePool</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">cStringIO</span> <span class="k">import</span> <span class="n">StringIO</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
+
+<span class="kn">from</span> <span class="nn">.NexusXMLHandler</span> <span class="k">import</span> <span class="n">NexusXMLHandler</span>
+<span class="kn">from</span> <span class="nn">.FetchNameHandler</span> <span class="k">import</span> <span class="n">FetchNameHandler</span>
+<span class="kn">from</span> <span class="nn">.StreamSet</span> <span class="k">import</span> <span class="n">StreamSet</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">FileWriter</span>
+
+<span class="kn">from</span> <span class="nn">.H5Elements</span> <span class="k">import</span> <span class="n">EFile</span>
+<span class="kn">from</span> <span class="nn">.DecoderPool</span> <span class="k">import</span> <span class="n">DecoderPool</span>
+<span class="kn">from</span> <span class="nn">.DataSourcePool</span> <span class="k">import</span> <span class="n">DataSourcePool</span>
+
+
+<span class="n">WRITERS</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">PNIWriter</span>
+    <span class="n">WRITERS</span><span class="p">[</span><span class="s2">&quot;pni&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">PNIWriter</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">H5PYWriter</span>
+    <span class="n">WRITERS</span><span class="p">[</span><span class="s2">&quot;h5py&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">H5PYWriter</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">H5CppWriter</span>
+    <span class="n">WRITERS</span><span class="p">[</span><span class="s2">&quot;h5cpp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">H5CppWriter</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="k">pass</span>
+<span class="n">DEFAULTWRITERS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;pni&quot;</span><span class="p">,</span> <span class="s2">&quot;h5py&quot;</span><span class="p">,</span> <span class="s2">&quot;h5cpp&quot;</span><span class="p">]</span>
+
+
+<span class="c1">#: (:obj:`bool`) PyTango bug #213 flag related to EncodedAttributes in python3</span>
+<span class="n">PYTG_BUG_213</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">PyTango</span>
+        <span class="n">PYTGMAJOR</span><span class="p">,</span> <span class="n">PYTGMINOR</span><span class="p">,</span> <span class="n">PYTGPATCH</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">PyTango</span><span class="o">.</span><span class="n">__version__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">PYTGMAJOR</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">PYTGMAJOR</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">PYTGMINOR</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">PYTG_BUG_213</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">elif</span> <span class="n">PYTGMINOR</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">PYTGPATCH</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="n">PYTG_BUG_213</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">PYTG_BUG_213</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
 
 
 <div class="viewcode-block" id="TangoDataWriter"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoDataWriter.TangoDataWriter">[docs]</a><span class="k">class</span> <span class="nc">TangoDataWriter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -209,84 +237,95 @@
     <span class="sd">&quot;&quot;&quot; NeXuS data writer</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; constructor</span>
 
 <span class="sd">        :brief: It initialize the data writer for the H5 output file</span>
 <span class="sd">        :param server: Tango server</span>
 <span class="sd">        :type server: :class:`PyTango.Device_4Impl`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c">#: (:obj:`str`) output file name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fileName</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
-        <span class="c">#: (:obj:`str`) output file name prefix</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__fileprefix</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
-        <span class="c">#: (:obj:`str`) output file name extension</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__fileext</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
-        <span class="c">#: (:obj:`dict` &lt;:obj:`str` , :obj:`any`&gt;) open file parameters</span>
+        <span class="c1">#: (:obj:`str`) output file name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fileName</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="c1">#: (:obj:`str`) output file name prefix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__fileprefix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="c1">#: (:obj:`str`) output file name extension</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__fileext</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="c1">#: (:obj:`dict` &lt;:obj:`str` , :obj:`any`&gt;) open file parameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__pars</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="c">#: (:class:`PyTango.Device_4Impl`) Tango server</span>
+        <span class="c1">#: (:class:`PyTango.Device_4Impl`) Tango server</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__server</span> <span class="o">=</span> <span class="n">server</span>
-        <span class="c">#: (:obj:`str`) XML string with file settings</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__xmlsettings</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
-        <span class="c">#: (:obj:`str`) global JSON string with data records</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__json</span> <span class="o">=</span> <span class="s">&quot;{}&quot;</span>
-        <span class="c">#: (:obj:`int`) maximal number of threads</span>
+        <span class="c1">#: (:obj:`str`) XML string with file settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__xmlsettings</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="c1">#: (:obj:`str`) global JSON string with data records</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__json</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span>
+        <span class="c1">#: (:obj:`int`) maximal number of threads</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">numberOfThreads</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="c">#        self.numberOfThreads = 1</span>
+<span class="c1">#        self.numberOfThreads = 1</span>
 
-        <span class="c">#: (:class:`ThreadPool.ThreadPool`) thread pool with INIT elements</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__initPool</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: (:class:`ThreadPool.ThreadPool`) thread pool with STEP elements</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__stepPool</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: (:class:`ThreadPool.ThreadPool`) thread pool with FINAL elements</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__finalPool</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: (:obj:`dict`&lt; :obj:`str`, \</span>
-        <span class="c">#:  :class:`nxswriter.ThreadPool.ThreadPool` &gt;) \</span>
-        <span class="c">#:     collection of thread pool with triggered STEP elements</span>
+        <span class="c1">#: (:class:`ThreadPool.ThreadPool`) thread pool with INIT elements</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__initPool</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: (:class:`ThreadPool.ThreadPool`) thread pool with STEP elements</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__stepPool</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: (:class:`ThreadPool.ThreadPool`) thread pool with FINAL elements</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__finalPool</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: (:obj:`dict`&lt; :obj:`str`, \</span>
+        <span class="c1">#:  :class:`nxswriter.ThreadPool.ThreadPool` &gt;) \</span>
+        <span class="c1">#:     collection of thread pool with triggered STEP elements</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__triggerPools</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="c">#: (:class:`nxswriter.FileWriter.FTGroup`) H5 file handle</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: (:class:`nxswriter.FileWriter.FTFile`) H5 file handle</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: (:class:`nxswriter.H5Elements.EFile`) element file objects</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__eFile</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1">#: (:class:`nxswriter.FileWriter.FTGroup`) H5 file handle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: (:class:`nxswriter.FileWriter.FTFile`) H5 file handle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: (:class:`nxswriter.H5Elements.EFile`) element file objects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__eFile</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: (:obj:`bool`) default value of canfail flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__defaultCanFail</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="c">#: (:obj:`str`) writer type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">writer</span> <span class="o">=</span> <span class="s">&quot;pni&quot;</span> <span class="k">if</span> <span class="s">&quot;pni&quot;</span> <span class="ow">in</span> <span class="n">WRITERS</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="s">&quot;h5py&quot;</span>
+        <span class="c1">#: (:obj:`str`) writer type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">writer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">wr</span> <span class="ow">in</span> <span class="n">DEFAULTWRITERS</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">wr</span> <span class="ow">in</span> <span class="n">WRITERS</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">writer</span> <span class="o">=</span> <span class="n">wr</span>
+                <span class="k">break</span>
 
-        <span class="c">#: (:obj:`int`) steps per file</span>
+        <span class="c1">#: (:obj:`int`) steps per file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stepsperfile</span> <span class="o">=</span> <span class="mi">0</span>
 
-        <span class="c">#: (:obj:`int`) current file id</span>
+        <span class="c1">#: (:obj:`int`) current file id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__currentfileid</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c">#: (:class:`nxswriter.DecoderPool.DecoderPool`) pool with decoders</span>
+        <span class="c1">#: (:class:`nxswriter.DecoderPool.DecoderPool`) pool with decoders</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__decoders</span> <span class="o">=</span> <span class="n">DecoderPool</span><span class="p">()</span>
 
-        <span class="c">#: (:class:`nxswriter.DataSourcePool.DataSourcePool`) \</span>
-        <span class="c">#:      pool with datasources</span>
+        <span class="c1">#: (:class:`nxswriter.DataSourcePool.DataSourcePool`) \</span>
+        <span class="c1">#:      pool with datasources</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__datasources</span> <span class="o">=</span> <span class="n">DataSourcePool</span><span class="p">()</span>
 
-        <span class="c">#: (:class:`nxswriter.FetchNameHandler.FetchNameHandler`) \</span>
-        <span class="c">#:       group name parser</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__fetcher</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1">#: (:class:`nxswriter.FetchNameHandler.FetchNameHandler`) \</span>
+        <span class="c1">#:       group name parser</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__fetcher</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="c">#: (:obj:`str`) adding logs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">addingLogs</span> <span class="o">=</span> <span class="bp">True</span>
-        <span class="c">#: (:obj:`int`) counter for open entries</span>
+        <span class="c1">#: (:obj:`str`) adding logs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addingLogs</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1">#: (:obj:`int`) counter for open entries</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__entryCounter</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c">#: (:class:`nxswriter.FileWriter.FTGroup`) group with Nexus log Info</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__logGroup</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1">#: (:class:`nxswriter.FileWriter.FTGroup`) group with Nexus log Info</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__logGroup</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="c">#: (:obj:`list` &lt; :obj:`str`&gt;) file names</span>
+        <span class="c1">#: (:obj:`list` &lt; :obj:`str`&gt;) file names</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__filenames</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="c">#: (:obj:`dict` &lt; :obj:`str`, :obj:`str`&gt;) file time stamps</span>
+        <span class="c1">#: (:obj:`dict` &lt; :obj:`str`, :obj:`str`&gt;) file time stamps</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__filetimes</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="c">#: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set</span>
+        <span class="c1">#: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span> <span class="o">=</span> <span class="n">StreamSet</span><span class="p">(</span><span class="n">server</span><span class="p">)</span>
 
-        <span class="c">#: (:obj:`bool`) skip acquisition flag</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">skipacquisition</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="c1">#: (:obj:`bool`) skip acquisition flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skipacquisition</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">PYTG_BUG_213</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;TangoDataWriter::TangoDataWriter() - &quot;</span>
+                <span class="s2">&quot;Reading Encoded Attributes for python3 and PyTango &lt; 9.2.5&quot;</span>
+                <span class="s2">&quot; is not supported &quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__setWriter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">writer</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; set method for  writer module name</span>
@@ -294,11 +333,13 @@
 <span class="sd">        :param jsonstring: value of  writer module name</span>
 <span class="sd">        :type jsonstring: :obj:`str`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="s">&#39;?&#39;</span> <span class="ow">in</span> <span class="n">writer</span><span class="p">:</span>
-            <span class="n">writer</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">writer</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;?&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;?&#39;</span> <span class="ow">in</span> <span class="n">writer</span><span class="p">:</span>
+            <span class="n">writer</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">writer</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;?&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">writer</span><span class="p">:</span>
-            <span class="n">writer</span> <span class="o">=</span> <span class="s">&quot;pni&quot;</span> <span class="k">if</span> <span class="s">&quot;pni&quot;</span> <span class="ow">in</span> <span class="n">WRITERS</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="s">&quot;h5py&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">writer</span> <span class="o">=</span> <span class="n">writer</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">wr</span> <span class="ow">in</span> <span class="n">DEFAULTWRITERS</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">wr</span> <span class="ow">in</span> <span class="n">WRITERS</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">writer</span> <span class="o">=</span> <span class="n">wr</span>
+                    <span class="k">break</span>
         <span class="n">wrmodule</span> <span class="o">=</span> <span class="n">WRITERS</span><span class="p">[</span><span class="n">writer</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
         <span class="n">FileWriter</span><span class="o">.</span><span class="n">setwriter</span><span class="p">(</span><span class="n">wrmodule</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">wrmodule</span>
@@ -319,9 +360,31 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__datasources</span><span class="o">.</span><span class="n">canfail</span> <span class="o">=</span> <span class="n">canfail</span>
 
-    <span class="c">#: the global can fail flag</span>
+    <span class="c1">#: the global can fail flag</span>
     <span class="n">canfail</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">__getCanFail</span><span class="p">,</span> <span class="n">__setCanFail</span><span class="p">,</span>
-                       <span class="n">doc</span><span class="o">=</span><span class="s">&#39;(:obj:`bool`) the global can fail flag&#39;</span><span class="p">)</span>
+                       <span class="n">doc</span><span class="o">=</span><span class="s1">&#39;(:obj:`bool`) the global can fail flag&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getDefaultCanFail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; get method for the global can fail flag</span>
+
+<span class="sd">        :returns: global can fail flag</span>
+<span class="sd">        :rtype: :obj:`bool`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__defaultCanFail</span>
+
+    <span class="k">def</span> <span class="nf">__setDefaultCanFail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canfail</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; set method for the global can fail flag</span>
+
+<span class="sd">        :param canfail: the global can fail flag</span>
+<span class="sd">        :type canfail: :obj:`bool`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__defaultCanFail</span> <span class="o">=</span> <span class="n">canfail</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__datasources</span><span class="o">.</span><span class="n">canfail</span> <span class="o">=</span> <span class="n">canfail</span>
+
+    <span class="c1">#: the global can fail flag</span>
+    <span class="n">defaultCanFail</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="n">__getDefaultCanFail</span><span class="p">,</span> <span class="n">__setDefaultCanFail</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s1">&#39;(:obj:`bool`) default value of the global can fail flag&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__getJSON</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; get method for jsonrecord attribute</span>
@@ -348,9 +411,9 @@
 
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">__json</span>
 
-    <span class="c">#: the json data string</span>
+    <span class="c1">#: the json data string</span>
     <span class="n">jsonrecord</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">__getJSON</span><span class="p">,</span> <span class="n">__setJSON</span><span class="p">,</span> <span class="n">__delJSON</span><span class="p">,</span>
-                          <span class="n">doc</span><span class="o">=</span><span class="s">&#39;(:obj:`str`) the json data string&#39;</span><span class="p">)</span>
+                          <span class="n">doc</span><span class="o">=</span><span class="s1">&#39;(:obj:`str`) the json data string&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__getCurrentFileID</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; get method for jsonrecord attribute</span>
@@ -360,9 +423,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__currentfileid</span>
 
-    <span class="c">#: the json data string</span>
+    <span class="c1">#: the json data string</span>
     <span class="n">currentfileid</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">__getCurrentFileID</span><span class="p">,</span>
-                             <span class="n">doc</span><span class="o">=</span><span class="s">&#39;(:obj:`str`) the current file id&#39;</span><span class="p">)</span>
+                             <span class="n">doc</span><span class="o">=</span><span class="s1">&#39;(:obj:`str`) the current file id&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__getXML</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; get method for xmlsettings attribute</span>
@@ -379,7 +442,10 @@
 <span class="sd">        :type xmlset: :obj:`str`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__fetcher</span> <span class="o">=</span> <span class="n">FetchNameHandler</span><span class="p">(</span><span class="n">streams</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">)</span>
-        <span class="n">sax</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">xmlset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__fetcher</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,):</span>
+            <span class="n">sax</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">xmlset</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">__fetcher</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sax</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">xmlset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__fetcher</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__xmlsettings</span> <span class="o">=</span> <span class="n">xmlset</span>
 
     <span class="k">def</span> <span class="nf">__delXML</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -387,9 +453,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">__xmlsettings</span>
 
-    <span class="c">#: the xmlsettings</span>
+    <span class="c1">#: the xmlsettings</span>
     <span class="n">xmlsettings</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">__getXML</span><span class="p">,</span> <span class="n">__setXML</span><span class="p">,</span> <span class="n">__delXML</span><span class="p">,</span>
-                           <span class="n">doc</span><span class="o">=</span><span class="s">&#39;(:obj:`str`) the xml settings&#39;</span><span class="p">)</span>
+                           <span class="n">doc</span><span class="o">=</span><span class="s1">&#39;(:obj:`str`) the xml settings&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TangoDataWriter.getFile"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoDataWriter.TangoDataWriter.getFile">[docs]</a>    <span class="k">def</span> <span class="nf">getFile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; the H5 file handle</span>
@@ -397,8 +463,8 @@
 <span class="sd">        :returns: the H5 file handle</span>
 <span class="sd">        :rtype: :class:`nxswriter.FileWriter.FTFile`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span>
-</div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span></div>
+
 <div class="viewcode-block" id="TangoDataWriter.openFile"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoDataWriter.TangoDataWriter.openFile">[docs]</a>    <span class="k">def</span> <span class="nf">openFile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; the H5 file opening</span>
 
@@ -409,23 +475,23 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">closeFile</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s">&quot;TangoDataWriter::openFile() - File cannot be closed&quot;</span><span class="p">)</span>
+                <span class="s2">&quot;TangoDataWriter::openFile() - File cannot be closed&quot;</span><span class="p">)</span>
 
         <span class="n">wrmodule</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__setWriter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">writer</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__eFile</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__initPool</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__stepPool</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__finalPool</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__eFile</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__initPool</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__stepPool</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__finalPool</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__triggerPools</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__currentfileid</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">__pars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getParams</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">writer</span><span class="p">)</span>
         <span class="n">pars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__pars</span><span class="p">)</span>
-        <span class="n">pars</span><span class="p">[</span><span class="s">&quot;writer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wrmodule</span>
+        <span class="n">pars</span><span class="p">[</span><span class="s2">&quot;writer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wrmodule</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fileName</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="o">=</span> <span class="n">FileWriter</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">fileName</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">pars</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fileName</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">pars</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="o">=</span> <span class="n">FileWriter</span><span class="o">.</span><span class="n">create_file</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">fileName</span><span class="p">,</span> <span class="o">**</span><span class="n">pars</span><span class="p">)</span>
@@ -435,34 +501,34 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span><span class="o">.</span><span class="n">stepsperfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepsperfile</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span><span class="o">.</span><span class="n">currentfileid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__currentfileid</span>
 
-        <span class="c">#: element file objects</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__eFile</span> <span class="o">=</span> <span class="n">EFile</span><span class="p">([],</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span><span class="p">)</span>
+        <span class="c1">#: element file objects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__eFile</span> <span class="o">=</span> <span class="n">EFile</span><span class="p">([],</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">addingLogs</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;nexus_logs&quot;</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;nexus_logs&quot;</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
                 <span class="n">ngroup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span>
-                    <span class="n">name</span><span class="p">,</span> <span class="s">&quot;NXcollection&quot;</span><span class="p">)</span>
+                    <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;NXcollection&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">ngroup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;configuration&quot;</span>
-            <span class="n">error</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;configuration&quot;</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="n">cname</span> <span class="o">=</span> <span class="n">name</span>
             <span class="k">while</span> <span class="n">error</span><span class="p">:</span>
                 <span class="n">cname</span> <span class="o">=</span> <span class="n">name</span> <span class="k">if</span> <span class="n">counter</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> \
-                    <span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">_</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">counter</span><span class="p">))</span>
+                    <span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">counter</span><span class="p">))</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">ngroup</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cname</span><span class="p">):</span>
-                    <span class="n">error</span> <span class="o">=</span> <span class="bp">False</span>
+                    <span class="n">error</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__logGroup</span> <span class="o">=</span> <span class="n">ngroup</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span>
-                <span class="n">cname</span><span class="p">,</span> <span class="s">&quot;NXcollection&quot;</span><span class="p">)</span>
+                <span class="n">cname</span><span class="p">,</span> <span class="s2">&quot;NXcollection&quot;</span><span class="p">)</span>
             <span class="n">vfield</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__logGroup</span><span class="o">.</span><span class="n">create_field</span><span class="p">(</span>
-                <span class="s">&quot;python_version&quot;</span><span class="p">,</span> <span class="s">&quot;string&quot;</span><span class="p">)</span>
+                <span class="s2">&quot;python_version&quot;</span><span class="p">,</span> <span class="s2">&quot;string&quot;</span><span class="p">)</span>
             <span class="n">vfield</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">))</span>
-            <span class="n">vfield</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</div>
+            <span class="n">vfield</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
     <span class="k">def</span> <span class="nf">__getParams</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; fetch parameters from url</span>
 
@@ -472,15 +538,19 @@
 <span class="sd">        :rtype: :obj:`dict` &lt; :obj:`str`,  :obj:`str`&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pars</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="s">&#39;?&#39;</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
-            <span class="n">_</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;?&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;?&#39;</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;?&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">params</span><span class="p">:</span>
-                <span class="n">parlist</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;&amp;&#39;</span><span class="p">)</span>
+                <span class="n">parlist</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&amp;&#39;</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="n">parlist</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="s">&quot;=&quot;</span> <span class="ow">in</span> <span class="n">par</span><span class="p">:</span>
-                        <span class="n">ky</span><span class="p">,</span> <span class="n">vl</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;=&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="s2">&quot;=&quot;</span> <span class="ow">in</span> <span class="n">par</span><span class="p">:</span>
+                        <span class="n">ky</span><span class="p">,</span> <span class="n">vl</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">ky</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">ky</span> <span class="o">==</span> <span class="s2">&quot;swmr&quot;</span><span class="p">:</span>
+                                <span class="n">vl</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">vl</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span> <span class="k">else</span> <span class="kc">False</span>
                             <span class="n">pars</span><span class="p">[</span><span class="n">ky</span><span class="p">]</span> <span class="o">=</span> <span class="n">vl</span>
+        <span class="k">if</span> <span class="s2">&quot;swmr&quot;</span> <span class="ow">in</span> <span class="n">pars</span> <span class="ow">and</span> <span class="n">pars</span><span class="p">[</span><span class="s2">&quot;swmr&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="s2">&quot;libver&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pars</span><span class="p">:</span>
+            <span class="n">pars</span><span class="p">[</span><span class="s2">&quot;libver&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;latest&quot;</span>
         <span class="k">return</span> <span class="n">pars</span>
 
 <div class="viewcode-block" id="TangoDataWriter.openEntry"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoDataWriter.TangoDataWriter.openEntry">[docs]</a>    <span class="k">def</span> <span class="nf">openEntry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -490,7 +560,7 @@
 <span class="sd">                and runs the INIT pool.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmlsettings</span><span class="p">:</span>
-            <span class="c"># flag for INIT mode</span>
+            <span class="c1"># flag for INIT mode</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__datasources</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__datasources</span><span class="o">.</span><span class="n">nxroot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span>
             <span class="n">errorHandler</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">ErrorHandler</span><span class="p">()</span>
@@ -527,29 +597,30 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">skipacquisition</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__initPool</span><span class="o">.</span><span class="n">runAndWait</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__initPool</span><span class="o">.</span><span class="n">checkErrors</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">skipacquisition</span> <span class="o">=</span> <span class="bp">False</span>
-
+            <span class="bp">self</span><span class="o">.</span><span class="n">skipacquisition</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">addingLogs</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__entryCounter</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__logGroup</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">__logGroup</span><span class="o">.</span><span class="n">reopen</span><span class="p">()</span>
                 <span class="n">lfield</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__logGroup</span><span class="o">.</span><span class="n">create_field</span><span class="p">(</span>
-                    <span class="s">&quot;nexus__entry__</span><span class="si">%s</span><span class="s">_xml&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__entryCounter</span><span class="p">),</span>
-                    <span class="s">&quot;string&quot;</span><span class="p">)</span>
+                    <span class="s2">&quot;nexus__entry__</span><span class="si">%s</span><span class="s2">_xml&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__entryCounter</span><span class="p">),</span>
+                    <span class="s2">&quot;string&quot;</span><span class="p">)</span>
                 <span class="n">lfield</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xmlsettings</span><span class="p">)</span>
                 <span class="n">lfield</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="p">,</span> <span class="s">&quot;flush&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="p">,</span> <span class="s2">&quot;flush&quot;</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepsperfile</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__filenames</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__filetimes</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__nextfile</span><span class="p">()</span>
-</div>
+            <span class="k">elif</span> <span class="s2">&quot;swmr&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pars</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pars</span><span class="p">[</span><span class="s2">&quot;swmr&quot;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="o">.</span><span class="n">reopen</span><span class="p">(</span><span class="n">readonly</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">__pars</span><span class="p">)</span></div>
+
     <span class="k">def</span> <span class="nf">__nextfile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__currentfileid</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span><span class="o">.</span><span class="n">currentfileid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__currentfileid</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__filenames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">_</span><span class="si">%05d%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__filenames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%05d%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__fileprefix</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__currentfileid</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__fileext</span><span class="p">)</span>
@@ -557,7 +628,7 @@
         <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fileName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filenames</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__filetimes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__filenames</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="o">.</span><span class="n">currenttime</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filenames</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="o">.</span><span class="n">reopen</span><span class="p">(</span><span class="n">readonly</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">__pars</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="o">.</span><span class="n">reopen</span><span class="p">(</span><span class="n">readonly</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">__pars</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__previousfile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -565,7 +636,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span><span class="o">.</span><span class="n">currentfileid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__currentfileid</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__filenames</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filenames</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="o">.</span><span class="n">reopen</span><span class="p">(</span><span class="n">readonly</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">__pars</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="o">.</span><span class="n">reopen</span><span class="p">(</span><span class="n">readonly</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">__pars</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__removefile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filenames</span><span class="p">:</span>
@@ -575,9 +646,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span><span class="o">.</span><span class="n">currentfileid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__currentfileid</span>
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filenames</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="o">.</span><span class="n">reopen</span><span class="p">(</span><span class="n">readonly</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">__pars</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="o">.</span><span class="n">reopen</span><span class="p">(</span><span class="n">readonly</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">__pars</span><span class="p">)</span>
 
-<div class="viewcode-block" id="TangoDataWriter.record"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoDataWriter.TangoDataWriter.record">[docs]</a>    <span class="k">def</span> <span class="nf">record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jsonstring</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="TangoDataWriter.record"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoDataWriter.TangoDataWriter.record">[docs]</a>    <span class="k">def</span> <span class="nf">record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jsonstring</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; runs threads form the STEP pool</span>
 
 <span class="sd">        :brief: It runs threads from the STEP pool</span>
@@ -585,36 +656,36 @@
 <span class="sd">        :type jsonstring: :obj:`str`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c"># flag for STEP mode</span>
+        <span class="c1"># flag for STEP mode</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__datasources</span><span class="o">.</span><span class="n">counter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__datasources</span><span class="o">.</span><span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__datasources</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span>
 
-        <span class="n">localJSON</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">localJSON</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">jsonstring</span><span class="p">:</span>
             <span class="n">localJSON</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">jsonstring</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stepPool</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="s">&quot;TangoDataWriter::record() - Default trigger&quot;</span><span class="p">,</span>
-                <span class="bp">False</span>
+                <span class="s2">&quot;TangoDataWriter::record() - Default trigger&quot;</span><span class="p">,</span>
+                <span class="kc">False</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__stepPool</span><span class="o">.</span><span class="n">setJSON</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jsonrecord</span><span class="p">),</span> <span class="n">localJSON</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">skipacquisition</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__stepPool</span><span class="o">.</span><span class="n">runAndWait</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__stepPool</span><span class="o">.</span><span class="n">checkErrors</span><span class="p">()</span>
 
-        <span class="n">triggers</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="k">if</span> <span class="n">localJSON</span> <span class="ow">and</span> <span class="s">&#39;triggers&#39;</span> <span class="ow">in</span> <span class="n">localJSON</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">triggers</span> <span class="o">=</span> <span class="n">localJSON</span><span class="p">[</span><span class="s">&#39;triggers&#39;</span><span class="p">]</span>
+        <span class="n">triggers</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">localJSON</span> <span class="ow">and</span> <span class="s1">&#39;triggers&#39;</span> <span class="ow">in</span> <span class="n">localJSON</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">triggers</span> <span class="o">=</span> <span class="n">localJSON</span><span class="p">[</span><span class="s1">&#39;triggers&#39;</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">triggers</span><span class="p">,</span> <span class="s">&quot;__iter__&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">triggers</span><span class="p">,</span> <span class="s2">&quot;__iter__&quot;</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">pool</span> <span class="ow">in</span> <span class="n">triggers</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">pool</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__triggerPools</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                        <span class="s">&quot;TangoDataWriter:record() - Trigger: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">pool</span><span class="p">,</span>
-                        <span class="bp">False</span>
+                        <span class="s2">&quot;TangoDataWriter:record() - Trigger: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">pool</span><span class="p">,</span>
+                        <span class="kc">False</span>
                     <span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">__triggerPools</span><span class="p">[</span><span class="n">pool</span><span class="p">]</span><span class="o">.</span><span class="n">setJSON</span><span class="p">(</span>
                         <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jsonrecord</span><span class="p">),</span> <span class="n">localJSON</span><span class="p">)</span>
@@ -622,22 +693,22 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">__triggerPools</span><span class="p">[</span><span class="n">pool</span><span class="p">]</span><span class="o">.</span><span class="n">runAndWait</span><span class="p">()</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">__triggerPools</span><span class="p">[</span><span class="n">pool</span><span class="p">]</span><span class="o">.</span><span class="n">checkErrors</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="p">,</span> <span class="s">&quot;flush&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="p">,</span> <span class="s2">&quot;flush&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepsperfile</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__datasources</span><span class="o">.</span><span class="n">counter</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepsperfile</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__nextfile</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">skipacquisition</span> <span class="o">=</span> <span class="bp">False</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skipacquisition</span> <span class="o">=</span> <span class="kc">False</span></div>
+
     <span class="k">def</span> <span class="nf">__updateNXRoot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">fname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filenames</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-            <span class="s">&quot;file_name&quot;</span><span class="p">,</span> <span class="s">&quot;string&quot;</span><span class="p">,</span>
-            <span class="n">overwrite</span><span class="o">=</span><span class="bp">True</span><span class="p">)[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
+            <span class="s2">&quot;file_name&quot;</span><span class="p">,</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
         <span class="k">if</span> <span class="n">fname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filetimes</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filenames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-                <span class="s">&quot;file_time&quot;</span><span class="p">,</span> <span class="s">&quot;string&quot;</span><span class="p">,</span>
-                <span class="n">overwrite</span><span class="o">=</span><span class="bp">True</span><span class="p">)[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filetimes</span><span class="p">[</span><span class="n">fname</span><span class="p">])</span>
+                <span class="s2">&quot;file_time&quot;</span><span class="p">,</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__filetimes</span><span class="p">[</span><span class="n">fname</span><span class="p">])</span>
 
 <div class="viewcode-block" id="TangoDataWriter.closeEntry"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoDataWriter.TangoDataWriter.closeEntry">[docs]</a>    <span class="k">def</span> <span class="nf">closeEntry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; closes the data entry</span>
@@ -645,18 +716,18 @@
 <span class="sd">        :brief: It runs threads from the FINAL pool and</span>
 <span class="sd">                removes the thread pools</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># flag for FINAL mode</span>
+        <span class="c1"># flag for FINAL mode</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepsperfile</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fileName</span><span class="p">)</span>
             <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__datasources</span><span class="o">.</span><span class="n">counter</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepsperfile</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__removefile</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">__datasources</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__datasources</span><span class="o">.</span><span class="n">canfail</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__datasources</span><span class="o">.</span><span class="n">canfail</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultCanFail</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">addingLogs</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__logGroup</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__logGroup</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="c"># self.__logGroup = None</span>
+            <span class="c1"># self.__logGroup = None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__finalPool</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__finalPool</span><span class="o">.</span><span class="n">setJSON</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jsonrecord</span><span class="p">))</span>
@@ -671,19 +742,19 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">__updateNXRoot</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">skipacquisition</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__finalPool</span><span class="o">.</span><span class="n">checkErrors</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">skipacquisition</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skipacquisition</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__initPool</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__initPool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__initPool</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__initPool</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stepPool</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__stepPool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__stepPool</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__stepPool</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__finalPool</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__finalPool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__finalPool</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__finalPool</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__triggerPools</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">pool</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__triggerPools</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -693,11 +764,11 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">addingLogs</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__logGroup</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__logGroup</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="p">,</span> <span class="s">&quot;flush&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="p">,</span> <span class="s2">&quot;flush&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
-        <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
-</div>
+        <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="TangoDataWriter.closeFile"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoDataWriter.TangoDataWriter.closeFile">[docs]</a>    <span class="k">def</span> <span class="nf">closeFile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; the H5 file closing</span>
 
@@ -709,15 +780,15 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__initPool</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__initPool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__initPool</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__initPool</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stepPool</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__stepPool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__stepPool</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__stepPool</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__finalPool</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__finalPool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__finalPool</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__finalPool</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__triggerPools</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">pool</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__triggerPools</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -732,75 +803,75 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">addingLogs</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__logGroup</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__logGroup</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__eFile</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__logGroup</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__eFile</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__logGroup</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span></div></div>
 
-</div></div>
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
 
     <span class="kn">import</span> <span class="nn">time</span>
 
-    <span class="c"># Create a TDW object</span>
-    <span class="c">#: (:class:`TangoDataWriter`) instance of TangoDataWriter</span>
+    <span class="c1"># Create a TDW object</span>
+    <span class="c1">#: (:class:`TangoDataWriter`) instance of TangoDataWriter</span>
     <span class="n">tdw</span> <span class="o">=</span> <span class="n">TangoDataWriter</span><span class="p">()</span>
-    <span class="n">tdw</span><span class="o">.</span><span class="n">fileName</span> <span class="o">=</span> <span class="s">&#39;test.h5&#39;</span>
+    <span class="n">tdw</span><span class="o">.</span><span class="n">fileName</span> <span class="o">=</span> <span class="s1">&#39;test.h5&#39;</span>
 
     <span class="n">tdw</span><span class="o">.</span><span class="n">numberOfThreads</span> <span class="o">=</span> <span class="mi">1</span>
 
-    <span class="c">#: (:obj:`str`) xml file name</span>
-    <span class="n">xmlf</span> <span class="o">=</span> <span class="s">&quot;../XMLExamples/MNI.xml&quot;</span>
-    <span class="c">#    xmlf = &quot;../XMLExamples/test.xml&quot;</span>
+    <span class="c1">#: (:obj:`str`) xml file name</span>
+    <span class="n">xmlf</span> <span class="o">=</span> <span class="s2">&quot;../XMLExamples/MNI.xml&quot;</span>
+    <span class="c1">#    xmlf = &quot;../XMLExamples/test.xml&quot;</span>
 
-    <span class="k">print</span><span class="p">(</span><span class="s">&quot;usage: TangoDataWriter.py  &lt;XMLfile1&gt;  &quot;</span>
-          <span class="s">&quot;&lt;XMLfile2&gt;  ...  &lt;XMLfileN&gt;  &lt;H5file&gt;&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;usage: TangoDataWriter.py  &lt;XMLfile1&gt;  &quot;</span>
+          <span class="s2">&quot;&lt;XMLfile2&gt;  ...  &lt;XMLfileN&gt;  &lt;H5file&gt;&quot;</span><span class="p">)</span>
 
-    <span class="c">#: (:obj:`str`) No arguments</span>
+    <span class="c1">#: (:obj:`str`) No arguments</span>
     <span class="n">argc</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
         <span class="n">tdw</span><span class="o">.</span><span class="n">fileName</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="n">argc</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">&quot;opening the H5 file&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;opening the H5 file&quot;</span><span class="p">)</span>
         <span class="n">tdw</span><span class="o">.</span><span class="n">openFile</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">argc</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">xmlf</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
-            <span class="c">#: (:obj:`str`) xml string</span>
-            <span class="n">xml</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">xmlf</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="c1">#: (:obj:`str`) xml string</span>
+            <span class="n">xml</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">xmlf</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
             <span class="n">tdw</span><span class="o">.</span><span class="n">xmlsettings</span> <span class="o">=</span> <span class="n">xml</span>
 
-            <span class="k">print</span><span class="p">(</span><span class="s">&quot;opening the data entry &quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;opening the data entry &quot;</span><span class="p">)</span>
             <span class="n">tdw</span><span class="o">.</span><span class="n">openEntry</span><span class="p">()</span>
 
-            <span class="k">print</span><span class="p">(</span><span class="s">&quot;recording the H5 file&quot;</span><span class="p">)</span>
-            <span class="n">tdw</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="s">&#39;{&quot;data&quot;: {&quot;emittance_x&quot;: 0.8} , &#39;</span>
-                       <span class="s">&#39; &quot;triggers&quot;:[&quot;trigger1&quot;, &quot;trigger2&quot;] }&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;recording the H5 file&quot;</span><span class="p">)</span>
+            <span class="n">tdw</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="s1">&#39;{&quot;data&quot;: {&quot;emittance_x&quot;: 0.8} , &#39;</span>
+                       <span class="s1">&#39; &quot;triggers&quot;:[&quot;trigger1&quot;, &quot;trigger2&quot;] }&#39;</span><span class="p">)</span>
 
-            <span class="k">print</span><span class="p">(</span><span class="s">&quot;sleeping for 1s&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sleeping for 1s&quot;</span><span class="p">)</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="k">print</span><span class="p">(</span><span class="s">&quot;recording the H5 file&quot;</span><span class="p">)</span>
-            <span class="n">tdw</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="s">&#39;{&quot;data&quot;: {&quot;emittance_x&quot;: 1.2}, &#39;</span>
-                       <span class="s">&#39; &quot;triggers&quot;:[&quot;trigger2&quot;] }&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;recording the H5 file&quot;</span><span class="p">)</span>
+            <span class="n">tdw</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="s1">&#39;{&quot;data&quot;: {&quot;emittance_x&quot;: 1.2}, &#39;</span>
+                       <span class="s1">&#39; &quot;triggers&quot;:[&quot;trigger2&quot;] }&#39;</span><span class="p">)</span>
 
-            <span class="k">print</span><span class="p">(</span><span class="s">&quot;sleeping for 1s&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sleeping for 1s&quot;</span><span class="p">)</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="k">print</span><span class="p">(</span><span class="s">&quot;recording the H5 file&quot;</span><span class="p">)</span>
-            <span class="n">tdw</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="s">&#39;{&quot;data&quot;: {&quot;emittance_x&quot;: 1.1}  , &#39;</span>
-                       <span class="s">&#39; &quot;triggers&quot;:[&quot;trigger1&quot;] }&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;recording the H5 file&quot;</span><span class="p">)</span>
+            <span class="n">tdw</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="s1">&#39;{&quot;data&quot;: {&quot;emittance_x&quot;: 1.1}  , &#39;</span>
+                       <span class="s1">&#39; &quot;triggers&quot;:[&quot;trigger1&quot;] }&#39;</span><span class="p">)</span>
 
-            <span class="k">print</span><span class="p">(</span><span class="s">&quot;sleeping for 1s&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sleeping for 1s&quot;</span><span class="p">)</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="k">print</span><span class="p">(</span><span class="s">&quot;recording the H5 file&quot;</span><span class="p">)</span>
-            <span class="n">tdw</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="s">&#39;{&quot;data&quot;: {&quot;emittance_x&quot;: 0.7} }&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;recording the H5 file&quot;</span><span class="p">)</span>
+            <span class="n">tdw</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="s1">&#39;{&quot;data&quot;: {&quot;emittance_x&quot;: 0.7} }&#39;</span><span class="p">)</span>
 
-            <span class="k">print</span><span class="p">(</span><span class="s">&quot;closing the data entry &quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;closing the data entry &quot;</span><span class="p">)</span>
             <span class="n">tdw</span><span class="o">.</span><span class="n">closeEntry</span><span class="p">()</span>
 
-        <span class="k">print</span><span class="p">(</span><span class="s">&quot;closing the H5 file&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;closing the H5 file&quot;</span><span class="p">)</span>
         <span class="n">tdw</span><span class="o">.</span><span class="n">closeFile</span><span class="p">()</span>
 </pre></div>
 
@@ -818,7 +889,7 @@
         &copy; Copyright 2012-2017 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;
 
 GNU GENERAL PUBLIC LICENSE, version 3.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.<br/>
     </p>
   </div>
 </footer>

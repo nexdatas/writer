@@ -5,18 +5,18 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to NXSDataWriter’s documentation! &mdash; NXSDataWriter 2.15.0 documentation</title>
+    <title>Welcome to NXSDataWriter’s documentation! &#8212; NXSDataWriter 2.21.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.3.6/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.15.0',
+        VERSION:     '2.21.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,9 +27,11 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.15.0 documentation" href="#" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="NXSDataWriter 2.21.1 documentation" href="#" />
     <link rel="next" title="nxswriter package" href="nxswriter.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -37,7 +39,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -50,7 +52,7 @@
         </button>
         <a class="navbar-brand" href="#">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.15</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.21</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -137,7 +139,7 @@
               
                 
   <li>
-    <a href="nxswriter.html" title="Next Chapter: nxswriter package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">nxswriter packag... &raquo;</span>
+    <a href="nxswriter.html" title="Next Chapter: nxswriter package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">nxswriter pac... &raquo;</span>
     </a>
   </li>
               
@@ -193,7 +195,7 @@ various databases as well as passed by a user client via JSON strings.</p>
 <div class="line"><a class="reference external" href="https://github.com/nexdatas/writer">https://github.com/nexdatas/writer</a></div>
 </div>
 <p>Extract sources and run</p>
-<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> python setup.py install
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> python setup.py install
 </pre></div>
 </div>
 </div>
@@ -201,26 +203,26 @@ various databases as well as passed by a user client via JSON strings.</p>
 <h3>Debian packages<a class="headerlink" href="#debian-packages" title="Permalink to this headline">¶</a></h3>
 <p>Debian Jessie (and Wheezy) packages can be found in the HDRI repository.</p>
 <p>To install the debian packages, add the PGP repository key</p>
-<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> sudo su
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> sudo su
 <span class="gp">$</span> wget -q -O - http://repos.pni-hdri.de/debian_repo.pub.gpg <span class="p">|</span> apt-key add -
 </pre></div>
 </div>
 <p>and then download the corresponding source list</p>
-<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> <span class="nb">cd</span> /etc/apt/sources.list.d
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> <span class="nb">cd</span> /etc/apt/sources.list.d
 <span class="gp">$</span> wget http://repos.pni-hdri.de/jessie-pni-hdri.list
 </pre></div>
 </div>
 <p>Finally,</p>
-<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> apt-get update
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> apt-get update
 <span class="gp">$</span> apt-get install python-nxswriter
 </pre></div>
 </div>
 <p>To instal other NexDaTaS packages</p>
-<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> apt-get install python-nxstools nxsconfigserver-db python-nxsconfigserver nxsconfigtool
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> apt-get install python-nxstools nxsconfigserver-db python-nxsconfigserver nxsconfigtool
 </pre></div>
 </div>
 <p>and</p>
-<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> apt-get install python-nxsrecselector nxselector python-sardana-nxsrecorder
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> apt-get install python-nxsrecselector nxselector python-sardana-nxsrecorder
 </pre></div>
 </div>
 <p>for Component Selector and Sardana related packages.</p>
@@ -228,7 +230,7 @@ various databases as well as passed by a user client via JSON strings.</p>
 <div class="section" id="setting-nexus-writer-server">
 <h3>Setting NeXus Writer Server<a class="headerlink" href="#setting-nexus-writer-server" title="Permalink to this headline">¶</a></h3>
 <p>To set up  NeXus Writer Server run</p>
-<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> nxsetup -x NXSDataWriter
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> nxsetup -x NXSDataWriter
 </pre></div>
 </div>
 <p>The <em>nxsetup</em> command comes from the <strong>python-nxstools</strong> package.</p>
@@ -237,7 +239,7 @@ various databases as well as passed by a user client via JSON strings.</p>
 <div class="section" id="installation-from-sources">
 <h2>Installation from sources<a class="headerlink" href="#installation-from-sources" title="Permalink to this headline">¶</a></h2>
 <p>Extract sources and run</p>
-<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> python setup.py install
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> python setup.py install
 </pre></div>
 </div>
 </div>
@@ -246,84 +248,84 @@ various databases as well as passed by a user client via JSON strings.</p>
 <p>In order to use Nexus Data Server one has to write a client code. Some simple client codes
 are in the  nexdatas repository. In this section we add some
 comments related to the client code.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># To use the Tango Server we must import the PyTango module and</span>
-<span class="c"># create DeviceProxy for the server.</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># To use the Tango Server we must import the PyTango module and</span>
+<span class="c1"># create DeviceProxy for the server.</span>
 
 <span class="kn">import</span> <span class="nn">PyTango</span>
 
-<span class="n">device</span> <span class="o">=</span> <span class="s">&quot;p09/tdw/r228&quot;</span>
+<span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;p09/tdw/r228&quot;</span>
 <span class="n">dpx</span> <span class="o">=</span> <span class="n">PyTango</span><span class="o">.</span><span class="n">DeviceProxy</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 <span class="n">dpx</span><span class="o">.</span><span class="n">set_timeout_millis</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
 
 <span class="n">dpx</span><span class="o">.</span><span class="n">Init</span><span class="p">()</span>
 
-<span class="c"># Here device corresponds to a name of our Nexus Data Server.</span>
-<span class="c"># The Init() method resets the state of the server.</span>
+<span class="c1"># Here device corresponds to a name of our Nexus Data Server.</span>
+<span class="c1"># The Init() method resets the state of the server.</span>
 
-<span class="n">dpx</span><span class="o">.</span><span class="n">FileName</span> <span class="o">=</span> <span class="s">&quot;test.h5&quot;</span>
+<span class="n">dpx</span><span class="o">.</span><span class="n">FileName</span> <span class="o">=</span> <span class="s2">&quot;test.h5&quot;</span>
 <span class="n">dpx</span><span class="o">.</span><span class="n">OpenFile</span><span class="p">()</span>
 
-<span class="c"># We set the name of the output HDF5 file and open it.</span>
+<span class="c1"># We set the name of the output HDF5 file and open it.</span>
 
-<span class="c"># Now we are ready to pass the XML settings describing a structure of</span>
-<span class="c"># the output file as well as defining a way of data storing.</span>
-<span class="c"># Examples of the XMLSettings can be found in the XMLExamples directory.</span>
+<span class="c1"># Now we are ready to pass the XML settings describing a structure of</span>
+<span class="c1"># the output file as well as defining a way of data storing.</span>
+<span class="c1"># Examples of the XMLSettings can be found in the XMLExamples directory.</span>
 
-<span class="n">xml</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;test.xml&quot;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">xml</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;test.xml&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 <span class="n">dpx</span><span class="o">.</span><span class="n">XMLSettings</span> <span class="o">=</span> <span class="n">xml</span>
 
-<span class="n">dpx</span><span class="o">.</span><span class="n">JSONRecord</span> <span class="o">=</span> <span class="s">&#39;{&quot;data&quot;: {&quot;parameterA&quot;:0.2},</span>
-                      <span class="s">&quot;decoders&quot;</span><span class="p">:{</span><span class="s">&quot;DESY2D&quot;</span><span class="p">:</span><span class="s">&quot;desydecoders.desy2Ddec.desy2d&quot;</span><span class="p">},</span>
-                      <span class="s">&quot;datasources&quot;</span><span class="p">:{</span>
-                           <span class="s">&quot;MCLIENT&quot;</span><span class="p">:</span><span class="s">&quot;sources.DataSources.LocalClientSource&quot;</span><span class="p">}</span>
-<span class="p">}</span><span class="s">&#39;</span>
+<span class="n">dpx</span><span class="o">.</span><span class="n">JSONRecord</span> <span class="o">=</span> <span class="s1">&#39;{&quot;data&quot;: {&quot;parameterA&quot;:0.2},</span>
+                      <span class="s2">&quot;decoders&quot;</span><span class="p">:{</span><span class="s2">&quot;DESY2D&quot;</span><span class="p">:</span><span class="s2">&quot;desydecoders.desy2Ddec.desy2d&quot;</span><span class="p">},</span>
+                      <span class="s2">&quot;datasources&quot;</span><span class="p">:{</span>
+                           <span class="s2">&quot;MCLIENT&quot;</span><span class="p">:</span><span class="s2">&quot;sources.DataSources.LocalClientSource&quot;</span><span class="p">}</span>
+<span class="p">}</span><span class="s1">&#39;</span>
 
 <span class="n">dpx</span><span class="o">.</span><span class="n">OpenEntry</span><span class="p">()</span>
 
-<span class="c"># We read our XML settings settings from a file and pass them to the server via</span>
-<span class="c"># the XMLSettings attribute. Then we open an entry group related to the XML</span>
-<span class="c"># configuration. Optionally, we can also set JSONRecord, i.e. an attribute</span>
-<span class="c"># which contains a global JSON string with data needed to store during opening</span>
-<span class="c"># the entry and also other stages of recording. If external decoder for</span>
-<span class="c"># DevEncoded data is need one can registred it passing its packages and</span>
-<span class="c"># class names in JSONRecord,</span>
-<span class="c"># e.g. &quot;desy2d&quot; class of &quot;DESY2D&quot; label in &quot;desydecoders.desy2Ddec&quot; package.</span>
-<span class="c"># Similarly making use of &quot;datasources&quot; records of the JSON string one can</span>
-<span class="c"># registred additional datasources. The OpenEntry method stores data defined</span>
-<span class="c"># in the XML string with strategy=INIT.</span>
-<span class="c"># The JSONRecord attribute can be changed during recording our data.</span>
+<span class="c1"># We read our XML settings settings from a file and pass them to the server via</span>
+<span class="c1"># the XMLSettings attribute. Then we open an entry group related to the XML</span>
+<span class="c1"># configuration. Optionally, we can also set JSONRecord, i.e. an attribute</span>
+<span class="c1"># which contains a global JSON string with data needed to store during opening</span>
+<span class="c1"># the entry and also other stages of recording. If external decoder for</span>
+<span class="c1"># DevEncoded data is need one can registred it passing its packages and</span>
+<span class="c1"># class names in JSONRecord,</span>
+<span class="c1"># e.g. &quot;desy2d&quot; class of &quot;DESY2D&quot; label in &quot;desydecoders.desy2Ddec&quot; package.</span>
+<span class="c1"># Similarly making use of &quot;datasources&quot; records of the JSON string one can</span>
+<span class="c1"># registred additional datasources. The OpenEntry method stores data defined</span>
+<span class="c1"># in the XML string with strategy=INIT.</span>
+<span class="c1"># The JSONRecord attribute can be changed during recording our data.</span>
 
-<span class="c"># After finalization of the configuration process we can start recording</span>
-<span class="c"># the main experiment data in a STEP mode.</span>
+<span class="c1"># After finalization of the configuration process we can start recording</span>
+<span class="c1"># the main experiment data in a STEP mode.</span>
 
-<span class="n">dpx</span><span class="o">.</span><span class="n">Record</span><span class="p">(</span><span class="s">&#39;{&quot;data&quot;: {&quot;p09/counter/exp.01&quot;:0.1, &quot;p09/counter/exp.02&quot;:1.1}}&#39;</span><span class="p">)</span>
+<span class="n">dpx</span><span class="o">.</span><span class="n">Record</span><span class="p">(</span><span class="s1">&#39;{&quot;data&quot;: {&quot;p09/counter/exp.01&quot;:0.1, &quot;p09/counter/exp.02&quot;:1.1}}&#39;</span><span class="p">)</span>
 
-<span class="c"># Every time we call the Record method all nexus fields defined with</span>
-<span class="c"># strategy=STEP are extended by one record unit and the assigned to them data</span>
-<span class="c"># is stored. As the method argument we pass a local JSON string with the client</span>
-<span class="c"># data. To record the client data one can also use the global JSONRecord string.</span>
-<span class="c"># Contrary to the global JSON string the local one is only</span>
-<span class="c"># valid during one record step.</span>
+<span class="c1"># Every time we call the Record method all nexus fields defined with</span>
+<span class="c1"># strategy=STEP are extended by one record unit and the assigned to them data</span>
+<span class="c1"># is stored. As the method argument we pass a local JSON string with the client</span>
+<span class="c1"># data. To record the client data one can also use the global JSONRecord string.</span>
+<span class="c1"># Contrary to the global JSON string the local one is only</span>
+<span class="c1"># valid during one record step.</span>
 
-<span class="n">dpx</span><span class="o">.</span><span class="n">Record</span><span class="p">(</span><span class="s">&#39;{&quot;data&quot;: {&quot;emittance_x&quot;: 0.1},  &quot;triggers&quot;:[&quot;trigger1&quot;, &quot;trigger2&quot;]  }&#39;</span><span class="p">)</span>
+<span class="n">dpx</span><span class="o">.</span><span class="n">Record</span><span class="p">(</span><span class="s1">&#39;{&quot;data&quot;: {&quot;emittance_x&quot;: 0.1},  &quot;triggers&quot;:[&quot;trigger1&quot;, &quot;trigger2&quot;]  }&#39;</span><span class="p">)</span>
 
-<span class="c"># If you denote in your XML configuration string some fields by additional</span>
-<span class="c"># trigger attributes you may ask the server to store your data only in specific</span>
-<span class="c"># record steps. This can be helpful if you want to store your data in</span>
-<span class="c"># asynchronous mode. To this end you define in the local JSON string a list of</span>
-<span class="c"># triggers which are used in the current record step.</span>
+<span class="c1"># If you denote in your XML configuration string some fields by additional</span>
+<span class="c1"># trigger attributes you may ask the server to store your data only in specific</span>
+<span class="c1"># record steps. This can be helpful if you want to store your data in</span>
+<span class="c1"># asynchronous mode. To this end you define in the local JSON string a list of</span>
+<span class="c1"># triggers which are used in the current record step.</span>
 
-<span class="n">dpx</span><span class="o">.</span><span class="n">JSONRecord</span> <span class="o">=</span> <span class="s">&#39;{&quot;data&quot;: {&quot;parameterB&quot;:0.3}}&#39;</span>
+<span class="n">dpx</span><span class="o">.</span><span class="n">JSONRecord</span> <span class="o">=</span> <span class="s1">&#39;{&quot;data&quot;: {&quot;parameterB&quot;:0.3}}&#39;</span>
 <span class="n">dpx</span><span class="o">.</span><span class="n">CloseEntry</span><span class="p">()</span>
 
-<span class="c"># After scanning experiment data in &#39;STEP&#39; mode we close the entry.</span>
-<span class="c"># To this end we call the CloseEntry method which also stores data defined</span>
-<span class="c"># with strategy=FINAL. Since our HDF5 file can contain many entries we can again</span>
-<span class="c"># open the entry and repeat our record procedure. If we define more than one entry</span>
-<span class="c"># in one XML setting string the defined entries are recorded parallel</span>
-<span class="c"># with the same steps.</span>
+<span class="c1"># After scanning experiment data in &#39;STEP&#39; mode we close the entry.</span>
+<span class="c1"># To this end we call the CloseEntry method which also stores data defined</span>
+<span class="c1"># with strategy=FINAL. Since our HDF5 file can contain many entries we can again</span>
+<span class="c1"># open the entry and repeat our record procedure. If we define more than one entry</span>
+<span class="c1"># in one XML setting string the defined entries are recorded parallel</span>
+<span class="c1"># with the same steps.</span>
 
-<span class="c"># Finally, we can close our output file by</span>
+<span class="c1"># Finally, we can close our output file by</span>
 
 <span class="n">dpx</span><span class="o">.</span><span class="n">CloseFile</span><span class="p">()</span>
 </pre></div>
@@ -382,9 +384,9 @@ was created by XMLFile class defined in XMLCreator/simpleXML.py.</p>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
-<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
-<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
-<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
 </ul>
 </div>
 
@@ -403,7 +405,7 @@ was created by XMLFile class defined in XMLCreator/simpleXML.py.</p>
         &copy; Copyright 2012-2017 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;
 
 GNU GENERAL PUBLIC LICENSE, version 3.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.<br/>
     </p>
   </div>
 </footer>

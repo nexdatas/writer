@@ -5,18 +5,18 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nxswriter.PNIWriter &mdash; NXSDataWriter 2.15.0 documentation</title>
+    <title>nxswriter.PNIWriter &#8212; NXSDataWriter 2.21.1 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.15.0',
+        VERSION:     '2.21.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,9 +27,11 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.15.0 documentation" href="../../index.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="NXSDataWriter 2.21.1 documentation" href="../../index.html" />
     <link rel="up" title="nxswriter" href="../nxswriter.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -37,7 +39,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -50,7 +52,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.15</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.21</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -146,33 +148,34 @@
     <div class="col-md-12 content">
       
   <h1>Source code for nxswriter.PNIWriter</h1><div class="highlight"><pre>
-<span class="c">#!/usr/bin/env python</span>
-<span class="c">#   This file is part of nexdatas - Tango Server for NeXus data writer</span>
-<span class="c">#</span>
-<span class="c">#    Copyright (C) 2012-2017 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;</span>
-<span class="c">#</span>
-<span class="c">#    nexdatas is free software: you can redistribute it and/or modify</span>
-<span class="c">#    it under the terms of the GNU General Public License as published by</span>
-<span class="c">#    the Free Software Foundation, either version 3 of the License, or</span>
-<span class="c">#    (at your option) any later version.</span>
-<span class="c">#</span>
-<span class="c">#    nexdatas is distributed in the hope that it will be useful,</span>
-<span class="c">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="c">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-<span class="c">#    GNU General Public License for more details.</span>
-<span class="c">#</span>
-<span class="c">#    You should have received a copy of the GNU General Public License</span>
-<span class="c">#    along with nexdatas.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
-<span class="c">#</span>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">#   This file is part of nexdatas - Tango Server for NeXus data writer</span>
+<span class="c1">#</span>
+<span class="c1">#    Copyright (C) 2012-2017 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;</span>
+<span class="c1">#</span>
+<span class="c1">#    nexdatas is free software: you can redistribute it and/or modify</span>
+<span class="c1">#    it under the terms of the GNU General Public License as published by</span>
+<span class="c1">#    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1">#    (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1">#    nexdatas is distributed in the hope that it will be useful,</span>
+<span class="c1">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#    GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#    You should have received a copy of the GNU General Public License</span>
+<span class="c1">#    along with nexdatas.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
 
 <span class="sd">&quot;&quot;&quot; Provides pni file writer &quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">pni.io.nx.h5</span> <span class="kn">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">pni.io.nx.h5</span> <span class="k">as</span> <span class="nn">nx</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">FileWriter</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">FileWriter</span>
 
 
-<div class="viewcode-block" id="open_file"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.open_file">[docs]</a><span class="k">def</span> <span class="nf">open_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">libver</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="open_file"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.open_file">[docs]</a><span class="k">def</span> <span class="nf">open_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">libver</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; open the new file</span>
 
 <span class="sd">    :param filename: file name</span>
@@ -184,10 +187,10 @@
 <span class="sd">    :returns: file object</span>
 <span class="sd">    :rtype: :class:`PNIFile`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">PNIFile</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">readonly</span><span class="p">),</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">PNIFile</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">readonly</span><span class="p">),</span> <span class="n">filename</span><span class="p">)</span></div>
 
-</div>
-<div class="viewcode-block" id="create_file"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.create_file">[docs]</a><span class="k">def</span> <span class="nf">create_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">libver</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="create_file"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.create_file">[docs]</a><span class="k">def</span> <span class="nf">create_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">libver</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; create a new file</span>
 
 <span class="sd">    :param filename: file name</span>
@@ -199,9 +202,9 @@
 <span class="sd">    :returns: file object</span>
 <span class="sd">    :rtype: :class:`PNIFile`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">PNIFile</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">create_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">),</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">PNIFile</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">create_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">),</span> <span class="n">filename</span><span class="p">)</span></div>
 
-</div>
+
 <div class="viewcode-block" id="link"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.link">[docs]</a><span class="k">def</span> <span class="nf">link</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; create link</span>
 
@@ -218,18 +221,32 @@
     <span class="n">lks</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">get_links</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">h5object</span><span class="p">)</span>
     <span class="n">lk</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">lks</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">el</span> <span class="o">=</span> <span class="n">PNILink</span><span class="p">(</span><span class="n">lk</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">el</span>
+    <span class="k">return</span> <span class="n">el</span></div>
 
-</div>
+
+<div class="viewcode-block" id="get_links"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.get_links">[docs]</a><span class="k">def</span> <span class="nf">get_links</span><span class="p">(</span><span class="n">parent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; get links</span>
+
+<span class="sd">    :param parent: parent object</span>
+<span class="sd">    :type parent: :class:`FTObject`</span>
+<span class="sd">    :returns: list of link objects</span>
+<span class="sd">    :returns: link object</span>
+<span class="sd">    :rtype: :obj: `list` &lt;:class:`PNILink`&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lks</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">get_links</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">h5object</span><span class="p">)</span>
+    <span class="n">links</span> <span class="o">=</span> <span class="p">[</span><span class="n">PNILink</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">lks</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">links</span></div>
+
+
 <div class="viewcode-block" id="deflate_filter"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.deflate_filter">[docs]</a><span class="k">def</span> <span class="nf">deflate_filter</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot; create deflate filter</span>
 
 <span class="sd">    :returns: deflate filter object</span>
 <span class="sd">    :rtype: :class:`PNIDeflate`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">PNIDeflate</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">deflate_filter</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">PNIDeflate</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">deflate_filter</span><span class="p">())</span></div>
 
-</div>
+
 <div class="viewcode-block" id="PNIFile"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIFile">[docs]</a><span class="k">class</span> <span class="nc">PNIFile</span><span class="p">(</span><span class="n">FileWriter</span><span class="o">.</span><span class="n">FTFile</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; file tree file</span>
@@ -243,10 +260,10 @@
 <span class="sd">        :param filename:  file name</span>
 <span class="sd">        :type filename: :obj:`str`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTFile</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-        <span class="c">#: (:obj:`str`) object nexus path</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s">&quot;path&quot;</span><span class="p">):</span>
+        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTFile</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="c1">#: (:obj:`str`) object nexus path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">h5object</span><span class="o">.</span><span class="n">path</span>
 
 <div class="viewcode-block" id="PNIFile.root"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIFile.root">[docs]</a>    <span class="k">def</span> <span class="nf">root</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -255,38 +272,38 @@
 <span class="sd">        :returns: parent object</span>
 <span class="sd">        :rtype: :class:`PNIGroup`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">PNIGroup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">root</span><span class="p">(),</span> <span class="bp">self</span><span class="p">)</span>
-</div>
+        <span class="k">return</span> <span class="n">PNIGroup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">root</span><span class="p">(),</span> <span class="bp">self</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="PNIFile.flush"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIFile.flush">[docs]</a>    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; flash the data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="PNIFile.close"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIFile.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; close file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTFile</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
     <span class="nd">@property</span>
-<div class="viewcode-block" id="PNIFile.is_valid"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIFile.is_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; check if file is valid</span>
 
 <span class="sd">        :returns: valid flag</span>
 <span class="sd">        :rtype: :obj:`bool`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">is_valid</span>
-</div>
+
     <span class="nd">@property</span>
-<div class="viewcode-block" id="PNIFile.readonly"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIFile.readonly">[docs]</a>    <span class="k">def</span> <span class="nf">readonly</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">readonly</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; check if file is readonly</span>
 
 <span class="sd">        :returns: readonly flag</span>
 <span class="sd">        :rtype: :obj:`bool`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">readonly</span>
-</div>
-<div class="viewcode-block" id="PNIFile.reopen"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIFile.reopen">[docs]</a>    <span class="k">def</span> <span class="nf">reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">swmr</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">_</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="PNIFile.reopen"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIFile.reopen">[docs]</a>    <span class="k">def</span> <span class="nf">reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">swmr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">_</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; reopen file</span>
 
 <span class="sd">        :param readonly: readonly flag</span>
@@ -298,17 +315,17 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">swmr</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;SWMR not supported&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;SWMR not supported&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span>
-        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTFile</span><span class="o">.</span><span class="n">reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTFile</span><span class="o">.</span><span class="n">reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
 
-</div></div>
+
 <div class="viewcode-block" id="PNIGroup"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIGroup">[docs]</a><span class="k">class</span> <span class="nc">PNIGroup</span><span class="p">(</span><span class="n">FileWriter</span><span class="o">.</span><span class="n">FTGroup</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; file tree group</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; constructor</span>
 
 <span class="sd">        :param h5object: pni object</span>
@@ -317,14 +334,14 @@
 <span class="sd">        :type tparent: :obj:`FTObject`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTGroup</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="p">)</span>
-        <span class="c">#: (:obj:`str`) object nexus path</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: (:obj:`str`) object name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s">&quot;path&quot;</span><span class="p">):</span>
+        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTGroup</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="p">)</span>
+        <span class="c1">#: (:obj:`str`) object nexus path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: (:obj:`str`) object name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">h5object</span><span class="o">.</span><span class="n">path</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s">&quot;name&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">h5object</span><span class="o">.</span><span class="n">name</span>
 
 <div class="viewcode-block" id="PNIGroup.open"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIGroup.open">[docs]</a>    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -346,9 +363,9 @@
             <span class="n">el</span> <span class="o">=</span> <span class="n">PNILink</span><span class="p">(</span><span class="n">itm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTObject</span><span class="p">(</span><span class="n">itm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">el</span>
-</div>
-<div class="viewcode-block" id="PNIGroup.create_group"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIGroup.create_group">[docs]</a>    <span class="k">def</span> <span class="nf">create_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">nxclass</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">el</span></div>
+
+<div class="viewcode-block" id="PNIGroup.create_group"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIGroup.create_group">[docs]</a>    <span class="k">def</span> <span class="nf">create_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">nxclass</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; open a file tree element</span>
 
 <span class="sd">        :param n: group name</span>
@@ -358,10 +375,10 @@
 <span class="sd">        :returns: file tree group</span>
 <span class="sd">        :rtype: :class:`PNIGroup`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">PNIGroup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">nxclass</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span>
-</div>
+        <span class="k">return</span> <span class="n">PNIGroup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">nxclass</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="PNIGroup.create_field"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIGroup.create_field">[docs]</a>    <span class="k">def</span> <span class="nf">create_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">type_code</span><span class="p">,</span>
-                     <span class="n">shape</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">chunk</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dfilter</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                     <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">chunk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dfilter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; open a file tree element</span>
 
 <span class="sd">        :param n: group name</span>
@@ -380,32 +397,32 @@
         <span class="k">return</span> <span class="n">PNIField</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">create_field</span><span class="p">(</span>
                 <span class="n">name</span><span class="p">,</span> <span class="n">type_code</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">chunk</span><span class="p">,</span>
-                <span class="n">dfilter</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">dfilter</span> <span class="k">else</span> <span class="n">dfilter</span><span class="o">.</span><span class="n">h5object</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span>
-</div>
+                <span class="n">dfilter</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">dfilter</span> <span class="k">else</span> <span class="n">dfilter</span><span class="o">.</span><span class="n">h5object</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span></div>
+
     <span class="nd">@property</span>
-<div class="viewcode-block" id="PNIGroup.size"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIGroup.size">[docs]</a>    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; group size</span>
 
 <span class="sd">        :returns: group size</span>
 <span class="sd">        :rtype: :obj:`int`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">size</span>
-</div>
+
     <span class="nd">@property</span>
-<div class="viewcode-block" id="PNIGroup.attributes"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIGroup.attributes">[docs]</a>    <span class="k">def</span> <span class="nf">attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; return the attribute manager</span>
 
 <span class="sd">        :returns: attribute manager</span>
 <span class="sd">        :rtype: :class:`PNIAttributeManager`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">PNIAttributeManager</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">attributes</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-</div>
+
 <div class="viewcode-block" id="PNIGroup.close"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIGroup.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; close group</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTGroup</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="PNIGroup.reopen"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIGroup.reopen">[docs]</a>    <span class="k">def</span> <span class="nf">reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; reopen group</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -413,8 +430,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tparent</span><span class="o">.</span><span class="n">h5object</span><span class="o">.</span><span class="n">root</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tparent</span><span class="o">.</span><span class="n">h5object</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTGroup</span><span class="o">.</span><span class="n">reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</div>
+        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTGroup</span><span class="o">.</span><span class="n">reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="PNIGroup.exists"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIGroup.exists">[docs]</a>    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; if child exists</span>
 
@@ -423,21 +440,29 @@
 <span class="sd">        :returns: existing flag</span>
 <span class="sd">        :rtype: :obj:`bool`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-</div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PNIGroup.names"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIGroup.names">[docs]</a>    <span class="k">def</span> <span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; read the child names</span>
+
+<span class="sd">        :returns: pni object</span>
+<span class="sd">        :rtype: :obj:`list` &lt;`str`&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">names</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="PNIGroup.PNIGroupIter"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIGroup.PNIGroupIter">[docs]</a>    <span class="k">class</span> <span class="nc">PNIGroupIter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
         <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot; constructor</span>
 
 <span class="sd">            :param group: group object</span>
-<span class="sd">            :type manager: :obj:`H5PYGroup`</span>
+<span class="sd">            :type manager: :obj:`PNIGroup`</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">__group</span> <span class="o">=</span> <span class="n">group</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__names</span> <span class="o">=</span> <span class="p">[</span><span class="n">kid</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">kid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__group</span><span class="o">.</span><span class="n">h5object</span><span class="p">]</span>
 
-<div class="viewcode-block" id="PNIGroup.PNIGroupIter.next"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIGroup.PNIGroupIter.next">[docs]</a>        <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot; the next attribute</span>
 
 <span class="sd">            :returns: attribute object</span>
@@ -447,39 +472,41 @@
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__group</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__names</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">StopIteration</span><span class="p">()</span>
-</div>
+
+        <span class="nb">next</span> <span class="o">=</span> <span class="fm">__next__</span>
+
         <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot; attribute iterator</span>
 
 <span class="sd">            :returns: attribute iterator</span>
-<span class="sd">            :rtype: :class:`H5PYAttrIter`</span>
+<span class="sd">            :rtype: :class:`PNIAttrIter`</span>
 <span class="sd">            &quot;&quot;&quot;</span>
-            <span class="k">return</span> <span class="bp">self</span>
-</div>
+            <span class="k">return</span> <span class="bp">self</span></div>
+
     <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; attribute iterator</span>
 
 <span class="sd">        :returns: attribute iterator</span>
-<span class="sd">        :rtype: :class:`H5PYAttrIter`</span>
+<span class="sd">        :rtype: :class:`PNIAttrIter`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">PNIGroupIter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-<div class="viewcode-block" id="PNIGroup.is_valid"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIGroup.is_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; check if field is valid</span>
 
 <span class="sd">        :returns: valid flag</span>
 <span class="sd">        :rtype: :obj:`bool`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">is_valid</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">is_valid</span></div>
 
-</div></div>
+
 <div class="viewcode-block" id="PNIField"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIField">[docs]</a><span class="k">class</span> <span class="nc">PNIField</span><span class="p">(</span><span class="n">FileWriter</span><span class="o">.</span><span class="n">FTField</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; file tree file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; constructor</span>
 
 <span class="sd">        :param h5object: pni object</span>
@@ -487,37 +514,45 @@
 <span class="sd">        :param tparent: treee parent</span>
 <span class="sd">        :type tparent: :obj:`FTObject`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTField</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="p">)</span>
-        <span class="c">#: (:obj:`str`) object nexus path</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: (:obj:`str`) object name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s">&quot;path&quot;</span><span class="p">):</span>
+        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTField</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="p">)</span>
+        <span class="c1">#: (:obj:`str`) object nexus path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: (:obj:`str`) object name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">h5object</span><span class="o">.</span><span class="n">path</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s">&quot;name&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">h5object</span><span class="o">.</span><span class="n">name</span>
 
     <span class="nd">@property</span>
-<div class="viewcode-block" id="PNIField.attributes"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIField.attributes">[docs]</a>    <span class="k">def</span> <span class="nf">attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; return the attribute manager</span>
 
 <span class="sd">        :returns: attribute manager</span>
 <span class="sd">        :rtype: :class:`PNIAttributeManager`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">PNIAttributeManager</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">attributes</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-</div>
+
 <div class="viewcode-block" id="PNIField.close"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIField.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; close field</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTField</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="PNIField.reopen"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIField.reopen">[docs]</a>    <span class="k">def</span> <span class="nf">reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; reopen field</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tparent</span><span class="o">.</span><span class="n">h5object</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTField</span><span class="o">.</span><span class="n">reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</div>
+        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTField</span><span class="o">.</span><span class="n">reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PNIField.refresh"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIField.refresh">[docs]</a>    <span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; refresh the field</span>
+
+<span class="sd">        :returns: refreshed</span>
+<span class="sd">        :rtype: :obj:`bool`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
 <div class="viewcode-block" id="PNIField.grow"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIField.grow">[docs]</a>    <span class="k">def</span> <span class="nf">grow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; grow the field</span>
 
@@ -526,24 +561,29 @@
 <span class="sd">        :param dim: size of the grow</span>
 <span class="sd">        :type dim: :obj:`int`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">grow</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">ext</span><span class="p">)</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">grow</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">ext</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="PNIField.read"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIField.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; read the field value</span>
 
 <span class="sd">        :returns: pni object</span>
 <span class="sd">        :rtype: :obj:`any`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-</div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="PNIField.write"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIField.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; write the field value</span>
 
 <span class="sd">        :param o: pni object</span>
 <span class="sd">        :type o: :obj:`any`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
-</div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,):</span>
+                <span class="n">o</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">o</span><span class="p">)</span></div>
+
     <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; set value</span>
 
@@ -552,7 +592,12 @@
 <span class="sd">        :param o: pni object</span>
 <span class="sd">        :type o: :obj:`any`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">__setitem__</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,):</span>
+                <span class="n">o</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; get value</span>
@@ -562,51 +607,51 @@
 <span class="sd">        :returns: pni object</span>
 <span class="sd">        :rtype: :obj:`any`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">__getitem__</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-<div class="viewcode-block" id="PNIField.is_valid"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIField.is_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; check if field is valid</span>
 
 <span class="sd">        :returns: valid flag</span>
 <span class="sd">        :rtype: :obj:`bool`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">is_valid</span>
-</div>
+
     <span class="nd">@property</span>
-<div class="viewcode-block" id="PNIField.dtype"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIField.dtype">[docs]</a>    <span class="k">def</span> <span class="nf">dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; field data type</span>
 
 <span class="sd">        :returns: field data type</span>
 <span class="sd">        :rtype: :obj:`str`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">dtype</span>
-</div>
+
     <span class="nd">@property</span>
-<div class="viewcode-block" id="PNIField.shape"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIField.shape">[docs]</a>    <span class="k">def</span> <span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; field shape</span>
 
 <span class="sd">        :returns: field shape</span>
 <span class="sd">        :rtype: :obj:`list` &lt; :obj:`int` &gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">shape</span>
-</div>
+
     <span class="nd">@property</span>
-<div class="viewcode-block" id="PNIField.size"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIField.size">[docs]</a>    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; field size</span>
 
 <span class="sd">        :returns: field size</span>
 <span class="sd">        :rtype: :obj:`int`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">size</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">size</span></div>
 
-</div></div>
+
 <div class="viewcode-block" id="PNILink"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNILink">[docs]</a><span class="k">class</span> <span class="nc">PNILink</span><span class="p">(</span><span class="n">FileWriter</span><span class="o">.</span><span class="n">FTLink</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; file tree link</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; constructor</span>
 
 <span class="sd">        :param h5object: pni object</span>
@@ -614,34 +659,42 @@
 <span class="sd">        :param tparent: treee parent</span>
 <span class="sd">        :type tparent: :obj:`FTObject`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTLink</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="p">)</span>
-        <span class="c">#: (:obj:`str`) object nexus path</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: (:obj:`str`) object name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s">&quot;path&quot;</span><span class="p">):</span>
+        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTLink</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="p">)</span>
+        <span class="c1">#: (:obj:`str`) object nexus path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: (:obj:`str`) object name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">h5object</span><span class="o">.</span><span class="n">path</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s">&quot;name&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">h5object</span><span class="o">.</span><span class="n">name</span>
 
     <span class="nd">@property</span>
-<div class="viewcode-block" id="PNILink.is_valid"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNILink.is_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; check if link is valid</span>
 
 <span class="sd">        :returns: valid flag</span>
 <span class="sd">        :rtype: :obj:`bool`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">is_valid</span>
-</div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">is_valid</span>
+
+<div class="viewcode-block" id="PNILink.refresh"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNILink.refresh">[docs]</a>    <span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; refresh the field</span>
+
+<span class="sd">        :returns: refreshed</span>
+<span class="sd">        :rtype: :obj:`bool`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
     <span class="nd">@property</span>
-<div class="viewcode-block" id="PNILink.target_path"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNILink.target_path">[docs]</a>    <span class="k">def</span> <span class="nf">target_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">target_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; target path</span>
 
 <span class="sd">        :returns: target path</span>
 <span class="sd">        :rtype: :obj:`str`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">target_path</span><span class="p">)</span>
-</div>
+
 <div class="viewcode-block" id="PNILink.reopen"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNILink.reopen">[docs]</a>    <span class="k">def</span> <span class="nf">reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; reopen field</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -649,17 +702,17 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">lk</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">lks</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span> <span class="o">=</span> <span class="n">lk</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTLink</span><span class="o">.</span><span class="n">reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</div>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTLink</span><span class="o">.</span><span class="n">reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="PNILink.close"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNILink.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; close group</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTLink</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span> <span class="o">=</span> <span class="kc">None</span></div></div>
 
-</div></div>
+
 <div class="viewcode-block" id="PNIDeflate"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIDeflate">[docs]</a><span class="k">class</span> <span class="nc">PNIDeflate</span><span class="p">(</span><span class="n">FileWriter</span><span class="o">.</span><span class="n">FTDeflate</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; file tree deflate</span>
@@ -671,7 +724,7 @@
 <span class="sd">        :param h5object: pni object</span>
 <span class="sd">        :type h5object: :obj:`any`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTDeflate</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">)</span>
+        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTDeflate</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__getrate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; getter for compression rate</span>
@@ -689,7 +742,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">rate</span> <span class="o">=</span> <span class="n">value</span>
 
-    <span class="c">#: (:obj:`int`) compression rate</span>
+    <span class="c1">#: (:obj:`int`) compression rate</span>
     <span class="n">rate</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">__getrate</span><span class="p">,</span> <span class="n">__setrate</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__getshuffle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -708,16 +761,16 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">shuffle</span> <span class="o">=</span> <span class="n">value</span>
 
-    <span class="c">#: (:obj:`bool`) compression shuffle</span>
-    <span class="n">shuffle</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">__getshuffle</span><span class="p">,</span> <span class="n">__setshuffle</span><span class="p">)</span>
+    <span class="c1">#: (:obj:`bool`) compression shuffle</span>
+    <span class="n">shuffle</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">__getshuffle</span><span class="p">,</span> <span class="n">__setshuffle</span><span class="p">)</span></div>
 
-</div>
+
 <div class="viewcode-block" id="PNIAttributeManager"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIAttributeManager">[docs]</a><span class="k">class</span> <span class="nc">PNIAttributeManager</span><span class="p">(</span><span class="n">FileWriter</span><span class="o">.</span><span class="n">FTAttributeManager</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; file tree attribute</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; constructor</span>
 
 <span class="sd">        :param h5object: pni object</span>
@@ -725,17 +778,17 @@
 <span class="sd">        :param tparent: treee parent</span>
 <span class="sd">        :type tparent: :obj:`FTObject`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTAttributeManager</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="p">)</span>
-        <span class="c">#: (:obj:`str`) object nexus path</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: (:obj:`str`) object name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s">&quot;path&quot;</span><span class="p">):</span>
+        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTAttributeManager</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="p">)</span>
+        <span class="c1">#: (:obj:`str`) object nexus path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: (:obj:`str`) object name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">h5object</span><span class="o">.</span><span class="n">path</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s">&quot;name&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">h5object</span><span class="o">.</span><span class="n">name</span>
 
-<div class="viewcode-block" id="PNIAttributeManager.create"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIAttributeManager.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="PNIAttributeManager.create"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIAttributeManager.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; create a new attribute</span>
 
 <span class="sd">        :param name: attribute name</span>
@@ -752,15 +805,15 @@
         <span class="n">shape</span> <span class="o">=</span> <span class="n">shape</span> <span class="ow">or</span> <span class="p">[]</span>
         <span class="k">return</span> <span class="n">PNIAttribute</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-                <span class="n">name</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
-</div>
+                <span class="n">name</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span></div>
+
     <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; number of attributes</span>
 
 <span class="sd">        :returns: number of attributes</span>
 <span class="sd">        :rtype: :obj:`int`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">__len__</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; get value</span>
@@ -771,35 +824,35 @@
 <span class="sd">        :rtype: :class:`FTAtribute`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">PNIAttribute</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">__getitem__</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PNIAttributeManager.close"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIAttributeManager.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; close attribure manager</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTAttributeManager</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</div>
+        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTAttributeManager</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="PNIAttributeManager.reopen"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIAttributeManager.reopen">[docs]</a>    <span class="k">def</span> <span class="nf">reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; reopen field</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tparent</span><span class="o">.</span><span class="n">h5object</span><span class="o">.</span><span class="n">attributes</span>
-        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTAttributeManager</span><span class="o">.</span><span class="n">reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</div>
+        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTAttributeManager</span><span class="o">.</span><span class="n">reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
     <span class="nd">@property</span>
-<div class="viewcode-block" id="PNIAttributeManager.is_valid"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIAttributeManager.is_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; check if link is valid</span>
 
 <span class="sd">        :returns: valid flag</span>
 <span class="sd">        :rtype: :obj:`bool`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">is_valid</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">is_valid</span></div>
 
-</div></div>
+
 <div class="viewcode-block" id="PNIAttribute"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIAttribute">[docs]</a><span class="k">class</span> <span class="nc">PNIAttribute</span><span class="p">(</span><span class="n">FileWriter</span><span class="o">.</span><span class="n">FTAttribute</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; file tree attribute</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; constructor</span>
 
 <span class="sd">        :param h5object: pni object</span>
@@ -807,38 +860,38 @@
 <span class="sd">        :param tparent: treee parent</span>
 <span class="sd">        :type tparent: :obj:`FTObject`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTAttribute</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="p">)</span>
-        <span class="c">#: (:obj:`str`) object nexus path</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: (:obj:`str`) object name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s">&quot;path&quot;</span><span class="p">):</span>
+        <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTAttribute</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="p">)</span>
+        <span class="c1">#: (:obj:`str`) object nexus path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: (:obj:`str`) object name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">h5object</span><span class="o">.</span><span class="n">path</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s">&quot;name&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">h5object</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">h5object</span><span class="o">.</span><span class="n">name</span>
 
 <div class="viewcode-block" id="PNIAttribute.close"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIAttribute.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; close attribute</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">FileWriter</span><span class="o">.</span><span class="n">FTAttribute</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="PNIAttribute.read"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIAttribute.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; read attribute value</span>
 
 <span class="sd">        :returns: python object</span>
 <span class="sd">        :rtype: :obj:`any`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-</div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="PNIAttribute.write"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIAttribute.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; write attribute value</span>
 
 <span class="sd">        :param o: python object</span>
 <span class="sd">        :type o: :obj:`any`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">o</span><span class="p">)</span></div>
+
     <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; write attribute value</span>
 
@@ -847,7 +900,7 @@
 <span class="sd">        :param o: python object</span>
 <span class="sd">        :type o: :obj:`any`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">__setitem__</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; read attribute value</span>
@@ -857,35 +910,35 @@
 <span class="sd">        :returns: python object</span>
 <span class="sd">        :rtype: :obj:`any`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">__getitem__</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-<div class="viewcode-block" id="PNIAttribute.is_valid"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIAttribute.is_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; check if attribute is valid</span>
 
 <span class="sd">        :returns: valid flag</span>
 <span class="sd">        :rtype: :obj:`bool`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">is_valid</span>
-</div>
+
     <span class="nd">@property</span>
-<div class="viewcode-block" id="PNIAttribute.dtype"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIAttribute.dtype">[docs]</a>    <span class="k">def</span> <span class="nf">dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; attribute data type</span>
 
 <span class="sd">        :returns: attribute data type</span>
 <span class="sd">        :rtype: :obj:`str`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">dtype</span>
-</div>
+
     <span class="nd">@property</span>
-<div class="viewcode-block" id="PNIAttribute.shape"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIAttribute.shape">[docs]</a>    <span class="k">def</span> <span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; attribute shape</span>
 
 <span class="sd">        :returns: attribute shape</span>
 <span class="sd">        :rtype: :obj:`list` &lt; :obj:`int` &gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">shape</span>
-</div>
+
 <div class="viewcode-block" id="PNIAttribute.reopen"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.PNIWriter.PNIAttribute.reopen">[docs]</a>    <span class="k">def</span> <span class="nf">reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; reopen attribute</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -907,7 +960,7 @@
         &copy; Copyright 2012-2017 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;
 
 GNU GENERAL PUBLIC LICENSE, version 3.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.<br/>
     </p>
   </div>
 </footer>

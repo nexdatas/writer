@@ -5,18 +5,18 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nxswriter.DecoderPool &mdash; NXSDataWriter 2.15.0 documentation</title>
+    <title>nxswriter.DecoderPool &#8212; NXSDataWriter 2.21.1 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.15.0',
+        VERSION:     '2.21.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,9 +27,11 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.15.0 documentation" href="../../index.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="NXSDataWriter 2.21.1 documentation" href="../../index.html" />
     <link rel="up" title="nxswriter" href="../nxswriter.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -37,7 +39,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -50,7 +52,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.15</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.21</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -146,29 +148,33 @@
     <div class="col-md-12 content">
       
   <h1>Source code for nxswriter.DecoderPool</h1><div class="highlight"><pre>
-<span class="c">#!/usr/bin/env python</span>
-<span class="c">#   This file is part of nexdatas - Tango Server for NeXus data writer</span>
-<span class="c">#</span>
-<span class="c">#    Copyright (C) 2012-2017 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;</span>
-<span class="c">#</span>
-<span class="c">#    nexdatas is free software: you can redistribute it and/or modify</span>
-<span class="c">#    it under the terms of the GNU General Public License as published by</span>
-<span class="c">#    the Free Software Foundation, either version 3 of the License, or</span>
-<span class="c">#    (at your option) any later version.</span>
-<span class="c">#</span>
-<span class="c">#    nexdatas is distributed in the hope that it will be useful,</span>
-<span class="c">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="c">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-<span class="c">#    GNU General Public License for more details.</span>
-<span class="c">#</span>
-<span class="c">#    You should have received a copy of the GNU General Public License</span>
-<span class="c">#    along with nexdatas.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
-<span class="c">#</span>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">#   This file is part of nexdatas - Tango Server for NeXus data writer</span>
+<span class="c1">#</span>
+<span class="c1">#    Copyright (C) 2012-2017 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;</span>
+<span class="c1">#</span>
+<span class="c1">#    nexdatas is free software: you can redistribute it and/or modify</span>
+<span class="c1">#    it under the terms of the GNU General Public License as published by</span>
+<span class="c1">#    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1">#    (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1">#    nexdatas is distributed in the hope that it will be useful,</span>
+<span class="c1">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#    GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#    You should have received a copy of the GNU General Public License</span>
+<span class="c1">#    along with nexdatas.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
 
 <span class="sd">&quot;&quot;&quot; Provides a pool  with data decoders &quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">struct</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,):</span>
+    <span class="n">unicode</span> <span class="o">=</span> <span class="nb">str</span>
 
 
 <div class="viewcode-block" id="UTF8decoder"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DecoderPool.UTF8decoder">[docs]</a><span class="k">class</span> <span class="nc">UTF8decoder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -181,50 +187,53 @@
 
 <span class="sd">        :brief: It clears the local variables</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c">#: (:obj:`str`) decoder name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;UTF8&quot;</span>
-        <span class="c">#: (:obj:`str`) decoder format</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: (:obj:`str`) data type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1">#: (:obj:`str`) decoder name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;UTF8&quot;</span>
+        <span class="c1">#: (:obj:`str`) decoder format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: (:obj:`str`) data type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="c">#: (:class:`numpy.ndarray`) image data</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: ([:obj:`str`, :obj:`str`]) header and image data</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__data</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1">#: (:class:`numpy.ndarray`) image data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: ([:obj:`str`, :obj:`str`]) header and image data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__data</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="UTF8decoder.load"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DecoderPool.UTF8decoder.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; loads encoded data</span>
 
 <span class="sd">        :param data: encoded data</span>
-<span class="sd">        :type data: [:obj:`str`, :obj:`str`]</span>
+<span class="sd">        :type data: [:obj:`str`, :obj:`bytes`]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__data</span> <span class="o">=</span> <span class="n">data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="s">&quot;string&quot;</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="s2">&quot;string&quot;</span></div>
+
 <div class="viewcode-block" id="UTF8decoder.shape"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DecoderPool.UTF8decoder.shape">[docs]</a>    <span class="k">def</span> <span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; provides the data shape</span>
 
 <span class="sd">        :returns: the data shape i.e. `[1, 0]`</span>
 <span class="sd">        :rtype: :obj:`list` &lt;:obj:`int` &gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-</div>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span></div>
+
 <div class="viewcode-block" id="UTF8decoder.decode"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DecoderPool.UTF8decoder.decode">[docs]</a>    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; provides the decoded data</span>
 
 <span class="sd">        :returns: the decoded data if data was loaded</span>
-<span class="sd">        :rtype: :class:`numpy.ndarray`</span>
+<span class="sd">        :rtype: :obj:`bytes`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__value</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__value</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">unicode</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__value</span></div></div>
 
-</div></div>
+
 <div class="viewcode-block" id="UINT32decoder"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DecoderPool.UINT32decoder">[docs]</a><span class="k">class</span> <span class="nc">UINT32decoder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; INT decoder</span>
@@ -235,33 +244,33 @@
 
 <span class="sd">        :brief: It clears the local variables</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c">#: (:obj:`str`) decoder name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;UINT32&quot;</span>
-        <span class="c">#: (:obj:`str`) decoder format</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: (:obj:`str`) data type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1">#: (:obj:`str`) decoder name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;UINT32&quot;</span>
+        <span class="c1">#: (:obj:`str`) decoder format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: (:obj:`str`) data type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="c">#: (:class:`numpy.ndarray`) image data</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: ([:obj:`str`, :obj:`str`]) header and image data</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__data</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1">#: (:class:`numpy.ndarray`) image data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: ([:obj:`str`, :obj:`str`]) header and image data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__data</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="UINT32decoder.load"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DecoderPool.UINT32decoder.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; loads encoded data</span>
 
 <span class="sd">        :param data: encoded data</span>
-<span class="sd">        :type data: [:obj:`str`, :obj:`str`]</span>
+<span class="sd">        :type data: [:obj:`str`, :obj:`bytes`]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s">&quot;__iter__&quot;</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Wrong Data Format&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;__iter__&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Wrong Data Format&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">%</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Wrong encoded UINT32 data length&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Wrong encoded UINT32 data length&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__data</span> <span class="o">=</span> <span class="n">data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="s">&quot;uint32&quot;</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="s2">&quot;uint32&quot;</span></div>
+
 <div class="viewcode-block" id="UINT32decoder.shape"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DecoderPool.UINT32decoder.shape">[docs]</a>    <span class="k">def</span> <span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; provides the data shape</span>
 
@@ -269,8 +278,8 @@
 <span class="sd">        :rtype: :obj:`list` &lt;:obj:`int` &gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">//</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-</div>
+            <span class="k">return</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">//</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span></div>
+
 <div class="viewcode-block" id="UINT32decoder.decode"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DecoderPool.UINT32decoder.decode">[docs]</a>    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; provides the decoded data</span>
 
@@ -281,15 +290,20 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">%</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Wrong encoded UINT32 data length&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Wrong encoded UINT32 data length&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__value</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">ord</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># res = struct.unpack(&#39;I&#39; * (len(data) // 4), data)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-                <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s">&#39;I&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">//</span> <span class="mi">4</span><span class="p">),</span>
-                              <span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
-                <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">//</span> <span class="mi">4</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__value</span>
+                <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;I&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">//</span> <span class="mi">4</span><span class="p">),</span> <span class="n">data</span><span class="p">),</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">//</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__value</span></div></div>
 
-</div></div>
+
 <div class="viewcode-block" id="VDEOdecoder"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DecoderPool.VDEOdecoder">[docs]</a><span class="k">class</span> <span class="nc">VDEOdecoder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; VIDEO IMAGE LIMA decoder</span>
@@ -300,25 +314,25 @@
 
 <span class="sd">        :brief: It clears the local variables</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c">#: (:obj:`str`) decoder name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;LIMA_VIDEO_IMAGE&quot;</span>
-        <span class="c">#: (:obj:`str`) decoder format</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: (:obj:`str`) data type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1">#: (:obj:`str`) decoder name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;LIMA_VIDEO_IMAGE&quot;</span>
+        <span class="c1">#: (:obj:`str`) decoder format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: (:obj:`str`) data type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="c">#: (:class:`numpy.ndarray`) image data</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: ([:obj:`str`, :obj:`str`]) header and image data</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__data</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: (:obj:`str`) struct header format</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__headerFormat</span> <span class="o">=</span> <span class="s">&#39;!IHHqiiHHHH&#39;</span>
-        <span class="c">#: (:obj:`dict` &lt;:obj:`str`, :obj:`any` &gt; ) header data</span>
+        <span class="c1">#: (:class:`numpy.ndarray`) image data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: ([:obj:`str`, :obj:`str`]) header and image data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: (:obj:`str`) struct header format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__headerFormat</span> <span class="o">=</span> <span class="s1">&#39;!IHHqiiHHHH&#39;</span>
+        <span class="c1">#: (:obj:`dict` &lt;:obj:`str`, :obj:`any` &gt; ) header data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__header</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="c">#: (:obj:`dict` &lt;:obj:`int`, :obj:`str` &gt; ) format modes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__formatID</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s">&#39;B&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s">&#39;I&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s">&#39;Q&#39;</span><span class="p">}</span>
-        <span class="c">#: (:obj:`dict` &lt;:obj:`int`, :obj:`str` &gt; ) dtype modes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__dtypeID</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s">&#39;uint8&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s">&#39;uint16&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s">&#39;uint32&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s">&#39;uint64&#39;</span><span class="p">}</span>
+        <span class="c1">#: (:obj:`dict` &lt;:obj:`int`, :obj:`str` &gt; ) format modes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__formatID</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;Q&#39;</span><span class="p">}</span>
+        <span class="c1">#: (:obj:`dict` &lt;:obj:`int`, :obj:`str` &gt; ) dtype modes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dtypeID</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;uint8&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;uint16&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;uint32&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;uint64&#39;</span><span class="p">}</span>
 
 <div class="viewcode-block" id="VDEOdecoder.load"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DecoderPool.VDEOdecoder.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;  loads encoded data</span>
@@ -329,8 +343,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__data</span> <span class="o">=</span> <span class="n">data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_loadHeader</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">][:</span><span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__headerFormat</span><span class="p">)])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="bp">None</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="kc">None</span></div>
+
     <span class="k">def</span> <span class="nf">_loadHeader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">headerData</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; loads the image header</span>
 
@@ -339,17 +353,17 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">hdr</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__headerFormat</span><span class="p">,</span> <span class="n">headerData</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__header</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s">&#39;magic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s">&#39;headerVersion&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s">&#39;imageMode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s">&#39;frameNumber&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s">&#39;width&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s">&#39;height&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s">&#39;endianness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s">&#39;headerSize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s">&#39;padding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="mi">7</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s1">&#39;magic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s1">&#39;headerVersion&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s1">&#39;imageMode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s1">&#39;frameNumber&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s1">&#39;endianness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s1">&#39;headerSize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s1">&#39;padding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="mi">7</span><span class="p">:]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dtypeID</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s">&#39;imageMode&#39;</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dtypeID</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s1">&#39;imageMode&#39;</span><span class="p">]]</span>
 
 <div class="viewcode-block" id="VDEOdecoder.shape"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DecoderPool.VDEOdecoder.shape">[docs]</a>    <span class="k">def</span> <span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; provides the data shape</span>
@@ -358,8 +372,8 @@
 <span class="sd">        :rtype: :obj:`list` &lt;:obj:`int` &gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s">&#39;width&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s">&#39;height&#39;</span><span class="p">]]</span>
-</div>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]]</span></div>
+
 <div class="viewcode-block" id="VDEOdecoder.decode"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DecoderPool.VDEOdecoder.decode">[docs]</a>    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; provides the decoded data</span>
 
@@ -370,21 +384,21 @@
             <span class="k">return</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__value</span><span class="p">:</span>
             <span class="n">image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__headerFormat</span><span class="p">):]</span>
-            <span class="n">dformat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__formatID</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s">&#39;imageMode&#39;</span><span class="p">]]</span>
+            <span class="n">dformat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__formatID</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s1">&#39;imageMode&#39;</span><span class="p">]]</span>
             <span class="n">fSize</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">dformat</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
                 <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">dformat</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="p">)</span> <span class="o">//</span> <span class="n">fSize</span><span class="p">),</span> <span class="n">image</span><span class="p">),</span>
-                <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s">&#39;width&#39;</span><span class="p">],</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s">&#39;height&#39;</span><span class="p">])</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__value</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">],</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">__header</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__value</span></div></div>
 
-</div></div>
+
 <div class="viewcode-block" id="DecoderPool"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DecoderPool.DecoderPool">[docs]</a><span class="k">class</span> <span class="nc">DecoderPool</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Decoder pool</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configJSON</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configJSON</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; constructor</span>
 
 <span class="sd">        :brief: It creates know decoders</span>
@@ -393,9 +407,9 @@
 <span class="sd">        :    :obj:`dict` &lt;:obj:`str`, :obj:`dict` &lt;:obj:`str`, any&gt;&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__knowDecoders</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s">&quot;LIMA_VIDEO_IMAGE&quot;</span><span class="p">:</span> <span class="n">VDEOdecoder</span><span class="p">,</span>
-            <span class="s">&quot;UTF8&quot;</span><span class="p">:</span> <span class="n">UTF8decoder</span><span class="p">,</span>
-            <span class="s">&quot;UINT32&quot;</span><span class="p">:</span> <span class="n">UINT32decoder</span><span class="p">}</span>
+            <span class="s2">&quot;LIMA_VIDEO_IMAGE&quot;</span><span class="p">:</span> <span class="n">VDEOdecoder</span><span class="p">,</span>
+            <span class="s2">&quot;UTF8&quot;</span><span class="p">:</span> <span class="n">UTF8decoder</span><span class="p">,</span>
+            <span class="s2">&quot;UINT32&quot;</span><span class="p">:</span> <span class="n">UINT32decoder</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__pool</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">__createDecoders</span><span class="p">()</span>
@@ -408,14 +422,19 @@
 <span class="sd">        :type configJSON: \</span>
 <span class="sd">        :    :obj:`dict` &lt;:obj:`str`, :obj:`dict` &lt;:obj:`str`, any&gt;&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">configJSON</span> <span class="ow">and</span> <span class="s">&#39;decoders&#39;</span> <span class="ow">in</span> <span class="n">configJSON</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
-                <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">configJSON</span><span class="p">[</span><span class="s">&#39;decoders&#39;</span><span class="p">],</span> <span class="s">&#39;keys&#39;</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">dk</span> <span class="ow">in</span> <span class="n">configJSON</span><span class="p">[</span><span class="s">&#39;decoders&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="n">pkl</span> <span class="o">=</span> <span class="n">configJSON</span><span class="p">[</span><span class="s">&#39;decoders&#39;</span><span class="p">][</span><span class="n">dk</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">)</span>
-                <span class="n">dec</span> <span class="o">=</span> <span class="nb">__import__</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pkl</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">globals</span><span class="p">(),</span>
-                                 <span class="nb">locals</span><span class="p">(),</span> <span class="n">pkl</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">pkl</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dk</span><span class="p">)</span>
-</div>
+        <span class="k">if</span> <span class="n">configJSON</span> <span class="ow">and</span> <span class="s1">&#39;decoders&#39;</span> <span class="ow">in</span> <span class="n">configJSON</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> \
+                <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">configJSON</span><span class="p">[</span><span class="s1">&#39;decoders&#39;</span><span class="p">],</span> <span class="s1">&#39;keys&#39;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">dk</span> <span class="ow">in</span> <span class="n">configJSON</span><span class="p">[</span><span class="s1">&#39;decoders&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">pkl</span> <span class="o">=</span> <span class="n">configJSON</span><span class="p">[</span><span class="s1">&#39;decoders&#39;</span><span class="p">][</span><span class="n">dk</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+                <span class="n">pkg</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pkl</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">pkg</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">pdec</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">pkg</span><span class="p">]</span>
+                    <span class="n">dec</span> <span class="o">=</span> <span class="n">pdec</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">dec</span> <span class="o">=</span> <span class="nb">__import__</span><span class="p">(</span><span class="n">pkg</span><span class="p">,</span> <span class="nb">globals</span><span class="p">(),</span>
+                                     <span class="nb">locals</span><span class="p">(),</span> <span class="n">pkl</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">pkl</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dk</span><span class="p">)</span></div>
+
     <span class="k">def</span> <span class="nf">__createDecoders</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; creates know decoders</span>
 
@@ -432,8 +451,8 @@
 <span class="sd">        :returns: True if it the decoder is registered</span>
 <span class="sd">        :rtype: :obj:`bool`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">True</span> <span class="k">if</span> <span class="n">decoder</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pool</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="bp">False</span>
-</div>
+        <span class="k">return</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">decoder</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pool</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="kc">False</span></div>
+
 <div class="viewcode-block" id="DecoderPool.get"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DecoderPool.DecoderPool.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">decoder</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; checks it the decoder is registered</span>
 
@@ -443,16 +462,16 @@
 <span class="sd">        :rtype: :obj:`object`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">decoder</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pool</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pool</span><span class="p">[</span><span class="n">decoder</span><span class="p">]</span>
-</div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pool</span><span class="p">[</span><span class="n">decoder</span><span class="p">]</span></div>
+
 <div class="viewcode-block" id="DecoderPool.pop"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DecoderPool.DecoderPool.pop">[docs]</a>    <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; adds additional decoder</span>
 
 <span class="sd">        :param name: name of the adding decoder</span>
 <span class="sd">        :type name: :obj:`str`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__pool</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__pool</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="DecoderPool.append"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DecoderPool.DecoderPool.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">decoder</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; adds additional decoder</span>
 
@@ -467,11 +486,11 @@
         <span class="n">instance</span> <span class="o">=</span> <span class="n">decoder</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__pool</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">instance</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s">&quot;load&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s">&quot;name&quot;</span><span class="p">)</span> \
-                <span class="ow">or</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s">&quot;shape&quot;</span><span class="p">)</span> \
-                <span class="ow">or</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s">&quot;decode&quot;</span><span class="p">)</span> \
-                <span class="ow">or</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s">&quot;dtype&quot;</span><span class="p">)</span> \
-                <span class="ow">or</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s">&quot;format&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;load&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">)</span> \
+                <span class="ow">or</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;shape&quot;</span><span class="p">)</span> \
+                <span class="ow">or</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;decode&quot;</span><span class="p">)</span> \
+                <span class="ow">or</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;dtype&quot;</span><span class="p">)</span> \
+                <span class="ow">or</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;format&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="k">return</span>
         <span class="k">return</span> <span class="n">name</span></div></div>
@@ -491,7 +510,7 @@
         &copy; Copyright 2012-2017 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;
 
 GNU GENERAL PUBLIC LICENSE, version 3.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.<br/>
     </p>
   </div>
 </footer>
