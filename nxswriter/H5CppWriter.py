@@ -162,7 +162,7 @@ hTp = {
 }
 
 
-def open_file(filename, readonly=False, libver=None):
+def open_file(filename, readonly=False, libver=None, swmr=False):
     """ open the new file
 
     :param filename: file name
@@ -177,13 +177,17 @@ def open_file(filename, readonly=False, libver=None):
 
     fapl = h5cpp.property.FileAccessList()
     # fapl.set_close_degree(h5cpp._property.CloseDegree.STRONG)
-    flag = h5cpp.file.AccessFlags.READONLY if readonly \
-        else h5cpp.file.AccessFlags.READWRITE
+    if readonly:
+        flag = h5cpp.file.AccessFlags.READONLY
+    else:
+        flag = h5cpp.file.AccessFlags.READWRITE
+    if swmr:
+        if hasattr(h5cpp.file.AccessFlags, "SWMRREAD"):
+            flag = flag | h5cpp.file.AccessFlags.SWMRREAD
     if libver is None or libver == 'lastest':
         fapl.library_version_bounds(
             h5cpp.property.LibVersion.LATEST,
             h5cpp.property.LibVersion.LATEST)
-
     return H5CppFile(h5cpp.file.open(filename, flag, fapl), filename)
 
 
@@ -368,8 +372,13 @@ class H5CppFile(FileWriter.FTFile):
         if swmr:
             if not hasattr(h5cpp.file.AccessFlags, "SWMRWRITE"):
                 raise Exception("SWMR not supported")
-            flag = h5cpp.file.AccessFlags.READWRITE \
-                | h5cpp.file.AccessFlags.SWMRWRITE
+            if not readonly:
+                flag = h5cpp.file.AccessFlags.READWRITE \
+                       | h5cpp.file.AccessFlags.SWMRWRITE
+            else:
+                flag = h5cpp.file.AccessFlags.READONLY \
+                       | h5cpp.file.AccessFlags.SWMRREAD
+
         elif readonly:
             flag = h5cpp.file.AccessFlags.READONLY
         else:
@@ -878,7 +887,8 @@ class H5CppField(FileWriter.FTField):
             else:
                 return "int"
         elif str(self._h5object.datatype.type) == "ENUM":
-            if h5cpp._datatype.is_bool(self._h5object.datatype):
+            if h5cpp._datatype.is_bool(
+                    h5cpp.datatype.Enum(self._h5object.datatype)):
                 return "bool"
             else:
                 return "int"
@@ -1365,7 +1375,8 @@ class H5CppAttribute(FileWriter.FTAttribute):
             else:
                 return "int"
         elif str(self._h5object.datatype.type) == "ENUM":
-            if h5cpp._datatype.is_bool(self._h5object.datatype):
+            if h5cpp._datatype.is_bool(
+                    h5cpp.datatype.Enum(self._h5object.datatype)):
                 return "bool"
             else:
                 return "int"
