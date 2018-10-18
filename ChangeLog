@@ -1,3 +1,8 @@
+2018-10-18 Jan Kotanski <jankotan@gmail.com>
+	* split the package
+	* fix for h5cppwriter module
+	* tagged as 2.22.0
+
 2018-10-09 Jan Kotanski <jankotan@gmail.com>
 	* fixes for SWMR with h5cpp
 	* tagged as 2.21.1
