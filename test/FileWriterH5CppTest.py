@@ -28,8 +28,8 @@ import binascii
 import string
 import time
 
-import nxswriter.FileWriter as FileWriter
-import nxswriter.H5CppWriter as H5CppWriter
+from nxstools import filewriter as FileWriter
+from nxstools import h5cppwriter as H5CppWriter
 from pninexus import h5cpp
 # import h5py
 

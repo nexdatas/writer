@@ -28,8 +28,8 @@ import struct
 from nxswriter.TangoDataWriter import TangoDataWriter
 from Checkers import Checker
 
-import nxswriter.FileWriter as FileWriter
-import nxswriter.H5PYWriter as H5PYWriter
+from nxstools import filewriter as FileWriter
+from nxstools import h5pywriter as H5PYWriter
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

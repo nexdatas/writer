@@ -25,7 +25,7 @@ from .FElement import FElement
 from .Errors import (XMLSettingSyntaxError)
 from .DataHolder import DataHolder
 
-from . import FileWriter
+from nxstools import filewriter as FileWriter
 
 
 class ELink(FElement):

@@ -33,7 +33,7 @@ except Exception:
 
 import struct
 
-import nxswriter.H5CppWriter as H5CppWriter
+from nxstools import h5cppwriter as H5CppWriter
 
 
 try:
@@ -694,7 +694,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()

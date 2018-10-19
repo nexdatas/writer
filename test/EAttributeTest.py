@@ -40,8 +40,8 @@ from TestDataSource import TestDataSource
 
 from Checkers import Checker
 
-import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+from nxstools import filewriter as FileWriter
+from nxstools import pniwriter as PNIWriter
 
 # from  xml.sax import SAXParseException
 

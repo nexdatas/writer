@@ -42,7 +42,7 @@ from nxswriter.DataSourcePool import DataSourcePool
 from nxswriter.Errors import DataSourceSetupError
 from nxswriter.Types import Converters, NTP
 
-import nxswriter.H5CppWriter
+from nxstools import h5cppwriter as H5CppWriter
 
 
 # if 64-bit machione
@@ -845,7 +845,7 @@ ds.res = commonblock["myres"]
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
-        f = nxswriter.H5CppWriter.create_file(fname, False)
+        f = H5CppWriter.create_file(fname, False)
 
         try:
             rt = f.root()
@@ -875,7 +875,7 @@ ds.res = commonblock["myres"]
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
-        f = nxswriter.H5CppWriter.create_file(fname, False)
+        f = H5CppWriter.create_file(fname, False)
 
         try:
             rt = f.root()

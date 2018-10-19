@@ -30,7 +30,7 @@ import nxswriter
 from nxswriter.TangoDataWriter import TangoDataWriter
 import struct
 
-from nxswriter import H5PYWriter
+from nxstools import h5pywriter as H5PYWriter
 
 
 # if 64-bit machione
@@ -300,7 +300,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -367,7 +367,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -435,7 +435,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -524,7 +524,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -587,7 +587,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -692,7 +692,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -785,7 +785,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -1119,7 +1119,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -1513,7 +1513,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -1857,7 +1857,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -2309,7 +2309,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -2761,7 +2761,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -3215,7 +3215,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -3560,7 +3560,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -3928,7 +3928,7 @@ ds.res2 = str(True)
 
             fname = '%s/%s%s_00001.h5' % (
                 os.getcwd(), self.__class__.__name__, fun)
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -4821,7 +4821,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -5143,7 +5143,7 @@ ds.res2 = str(True)
             tdw.closeFile()
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -5472,7 +5472,7 @@ ds.res2 = str(True)
             tdw.closeFile()
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -5806,7 +5806,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()

@@ -28,7 +28,7 @@ from .FElement import FElementWithAttr
 from .Types import NTP
 from .Errors import (XMLSettingSyntaxError)
 
-from . import FileWriter
+from nxstools import filewriter as FileWriter
 
 
 class EField(FElementWithAttr):

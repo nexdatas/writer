@@ -38,8 +38,8 @@ from nxswriter.DataSourceFactory import DataSourceFactory
 from nxswriter.Errors import UnsupportedTagError
 from nxswriter.FetchNameHandler import TNObject
 
-import nxswriter.FileWriter as FileWriter
-import nxswriter.H5CppWriter as H5CppWriter
+from nxstools import filewriter as FileWriter
+from nxstools import h5cppwriter as H5CppWriter
 
 
 from xml import sax

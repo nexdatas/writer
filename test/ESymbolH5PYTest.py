@@ -27,8 +27,8 @@ import sys
 import struct
 # import numpy
 
-import nxswriter.FileWriter as FileWriter
-import nxswriter.H5PYWriter as H5PYWriter
+from nxstools import filewriter as FileWriter
+from nxstools import h5pywriter as H5PYWriter
 
 
 # from nxswriter.H5Elements import FElement

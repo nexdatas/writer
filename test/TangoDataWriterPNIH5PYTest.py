@@ -31,7 +31,7 @@ import nxswriter
 from nxswriter.TangoDataWriter import TangoDataWriter
 import struct
 
-from nxswriter import H5PYWriter
+from nxstools import h5pywriter as H5PYWriter
 
 
 # if 64-bit machione

@@ -28,8 +28,8 @@ from nxswriter.EStrategy import EStrategy
 from nxswriter.EField import EField
 from nxswriter.Element import Element
 from nxswriter.Types import Converters
-import nxswriter.FileWriter as FileWriter
-import nxswriter.H5CppWriter as H5CppWriter
+from nxstools import filewriter as FileWriter
+from nxstools import h5cppwriter as H5CppWriter
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
