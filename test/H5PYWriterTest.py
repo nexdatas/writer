@@ -29,8 +29,8 @@ import string
 import h5py
 import time
 
-import nxswriter.FileWriter as FileWriter
-import nxswriter.H5PYWriter as H5PYWriter
+from nxstools import filewriter as FileWriter
+from nxstools import h5pywriter as H5PYWriter
 
 H5PYMAJOR, H5PYMINOR, H5PYPATCH = h5py.__version__.split(".", 2)
 

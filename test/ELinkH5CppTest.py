@@ -38,8 +38,8 @@ from nxswriter.FetchNameHandler import TNObject
 
 from Checkers import Checker
 
-import nxswriter.FileWriter as FileWriter
-import nxswriter.H5CppWriter as H5CppWriter
+from nxstools import filewriter as FileWriter
+from nxstools import h5cppwriter as H5CppWriter
 
 
 # from  xml.sax import SAXParseException

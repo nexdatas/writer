@@ -36,7 +36,7 @@ except ImportError:
 from .NexusXMLHandler import NexusXMLHandler
 from .FetchNameHandler import FetchNameHandler
 from .StreamSet import StreamSet
-from . import FileWriter
+from nxstools import filewriter as FileWriter
 
 from .H5Elements import EFile
 from .DecoderPool import DecoderPool
@@ -45,18 +45,18 @@ from .DataSourcePool import DataSourcePool
 
 WRITERS = {}
 try:
-    from . import PNIWriter
+    from nxstools import pniwriter as PNIWriter
     WRITERS["pni"] = PNIWriter
 except Exception:
     pass
 try:
-    from . import H5PYWriter
+    from nxstools import h5pywriter as H5PYWriter
     WRITERS["h5py"] = H5PYWriter
 except Exception:
     pass
 
 try:
-    from . import H5CppWriter
+    from nxstools import h5cppwriter as H5CppWriter
     WRITERS["h5cpp"] = H5CppWriter
 except Exception:
     pass

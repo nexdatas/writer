@@ -33,7 +33,7 @@ import nxswriter
 from nxswriter.TangoDataWriter import TangoDataWriter
 import struct
 
-from nxswriter import PNIWriter
+from nxstools import pniwriter as PNIWriter
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

@@ -24,8 +24,8 @@ import os
 import sys
 import struct
 
-import nxswriter.FileWriter as FileWriter
-import nxswriter.H5CppWriter as H5CppWriter
+from nxstools import filewriter as FileWriter
+from nxstools import h5cppwriter as H5CppWriter
 
 
 from nxswriter.EField import EField

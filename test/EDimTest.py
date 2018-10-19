@@ -27,8 +27,8 @@ import struct
 import binascii
 
 
-import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+from nxstools import filewriter as FileWriter
+from nxstools import pniwriter as PNIWriter
 
 
 from nxswriter.EField import EField

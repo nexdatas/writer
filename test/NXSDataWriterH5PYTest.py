@@ -34,8 +34,8 @@ except Exception:
     from .ProxyHelper import ProxyHelper
 
 
-import nxswriter.FileWriter as FileWriter
-import nxswriter.H5PYWriter as H5PYWriter
+from nxstools import filewriter as FileWriter
+from nxstools import h5pywriter as H5PYWriter
 
 
 try:

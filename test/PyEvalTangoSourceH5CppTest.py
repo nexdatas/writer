@@ -42,7 +42,7 @@ from nxswriter.DataSourcePool import DataSourcePool
 from nxswriter.Errors import DataSourceSetupError
 from nxswriter.Types import Converters, NTP
 
-import nxswriter.H5CppWriter
+from nxstools import h5cppwriter as H5CppWriter
 
 
 # if 64-bit machione

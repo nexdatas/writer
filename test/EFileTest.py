@@ -29,8 +29,8 @@ from nxswriter.H5Elements import FElement
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
 
-import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+from nxstools import filewriter as FileWriter
+from nxstools import pniwriter as PNIWriter
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

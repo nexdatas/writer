@@ -28,8 +28,8 @@ import binascii
 import string
 import time
 
-import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+from nxstools import filewriter as FileWriter
+from nxstools import pniwriter as PNIWriter
 
 try:
     import pni.io.nx.h5 as nx

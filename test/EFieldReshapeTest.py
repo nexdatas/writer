@@ -35,8 +35,8 @@ from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
 from nxswriter.Types import NTP, Converters
 
-import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+from nxstools import filewriter as FileWriter
+from nxstools import pniwriter as PNIWriter
 
 
 # True if pniio installed

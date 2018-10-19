@@ -41,7 +41,7 @@ from nxswriter.DataSourcePool import DataSourcePool
 from nxswriter.Errors import DataSourceSetupError
 from nxswriter.Types import NTP, Converters
 
-import nxswriter.H5PYWriter
+from nxstools import h5pywriter as H5PYWriter
 
 
 # if 64-bit machione

@@ -30,7 +30,7 @@ import nxswriter
 from nxswriter.TangoDataWriter import TangoDataWriter
 import struct
 
-from nxswriter import H5CppWriter
+from nxstools import h5cppwriter as H5CppWriter
 
 
 # if 64-bit machione
@@ -302,7 +302,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -369,7 +369,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -437,7 +437,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -527,7 +527,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -590,7 +590,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -695,7 +695,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -788,7 +788,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -1122,7 +1122,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -1514,7 +1514,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -1858,7 +1858,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -2310,7 +2310,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -2762,7 +2762,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -3216,7 +3216,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -3561,7 +3561,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -3923,7 +3923,7 @@ ds.res2 = str(True)
 
             fname = '%s/%s%s_00001.h5' % (
                 os.getcwd(), self.__class__.__name__, fun)
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -4816,7 +4816,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -5138,7 +5138,7 @@ ds.res2 = str(True)
             tdw.closeFile()
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -5467,7 +5467,7 @@ ds.res2 = str(True)
             tdw.closeFile()
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
@@ -5801,7 +5801,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
+            from nxstools import filewriter as FileWriter
             FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()

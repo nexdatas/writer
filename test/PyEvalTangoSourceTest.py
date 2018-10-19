@@ -41,7 +41,7 @@ from nxswriter.DataSourcePool import DataSourcePool
 from nxswriter.Errors import DataSourceSetupError
 from nxswriter.Types import Converters, NTP
 
-import nxswriter.PNIWriter
+from nxstools import pniwriter as PNIWriter
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

@@ -33,8 +33,8 @@ from nxswriter.FElement import FElementWithAttr
 from nxswriter.FElement import FElement
 from nxswriter.Element import Element
 from nxswriter.Types import Converters
-import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+from nxstools import filewriter as FileWriter
+from nxstools import pniwriter as PNIWriter
 
 
 # if 64-bit machione

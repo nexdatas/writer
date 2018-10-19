@@ -37,8 +37,8 @@ from nxswriter.Types import NTP, Converters
 
 from nxswriter.Errors import XMLSettingSyntaxError
 
-import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+from nxstools import filewriter as FileWriter
+from nxstools import pniwriter as PNIWriter
 
 
 # True if pniio installed
