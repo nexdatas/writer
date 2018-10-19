@@ -845,7 +845,7 @@ ds.res = commonblock["myres"]
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
-        f = nxswriter.H5CppWriter.create_file(fname, False)
+        f = H5CppWriter.create_file(fname, False)
 
         try:
             rt = f.root()
@@ -875,7 +875,7 @@ ds.res = commonblock["myres"]
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
-        f = nxswriter.H5CppWriter.create_file(fname, False)
+        f = H5CppWriter.create_file(fname, False)
 
         try:
             rt = f.root()
