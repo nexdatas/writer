@@ -1310,9 +1310,9 @@ class SimpleServerClass(PyTango.DeviceClass):
     }
 
 
-# ------------------------------------------------------------------
-#    SimpleServerClass Constructor
-# ------------------------------------------------------------------
+    # ------------------------------------------------------------------
+    #    SimpleServerClass Constructor
+    # ------------------------------------------------------------------
     def __init__(self, name):
         PyTango.DeviceClass.__init__(self, name)
         self.set_type(name)
