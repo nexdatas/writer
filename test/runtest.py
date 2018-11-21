@@ -54,6 +54,9 @@ try:
 except ImportError as e:
     H5CPP_AVAILABLE = False
     print("h5cpp is not available: %s" % e)
+except SystemError as e:
+    H5CPP_AVAILABLE = False
+    print("h5cpp is not available: %s" % e)
 
 
 import os
@@ -322,7 +325,7 @@ if sys.version_info > (3,):
             if PYTGMAJOR == 9:
                 if PYTGMINOR < 2:
                     PYTG_BUG_213 = True
-                elif PYTGMINOR == 2 and PYTGPATCH < 4:
+                elif PYTGMINOR == 2 and PYTGPATCH <= 4:
                     PYTG_BUG_213 = True
             else:
                 PYTG_BUG_213 = True
