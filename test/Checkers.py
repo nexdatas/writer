@@ -582,7 +582,7 @@ class Checker(object):
                     self._tc.assertTrue(abs(values - value) <= error)
                 except Exception:
                     self._tc.assertEqual(values, value)
-                    
+
             else:
                 self._tc.assertEqual(values, value)
         if self._isNumeric(cnt.read()) and not (
