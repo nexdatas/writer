@@ -6,7 +6,7 @@ if [ $1 = "ubuntu16.04" ]; then
 fi
 
 echo "restart mysql"
-if [ $1 = "debian9" ]; then
+if [ $1 = "debian9" ] || [ $1 = "debian10" ]; then
     # workaround for a bug in debian9, i.e. starting mysql hangs
     docker exec -it --user root ndts service mysql stop
     docker exec -it --user root ndts /bin/sh -c '$(service mysql start &) && sleep 30'
