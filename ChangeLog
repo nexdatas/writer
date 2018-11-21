@@ -1,3 +1,8 @@
+2018-11-21 Jan Kotanski <jankotan@gmail.com>
+	* fix tests for buster
+	* fix for PYTG_BUG_213
+	* tagged as 2.22.1
+
 2018-10-18 Jan Kotanski <jankotan@gmail.com>
 	* split the package
 	* fix for h5cppwriter module
