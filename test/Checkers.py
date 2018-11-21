@@ -578,7 +578,11 @@ class Checker(object):
         if not isinstance(values, str) and not isinstance(values, unicode):
             value = cnt.read()
             if self._isNumeric(value):
-                self._tc.assertTrue(abs(values - value) <= error)
+                try:
+                    self._tc.assertTrue(abs(values - value) <= error)
+                except:
+                    self._tc.assertEqual(values, value)
+                    
             else:
                 self._tc.assertEqual(values, value)
         if self._isNumeric(cnt.read()) and not (
