@@ -246,7 +246,10 @@ class Checker(object):
             elif not self._isNumeric(values):
                 self._tc.assertEqual(Types.Converters.toBool(values), cnt[...])
             else:
-                self._tc.assertTrue(abs(values - cnt[...]) <= error)
+                try:
+                    self._tc.assertTrue(abs(values - cnt[...]) <= error)
+                except:
+                    self._tc.assertEqual(values, cnt[...])
         elif isinstance(cnt[...], numpy.bool_):
             self._tc.assertEqual(Types.Converters.toBool(values), cnt[...])
         elif self._isNumeric(values):
@@ -489,7 +492,10 @@ class Checker(object):
                 self._tc.assertEqual(
                     Types.Converters.toBool(values), cnt.read())
             else:
-                self._tc.assertTrue(abs(values - cnt.read()) <= error)
+                try:
+                    self._tc.assertTrue(abs(values - cnt.read()) <= error)
+                except Exception:
+                    self._tc.assertEqual(values, cnt.read())
         else:
             self._tc.assertEqual(values, cnt.read())
 
