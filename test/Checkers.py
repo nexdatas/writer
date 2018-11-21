@@ -233,7 +233,7 @@ class Checker(object):
                 #  print "Val", name , values ,value
                 try:
                     self._tc.assertTrue(abs(values - value) <= error)
-                except:
+                except Exception:
                     self._tc.assertEqual(values, value)
             else:
                 self._tc.assertEqual(values, value)
@@ -602,7 +602,7 @@ class Checker(object):
             else:
                 try:
                     self._tc.assertTrue(abs(values - cnt.read()) <= error)
-                except:
+                except Exception:
                     self._tc.assertEqual(values, cnt.read())
         else:
             self._tc.assertEqual(values, cnt.read())
