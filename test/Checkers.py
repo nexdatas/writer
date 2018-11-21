@@ -248,7 +248,7 @@ class Checker(object):
             else:
                 try:
                     self._tc.assertTrue(abs(values - cnt[...]) <= error)
-                except:
+                except Exception:
                     self._tc.assertEqual(values, cnt[...])
         elif isinstance(cnt[...], numpy.bool_):
             self._tc.assertEqual(Types.Converters.toBool(values), cnt[...])
