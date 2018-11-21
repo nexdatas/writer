@@ -231,7 +231,10 @@ class Checker(object):
             value = cnt[...]
             if self._isNumeric(value):
                 #  print "Val", name , values ,value
-                self._tc.assertTrue(abs(values - value) <= error)
+                try:
+                    self._tc.assertTrue(abs(values - value) <= error)
+                except:
+                    self._tc.assertEqual(values, value)
             else:
                 self._tc.assertEqual(values, value)
         if not isinstance(cnt[...], numpy.string_) and \
@@ -402,7 +405,10 @@ class Checker(object):
             value = cnt.read()
             for i in range(len(value)):
                 if self._isNumeric(value[i]):
-                    self._tc.assertTrue(abs(value[i] - values[i]) <= error)
+                    try:
+                        self._tc.assertTrue(abs(value[i] - values[i]) <= error)
+                    except Exception:
+                        self._tc.assertEqual(values[i], value[i])
                 else:
                     self._tc.assertEqual(values[i], value[i])
         for i in range(len(values)):
@@ -469,7 +475,10 @@ class Checker(object):
         if not isinstance(values, str) and not isinstance(values, unicode):
             value = cnt.read()
             if self._isNumeric(value):
-                self._tc.assertTrue(abs(values - value) <= error)
+                try:
+                    self._tc.assertTrue(abs(values - value) <= error)
+                except Exception:
+                    self._tc.assertEqual(values, value)
             else:
                 self._tc.assertEqual(values, value)
         if self._isNumeric(cnt.read()) and not (
@@ -582,7 +591,6 @@ class Checker(object):
                     self._tc.assertTrue(abs(values - value) <= error)
                 except Exception:
                     self._tc.assertEqual(values, value)
-
             else:
                 self._tc.assertEqual(values, value)
         if self._isNumeric(cnt.read()) and not (
@@ -592,7 +600,10 @@ class Checker(object):
                 self._tc.assertEqual(
                     Types.Converters.toBool(values), cnt.read())
             else:
-                self._tc.assertTrue(abs(values - cnt.read()) <= error)
+                try:
+                    self._tc.assertTrue(abs(values - cnt.read()) <= error)
+                except:
+                    self._tc.assertEqual(values, cnt.read())
         else:
             self._tc.assertEqual(values, cnt.read())
 
