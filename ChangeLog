@@ -1,3 +1,7 @@
+2018-11-26 Jan Kotanski <jankotan@gmail.com>
+	* workaround for broken pipe in StreamSet
+	* tagged as 2.22.2
+
 2018-11-21 Jan Kotanski <jankotan@gmail.com>
 	* fix tests for buster
 	* fix for PYTG_BUG_213
