@@ -40,6 +40,7 @@ except ImportError as e:
     sys.stdout.write("PYTANGO not available: %s" % e)
     sys.stdout.flush()
 
+
 class ProxyTools(object):
 
     """ tools for proxy
