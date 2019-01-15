@@ -41,6 +41,7 @@ try:
 except ImportError as e:
     pass
     # sys.stdout.write("MYSQL not available: %s\n" % e)
+    # sys.stdout.flush()
 
 try:
     import psycopg2
@@ -48,6 +49,7 @@ try:
 except ImportError as e:
     pass
     # sys.stdout.write("PGSQL not available: %s\n" % e)
+    # sys.stdout.flush()
 
 try:
     import cx_Oracle
@@ -55,6 +57,7 @@ try:
 except ImportError as e:
     pass
     # sys.stdout.write("ORACLE not available: %s\n" % e)
+    # sys.stdout.flush()
 
 
 class DBaseSource(DataSource):
