@@ -27,9 +27,9 @@ from nxswriter.DataSources import DataSource
 
 # test datasource
 class TestDataSource(DataSource):
-        # constructor
-    # \brief It cleans all member variables
 
+    # constructor
+    # \brief It cleans all member variables
     def __init__(self, streams=None):
         # flag for running getData
         self.dataTaken = False

@@ -114,10 +114,10 @@ class DataSourceDecodersTest(unittest.TestCase):
         if decoders is not None:
             self.assertEqual(data["decoders"], decoders)
         if dformat == 'SCALAR':
-                if error:
-                    self.assertTrue(abs(data["value"] - value) <= error)
-                else:
-                    self.assertEqual(data["value"], value)
+            if error:
+                self.assertTrue(abs(data["value"] - value) <= error)
+            else:
+                self.assertEqual(data["value"], value)
         elif dformat == 'SPECTRUM':
             self.assertEqual(len(data["value"]), len(value))
             for i in range(len(value)):
