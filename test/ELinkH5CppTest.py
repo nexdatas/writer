@@ -172,6 +172,9 @@ class ELinkH5CppTest(unittest.TestCase):
         atts7 = {"name": "link7",
                  "path":
                  "ELinkH5CppTesttest_createLink_default.h5://testField"}
+        atts8 = {"name": "link8", "target": "/NXentry/testField",
+                 "path":
+                 "ELinkTesttest_createLink_default.h5://testGroup/testField"}
         ct7 = "testField"
         gT1 = TNObject()
         TNObject("testGroup", "NXentry", gT1)
@@ -187,6 +190,7 @@ class ELinkH5CppTest(unittest.TestCase):
         li6 = ELink(atts6, eFile)
         li7 = ELink(atts7, eFile)
         li7.content.append(ct7)
+        li8 = ELink(atts8, eFile)
 
         fi2 = EField(self._fattrs, gr)
         fi2.content = ["2 "]
@@ -208,7 +212,12 @@ class ELinkH5CppTest(unittest.TestCase):
         self.assertEqual(li0.h5Object, None)
         self.assertEqual(li1.h5Object, None)
         self.assertEqual(li2.h5Object, None)
-        self.myAssertRaise(XMLSettingSyntaxError, li1.createLink, TNObject())
+
+        li8.createLink(TNObject())
+        self.assertTrue(isinstance(li8.h5Object, H5CppWriter.H5CppLink))
+        self.assertEqual(li8.h5Object.name, atts8["name"])
+        self.assertTrue(li8.h5Object._h5object.path, atts8["target"])
+
         li1.createLink(gT1)
         self.assertTrue(isinstance(li1.h5Object, H5CppWriter.H5CppLink))
         self.assertEqual(li1.h5Object.name, atts1["name"])
@@ -216,7 +225,6 @@ class ELinkH5CppTest(unittest.TestCase):
 
         # self.assertEqual(li1.h5Object._h5object, None)
         li2.createLink(TNObject())
-        self.myAssertRaise(XMLSettingSyntaxError, li3.createLink, TNObject())
         li3.createLink(gT2)
         li4.createLink(TNObject())
         li5.createLink(TNObject())

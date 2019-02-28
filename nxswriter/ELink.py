@@ -186,7 +186,6 @@ class ELink(FElement):
         res = ""
         ch = groupTypes
         valid = True if ch.name == "root" else False
-
         for gr in sp[:-1]:
             if len(gr) > 0:
                 sgr = gr.split(":")
@@ -209,7 +208,7 @@ class ELink(FElement):
                                 ch = c
                             else:
                                 valid = False
-                    if not valid:
+                    else:
                         if self._streams:
                             self._streams.error(
                                 "ELink::__typesToNames() - "
