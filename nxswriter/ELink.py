@@ -207,6 +207,7 @@ class ELink(FElement):
                                 res = "/".join([res, sgr[0]])
                                 ch = c
                             else:
+                                res = "/".join([res, sgr[0]])
                                 valid = False
                     else:
                         if self._streams:

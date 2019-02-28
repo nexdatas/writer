@@ -1,4 +1,8 @@
 2019-02-28 Jan Kotanski <jankotan@gmail.com>
+	* fix for links to not existing object
+	* tagged as 2.22.5
+
+2019-02-28 Jan Kotanski <jankotan@gmail.com>
 	* allows creating links to not existing object
 	* tagged as 2.22.4
 
