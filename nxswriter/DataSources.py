@@ -116,6 +116,8 @@ class DataSource(object):
             rec = globalJSON['data'][str(name)]
         else:
             return
+        if rec is None:
+            return
         ntp = NTP()
         rank, shape, dtype = ntp.arrayRankShape(rec)
 
