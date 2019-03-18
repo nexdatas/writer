@@ -1,3 +1,7 @@
+2019-03-18 Jan Kotanski <jankotan@gmail.com>
+	* workaround for the case when Client data is None
+	* tagged as 2.22.6
+
 2019-02-28 Jan Kotanski <jankotan@gmail.com>
 	* fix for links to not existing object
 	* tagged as 2.22.5
