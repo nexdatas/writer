@@ -255,6 +255,7 @@ class ClientSourceTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
+            "none": ["null", None, "NoneType", []],
             "int": [-23243, "SCALAR", "DevLong64", []],
             "long": [10000023540000000000000003, "SCALAR", "DevLong64", []],
             "float": [121.223e-01, "SCALAR", "DevDouble", []],
@@ -274,7 +275,9 @@ class ClientSourceTest(unittest.TestCase):
             self.assertEqual(
                 ds.setJSON(json.loads(gjson), json.loads(ljson)), None)
             dt = ds.getData()
-            if arr[a][2] == "DevBoolean":
+            if arr[a][2] == "NoneType":
+                self.assertTrue(dt is None)
+            elif arr[a][2] == "DevBoolean":
                 self.checkData(
                     dt, arr[a][1], Converters.toBool(arr[a][0]),
                     arr[a][2], arr[a][3])
