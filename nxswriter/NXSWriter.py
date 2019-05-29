@@ -78,7 +78,7 @@ class CommandThread(Thread):
             self.command(*self.args)
             with self.server.lock:
                 self.server.state_flag = self.fstate
-            self.dp.State()
+            self.dp.state()
         except (PyTango.DevFailed, BaseException):
             self.__failed()
             raise
@@ -95,7 +95,7 @@ class CommandThread(Thread):
             self.server.state_flag = self.estate
             self.server.errors.append(
                 str(datetime.now()) + ":\n" + str(sys.exc_info()[1]))
-        self.dp.State()
+        self.dp.state()
 
 
 class NXSDataWriter(PyTango.Device_4Impl):
