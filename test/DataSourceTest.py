@@ -22,8 +22,7 @@
 import unittest
 import sys
 import struct
-from xml.dom import minidom
-
+import xml.etree.ElementTree as et
 
 from nxswriter.DataSources import DataSource
 from nxswriter.TangoSource import PYTANGO_AVAILABLE as PYTANGO
@@ -172,23 +171,19 @@ class DataSourceTest(unittest.TestCase):
         self.assertTrue(isinstance(el, object))
         self.myAssertRaise(AttributeError, el._getText, None)
 
-        dom = minidom.parseString("<tag/>")
-        node = dom.getElementsByTagName("tag")
-        self.assertEqual(el._getText(node[0]).strip(), '')
+        node = et.fromstring("<tag/>")
+        self.assertEqual(el._getText(node).strip(), '')
 
         text = "My test \n text"
-        dom = minidom.parseString("<tag> %s</tag>" % text)
-        node = dom.getElementsByTagName("tag")
-        self.assertEqual(el._getText(node[0]).strip(), text)
+        node = et.fromstring(b"<tag> %s</tag>" % text)
+        self.assertEqual(el._getText(node).strip(), text)
 
         text = "My test text"
-        dom = minidom.parseString("<node> %s</node>" % text)
-        node = dom.getElementsByTagName("node")
-        self.assertEqual(el._getText(node[0]).strip(), text)
+        node = et.fromstring(b"<node> %s</node>" % text)
+        self.assertEqual(el._getText(node).strip(), text)
 
-        dom = minidom.parseString("<node></node>")
-        node = dom.getElementsByTagName("node")
-        self.assertEqual(el._getText(node[0]).strip(), '')
+        node = et.fromstring(b"<node></node>")
+        self.assertEqual(el._getText(node).strip(), '')
 
 
 if __name__ == '__main__':
