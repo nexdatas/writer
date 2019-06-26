@@ -198,17 +198,17 @@ class TangoSource(DataSource):
         client = False
         if dv is not None:
             device = dv.attrib["name"] \
-                if "name" in  dv.attrib else None
+                if "name" in dv.attrib else None
             hostname = dv.attrib["hostname"] \
-                if "hostname" in  dv.attrib else None
+                if "hostname" in dv.attrib else None
             port = dv.attrib["port"] \
-                if "port" in  dv.attrib else None
+                if "port" in dv.attrib else None
             group = dv.attrib["group"] \
-                if "group" in  dv.attrib else None
+                if "group" in dv.attrib else None
             encoding = dv.attrib["encoding"] \
-                if "encoding" in  dv.attrib else None
+                if "encoding" in dv.attrib else None
             memberType = dv.attrib["member"] \
-                if "member" in  dv.attrib else None
+                if "member" in dv.attrib else None
             if not memberType or memberType not in [
                     "attribute", "command", "property"]:
                 memberType = "attribute"

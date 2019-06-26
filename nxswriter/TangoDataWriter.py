@@ -675,9 +675,6 @@ class TangoDataWriter(object):
         # JKE tests
 
 
-
-
-
 if __name__ == "__main__":
 
     import time

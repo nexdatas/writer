@@ -141,23 +141,23 @@ class DBaseSource(DataSource):
         db = root.find("database")
         if db is not None:
             self.dbname = db.attrib["dbname"] \
-                if "dbname" in  db.attrib else None
+                if "dbname" in db.attrib else None
             self.dbtype = db.attrib["dbtype"] \
-                if "dbtype" in  db.attrib else None
+                if "dbtype" in db.attrib else None
             self.user = db.attrib["user"] \
-                if "user" in  db.attrib else None
+                if "user" in db.attrib else None
             self.passwd = db.attrib["passwd"] \
-                if "passwd" in  db.attrib else None
+                if "passwd" in db.attrib else None
             self.mode = db.attrib["mode"] \
-                if "mode" in  db.attrib else None
+                if "mode" in db.attrib else None
             mycnf = db.attrib["mycnf"] \
-                if "mycnf" in  db.attrib else None
+                if "mycnf" in db.attrib else None
             if mycnf:
                 self.mycnf = mycnf
             self.hostname = db.attrib["hostname"] \
-                if "hostname" in  db.attrib else None
+                if "hostname" in db.attrib else None
             self.port = db.attrib["port"] \
-                if "port" in  db.attrib else None
+                if "port" in db.attrib else None
             self.dsn = self._getText(db)
 
     def __connectMYSQL(self):
