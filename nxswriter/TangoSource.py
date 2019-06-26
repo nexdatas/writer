@@ -24,6 +24,7 @@ import time
 import threading
 import socket
 import xml.etree.ElementTree as et
+from lxml.etree import XMLParser
 
 from .Types import NTP
 
@@ -176,9 +177,8 @@ class TangoSource(DataSource):
         """
 
         if sys.version_info > (3,):
-            root = et.fromstring(bytes(xml, "UTF-8"))
-        else:
-            root = et.fromstring(xml)
+            xml = bytes(xml, "UTF-8")
+        root = et.fromstring(xml, parser=XMLParser(collect_ids=False))
         rec = root.find("record")
         name = None
         if rec is not None:

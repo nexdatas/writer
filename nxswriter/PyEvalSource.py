@@ -23,6 +23,7 @@ import threading
 import copy
 import sys
 import xml.etree.ElementTree as et
+from lxml.etree import XMLParser
 
 from .Types import NTP
 
@@ -95,9 +96,8 @@ class PyEvalSource(DataSource):
         """
 
         if sys.version_info > (3,):
-            root = et.fromstring(bytes(xml, "UTF-8"))
-        else:
-            root = et.fromstring(xml)
+            xml = bytes(xml, "UTF-8")
+        root = et.fromstring(xml, parser=XMLParser(collect_ids=False))
         mds = root.find("datasource")
         inputs = []
         if mds is not None:

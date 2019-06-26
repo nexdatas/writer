@@ -21,7 +21,7 @@
 
 import sys
 import xml.etree.ElementTree as et
-
+from lxml.etree import XMLParser
 from .DataSources import DataSource
 from .Errors import DataSourceSetupError
 
@@ -57,9 +57,8 @@ class ClientSource(DataSource):
         :        if :obj:`name` is not defined
         """
         if sys.version_info > (3,):
-            root = et.fromstring(bytes(xml, "UTF-8"))
-        else:
-            root = et.fromstring(xml)
+            xml = bytes(xml, "UTF-8")
+        root = et.fromstring(xml, parser=XMLParser(collect_ids=False))
         rec = root.find("record")
         if rec is not None:
             self.name = rec.attrib["name"] \
