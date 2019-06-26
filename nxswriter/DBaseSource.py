@@ -20,6 +20,7 @@
 """ Definitions of DB datasource """
 
 import xml.etree.ElementTree as et
+from lxml.etree import XMLParser
 import sys
 
 from .Types import NTP
@@ -119,9 +120,8 @@ class DBaseSource(DataSource):
             if :obj:`format` or :obj:`query` is not defined
         """
         if sys.version_info > (3,):
-            root = et.fromstring(bytes(xml, "UTF-8"))
-        else:
-            root = et.fromstring(xml)
+            xml = bytes(xml, "UTF-8")
+        root = et.fromstring(xml, parser=XMLParser(collect_ids=False))
         query = root.find("query")
         if query is not None:
             self.format = query.attrib["format"] \
