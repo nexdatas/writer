@@ -21,6 +21,23 @@
 
 from .Types import NTP
 import xml.etree.ElementTree as et
+import sys
+
+
+def _tostr(text):
+    """ converts text  to str type
+
+    :param text: text
+    :type text: :obj:`bytes` or :obj:`unicode`
+    :returns: text in str type
+    :rtype: :obj:`str`
+    """
+    if isinstance(text, str):
+        return text
+    elif sys.version_info > (3,):
+        return str(text, encoding="utf8")
+    else:
+        return str(text)
 
 
 class DataSource(object):
@@ -80,11 +97,10 @@ class DataSource(object):
         """
         if hasattr(node, "toxml"):
             xml = node.toxml()
-
         else:
-            xml = et.tostring(node, encoding='utf8', method='xml')
-            if len(xml) > 38:
-                xml = xml[38:]
+            xml = _tostr(et.tostring(node, encoding='utf8', method='xml'))
+            if xml.startswith("<?xml version='1.0' encoding='utf8'?>"):
+                xml = str(xml[38:])
         start = xml.find('>')
         end = xml.rfind('<')
         if start == -1 or end < start:
