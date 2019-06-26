@@ -175,14 +175,14 @@ class DataSourceTest(unittest.TestCase):
         self.assertEqual(el._getText(node).strip(), '')
 
         text = "My test \n text"
-        node = et.fromstring(b"<tag> %s</tag>" % text)
+        node = et.fromstring("<tag> %s</tag>" % text)
         self.assertEqual(el._getText(node).strip(), text)
 
         text = "My test text"
-        node = et.fromstring(b"<node> %s</node>" % text)
+        node = et.fromstring("<node> %s</node>" % text)
         self.assertEqual(el._getText(node).strip(), text)
 
-        node = et.fromstring(b"<node></node>")
+        node = et.fromstring("<node></node>")
         self.assertEqual(el._getText(node).strip(), '')
 
 
