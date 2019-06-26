@@ -657,7 +657,25 @@ class TangoDataWriter(object):
         self.__nxFile = None
         self.__eFile = None
         self.__logGroup = None
-        gc.collect()
+        # JKR tests
+        # gc.collect()
+        # JK tests
+        gc.set_debug(gc.DEBUG_LEAK)
+        n = gc.collect()
+        print("UNREACHABLE %s" % n)
+        gres = gc.garbage
+        print("GARBAGE %s" % len(gres))
+        res = str(gres)
+        import time
+        fname = "/tmp/gcdump-%s.gc" % str(time.time())
+        print(fname)
+        fl = open(fname, "w")
+        fl.write(res)
+        fl.close()
+        # JKE tests
+
+
+
 
 
 if __name__ == "__main__":

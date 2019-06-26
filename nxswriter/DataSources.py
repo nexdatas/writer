@@ -20,6 +20,7 @@
 """ Definitions of various datasources """
 
 from .Types import NTP
+import xml.etree.ElementTree as et
 
 
 class DataSource(object):
@@ -77,7 +78,13 @@ class DataSource(object):
         :returns: xml content string
         :rtype: :obj:`str`
         """
-        xml = node.toxml()
+        if hasattr(node, "toxml"):
+            xml = node.toxml()
+
+        else:
+            xml = et.tostring(node, encoding='utf8', method='xml')
+            if len(xml) > 38:
+                xml = xml[38:]
         start = xml.find('>')
         end = xml.rfind('<')
         if start == -1 or end < start:
