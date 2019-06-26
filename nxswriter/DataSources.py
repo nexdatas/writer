@@ -87,6 +87,20 @@ class DataSource(object):
         return "unknown DataSource"
 
     @classmethod
+    def _toxml(cls, node):
+        """ provides xml content of the whole node
+
+        :param node: DOM node
+        :type node: :class:`xml.dom.Node`
+        :returns: xml content string
+        :rtype: :obj:`str`
+        """
+        xml = _tostr(et.tostring(node, encoding='utf8', method='xml'))
+        if xml.startswith("<?xml version='1.0' encoding='utf8'?>"):
+            xml = str(xml[38:])
+        return xml
+
+    @classmethod
     def _getText(cls, node):
         """ provides xml content of the node
 
@@ -95,12 +109,7 @@ class DataSource(object):
         :returns: xml content string
         :rtype: :obj:`str`
         """
-        if hasattr(node, "toxml"):
-            xml = node.toxml()
-        else:
-            xml = _tostr(et.tostring(node, encoding='utf8', method='xml'))
-            if xml.startswith("<?xml version='1.0' encoding='utf8'?>"):
-                xml = str(xml[38:])
+        xml = cls._toxml(node)
         start = xml.find('>')
         end = xml.rfind('<')
         if start == -1 or end < start:

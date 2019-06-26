@@ -22,7 +22,7 @@
 import threading
 import copy
 import sys
-from xml.dom import minidom
+import xml.etree.ElementTree as et
 
 from .Types import NTP
 
@@ -95,49 +95,49 @@ class PyEvalSource(DataSource):
         """
 
         if sys.version_info > (3,):
-            dom = minidom.parseString(bytes(xml, "UTF-8"))
+            root = et.fromstring(bytes(xml, "UTF-8"))
         else:
-            dom = minidom.parseString(xml)
-        mds = dom.getElementsByTagName("datasource")
+            root = et.fromstring(xml)
+        mds = root.find("datasource")
         inputs = []
-        if mds and len(mds) > 0:
-            inputs = mds[0].getElementsByTagName("datasource")
-        for inp in inputs:
-            if inp.hasAttribute("name") and inp.hasAttribute("type"):
-                name = inp.getAttribute("name").strip()
-                dstype = inp.getAttribute("type").strip()
-                if len(name) > 0:
-                    if len(name) > 3 and name[:2] == 'ds.':
-                        name = name[3:]
-                    self.__sources[name] = (dstype, inp.toxml())
+        if mds is not None:
+            inputs = root.findall(".//datasource")
+            for inp in inputs:
+                if "name" in inp.attrib and "type" in inp.attrib:
+                    name = inp.attrib["name"].strip()
+                    dstype = inp.attrib["type"].strip()
+                    if len(name) > 0:
+                        if len(name) > 3 and name[:2] == 'ds.':
+                            name = name[3:]
+                        self.__sources[name] = (dstype, self._toxml(inp))
+                    else:
+                        if self._streams:
+                            self._streams.error(
+                                "PyEvalSource::setup() - "
+                                "PyEval input %s not defined" % name,
+                                std=False)
+
+                        raise DataSourceSetupError(
+                            "PyEvalSource::setup() - "
+                            "PyEval input %s not defined" % name)
+
                 else:
                     if self._streams:
                         self._streams.error(
                             "PyEvalSource::setup() - "
-                            "PyEval input %s not defined" % name,
+                            "PyEval input name wrongly defined",
                             std=False)
 
                     raise DataSourceSetupError(
                         "PyEvalSource::setup() - "
-                        "PyEval input %s not defined" % name)
-
-            else:
-                if self._streams:
-                    self._streams.error(
-                        "PyEvalSource::setup() - "
-                        "PyEval input name wrongly defined",
-                        std=False)
-
-                raise DataSourceSetupError(
-                    "PyEvalSource::setup() - "
-                    "PyEval input name wrongly defined")
-        res = dom.getElementsByTagName("result")
-        if res and len(res) > 0:
-            self.__name = res[0].getAttribute("name") \
-                if res[0].hasAttribute("name") else 'result'
+                        "PyEval input name wrongly defined")
+        res = root.find("result")
+        if res is not None:
+            self.__name = res.attrib["name"] \
+                   if "name" in res.attrib else 'result'
             if len(self.__name) > 3 and self.__name[:2] == 'ds.':
                 self.__name = self.__name[3:]
-            self.__script = self._getText(res[0])
+            self.__script = self._getText(res)
 
         if len(self.__script) == 0:
             if self._streams:
