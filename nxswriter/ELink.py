@@ -20,6 +20,7 @@
 """ Definitions of link tag evaluation classes """
 
 import sys
+import weakref
 
 from .FElement import FElement
 from .Errors import (XMLSettingSyntaxError)
@@ -51,7 +52,7 @@ class ELink(FElement):
         self.strategy = None
         #: (:obj:`str`) trigger for asynchronous writting
         self.trigger = None
-        self.__groupTypes = None
+        self.__groupTypes = lambda: None
         self.__target = None
         self.__name = None
 
@@ -113,8 +114,11 @@ class ELink(FElement):
         :param target: NeXus target path
         :type target: :obj: `str`
         """
-        if groupTypes:
-            self.__groupTypes = groupTypes
+        if groupTypes is not None:
+            if not hasattr(groupTypes, "__call__"):
+                groupTypes = weakref.ref(groupTypes)
+            if groupTypes():
+                self.__groupTypes = groupTypes
         if "name" in self._tagAttrs.keys():
             self.__setTarget(target)
             if self.__target:
@@ -162,13 +166,14 @@ class ELink(FElement):
                 target = ("".join(self.content)).strip().encode()
         if target is not None:
             if '://' not in str(target) \
-               and self.__groupTypes is not None:
+               and self.__groupTypes is not None and \
+               self.__groupTypes() is not None:
                 if sys.version_info > (3,):
                     self.__target = (self.__typesToNames(
-                        target, self.__groupTypes))
+                        target, self.__groupTypes()))
                 else:
                     self.__target = (self.__typesToNames(
-                        target, self.__groupTypes)).encode()
+                        target, self.__groupTypes())).encode()
             else:
                 self.__target = str(target)
 

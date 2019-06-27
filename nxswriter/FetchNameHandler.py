@@ -23,6 +23,8 @@ from xml import sax
 
 import sys
 import os
+import weakref
+
 
 from .Errors import XMLSyntaxError
 
@@ -48,12 +50,12 @@ class TNObject(object):
         #: (:obj:`str`) object Nexus type
         self.nxtype = nxtype
         #:  (:class:`nxswriter.Element.Element`) object parent
-        self.parent = parent
+        self.parent = weakref.ref(parent) if parent else lambda: None
         #: (:obj`:list` <:class:`nxswriter.Element.Element`>) object children
         self.children = []
 
-        if hasattr(self.parent, "children"):
-            self.parent.children.append(self)
+        if hasattr(self.parent(), "children"):
+            self.parent().children.append(self)
 
     def child(self, name='', nxtype=''):
         """ get child by name or nxtype
@@ -167,7 +169,7 @@ class FetchNameHandler(sax.ContentHandler):
                             std=False)
 
                     raise XMLSyntaxError("The group type not defined")
-            self.__current = self.__current.parent
+            self.__current = self.__current.parent()
             self.__stack.pop()
 
         if name == "attribute" and self.__stack[-1] == "group":

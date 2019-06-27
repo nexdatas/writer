@@ -120,9 +120,14 @@ class TElement(FElement):
 
     @classmethod
     def getGroupTypes(self, tno, gt):
-        gt[tno.nxtype] = tno.name
-        for ch in tno.children:
-            self.getGroupTypes(ch, gt)
+        if hasattr(tno, "__call__"):
+            gt[tno().nxtype] = tno().name
+            for ch in tno().children:
+                self.getGroupTypes(ch, gt)
+        else:
+            gt[tno.nxtype] = tno.name
+            for ch in tno.children:
+                self.getGroupTypes(ch, gt)
 
     # creates links
     def createLink(self, groupTypes):
@@ -3263,8 +3268,8 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         parser = sax.make_parser()
         errorHandler = sax.ErrorHandler()
 
-        datasources = "SOMETHING"
-        decoders = "SOMETHING2"
+        datasources = (lambda: "SOMETHING")
+        decoders = (lambda: "SOMETHING2")
         gjson = json.loads('{"data":{"myrecord":"1"}}')
         el = NexusXMLHandler(
             self._eFile, parser=parser, globalJSON=gjson,
@@ -3386,8 +3391,8 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         parser = sax.make_parser()
         errorHandler = sax.ErrorHandler()
 
-        datasources = "SOMETHING"
-        decoders = "SOMETHING2"
+        datasources = (lambda: "SOMETHING")
+        decoders = (lambda: "SOMETHING2")
         gjson = json.loads('{"data":{"myrecord":"1"}}')
         el = NexusXMLHandler(
             self._eFile, parser=parser, globalJSON=gjson,
@@ -3509,8 +3514,8 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         parser = sax.make_parser()
         errorHandler = sax.ErrorHandler()
 
-        datasources = "SOMETHING"
-        decoders = "SOMETHING2"
+        datasources = (lambda: "SOMETHING")
+        decoders = (lambda: "SOMETHING2")
         gjson = json.loads('{"data":{"myrecord":"1"}}')
         el = NexusXMLHandler(
             self._eFile, parser=parser, globalJSON=gjson,

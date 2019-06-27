@@ -20,6 +20,7 @@
 """ SAX parser for taking XML string inside specified tag """
 
 from xml import sax
+import weakref
 
 
 class InnerXMLHandler(sax.ContentHandler):
@@ -30,7 +31,7 @@ class InnerXMLHandler(sax.ContentHandler):
     def __init__(self, xmlReader, contentHandler, name, attrs):
         """ constructor
 
-        :brief: It constructs parser handler for taking xml od datasources
+        :brief: It constructs parser handler for taking xml of datasources
         :param xmlReader: NeXus xml sax reader
         :type xmlReader: :class:`xml.sax.xmlreader.XMLReader`
         :param contentHandler: NeXus XML content handler
@@ -46,9 +47,9 @@ class InnerXMLHandler(sax.ContentHandler):
         self.xml = None
         #: (:class:`nxswriter.NeXusXMLHandler.NeXusXMLHandler`) \
         #:       external contentHandler
-        self.__contentHandler = contentHandler
+        self.__contentHandler = weakref.ref(contentHandler)
         #: (:class:`xml.sax.xmlreader.XMLReader`) external xmlreader
-        self.__xmlReader = xmlReader
+        self.__xmlReader = weakref.ref(xmlReader)
         #: (:obj:`int`) tag depth
         self.__depth = 1
         #: (:obj:`str`) first tag
@@ -130,6 +131,6 @@ class InnerXMLHandler(sax.ContentHandler):
         self.__depth -= 1
         if self.__depth == 0:
             self.xml = (self.__preXML, self.__contentXML, self.__postXML)
-            self.__xmlReader.setContentHandler(self.__contentHandler)
+            self.__xmlReader().setContentHandler(self.__contentHandler())
         else:
             self.__contentXML += "</%s>" % name
