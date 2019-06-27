@@ -399,7 +399,6 @@ class ELinkH5CppTest(unittest.TestCase):
         fi4 = EField(self._fattrs, gr3)
         fi4.content = ["4 "]
         fi4.store()
-
         self.assertTrue(isinstance(li1, Element))
         self.assertTrue(isinstance(li1, FElement))
         self.assertEqual(li1.tagName, "link")
@@ -502,6 +501,7 @@ class ELinkH5CppTest(unittest.TestCase):
         gT2 = TNObject()
         TNObject("entry3", "NXentry", gT2)
 
+        gT = TNObject()
         ds1 = TestDataSource()
         ds1.value = {"rank": 0, "value": tatts1["target1"],
                      "tangoDType": "DevString", "shape": [0, 0]}
@@ -558,7 +558,8 @@ class ELinkH5CppTest(unittest.TestCase):
         li1.createLink(TNObject())
         li1.createLink(gT1)
         self.assertEqual(li1.h5Object, None)
-        li2.createLink(TNObject())
+        # li2.createLink(TNObject())
+        li2.createLink(gT)
         li3.createLink(TNObject())
         li3.createLink(gT2)
         li4.createLink(TNObject())
@@ -618,6 +619,8 @@ class ELinkH5CppTest(unittest.TestCase):
             fi2.h5Object.attributes["units"].shape)
 
         l2 = self._nxFile.open("link2")
+        print(dir(l2))
+        print(dir(fi3.h5Object))
         self.assertEqual(l2.read(), fi3.h5Object.read())
         self.assertEqual(l2.dtype, fi3.h5Object.dtype)
         self.assertEqual(l2.shape, fi3.h5Object.shape)
@@ -711,6 +714,7 @@ class ELinkH5CppTest(unittest.TestCase):
                "strategy4": "INIT",
                "strategy5": "STEP",
                "strategy6": "FINAL"}
+        gT = TNObject()
         gT1 = TNObject()
         TNObject("testGroup", "NXentry", gT1)
         gT2 = TNObject()
@@ -780,7 +784,7 @@ class ELinkH5CppTest(unittest.TestCase):
         li1.createLink(TNObject())
         li1.createLink(gT1)
         self.assertEqual(li1.h5Object, None)
-        li2.createLink(TNObject())
+        li2.createLink(gT)
         li3.createLink(TNObject())
         li3.createLink(gT2)
         li4.createLink(TNObject())

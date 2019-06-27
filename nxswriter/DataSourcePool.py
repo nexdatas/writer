@@ -70,6 +70,7 @@ class DataSourcePool(object):
             for dk in configJSON['datasources'].keys():
                 pkl = configJSON['datasources'][dk].split(".")
                 pkg = ".".join(pkl[:-1])
+
                 if pkg in sys.modules.keys():
                     pdec = sys.modules[pkg]
                     dec = pdec

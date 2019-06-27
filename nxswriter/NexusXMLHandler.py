@@ -88,14 +88,16 @@ class NexusXMLHandler(sax.ContentHandler):
         self.raiseUnsupportedTag = True
 
         #: (:class:`xml.sax.xmlreader.XMLReader`) xmlreader
-        self.__parser = weakref.ref(parser)
+        self.__parser = weakref.ref(parser) \
+            if parser else (lambda: None)
         #: (:class:`nxswriter.InnerXMLHandler.InnerXMLHandler`) \
         #:     inner xml handler
         self.__innerHandler = None
 
         #: (:obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>) \
         #:    global json string
-        self.__json = dict(globalJSON)
+        self.__json = dict(globalJSON) \
+            if globalJSON is not None else None
 
         #: (:obj:`dict` <:obj:`str`: :class:`nxswriter.Element.Element` > ) \
         #:     tags with inner xml as its input
@@ -132,17 +134,17 @@ class NexusXMLHandler(sax.ContentHandler):
         #: (:class:`nxswriter.ThreadPool.ThreadPool`) \
         #:       thread pool with INIT elements
         self.initPool = ThreadPool(streams=StreamSet(
-             weakref.ref(streams)))
+             weakref.ref(streams) if streams else None))
         # self.initPool = ThreadPool()
         #: (:class:`nxswriter.ThreadPool.ThreadPool`) \
         #:       thread pool with STEP elements
         self.stepPool = ThreadPool(streams=StreamSet(
-            weakref.ref(streams)))
+            weakref.ref(streams) if streams else None))
         # self.stepPool = ThreadPool()
         #: (:class:`nxswriter.ThreadPool.ThreadPool`) \
         #:      thread pool with FINAL elements
         self.finalPool = ThreadPool(streams=StreamSet(
-            weakref.ref(streams)))
+            weakref.ref(streams) if streams else None))
         # self.finalPool = ThreadPool()
 
         #: (:obj:`dict` \
@@ -217,13 +219,17 @@ class NexusXMLHandler(sax.ContentHandler):
                 self.__stack.append(
                     self.elementClass[name](
                         attrs, self.__last(),
-                        streams=StreamSet(weakref.ref(self._streams)),
+                        streams=StreamSet(
+                            weakref.ref(self._streams)
+                            if self._streams else None),
                         reloadmode=self.__reloadmode))
             elif name in self.elementClass:
                 self.__stack.append(
                     self.elementClass[name](
                         attrs, self.__last(),
-                        streams=StreamSet(weakref.ref(self._streams))))
+                        streams=StreamSet(
+                            weakref.ref(self._streams)
+                            if self._streams else None)))
                 if hasattr(self.__datasources(), "canfail") \
                    and self.__datasources().canfail \
                    and hasattr(self.__stack[-1], "setCanFail"):
@@ -295,7 +301,10 @@ class NexusXMLHandler(sax.ContentHandler):
         if trigger and strategy == 'STEP':
             if trigger not in self.triggerPools.keys():
                 self.triggerPools[trigger] = ThreadPool(
-                    streams=StreamSet(weakref.ref(self._streams)))
+                    streams=StreamSet(
+                        weakref.ref(self._streams)
+                        if self._streams else None
+                    ))
             self.triggerPools[trigger].append(task)
         elif strategy in self.__poolMap.keys():
             self.__poolMap[strategy].append(task)
@@ -310,7 +319,10 @@ class NexusXMLHandler(sax.ContentHandler):
             res = None
             inner = self.withXMLinput[self.__storedName](
                 self.__storedAttrs, self.__last(),
-                streams=StreamSet(weakref.ref(self._streams)))
+                streams=StreamSet(
+                    weakref.ref(self._streams)
+                    if self._streams else None
+                ))
             if hasattr(inner, "setDataSources") \
                     and callable(inner.setDataSources):
                 inner.setDataSources(self.__datasources())

@@ -165,7 +165,7 @@ class TangoDataWriter(object):
         self.__filetimes = {}
 
         #: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set
-        self._streams = StreamSet(weakref.ref(server))
+        self._streams = StreamSet(weakref.ref(server) if server else None)
 
         #: (:obj:`bool`) skip acquisition flag
         self.skipacquisition = False
@@ -652,7 +652,7 @@ class TangoDataWriter(object):
         self.__nxFile = None
         self.__eFile = None
         self.__logGroup = None
-        self.__fetcher = None
+        # self.__fetcher = None
         # JKR tests
         gc.collect()
         # JK tests

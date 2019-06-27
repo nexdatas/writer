@@ -20,6 +20,7 @@
 """ labels to Tango Streams """
 
 import sys
+import weakref
 
 
 class StreamSet(object):
@@ -42,6 +43,10 @@ class StreamSet(object):
         #: (:class:`PyTango.log4tango.TangoStream`) Tango debug log stream
         self.log_debug = None
         #: (:obj:`set <:obj:`str` >`) if tango server
+        if not hasattr(streams, "__call__"):
+            streams = weakref.ref(streams) \
+                if streams is not None else (lambda: None)
+
         if streams():
             if hasattr(streams(), "log_fatal"):
                 self.log_fatal = streams().log_fatal

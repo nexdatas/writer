@@ -26,6 +26,7 @@ import random
 import time
 import struct
 import binascii
+
 try:
     from cStringIO import StringIO
 except Exception:

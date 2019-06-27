@@ -75,7 +75,7 @@ class ElementTest(unittest.TestCase):
         root = TNObject()
         self.assertEqual(root.name, 'root')
         self.assertEqual(root.nxtype, None)
-        self.assertEqual(root.parent, None)
+        self.assertEqual(root.parent(), None)
         self.assertEqual(root.children, [])
 
         nn = self.__rnd.randint(1, 9)
@@ -84,7 +84,7 @@ class ElementTest(unittest.TestCase):
         el = TNObject(mname)
         self.assertEqual(el.name, mname)
         self.assertEqual(el.nxtype, None)
-        self.assertEqual(el.parent, None)
+        self.assertEqual(el.parent(), None)
         self.assertEqual(el.children, [])
 
         nn = self.__rnd.randint(1, 9)
@@ -93,7 +93,7 @@ class ElementTest(unittest.TestCase):
         el = TNObject(mname, mtype)
         self.assertEqual(el.name, mname)
         self.assertEqual(el.nxtype, mtype)
-        self.assertEqual(el.parent, None)
+        self.assertEqual(el.parent(), None)
         self.assertEqual(el.children, [])
 
         nn = self.__rnd.randint(1, 9)
@@ -104,7 +104,7 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(root.children, [el])
         self.assertEqual(el.name, mname)
         self.assertEqual(el.nxtype, mtype)
-        self.assertEqual(el.parent, root)
+        self.assertEqual(el.parent(), root)
         self.assertEqual(el.children, [])
 
         nn = self.__rnd.randint(1, 9)
@@ -115,7 +115,7 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(root.children, [el, el2])
         self.assertEqual(el2.name, mname)
         self.assertEqual(el2.nxtype, mtype)
-        self.assertEqual(el2.parent, root)
+        self.assertEqual(el2.parent(), root)
         self.assertEqual(el2.children, [])
 
         nn = self.__rnd.randint(1, 9)
@@ -128,7 +128,7 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(root.children, [el, el2])
         self.assertEqual(el3.name, mname)
         self.assertEqual(el3.nxtype, mtype)
-        self.assertEqual(el3.parent, el2)
+        self.assertEqual(el3.parent(), el2)
         self.assertEqual(el3.children, [])
 
     # constructor test
@@ -139,7 +139,7 @@ class ElementTest(unittest.TestCase):
         root = TNObject()
         self.assertEqual(root.name, 'root')
         self.assertEqual(root.nxtype, None)
-        self.assertEqual(root.parent, None)
+        self.assertEqual(root.parent(), None)
         self.assertEqual(root.children, [])
 
         nn = self.__rnd.randint(1, 10)
@@ -148,7 +148,7 @@ class ElementTest(unittest.TestCase):
         el = TNObject(mname)
         self.assertEqual(el.name, mname)
         self.assertEqual(el.nxtype, None)
-        self.assertEqual(el.parent, None)
+        self.assertEqual(el.parent(), None)
         self.assertEqual(el.children, [])
 
         nn = self.__rnd.randint(1, 10)
@@ -159,7 +159,7 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(root.children, [el])
         self.assertEqual(el.name, mname)
         self.assertEqual(el.nxtype, mtype)
-        self.assertEqual(el.parent, root)
+        self.assertEqual(el.parent(), root)
         self.assertEqual(el.children, [])
 
         nn = self.__rnd.randint(1, 10)
@@ -170,7 +170,7 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(root.children, [el, el2])
         self.assertEqual(el2.name, mname2)
         self.assertEqual(el2.nxtype, mtype2)
-        self.assertEqual(el2.parent, root)
+        self.assertEqual(el2.parent(), root)
         self.assertEqual(el2.children, [])
 
         nn = self.__rnd.randint(1, 10)
@@ -183,7 +183,7 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(root.children, [el, el2])
         self.assertEqual(el3.name, mname3)
         self.assertEqual(el3.nxtype, mtype3)
-        self.assertEqual(el3.parent, el2)
+        self.assertEqual(el3.parent(), el2)
         self.assertEqual(el3.children, [])
 
         ch = root.child()

@@ -493,6 +493,7 @@ class ELinkH5PYTest(unittest.TestCase):
                   "target4": "/testField",
                   "target5": "/testGroup",
                   "target6": "/testField"}
+        gT = TNObject()
         gT1 = TNObject()
         TNObject("testGroup", "NXentry", gT1)
         gT2 = TNObject()
@@ -554,7 +555,7 @@ class ELinkH5PYTest(unittest.TestCase):
         li1.createLink(TNObject())
         li1.createLink(gT1)
         self.assertEqual(li1.h5Object, None)
-        li2.createLink(TNObject())
+        li2.createLink(gT)
         li3.createLink(TNObject())
         li3.createLink(gT2)
         li4.createLink(TNObject())
@@ -707,6 +708,7 @@ class ELinkH5PYTest(unittest.TestCase):
                "strategy4": "INIT",
                "strategy5": "STEP",
                "strategy6": "FINAL"}
+        gT = TNObject()
         gT1 = TNObject()
         TNObject("testGroup", "NXentry", gT1)
         gT2 = TNObject()
@@ -776,7 +778,7 @@ class ELinkH5PYTest(unittest.TestCase):
         li1.createLink(TNObject())
         li1.createLink(gT1)
         self.assertEqual(li1.h5Object, None)
-        li2.createLink(TNObject())
+        li2.createLink(gT)
         li3.createLink(TNObject())
         li3.createLink(gT2)
         li4.createLink(TNObject())

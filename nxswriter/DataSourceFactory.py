@@ -61,22 +61,28 @@ class DataSourceFactory(Element):
         """
         if "type" in attrs.keys():
             if self.__dsPool and self.__dsPool.hasDataSource(attrs["type"]):
+                streams = weakref.ref(self._streams) \
+                          if self._streams else (lambda: None)
                 self.last.source = self.__dsPool.get(attrs["type"])(
-                    streams=StreamSet(weakref.ref(self._streams)))
+                    streams=StreamSet(streams))
             else:
                 if self._streams:
                     self._streams.error(
                         "DataSourceFactory::__createDSource - "
                         "Unknown data source")
+                streams = weakref.ref(self._streams) \
+                    if self._streams else (lambda: None)
                 self.last.source = DataSource(
-                    streams=StreamSet(weakref.ref(self._streams)))
+                    streams=StreamSet(streams))
         else:
             if self._streams:
                 self._streams.error(
                     "DataSourceFactory::__createDSource - "
                     "Typeless data source")
+            streams = weakref.ref(self._streams) \
+                if self._streams else (lambda: None)
             self.last.source = DataSource(
-                streams=StreamSet(weakref.ref(self._streams)))
+                streams=StreamSet(streams))
 
     def store(self, xml=None, globalJSON=None):
         """ sets the datasource form xml string

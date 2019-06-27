@@ -322,8 +322,14 @@ ds.result = ds.myclient + 1
 
         atts = {"type": "CL"}
         name = "myRecord"
-        wjson = json.loads(
-            '{"datasources":{"CL":"TestDataSource.TestDataSource"}}')
+        if "test.TestDataSource" in sys.modules.keys():
+            wjson = json.loads(
+                '{"datasources":{'
+                '"CL":"test.TestDataSource.TestDataSource"}}')
+        else:
+            wjson = json.loads(
+                '{"datasources":{'
+                '"CL":"TestDataSource.TestDataSource"}}')
         gjson = json.loads('{"data":{"myRecord":1123}}')
         el = EField(self._fattrs, None)
         ds = DataSourceFactory(atts, el)
