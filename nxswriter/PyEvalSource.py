@@ -104,8 +104,8 @@ class PyEvalSource(DataSource):
             inputs = root.findall(".//datasource")
             for inp in inputs:
                 if "name" in inp.attrib and "type" in inp.attrib:
-                    name = inp.attrib["name"].strip()
-                    dstype = inp.attrib["type"].strip()
+                    name = inp.get("name").strip()
+                    dstype = inp.get("type").strip()
                     if len(name) > 0:
                         if len(name) > 3 and name[:2] == 'ds.':
                             name = name[3:]
@@ -133,8 +133,7 @@ class PyEvalSource(DataSource):
                         "PyEval input name wrongly defined")
         res = root.find("result")
         if res is not None:
-            self.__name = res.attrib["name"] \
-                   if "name" in res.attrib else 'result'
+            self.__name = res.get("name") or 'result'
             if len(self.__name) > 3 and self.__name[:2] == 'ds.':
                 self.__name = self.__name[3:]
             self.__script = self._getText(res)
