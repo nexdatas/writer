@@ -165,8 +165,7 @@ class TangoDataWriter(object):
         self.__filetimes = {}
 
         #: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set
-        # self._streams = StreamSet(weakref.ref(None))
-        self._streams = StreamSet(lambda : None)
+        self._streams = StreamSet(weakref.ref(server))
 
         #: (:obj:`bool`) skip acquisition flag
         self.skipacquisition = False
@@ -413,21 +412,19 @@ class TangoDataWriter(object):
             self.__datasources.counter = -1
             self.__datasources.nxroot = self.__nxRoot
             errorHandler = sax.ErrorHandler()
-            self.__parser = sax.make_parser()
-
+            parser = sax.make_parser()
             handler = NexusXMLHandler(
                 self.__eFile, self.__datasources,
                 self.__decoders, self.__fetcher.groupTypes,
-                self.__parser, json.loads(self.jsonrecord),
+                parser, json.loads(self.jsonrecord),
                 self._streams,
                 self.skipacquisition
             )
-            self.__parser.setContentHandler(handler)
-            self.__parser.setErrorHandler(errorHandler)
-
+            parser.setContentHandler(handler)
+            parser.setErrorHandler(errorHandler)
             inpsrc = sax.InputSource()
             inpsrc.setByteStream(StringIO(self.xmlsettings))
-            self.__parser.parse(inpsrc)
+            parser.parse(inpsrc)
 
             self.__initPool = handler.initPool
             self.__stepPool = handler.stepPool
@@ -655,21 +652,24 @@ class TangoDataWriter(object):
         self.__nxFile = None
         self.__eFile = None
         self.__logGroup = None
+        self.__fetcher = None
         # JKR tests
-        # gc.collect()
+        gc.collect()
         # JK tests
-        gc.set_debug(gc.DEBUG_LEAK)
-        n = gc.collect()
-        print("UNREACHABLE %s" % n)
-        gres = gc.garbage
-        print("GARBAGE %s" % len(gres))
-        res = str(gres)
-        import time
-        fname = "/tmp/gcdump-%s.gc" % str(time.time())
-        print(fname)
-        fl = open(fname, "w")
-        fl.write(res)
-        fl.close()
+        # JKE tests
+        # print("W4")
+        # gc.set_debug(gc.DEBUG_LEAK)
+        # n = gc.collect()
+        # print("UNREACHABLE %s" % n)
+        # gres = gc.garbage
+        # print("GARBAGE %s" % len(gres))
+        # res = str(gres)
+        # import time
+        # fname = "/tmp/gcdump-%s.gc" % str(time.time())
+        # print(fname)
+        # fl = open(fname, "w")
+        # fl.write(res)
+        # fl.close()
         # JKE tests
 
 

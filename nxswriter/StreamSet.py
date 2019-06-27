@@ -20,7 +20,6 @@
 """ labels to Tango Streams """
 
 import sys
-import weakref
 
 
 class StreamSet(object):
