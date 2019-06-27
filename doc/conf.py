@@ -432,5 +432,5 @@ intersphinx_mapping = {
     'http://docs.scipy.org/doc/scipy/reference': None,
     'http://docs.scipy.org/doc/numpy': None,
     'http://pytango.readthedocs.io/en/stable/': None,
-    'file:///usr/share/doc/python-pni-doc/html/': None,
+    # 'file:///usr/share/doc/python-pni-doc/html/': None,
 }

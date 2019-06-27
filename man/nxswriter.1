@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "NXSWRITER" "1" "Oct 18, 2018" "2.22" "NXSDataWriter"
+.TH "NXSWRITER" "1" "Jun 27, 2019" "2.23" "NXSDataWriter"
 .SH NAME
 nxswriter \- nxswriter Documentation
 .
@@ -290,7 +290,7 @@ constructor
 It sets all member variables to None
 .TP
 .B Parameters
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -302,7 +302,7 @@ provides access to the data
 dictionary with collected data
 .TP
 .B Return type
-{\(aqrank\(aq: \fI\%str\fP, \(aqvalue\(aq: any, \(aqtangoDType\(aq: \fI\%str\fP,         :        \(aqshape\(aq: \fBlist\fP <int>, \(aqencoding\(aq: \fI\%str\fP,         :        \(aqdecoders\(aq: \fI\%str\fP} )
+{‘rank’: \fI\%str\fP, ‘value’: any, ‘tangoDType’: \fI\%str\fP,         :        ‘shape’: \fBlist\fP <int>, ‘encoding’: \fI\%str\fP,         :        ‘decoders’: \fI\%str\fP} )
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -322,9 +322,9 @@ It sets the currently used  JSON string
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBglobalJSON\fP (\fI\%dict\fP         :                 <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- static JSON string
+\fBglobalJSON\fP (\fI\%dict\fP         :                 <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – static JSON string
 .IP \(bu 2
-\fBlocalJSON\fP (\fI\%dict\fP                          <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- dynamic JSON string
+\fBlocalJSON\fP (\fI\%dict\fP                          <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – dynamic JSON string
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -335,7 +335,7 @@ sets the parrameters up from xml
 .INDENT 7.0
 .TP
 .B Parameters
-\fBxml\fP (\fI\%str\fP) \-\- datasource parameters
+\fBxml\fP (\fI\%str\fP) – datasource parameters
 .TP
 .B Raises
 \fI\%nxswriter.Errors.DataSourceSetupError\fP         :        if \fI\%name\fP is not defined
@@ -364,7 +364,7 @@ constructor
 It sets all member variables to None
 .TP
 .B Parameters
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -436,7 +436,7 @@ sets the parrameters up from xml
 .INDENT 7.0
 .TP
 .B Parameters
-\fBxml\fP (\fI\%str\fP) \-\- datasource parameters
+\fBxml\fP (\fI\%str\fP) – datasource parameters
 .TP
 .B Raises
 \fI\%nxswriter.Errors.DataSourceSetupError\fP
@@ -465,19 +465,19 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBrank\fP (\fI\%str\fP) \-\- format of the data, i.e. SCALAR, SPECTRUM, IMAGE, VERTEX
+\fBrank\fP (\fI\%str\fP) – format of the data, i.e. SCALAR, SPECTRUM, IMAGE, VERTEX
 .IP \(bu 2
-\fBvalue\fP (\fI\%any\fP) \-\- value of the data. It may be also 1D and 2D array
+\fBvalue\fP (\fIany\fP) – value of the data. It may be also 1D and 2D array
 .IP \(bu 2
-\fBtangoDType\fP (\fI\%str\fP) \-\- type of the data
+\fBtangoDType\fP (\fI\%str\fP) – type of the data
 .IP \(bu 2
-\fBshape\fP (\fBlist\fP <\fI\%int\fP>) \-\- shape of the data
+\fBshape\fP (\fBlist\fP <\fI\%int\fP>) – shape of the data
 .IP \(bu 2
-\fBencoding\fP (\fI\%str\fP) \-\- encoding type of Tango DevEncoded varibles
+\fBencoding\fP (\fI\%str\fP) – encoding type of Tango DevEncoded varibles
 .IP \(bu 2
-\fBdecoders\fP (\fI\%nxswriter.DecoderPool.DecoderPool\fP) \-\- poll with decoding classes
+\fBdecoders\fP (\fI\%nxswriter.DecoderPool.DecoderPool\fP) – poll with decoding classes
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -487,7 +487,7 @@ casts the data into given type
 .INDENT 7.0
 .TP
 .B Parameters
-\fBdtype\fP (\fI\%str\fP) \-\- given type of data
+\fBdtype\fP (\fI\%str\fP) – given type of data
 .TP
 .B Returns
 numpy array of defined type or list
@@ -544,11 +544,11 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary with the tag attributes
+\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) – dictionary with the tag attributes
 .IP \(bu 2
-\fBlast\fP (\fI\%nxswriter.Element.Element\fP) \-\- the last element on the stack
+\fBlast\fP (\fI\%nxswriter.Element.Element\fP) – the last element on the stack
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -558,7 +558,7 @@ sets the used datasources
 .INDENT 7.0
 .TP
 .B Parameters
-\fBdatasources\fP (\fI\%nxswriter.DataSourcePool.DataSourcePool\fP) \-\- pool to be set
+\fBdatasources\fP (\fI\%nxswriter.DataSourcePool.DataSourcePool\fP) – pool to be set
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -568,7 +568,7 @@ sets the used decoders
 .INDENT 7.0
 .TP
 .B Parameters
-\fBdecoders\fP (\fI\%nxswriter.DecoderPool.DecoderPool\fP) \-\- pool to be set
+\fBdecoders\fP (\fI\%nxswriter.DecoderPool.DecoderPool\fP) – pool to be set
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -580,9 +580,9 @@ sets the datasource form xml string
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBxml\fP (\fI\%str\fP) \-\- input parameter
+\fBxml\fP (\fI\%str\fP) – input parameter
 .IP \(bu 2
-\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- global JSON string
+\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – global JSON string
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -604,7 +604,7 @@ constructor
 It creates know datasources
 .TP
 .B Parameters
-\fBconfigJSON\fP (:    \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- JSON dictionary with datasources
+\fBconfigJSON\fP (:    \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – JSON dictionary with datasources
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -615,9 +615,9 @@ adds additional datasource
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBname\fP (\fI\%str\fP) \-\- name of the adding datasource
+\fBname\fP (\fI\%str\fP) – name of the adding datasource
 .IP \(bu 2
-\fBdatasource\fP (\fI\%nxswriter.DataSources.DataSource\fP) \-\- instance of the adding datasource
+\fBdatasource\fP (\fI\%nxswriter.DataSources.DataSource\fP) – instance of the adding datasource
 .UNINDENT
 .TP
 .B Returns
@@ -634,7 +634,7 @@ loads user datasources
 .INDENT 7.0
 .TP
 .B Parameters
-\fBconfigJSON\fP (:    \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- string with datasources
+\fBconfigJSON\fP (:    \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – string with datasources
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -645,16 +645,12 @@ loads user datasources
 .INDENT 7.0
 .TP
 .B common = None
-.INDENT 7.0
-.TP
-.B (\fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) 
-global variables for specific datasources
-.UNINDENT
+(\fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) global variables for specific datasources
 .UNINDENT
 .INDENT 7.0
 .TP
 .B counter = None
-(\fI\%int\fP) step counter: INIT: \-1; STEP: 1,2,3...; FINAL: \-2;
+(\fI\%int\fP) step counter: INIT: \-1; STEP: 1,2,3…; FINAL: \-2;
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -663,7 +659,7 @@ checks it the datasource is registered
 .INDENT 7.0
 .TP
 .B Parameters
-\fBdatasource\fP (\fI\%str\fP) \-\- the given datasource name
+\fBdatasource\fP (\fI\%str\fP) – the given datasource name
 .TP
 .B Returns
 datasource type if it the datasource
@@ -680,7 +676,7 @@ checks if the datasource is registered
 .INDENT 7.0
 .TP
 .B Parameters
-\fBdatasource\fP (\fI\%str\fP) \-\- the given datasource
+\fBdatasource\fP (\fI\%str\fP) – the given datasource
 .TP
 .B Returns
 True if it the datasource is registered
@@ -706,7 +702,7 @@ adds additional datasource
 .INDENT 7.0
 .TP
 .B Parameters
-\fBname\fP (\fI\%str\fP) \-\- name of the adding datasource
+\fBname\fP (\fI\%str\fP) – name of the adding datasource
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -727,7 +723,7 @@ constructor
 It cleans all member variables
 .TP
 .B Parameters
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -759,7 +755,7 @@ sets the parrameters up from xml
 .INDENT 7.0
 .TP
 .B Parameters
-\fBxml\fP (\fI\%str\fP) \-\- datasource parameters
+\fBxml\fP (\fI\%str\fP) – datasource parameters
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -780,7 +776,7 @@ constructor
 It creates know decoders
 .TP
 .B Parameters
-\fBconfigJSON\fP (:    \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- string with decoders
+\fBconfigJSON\fP (:    \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – string with decoders
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -791,9 +787,9 @@ adds additional decoder
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBname\fP (\fI\%str\fP) \-\- name of the adding decoder
+\fBname\fP (\fI\%str\fP) – name of the adding decoder
 .IP \(bu 2
-\fBdecoder\fP (\fI\%object\fP) \-\- instance of the adding decoder
+\fBdecoder\fP (\fI\%object\fP) – instance of the adding decoder
 .UNINDENT
 .TP
 .B Returns
@@ -810,7 +806,7 @@ loads user decoders
 .INDENT 7.0
 .TP
 .B Parameters
-\fBconfigJSON\fP (:    \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- string with decoders
+\fBconfigJSON\fP (:    \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – string with decoders
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -820,7 +816,7 @@ checks it the decoder is registered
 .INDENT 7.0
 .TP
 .B Parameters
-\fBdecoder\fP (\fI\%str\fP) \-\- the given decoder
+\fBdecoder\fP (\fI\%str\fP) – the given decoder
 .TP
 .B Returns
 True if it the decoder is registered
@@ -836,7 +832,7 @@ checks it the decoder is registered
 .INDENT 7.0
 .TP
 .B Parameters
-\fBdecoder\fP (\fI\%str\fP) \-\- the given decoder
+\fBdecoder\fP (\fI\%str\fP) – the given decoder
 .TP
 .B Returns
 True if it the decoder is registered
@@ -852,7 +848,7 @@ adds additional decoder
 .INDENT 7.0
 .TP
 .B Parameters
-\fBname\fP (\fI\%str\fP) \-\- name of the adding decoder
+\fBname\fP (\fI\%str\fP) – name of the adding decoder
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -899,7 +895,7 @@ loads encoded data
 .INDENT 7.0
 .TP
 .B Parameters
-\fBdata\fP ([\fI\%str\fP, \fBbytes\fP]) \-\- encoded data
+\fBdata\fP ([\fI\%str\fP, \fBbytes\fP]) – encoded data
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -964,7 +960,7 @@ loads encoded data
 .INDENT 7.0
 .TP
 .B Parameters
-\fBdata\fP ([\fI\%str\fP, \fBbytes\fP]) \-\- encoded data
+\fBdata\fP ([\fI\%str\fP, \fBbytes\fP]) – encoded data
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1029,7 +1025,7 @@ loads encoded data
 .INDENT 7.0
 .TP
 .B Parameters
-\fBdata\fP ([\fI\%str\fP, \fI\%str\fP]) \-\- encoded data
+\fBdata\fP ([\fI\%str\fP, \fI\%str\fP]) – encoded data
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1067,21 +1063,17 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
+\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) – dictionary of the tag attributes
 .IP \(bu 2
-\fBlast\fP (\fI\%nxswriter.Element.Element\fP) \-\- the last element from the stack
+\fBlast\fP (\fI\%nxswriter.Element.Element\fP) – the last element from the stack
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
 .TP
 .B lengths = None
-.INDENT 7.0
-.TP
-.B (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) 
-shape of the attribute, i.e. {index: length}
-.UNINDENT
+(\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) shape of the attribute, i.e. {index: length}
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -1093,7 +1085,7 @@ marks the field as failed
 It marks the field as failed
 .TP
 .B Parameters
-\fBerror\fP (\fI\%str\fP) \-\- error string
+\fBerror\fP (\fI\%str\fP) – error string
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1125,9 +1117,9 @@ stores the tag content
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBxml\fP (\fI\%str\fP) \-\- xml setting
+\fBxml\fP (\fI\%str\fP) – xml setting
 .IP \(bu 2
-\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- global JSON string
+\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – global JSON string
 .UNINDENT
 .TP
 .B Returns
@@ -1164,13 +1156,13 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
+\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) – dictionary of the tag attributes
 .IP \(bu 2
-\fBlast\fP (\fI\%nxswriter.Element.Element\fP) \-\- the last element from the stack
+\fBlast\fP (\fI\%nxswriter.Element.Element\fP) – the last element from the stack
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .IP \(bu 2
-\fBreloadmode\fP (\fI\%bool\fP) \-\- reload mode
+\fBreloadmode\fP (\fI\%bool\fP) – reload mode
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1186,11 +1178,7 @@ constructor
 .INDENT 7.0
 .TP
 .B lengths = None
-.INDENT 7.0
-.TP
-.B (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) 
-shape of the field, i.e. {index: length}
-.UNINDENT
+(\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) shape of the field, i.e. {index: length}
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -1202,7 +1190,7 @@ marks the field as failed
 It marks the field as failed
 .TP
 .B Parameters
-\fBerror\fP (\fI\%str\fP) \-\- error string
+\fBerror\fP (\fI\%str\fP) – error string
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1244,9 +1232,9 @@ stores the tag content
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBxml\fP (\fI\%str\fP) \-\- xml setting
+\fBxml\fP (\fI\%str\fP) – xml setting
 .IP \(bu 2
-\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- global JSON string
+\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – global JSON string
 .UNINDENT
 .TP
 .B Returns
@@ -1283,13 +1271,13 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
+\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) – dictionary of the tag attributes
 .IP \(bu 2
-\fBlast\fP (\fI\%nxswriter.Element.Element\fP) \-\- the last element from the stack
+\fBlast\fP (\fI\%nxswriter.Element.Element\fP) – the last element from the stack
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .IP \(bu 2
-\fBreloadmode\fP (\fI\%bool\fP) \-\- reload mode
+\fBreloadmode\fP (\fI\%bool\fP) – reload mode
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1301,9 +1289,9 @@ stores the tag content
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBxml\fP (\fI\%str\fP) \-\- xml setting
+\fBxml\fP (\fI\%str\fP) – xml setting
 .IP \(bu 2
-\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- global JSON string
+\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – global JSON string
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -1324,11 +1312,11 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
+\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) – dictionary of the tag attributes
 .IP \(bu 2
-\fBlast\fP (\fI\%nxswriter.Element.Element\fP) \-\- the last element from the stack
+\fBlast\fP (\fI\%nxswriter.Element.Element\fP) – the last element from the stack
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1340,20 +1328,16 @@ creates the link the H5 file
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBgroupTypes\fP (\fI\%dict\fP <\fI\%str\fP ,  \fI\%str\fP >) \-\- dictionary with type:name group pairs
+\fBgroupTypes\fP (\fI\%dict\fP <\fI\%str\fP ,  \fI\%str\fP >) – dictionary with type:name group pairs
 .IP \(bu 2
-\fBtarget\fP \-\- NeXus target path
+\fBtarget\fP – NeXus target path
 .UNINDENT
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
 .TP
 .B h5Object = None
-.INDENT 7.0
-.TP
-.B (\fI\%nxswriter.FileWriter.FTLink\fP) 
-stored H5 file object (defined in base class)
-.UNINDENT
+(\fI\%nxswriter.FileWriter.FTLink\fP) stored H5 file object (defined in base class)
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -1374,9 +1358,9 @@ stores the tag content
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBxml\fP (\fI\%str\fP) \-\- xml setting
+\fBxml\fP (\fI\%str\fP) – xml setting
 .IP \(bu 2
-\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- global JSON string
+\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – global JSON string
 .UNINDENT
 .TP
 .B Returns
@@ -1413,11 +1397,11 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
+\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) – dictionary of the tag attributes
 .IP \(bu 2
-\fBlast\fP (\fI\%nxswriter.Element.Element\fP) \-\- the last element from the stack
+\fBlast\fP (\fI\%nxswriter.Element.Element\fP) – the last element from the stack
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1434,9 +1418,9 @@ stores the tag content
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBxml\fP (\fI\%str\fP) \-\- xml setting
+\fBxml\fP (\fI\%str\fP) – xml setting
 .IP \(bu 2
-\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- global JSON string
+\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – global JSON string
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -1457,13 +1441,13 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBname\fP (\fI\%str\fP) \-\- tag name
+\fBname\fP (\fI\%str\fP) – tag name
 .IP \(bu 2
-\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
+\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) – dictionary of the tag attributes
 .IP \(bu 2
-\fBlast\fP (\fI\%nxswriter.Element.Element\fP) \-\- the last element from the stack
+\fBlast\fP (\fI\%nxswriter.Element.Element\fP) – the last element from the stack
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1493,9 +1477,9 @@ abstract method to store the tag element
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBxml\fP (\fI\%str\fP) \-\- tuple of xml code
+\fBxml\fP (\fI\%str\fP) – tuple of xml code
 .IP \(bu 2
-\fBglobalJSON\fP (: \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- global JSON string
+\fBglobalJSON\fP (: \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – global JSON string
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -1524,9 +1508,9 @@ It creates ElementThread from the runnable element
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBindex\fP (\fI\%int\fP) \-\- the current thread index
+\fBindex\fP (\fI\%int\fP) – the current thread index
 .IP \(bu 2
-\fBqueue\fP (\fI\%Queue.Queue\fP) \-\- queue with tasks
+\fBqueue\fP (\fI\%Queue.Queue\fP) – queue with tasks
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1621,15 +1605,15 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBname\fP \-\- tag name
+\fBname\fP – tag name
 .IP \(bu 2
-\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
+\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) – dictionary of the tag attributes
 .IP \(bu 2
-\fBlast\fP (\fI\%nxswriter.Element.Element\fP) \-\- the last element from the stack
+\fBlast\fP (\fI\%nxswriter.Element.Element\fP) – the last element from the stack
 .IP \(bu 2
-\fBh5object\fP (\fI\%nxswriter.FileWriter.FTObject\fP) \-\- H5 file object
+\fBh5object\fP (\fI\%nxswriter.FileWriter.FTObject\fP) – H5 file object
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1664,7 +1648,7 @@ creates the error message
 .INDENT 7.0
 .TP
 .B Parameters
-\fBexceptionMessage\fP (\fI\%str\fP) \-\- additional message of exception
+\fBexceptionMessage\fP (\fI\%str\fP) – additional message of exception
 .TP
 .B Returns
 error message
@@ -1693,17 +1677,17 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBname\fP (\fI\%str\fP) \-\- tag name
+\fBname\fP (\fI\%str\fP) – tag name
 .IP \(bu 2
-\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
+\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) – dictionary of the tag attributes
 .IP \(bu 2
-\fBlast\fP (\fI\%nxswriter.Element.Element\fP) \-\- the last element from the stack
+\fBlast\fP (\fI\%nxswriter.Element.Element\fP) – the last element from the stack
 .IP \(bu 2
-\fBh5object\fP (\fI\%nxswriter.FileWriter.FTObject\fP) \-\- H5 file object
+\fBh5object\fP (\fI\%nxswriter.FileWriter.FTObject\fP) – H5 file object
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .IP \(bu 2
-\fBreloadmode\fP (\fI\%bool\fP) \-\- reload mode
+\fBreloadmode\fP (\fI\%bool\fP) – reload mode
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1713,7 +1697,7 @@ provides attribute h5 object
 .INDENT 7.0
 .TP
 .B Parameters
-\fBname\fP (\fI\%str\fP) \-\- attribute name
+\fBname\fP (\fI\%str\fP) – attribute name
 .TP
 .B Returns
 instance of the attribute object if created
@@ -1725,12 +1709,8 @@ instance of the attribute object if created
 .INDENT 7.0
 .TP
 .B tagAttributes = None
-.INDENT 7.0
-.TP
-.B (\fI\%dict\fP <\fI\%str\fP, (\fI\%str\fP, \fI\%str\fP, \fI\%tuple\fP)>  
-or \fI\%dict\fP <\fI\%str\fP, (\fI\%str\fP, \fI\%str\fP) > ) dictionary with attribures from sepatare attribute tags
+(\fI\%dict\fP <\fI\%str\fP, (\fI\%str\fP, \fI\%str\fP, \fI\%tuple\fP)>  or \fI\%dict\fP <\fI\%str\fP, (\fI\%str\fP, \fI\%str\fP) > ) dictionary with attribures from sepatare attribute tags
 written as (name, value, shape)
-.UNINDENT
 .UNINDENT
 .UNINDENT
 .SS nxswriter.FetchNameHandler module
@@ -1750,7 +1730,7 @@ constructor
 It constructs parser handler for fetching group names
 .TP
 .B Parameters
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -1759,7 +1739,7 @@ adds the tag content
 .INDENT 7.0
 .TP
 .B Parameters
-\fBcontent\fP (\fI\%str\fP) \-\- partial content of the tag
+\fBcontent\fP (\fI\%str\fP) – partial content of the tag
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1769,7 +1749,7 @@ parses an closing tag
 .INDENT 7.0
 .TP
 .B Parameters
-\fBname\fP (\fI\%str\fP) \-\- tag name
+\fBname\fP (\fI\%str\fP) – tag name
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1786,9 +1766,9 @@ parses the opening tag
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBname\fP (\fI\%str\fP) \-\- tag name
+\fBname\fP (\fI\%str\fP) – tag name
 .IP \(bu 2
-\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- attribute dictionary
+\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) – attribute dictionary
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -1809,11 +1789,11 @@ It sets default values of TNObject
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBname\fP (\fI\%str\fP) \-\- name of the object
+\fBname\fP (\fI\%str\fP) – name of the object
 .IP \(bu 2
-\fBnxtype\fP (\fI\%str\fP) \-\- Nexus type of the object
+\fBnxtype\fP (\fI\%str\fP) – Nexus type of the object
 .IP \(bu 2
-\fBparent\fP (\fI\%nxswriter.Element.Element\fP) \-\- object parent
+\fBparent\fP (\fI\%nxswriter.Element.Element\fP) – object parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1825,9 +1805,9 @@ get child by name or nxtype
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBname\fP (\fI\%str\fP) \-\- group name
+\fBname\fP (\fI\%str\fP) – group name
 .IP \(bu 2
-\fBnxtype\fP (\fI\%str\fP) \-\- nexus group type
+\fBnxtype\fP (\fI\%str\fP) – nexus group type
 .UNINDENT
 .TP
 .B Returns
@@ -1855,11 +1835,7 @@ child instance
 .INDENT 7.0
 .TP
 .B parent = None
-.INDENT 7.0
-.INDENT 3.5
 (\fI\%nxswriter.Element.Element\fP) object parent
-.UNINDENT
-.UNINDENT
 .UNINDENT
 .UNINDENT
 .SS nxswriter.H5Elements module
@@ -1878,11 +1854,11 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
+\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) – dictionary of the tag attributes
 .IP \(bu 2
-\fBlast\fP (\fI\%nxswriter.Element.Element\fP) \-\- the last element from the stack
+\fBlast\fP (\fI\%nxswriter.Element.Element\fP) – the last element from the stack
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1904,9 +1880,9 @@ stores the tag content
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBxml\fP \-\- xml setting
+\fBxml\fP – xml setting
 .IP \(bu 2
-\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- global JSON string
+\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – global JSON string
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -1924,11 +1900,11 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
+\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) – dictionary of the tag attributes
 .IP \(bu 2
-\fBlast\fP (\fI\%nxswriter.Element.Element\fP) \-\- the last element from the stack
+\fBlast\fP (\fI\%nxswriter.Element.Element\fP) – the last element from the stack
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -1945,11 +1921,11 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
+\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) – dictionary of the tag attributes
 .IP \(bu 2
-\fBlast\fP (\fI\%nxswriter.Element.Element\fP) \-\- the last element from the stack
+\fBlast\fP (\fI\%nxswriter.Element.Element\fP) – the last element from the stack
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1961,9 +1937,9 @@ stores the tag content
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBxml\fP \-\- xml setting
+\fBxml\fP – xml setting
 .IP \(bu 2
-\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- global JSON string
+\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – global JSON string
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -1981,13 +1957,13 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
+\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) – dictionary of the tag attributes
 .IP \(bu 2
-\fBlast\fP (\fI\%nxswriter.Element.Element\fP) \-\- the last element from the stack
+\fBlast\fP (\fI\%nxswriter.Element.Element\fP) – the last element from the stack
 .IP \(bu 2
-\fBh5fileObject\fP (\fBnxswriter.FileWriter.FTfile\fP) \-\- H5 file object
+\fBh5fileObject\fP (\fBnxswriter.FileWriter.FTfile\fP) – H5 file object
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -2004,11 +1980,11 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
+\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) – dictionary of the tag attributes
 .IP \(bu 2
-\fBlast\fP (\fI\%nxswriter.Element.Element\fP) \-\- the last element from the stack
+\fBlast\fP (\fI\%nxswriter.Element.Element\fP) – the last element from the stack
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2020,20 +1996,16 @@ stores the tag content
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBxml\fP \-\- xml setting2
+\fBxml\fP – xml setting2
 .IP \(bu 2
-\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- global JSON string
+\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – global JSON string
 .UNINDENT
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
 .TP
 .B symbols = None
-.INDENT 7.0
-.TP
-.B (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) 
-dictionary with symbols4
-.UNINDENT
+(\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) dictionary with symbols4
 .UNINDENT
 .UNINDENT
 .SS nxswriter.InnerXMLParser module
@@ -2050,18 +2022,18 @@ constructor
 .INDENT 7.0
 .TP
 .B Brief
-It constructs parser handler for taking xml od datasources
+It constructs parser handler for taking xml of datasources
 .TP
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBxmlReader\fP (\fI\%xml.sax.xmlreader.XMLReader\fP) \-\- NeXus xml sax reader
+\fBxmlReader\fP (\fI\%xml.sax.xmlreader.XMLReader\fP) – NeXus xml sax reader
 .IP \(bu 2
-\fBcontentHandler\fP (\fI\%nxswriter.NexusXMLHandler.NexusXMLHandler\fP) \-\- NeXus XML content handler
+\fBcontentHandler\fP (\fI\%nxswriter.NexusXMLHandler.NexusXMLHandler\fP) – NeXus XML content handler
 .IP \(bu 2
-\fBname\fP (\fI\%str\fP) \-\- tag name
+\fBname\fP (\fI\%str\fP) – tag name
 .IP \(bu 2
-\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
+\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) – dictionary of the tag attributes
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2071,7 +2043,7 @@ adds the tag content
 .INDENT 7.0
 .TP
 .B Parameters
-\fBcontent\fP (\fI\%str\fP) \-\- partial content of the tag
+\fBcontent\fP (\fI\%str\fP) – partial content of the tag
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2081,7 +2053,7 @@ parses an closing tag
 .INDENT 7.0
 .TP
 .B Parameters
-\fBname\fP (\fI\%str\fP) \-\- tag name
+\fBname\fP (\fI\%str\fP) – tag name
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2093,9 +2065,9 @@ parses the opening tag
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBname\fP (\fI\%str\fP) \-\- tag name
+\fBname\fP (\fI\%str\fP) – tag name
 .IP \(bu 2
-\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- attribute dictionary
+\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) – attribute dictionary
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -2121,13 +2093,13 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBserver\fP (\fBPyTango.Device_4Impl\fP) \-\- Tango server implementation
+\fBserver\fP (\fBPyTango.Device_4Impl\fP) – Tango server implementation
 .IP \(bu 2
-\fBcommand\fP (\fI\%str\fP) \-\- Thread command
+\fBcommand\fP (\fI\%str\fP) – Thread command
 .IP \(bu 2
-\fBfinalState\fP (\fBPyTango.DevState\fP) \-\- Final State Code
+\fBfinalState\fP (\fBPyTango.DevState\fP) – Final State Code
 .IP \(bu 2
-\fBargs\fP (\fBlist\fP <\fI\%str\fP>) \-\- List of command arguments
+\fBargs\fP (\fBlist\fP <\fI\%str\fP>) – List of command arguments
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2185,9 +2157,9 @@ Device constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBcl\fP (\fI\%str\fP) \-\- class name
+\fBcl\fP (\fI\%str\fP) – class name
 .IP \(bu 2
-\fBname\fP (\fI\%str\fP) \-\- device name
+\fBname\fP (\fI\%str\fP) – device name
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2260,7 +2232,7 @@ Record command
 Records data for one scan step
 .TP
 .B Parameters
-\fBargin\fP (\fI\%str\fP) \-\- JSON string with data
+\fBargin\fP (\fI\%str\fP) – JSON string with data
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2273,7 +2245,7 @@ RecordAsynch command
 Records data for one scan step in asynchronous mode
 .TP
 .B Parameters
-\fBargin\fP (\fI\%str\fP) \-\- DevString    JSON string with data
+\fBargin\fP (\fI\%str\fP) – DevString    JSON string with data
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2583,7 +2555,7 @@ Read CanFail attribute
 .INDENT 7.0
 .TP
 .B Parameters
-\fBattr\fP (\fBPyTango.Attribute\fP) \-\- attribute object
+\fBattr\fP (\fBPyTango.Attribute\fP) – attribute object
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2593,7 +2565,7 @@ Read CurrentFileId
 .INDENT 7.0
 .TP
 .B Parameters
-\fBattr\fP (\fBPyTango.Attribute\fP) \-\- attribute object
+\fBattr\fP (\fBPyTango.Attribute\fP) – attribute object
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2603,7 +2575,7 @@ Read Errors attribute
 .INDENT 7.0
 .TP
 .B Parameters
-\fBattr\fP (\fBPyTango.Attribute\fP) \-\- attribute object
+\fBattr\fP (\fBPyTango.Attribute\fP) – attribute object
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2613,7 +2585,7 @@ Read FileName attribute
 .INDENT 7.0
 .TP
 .B Parameters
-\fBattr\fP (\fBPyTango.Attribute\fP) \-\- attribute object
+\fBattr\fP (\fBPyTango.Attribute\fP) – attribute object
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2623,7 +2595,7 @@ Read JSONRecord attribute
 .INDENT 7.0
 .TP
 .B Parameters
-\fBattr\fP (\fBPyTango.Attribute\fP) \-\- attribute object
+\fBattr\fP (\fBPyTango.Attribute\fP) – attribute object
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2633,7 +2605,7 @@ Read SkipAcquisition attribute
 .INDENT 7.0
 .TP
 .B Parameters
-\fBattr\fP (\fBPyTango.Attribute\fP) \-\- attribute object
+\fBattr\fP (\fBPyTango.Attribute\fP) – attribute object
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2643,7 +2615,7 @@ Read StepsPerFile attribute
 .INDENT 7.0
 .TP
 .B Parameters
-\fBattr\fP (\fBPyTango.Attribute\fP) \-\- attribute object
+\fBattr\fP (\fBPyTango.Attribute\fP) – attribute object
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2653,7 +2625,7 @@ Read XMLSettings attribute
 .INDENT 7.0
 .TP
 .B Parameters
-\fBattr\fP (\fBPyTango.Attribute\fP) \-\- attribute object
+\fBattr\fP (\fBPyTango.Attribute\fP) – attribute object
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2673,7 +2645,7 @@ set_state method
 .INDENT 7.0
 .TP
 .B Parameters
-\fBstate\fP (\fBPyTango.DevState\fP) \-\- State Code
+\fBstate\fP (\fBPyTango.DevState\fP) – State Code
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2684,11 +2656,7 @@ set_state method
 .INDENT 7.0
 .TP
 .B tdw = None
-.INDENT 7.0
-.TP
-.B (\fI\%nxswriter.TangoDataWriter.TangoDataWriter\fP) 
-Tango Data Writer
-.UNINDENT
+(\fI\%nxswriter.TangoDataWriter.TangoDataWriter\fP) Tango Data Writer
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -2697,7 +2665,7 @@ Write CanFail attribute
 .INDENT 7.0
 .TP
 .B Parameters
-\fBattr\fP (\fBPyTango.Attribute\fP) \-\- attribute object
+\fBattr\fP (\fBPyTango.Attribute\fP) – attribute object
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2707,7 +2675,7 @@ Write FileName attribute
 .INDENT 7.0
 .TP
 .B Parameters
-\fBattr\fP (\fBPyTango.Attribute\fP) \-\- attribute object
+\fBattr\fP (\fBPyTango.Attribute\fP) – attribute object
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2717,7 +2685,7 @@ Write JSONRecord attribute
 .INDENT 7.0
 .TP
 .B Parameters
-\fBattr\fP (\fBPyTango.Attribute\fP) \-\- attribute object
+\fBattr\fP (\fBPyTango.Attribute\fP) – attribute object
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2727,7 +2695,7 @@ Write SkipAcquisition attribute
 .INDENT 7.0
 .TP
 .B Parameters
-\fBattr\fP (\fBPyTango.Attribute\fP) \-\- attribute object
+\fBattr\fP (\fBPyTango.Attribute\fP) – attribute object
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2737,7 +2705,7 @@ Write StepsPerFile attribute
 .INDENT 7.0
 .TP
 .B Parameters
-\fBattr\fP (\fBPyTango.Attribute\fP) \-\- attribute object
+\fBattr\fP (\fBPyTango.Attribute\fP) – attribute object
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2747,7 +2715,7 @@ Write XMLSettings attribute
 .INDENT 7.0
 .TP
 .B Parameters
-\fBattr\fP (\fBPyTango.Attribute\fP) \-\- attribute object
+\fBattr\fP (\fBPyTango.Attribute\fP) – attribute object
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -2761,40 +2729,24 @@ NXSDataWriterClass class definition
 NXSDataWriterClass Constructor
 .INDENT 7.0
 .TP
-.B attr_list = {\(aqStepsPerFile\(aq: [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqMemorized\(aq: \(aqtrue\(aq, \(aqdescription\(aq: \(aqNumber of steps per file\(aq, \(aqlabel\(aq: \(aqSteps per file\(aq}], \(aqCanFail\(aq: [[tango._tango.CmdArgType.DevBoolean, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqGlobal can fail flag. By default it is False\(aq, \(aqlabel\(aq: \(aqCan fail\(aq}], \(aqErrors\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SPECTRUM, tango._tango.AttrWriteType.READ, 1000], {\(aqdescription\(aq: \(aqlist of errors\(aq, \(aqlabel\(aq: \(aqList of errors\(aq}], \(aqSkipAcquisition\(aq: [[tango._tango.CmdArgType.DevBoolean, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqSkip acquisition. It is set to default False value after excuting the OpenEntry, Record or CloseEntry\(aq, \(aqlabel\(aq: \(aqSkip acquisition\(aq}], \(aqXMLSettings\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqAn XML string with Nexus configuration.\(aq, \(aqDisplay level\(aq: tango._tango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqXML Configuration\(aq}], \(aqJSONRecord\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA JSON string with global client data.\(aq, \(aqDisplay level\(aq: tango._tango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqJSON string with client data\(aq}], \(aqCurrentFileId\(aq: [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ], {\(aqdescription\(aq: \(aqcurrent file id\(aq, \(aqlabel\(aq: \(aqCurrent file id\(aq}], \(aqFileName\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA name of H5 output file with its full path\(aq, \(aqlabel\(aq: \(aqOutput file with its path\(aq}]}
-.INDENT 7.0
-.TP
-.B (\fI\%dict\fP <\fI\%str\fP, 
-[[ \fBPyTango.CmdArgType\fP, \fBPyTango.AttrDataFormat\fP, \fBPyTango.AttrWriteType\fP], \fI\%dict\fP <\fI\%str\fP, any> ] > ) Attribute definitions
-.UNINDENT
+.B attr_list = {\(aqCanFail\(aq: [[tango._tango.CmdArgType.DevBoolean, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqGlobal can fail flag. By default it is False\(aq, \(aqlabel\(aq: \(aqCan fail\(aq}], \(aqCurrentFileId\(aq: [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ], {\(aqdescription\(aq: \(aqcurrent file id\(aq, \(aqlabel\(aq: \(aqCurrent file id\(aq}], \(aqErrors\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SPECTRUM, tango._tango.AttrWriteType.READ, 1000], {\(aqdescription\(aq: \(aqlist of errors\(aq, \(aqlabel\(aq: \(aqList of errors\(aq}], \(aqFileName\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA name of H5 output file with its full path\(aq, \(aqlabel\(aq: \(aqOutput file with its path\(aq}], \(aqJSONRecord\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA JSON string with global client data.\(aq, \(aqDisplay level\(aq: tango._tango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqJSON string with client data\(aq}], \(aqSkipAcquisition\(aq: [[tango._tango.CmdArgType.DevBoolean, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqSkip acquisition. It is set to default False value after excuting the OpenEntry, Record or CloseEntry\(aq, \(aqlabel\(aq: \(aqSkip acquisition\(aq}], \(aqStepsPerFile\(aq: [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqMemorized\(aq: \(aqtrue\(aq, \(aqdescription\(aq: \(aqNumber of steps per file\(aq, \(aqlabel\(aq: \(aqSteps per file\(aq}], \(aqXMLSettings\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqAn XML string with Nexus configuration.\(aq, \(aqDisplay level\(aq: tango._tango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqXML Configuration\(aq}]}
+(\fI\%dict\fP <\fI\%str\fP, [[ \fBPyTango.CmdArgType\fP, \fBPyTango.AttrDataFormat\fP, \fBPyTango.AttrWriteType\fP], \fI\%dict\fP <\fI\%str\fP, any> ] > ) Attribute definitions
 .UNINDENT
 .INDENT 7.0
 .TP
 .B class_property_list = {}
-.INDENT 7.0
-.TP
-.B (\fI\%dict\fP <\fI\%str\fP, 
-[ \fI\%str\fP, \fBPyTango.CmdArgType\fP, [ \fBlist\fP <\fI\%int\fP> ] ] > ) Class Properties
-.UNINDENT
+(\fI\%dict\fP <\fI\%str\fP, [ \fI\%str\fP, \fBPyTango.CmdArgType\fP, [ \fBlist\fP <\fI\%int\fP> ] ] > ) Class Properties
 .UNINDENT
 .INDENT 7.0
 .TP
-.B cmd_list = {\(aqRecord\(aq: [[tango._tango.CmdArgType.DevString, \(aqJSON string with data\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqOpenFile\(aq: [[tango._tango.CmdArgType.DevVoid, \(aq\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqCloseEntryAsynch\(aq: [[tango._tango.CmdArgType.DevVoid, \(aq\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqCloseEntry\(aq: [[tango._tango.CmdArgType.DevVoid, \(aq\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqOpenEntryAsynch\(aq: [[tango._tango.CmdArgType.DevVoid, \(aq\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqRecordAsynch\(aq: [[tango._tango.CmdArgType.DevString, \(aqJSON string with data\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqOpenEntry\(aq: [[tango._tango.CmdArgType.DevVoid, \(aq\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqCloseFile\(aq: [[tango._tango.CmdArgType.DevVoid, \(aq\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]]}
-.INDENT 7.0
-.TP
-.B (\fI\%dict\fP <\fI\%str\fP, 
-[[ \fBPyTango.CmdArgType\fP, \fI\%str\fP]] >)
+.B cmd_list = {\(aqCloseEntry\(aq: [[tango._tango.CmdArgType.DevVoid, \(aq\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqCloseEntryAsynch\(aq: [[tango._tango.CmdArgType.DevVoid, \(aq\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqCloseFile\(aq: [[tango._tango.CmdArgType.DevVoid, \(aq\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqOpenEntry\(aq: [[tango._tango.CmdArgType.DevVoid, \(aq\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqOpenEntryAsynch\(aq: [[tango._tango.CmdArgType.DevVoid, \(aq\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqOpenFile\(aq: [[tango._tango.CmdArgType.DevVoid, \(aq\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqRecord\(aq: [[tango._tango.CmdArgType.DevString, \(aqJSON string with data\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqRecordAsynch\(aq: [[tango._tango.CmdArgType.DevString, \(aqJSON string with data\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]]}
+(\fI\%dict\fP <\fI\%str\fP, [[ \fBPyTango.CmdArgType\fP, \fI\%str\fP]] >)
 Command definitions
 .UNINDENT
-.UNINDENT
 .INDENT 7.0
 .TP
-.B device_property_list = {\(aqNumberOfThreads\(aq: [tango._tango.CmdArgType.DevLong, \(aqmaximal number of threads\(aq, [100]], \(aqDefaultCanFail\(aq: [tango._tango.CmdArgType.DevBoolean, \(aqDefault value of CanFail attribute\(aq, [True]], \(aqWriter\(aq: [tango._tango.CmdArgType.DevString, \(aqwriter module\(aq, [\(aq\(aq]]}
-.INDENT 7.0
-.TP
-.B (\fI\%dict\fP <\fI\%str\fP, 
-[ \fI\%str\fP, \fBPyTango.CmdArgType\fP, [ \fBlist\fP <\fI\%int\fP> ] ] > ) Device Properties
-.UNINDENT
+.B device_property_list = {\(aqDefaultCanFail\(aq: [tango._tango.CmdArgType.DevBoolean, \(aqDefault value of CanFail attribute\(aq, [True]], \(aqNumberOfThreads\(aq: [tango._tango.CmdArgType.DevLong, \(aqmaximal number of threads\(aq, [100]], \(aqWriter\(aq: [tango._tango.CmdArgType.DevString, \(aqwriter module\(aq, [\(aq\(aq]]}
+(\fI\%dict\fP <\fI\%str\fP, [ \fI\%str\fP, \fBPyTango.CmdArgType\fP, [ \fBlist\fP <\fI\%int\fP> ] ] > ) Device Properties
 .UNINDENT
 .UNINDENT
 .SS nxswriter.NexusXMLHandler module
@@ -2816,21 +2768,21 @@ It constructs parser and defines the H5 output file
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBfileElement\fP (\fI\%nxswriter.H5Elements.EFile\fP) \-\- file element
+\fBfileElement\fP (\fI\%nxswriter.H5Elements.EFile\fP) – file element
 .IP \(bu 2
-\fBdecoders\fP (\fI\%nxswriter.DecoderPool.DecoderPool\fP) \-\- decoder pool
+\fBdecoders\fP (\fI\%nxswriter.DecoderPool.DecoderPool\fP) – decoder pool
 .IP \(bu 2
-\fBdatasources\fP (\fI\%nxswriter.DataSourcePool.DataSourcePool\fP) \-\- datasource pool
+\fBdatasources\fP (\fI\%nxswriter.DataSourcePool.DataSourcePool\fP) – datasource pool
 .IP \(bu 2
-\fBgroupTypes\fP (\fI\%nxswriter.FetchNameHandler.TNObject\fP) \-\- map of NXclass : name
+\fBgroupTypes\fP (\fI\%nxswriter.FetchNameHandler.TNObject\fP) – map of NXclass : name
 .IP \(bu 2
-\fBparser\fP (\fI\%xml.sax.xmlreader.XMLReader\fP) \-\- instance of sax.xmlreader
+\fBparser\fP (\fI\%xml.sax.xmlreader.XMLReader\fP) – instance of sax.xmlreader
 .IP \(bu 2
-\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- global json string
+\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – global json string
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .IP \(bu 2
-\fBreloadmode\fP \-\- reload mode
+\fBreloadmode\fP – reload mode
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2840,7 +2792,7 @@ adds the tag content
 .INDENT 7.0
 .TP
 .B Parameters
-\fBcontent\fP (\fI\%str\fP) \-\- partial content of the tag
+\fBcontent\fP (\fI\%str\fP) – partial content of the tag
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2865,26 +2817,18 @@ parses the closing tag
 .INDENT 7.0
 .TP
 .B Parameters
-\fBname\fP (\fI\%str\fP) \-\- tag name
+\fBname\fP (\fI\%str\fP) – tag name
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
 .TP
 .B finalPool = None
-.INDENT 7.0
-.TP
-.B (\fI\%nxswriter.ThreadPool.ThreadPool\fP) 
-thread pool with FINAL elements
-.UNINDENT
+(\fI\%nxswriter.ThreadPool.ThreadPool\fP) thread pool with FINAL elements
 .UNINDENT
 .INDENT 7.0
 .TP
 .B initPool = None
-.INDENT 7.0
-.TP
-.B (\fI\%nxswriter.ThreadPool.ThreadPool\fP) 
-thread pool with INIT elements
-.UNINDENT
+(\fI\%nxswriter.ThreadPool.ThreadPool\fP) thread pool with INIT elements
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -2900,20 +2844,16 @@ parses the opening tag
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBname\fP (\fI\%str\fP) \-\- tag name
+\fBname\fP (\fI\%str\fP) – tag name
 .IP \(bu 2
-\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- attribute dictionary
+\fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) – attribute dictionary
 .UNINDENT
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
 .TP
 .B stepPool = None
-.INDENT 7.0
-.TP
-.B (\fI\%nxswriter.ThreadPool.ThreadPool\fP) 
-thread pool with STEP elements
-.UNINDENT
+(\fI\%nxswriter.ThreadPool.ThreadPool\fP) thread pool with STEP elements
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -2923,15 +2863,7 @@ thread pool with STEP elements
 .INDENT 7.0
 .TP
 .B triggerPools = None
-.INDENT 7.0
-.TP
-.B (\fI\%dict\fP <\fI\%str\fP, 
-.INDENT 7.0
-.TP
-.B \fI\%nxswriter.ThreadPool.ThreadPool\fP> ) 
-collection of thread pool with triggered STEP elements
-.UNINDENT
-.UNINDENT
+(\fI\%dict\fP <\fI\%str\fP, \fI\%nxswriter.ThreadPool.ThreadPool\fP> ) collection of thread pool with triggered STEP elements
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -2941,11 +2873,7 @@ collection of thread pool with triggered STEP elements
 .INDENT 7.0
 .TP
 .B withXMLinput = None
-.INDENT 7.0
-.TP
-.B (\fI\%dict\fP <\fI\%str\fP: \fI\%nxswriter.Element.Element\fP > ) 
-tags with inner xml as its input
-.UNINDENT
+(\fI\%dict\fP <\fI\%str\fP: \fI\%nxswriter.Element.Element\fP > ) tags with inner xml as its input
 .UNINDENT
 .UNINDENT
 .SS nxswriter.PyEvalSource module
@@ -2965,7 +2893,7 @@ constructor
 It cleans all member variables
 .TP
 .B Parameters
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -2977,7 +2905,7 @@ provides access to the data
 dictionary with collected data
 .TP
 .B Return type
-{\(aqrank\(aq: \fI\%str\fP, \(aqvalue\(aq: any, \(aqtangoDType\(aq: \fI\%str\fP,         :        \(aqshape\(aq: \fBlist\fP <int>, \(aqencoding\(aq: \fI\%str\fP,         :        \(aqdecoders\(aq: \fI\%str\fP} )
+{‘rank’: \fI\%str\fP, ‘value’: any, ‘tangoDType’: \fI\%str\fP,         :        ‘shape’: \fBlist\fP <int>, ‘encoding’: \fI\%str\fP,         :        ‘decoders’: \fI\%str\fP} )
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2987,7 +2915,7 @@ sets the datasources
 .INDENT 7.0
 .TP
 .B Parameters
-\fBpool\fP (\fI\%nxswriter.DataSourcePool.DataSourcePool\fP) \-\- datasource pool
+\fBpool\fP (\fI\%nxswriter.DataSourcePool.DataSourcePool\fP) – datasource pool
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2997,7 +2925,7 @@ sets the used decoders
 .INDENT 7.0
 .TP
 .B Parameters
-\fBdecoders\fP (\fI\%nxswriter.DecoderPool.DecoderPool\fP) \-\- pool to be set
+\fBdecoders\fP (\fI\%nxswriter.DecoderPool.DecoderPool\fP) – pool to be set
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3012,9 +2940,9 @@ It sets the currently used  JSON string
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP , \fI\%dict\fP <\fI\%str\fP, any>>) \-\- static JSON string
+\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP , \fI\%dict\fP <\fI\%str\fP, any>>) – static JSON string
 .IP \(bu 2
-\fBlocalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP , \fI\%dict\fP <\fI\%str\fP, any>>) \-\- dynamic JSON string
+\fBlocalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP , \fI\%dict\fP <\fI\%str\fP, any>>) – dynamic JSON string
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -3025,7 +2953,7 @@ sets the parrameters up from xml
 .INDENT 7.0
 .TP
 .B Parameters
-\fBxml\fP (\fI\%str\fP) \-\- datasource parameters
+\fBxml\fP (\fI\%str\fP) – datasource parameters
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -3048,7 +2976,7 @@ streamset constractor
 .INDENT 7.0
 .TP
 .B Parameters
-\fBstreams\fP (\fI\%StreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fI\%StreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -3059,9 +2987,9 @@ writes debug message
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBmessage\fP (\fI\%str\fP) \-\- debug message
+\fBmessage\fP (\fI\%str\fP) – debug message
 .IP \(bu 2
-\fBstd\fP (\fI\%bool\fP) \-\- True if it writes to sys stream
+\fBstd\fP (\fI\%bool\fP) – True if it writes to sys stream
 when log stream does not exist
 .UNINDENT
 .UNINDENT
@@ -3075,9 +3003,9 @@ writes error message
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBmessage\fP (\fI\%str\fP) \-\- error message
+\fBmessage\fP (\fI\%str\fP) – error message
 .IP \(bu 2
-\fBstd\fP (\fI\%bool\fP) \-\- True if it writes to sys stream
+\fBstd\fP (\fI\%bool\fP) – True if it writes to sys stream
 when log stream does not exist
 .UNINDENT
 .UNINDENT
@@ -3091,9 +3019,9 @@ writes fatal error message
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBmessage\fP (\fI\%str\fP) \-\- error message
+\fBmessage\fP (\fI\%str\fP) – error message
 .IP \(bu 2
-\fBstd\fP (\fI\%bool\fP) \-\- True if it writes to sys stream
+\fBstd\fP (\fI\%bool\fP) – True if it writes to sys stream
 when log stream does not exist
 .UNINDENT
 .UNINDENT
@@ -3107,9 +3035,9 @@ writes info message
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBmessage\fP (\fI\%str\fP) \-\- info message
+\fBmessage\fP (\fI\%str\fP) – info message
 .IP \(bu 2
-\fBstd\fP (\fI\%bool\fP) \-\- True if it writes to sys stream
+\fBstd\fP (\fI\%bool\fP) – True if it writes to sys stream
 when log stream does not exist
 .UNINDENT
 .UNINDENT
@@ -3148,9 +3076,9 @@ writes warning message
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBmessage\fP (\fI\%str\fP) \-\- warning message
+\fBmessage\fP (\fI\%str\fP) – warning message
 .IP \(bu 2
-\fBstd\fP (\fI\%bool\fP) \-\- True if it writes to sys stream
+\fBstd\fP (\fI\%bool\fP) – True if it writes to sys stream
 when log stream does not exist
 .UNINDENT
 .UNINDENT
@@ -3178,7 +3106,7 @@ constructor
 It initialize the data writer for the H5 output file
 .TP
 .B Parameters
-\fBserver\fP (\fBPyTango.Device_4Impl\fP) \-\- Tango server
+\fBserver\fP (\fBPyTango.Device_4Impl\fP) – Tango server
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -3280,7 +3208,7 @@ runs threads form the STEP pool
 It runs threads from the STEP pool
 .TP
 .B Parameters
-\fBjsonstring\fP (\fI\%str\fP) \-\- local JSON string with data records
+\fBjsonstring\fP (\fI\%str\fP) – local JSON string with data records
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3325,7 +3253,7 @@ checks if proxy is valid
 .INDENT 7.0
 .TP
 .B Parameters
-\fBproxy\fP (\fBPyTango.DeviceProxy\fP) \-\- PyTango proxy
+\fBproxy\fP (\fBPyTango.DeviceProxy\fP) – PyTango proxy
 .TP
 .B Returns
 True if proxy is valid else false
@@ -3343,9 +3271,9 @@ sets the Tango proxy up
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBdevice\fP (\fI\%str\fP) \-\- tango device
+\fBdevice\fP (\fI\%str\fP) – tango device
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .TP
 .B Returns
@@ -3394,7 +3322,7 @@ data provider
 dictionary with collected data
 .TP
 .B Return type
-{\(aqrank\(aq: \fI\%str\fP, \(aqvalue\(aq: any, \(aqtangoDType\(aq: \fI\%str\fP,         :        \(aqshape\(aq: \fBlist\fP <int>, \(aqencoding\(aq: \fI\%str\fP,         :        \(aqdecoders\(aq: \fI\%str\fP}
+{‘rank’: \fI\%str\fP, ‘value’: any, ‘tangoDType’: \fI\%str\fP,         :        ‘shape’: \fBlist\fP <int>, ‘encoding’: \fI\%str\fP,         :        ‘decoders’: \fI\%str\fP}
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3414,7 +3342,7 @@ sets the datasources
 .INDENT 7.0
 .TP
 .B Parameters
-\fBpool\fP (\fI\%nxswriter.DataSourcePool.DataSourcePool\fP) \-\- datasource pool
+\fBpool\fP (\fI\%nxswriter.DataSourcePool.DataSourcePool\fP) – datasource pool
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3424,7 +3352,7 @@ sets the used decoders
 .INDENT 7.0
 .TP
 .B Parameters
-\fBdecoders\fP (\fI\%nxswriter.DecoderPool.DecoderPool\fP) \-\- pool to be set
+\fBdecoders\fP (\fI\%nxswriter.DecoderPool.DecoderPool\fP) – pool to be set
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3439,9 +3367,9 @@ It sets the currently used  JSON string
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP , \fI\%dict\fP <\fI\%str\fP, any>>) \-\- static JSON string
+\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP , \fI\%dict\fP <\fI\%str\fP, any>>) – static JSON string
 .IP \(bu 2
-\fBlocalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- dynamic JSON string
+\fBlocalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – dynamic JSON string
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -3452,7 +3380,7 @@ sets the parrameters up from xml
 .INDENT 7.0
 .TP
 .B Parameters
-\fBxml\fP (\fI\%str\fP) \-\- datasource parameters
+\fBxml\fP (\fI\%str\fP) – datasource parameters
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -3469,11 +3397,11 @@ default constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBdevice\fP (\fI\%str\fP) \-\- tango device name
+\fBdevice\fP (\fI\%str\fP) – tango device name
 .IP \(bu 2
-\fBproxy\fP (\fBPyTango.DeviceProxy\fP) \-\- device proxy
+\fBproxy\fP (\fBPyTango.DeviceProxy\fP) – device proxy
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3494,11 +3422,7 @@ default constructor
 .INDENT 7.0
 .TP
 .B members = None
-.INDENT 7.0
-.TP
-.B (\fI\%dict\fP <\fI\%str\fP , \fI\%TgMember\fP > ) 
-dictionary with tango members
-.UNINDENT
+(\fI\%dict\fP <\fI\%str\fP , \fI\%TgMember\fP > ) dictionary with tango members
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -3517,7 +3441,7 @@ provides tango device member
 .INDENT 7.0
 .TP
 .B Parameters
-\fBmember\fP (\fI\%TgMember\fP) \-\- tango  device member
+\fBmember\fP (\fI\%TgMember\fP) – tango  device member
 .TP
 .B Returns
 TgMember instance of tango device member
@@ -3540,9 +3464,9 @@ default constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBcounter\fP (\fI\%int\fP) \-\- counts of steps
+\fBcounter\fP (\fI\%int\fP) – counts of steps
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3564,11 +3488,11 @@ reads data from device proxy
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBcounter\fP (\fI\%int\fP) \-\- counts of scan steps
+\fBcounter\fP (\fI\%int\fP) – counts of scan steps
 .IP \(bu 2
-\fBproxy\fP (\fBPyTango.DeviceProxy\fP) \-\- device proxy
+\fBproxy\fP (\fBPyTango.DeviceProxy\fP) – device proxy
 .IP \(bu 2
-\fBmember\fP (\fI\%TgMember\fP) \-\- required member
+\fBmember\fP (\fI\%TgMember\fP) – required member
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -3579,7 +3503,7 @@ provides tango device
 .INDENT 7.0
 .TP
 .B Parameters
-\fBdevice\fP (\fI\%str\fP) \-\- tango device name
+\fBdevice\fP (\fI\%str\fP) – tango device name
 .TP
 .B Returns
 TgDevice instance of tango device
@@ -3607,13 +3531,13 @@ default constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBname\fP (\fI\%str\fP) \-\- name of data record
+\fBname\fP (\fI\%str\fP) – name of data record
 .IP \(bu 2
-\fBmemberType\fP (\fI\%str\fP) \-\- member type of the data
+\fBmemberType\fP (\fI\%str\fP) – member type of the data
 .IP \(bu 2
-\fBencoding\fP (\fI\%str\fP) \-\- encoding type of Tango DevEncoded variables
+\fBencoding\fP (\fI\%str\fP) – encoding type of Tango DevEncoded variables
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3628,7 +3552,7 @@ reads data from device proxy
 .INDENT 7.0
 .TP
 .B Parameters
-\fBproxy\fP (\fBPyTango.DeviceProxy\fP) \-\- device proxy
+\fBproxy\fP (\fBPyTango.DeviceProxy\fP) – device proxy
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3638,17 +3562,17 @@ provides value of tango member
 .INDENT 7.0
 .TP
 .B Parameters
-\fBdecoders\fP (\fI\%nxswriter.DecoderPool.DecoderPool\fP) \-\- decoder pool
+\fBdecoders\fP (\fI\%nxswriter.DecoderPool.DecoderPool\fP) – decoder pool
 .TP
 .B Returns
-dictionary with {"rank":, "value":, "tangoDType":,
-"shape":, "encoding":, "decoders":}
+dictionary with {“rank”:, “value”:, “tangoDType”:,
+“shape”:, “encoding”:, “decoders”:}
 .TP
 .B Returns
 dictionary with collected data
 .TP
 .B Return type
-{\(aqrank\(aq: \fI\%str\fP, \(aqvalue\(aq: any, \(aqtangoDType\(aq: \fI\%str\fP,         :        \(aqshape\(aq: \fBlist\fP <int>, \(aqencoding\(aq: \fI\%str\fP,         :        \(aqdecoders\(aq: \fI\%str\fP}
+{‘rank’: \fI\%str\fP, ‘value’: any, ‘tangoDType’: \fI\%str\fP,         :        ‘shape’: \fBlist\fP <int>, ‘encoding’: \fI\%str\fP,         :        ‘decoders’: \fI\%str\fP}
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3667,7 +3591,7 @@ True if data is set
 .INDENT 7.0
 .TP
 .B memberType = None
-(\fI\%str\fP) member type of the data, i.e. attribute, property,...
+(\fI\%str\fP) member type of the data, i.e. attribute, property,…
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -3688,9 +3612,9 @@ sets tango data
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBdata\fP (\fBPyTango.DeviceAttribute\fP) \-\- output tango data
+\fBdata\fP (\fBPyTango.DeviceAttribute\fP) – output tango data
 .IP \(bu 2
-\fBcmd\fP (\fBPyTango.CommandInfo\fP) \-\- input command data
+\fBcmd\fP (\fBPyTango.CommandInfo\fP) – input command data
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -3714,9 +3638,9 @@ It cleans the member variables
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBnumberOfThreads\fP (\fI\%int\fP) \-\- number of threads
+\fBnumberOfThreads\fP (\fI\%int\fP) – number of threads
 .IP \(bu 2
-\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+\fBstreams\fP (\fBStreamSet\fP or \fBPyTango.Device_4Impl\fP) – tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3726,7 +3650,7 @@ appends the thread element
 .INDENT 7.0
 .TP
 .B Parameters
-\fBelem\fP (\fI\%nxswriter.Element.Element\fP) \-\- the thread element
+\fBelem\fP (\fI\%nxswriter.Element.Element\fP) – the thread element
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3751,7 +3675,7 @@ waits for all thread from the pool
 .INDENT 7.0
 .TP
 .B Parameters
-\fBtimeout\fP (\fI\%int\fP) \-\- the maximal waiting time
+\fBtimeout\fP (\fI\%int\fP) – the maximal waiting time
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3788,9 +3712,9 @@ sets the JSON string to threads
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP , \fI\%dict\fP <\fI\%str\fP, any>>) \-\- the static JSON string
+\fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP , \fI\%dict\fP <\fI\%str\fP, any>>) – the static JSON string
 .IP \(bu 2
-\fBlocalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- the dynamic JSON string
+\fBlocalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) – the dynamic JSON string
 .UNINDENT
 .TP
 .B Returns
@@ -3817,7 +3741,7 @@ converts to bool
 .INDENT 7.0
 .TP
 .B Parameters
-\fBvalue\fP (\fI\%any\fP) \-\- variable to convert
+\fBvalue\fP (\fIany\fP) – variable to convert
 .TP
 .B Returns
 result in bool type
@@ -3835,17 +3759,13 @@ Bases: \fI\%object\fP
 type converter
 .INDENT 7.0
 .TP
-.B aTn = {\(aqignoreExtraAttributes\(aq: \(aqNX_BOOLEAN\(aq, \(aqprimary\(aq: \(aqNX_INT32\(aq, \(aqfile_time\(aq: \(aqNX_DATE_TIME\(aq, \(aqoffset\(aq: \(aqNX_INT\(aq, \(aqfile_update_time\(aq: \(aqNX_DATE_TIME\(aq, \(aqignoreExtraFields\(aq: \(aqNX_BOOLEAN\(aq, \(aqaxis\(aq: \(aqNX_INT\(aq, \(aqignoreExtraGroups\(aq: \(aqNX_BOOLEAN\(aq, \(aqsignal\(aq: \(aqNX_INT\(aq, \(aqstride\(aq: \(aqNX_INT\(aq, \(aqrestricts\(aq: \(aqNX_INT\(aq, \(aqmaxOccus\(aq: \(aqNX_INT\(aq, \(aqminOccus\(aq: \(aqNX_INT\(aq}
+.B aTn = {\(aqaxis\(aq: \(aqNX_INT\(aq, \(aqfile_time\(aq: \(aqNX_DATE_TIME\(aq, \(aqfile_update_time\(aq: \(aqNX_DATE_TIME\(aq, \(aqignoreExtraAttributes\(aq: \(aqNX_BOOLEAN\(aq, \(aqignoreExtraFields\(aq: \(aqNX_BOOLEAN\(aq, \(aqignoreExtraGroups\(aq: \(aqNX_BOOLEAN\(aq, \(aqmaxOccus\(aq: \(aqNX_INT\(aq, \(aqminOccus\(aq: \(aqNX_INT\(aq, \(aqoffset\(aq: \(aqNX_INT\(aq, \(aqprimary\(aq: \(aqNX_INT32\(aq, \(aqrestricts\(aq: \(aqNX_INT\(aq, \(aqsignal\(aq: \(aqNX_INT\(aq, \(aqstride\(aq: \(aqNX_INT\(aq}
 (\fI\%dict\fP <\fI\%str\fP , \fI\%str\fP >) map of tag attribute types
 .UNINDENT
 .INDENT 7.0
 .TP
 .B aTnv = {\(aqvector\(aq: \(aqNX_FLOAT\(aq}
-.INDENT 7.0
-.TP
-.B (\fI\%dict\fP <\fI\%str\fP , \fI\%str\fP >) 
-map of vector tag attribute types
-.UNINDENT
+(\fI\%dict\fP <\fI\%str\fP , \fI\%str\fP >) map of vector tag attribute types
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -3857,7 +3777,7 @@ array rank
 It calculates the rank of the array
 .TP
 .B Parameters
-\fBarray\fP (\fI\%any\fP) \-\- given array
+\fBarray\fP (\fIany\fP) – given array
 .TP
 .B Returns
 rank
@@ -3877,7 +3797,7 @@ It calculates the rank, inverse shape and type of
 the first element of the list array
 .TP
 .B Parameters
-\fBarray\fP (\fI\%any\fP) \-\- given array
+\fBarray\fP (\fIany\fP) – given array
 .TP
 .B Returns
 (rank, inverse shape, type)
@@ -3897,7 +3817,7 @@ It calculates the rank, shape and type of
 the first element of the list array
 .TP
 .B Parameters
-\fBarray\fP (\fI\%any\fP) \-\- given array
+\fBarray\fP (\fIany\fP) – given array
 .TP
 .B Returns
 (rank, shape, type)
@@ -3908,12 +3828,8 @@ the first element of the list array
 .UNINDENT
 .INDENT 7.0
 .TP
-.B convert = {\(aqfloat16\(aq: <type \(aqfloat\(aq>, \(aqint32\(aq: <type \(aqint\(aq>, \(aqint16\(aq: <type \(aqint\(aq>, \(aqstring\(aq: <type \(aqstr\(aq>, \(aqfloat64\(aq: <type \(aqfloat\(aq>, \(aqint\(aq: <type \(aqint\(aq>, \(aqfloat\(aq: <type \(aqfloat\(aq>, \(aquint8\(aq: <type \(aqint\(aq>, \(aquint32\(aq: <type \(aqlong\(aq>, \(aquint64\(aq: <type \(aqlong\(aq>, \(aquint16\(aq: <type \(aqint\(aq>, \(aqint64\(aq: <type \(aqlong\(aq>, \(aqstr\(aq: <type \(aqstr\(aq>, \(aquint\(aq: <type \(aqint\(aq>, \(aqbool\(aq: <bound method type.toBool of <class \(aqnxswriter.Types.Converters\(aq>>, \(aqint8\(aq: <type \(aqint\(aq>, \(aqfloat32\(aq: <type \(aqfloat\(aq>}
-.INDENT 7.0
-.TP
-.B (\fI\%dict\fP <\fI\%str\fP , \fI\%type\fP or \fI\%types.MethodType\fP >) 
-map of type : converting function
-.UNINDENT
+.B convert = {\(aqbool\(aq: <bound method type.toBool of <class \(aqnxswriter.Types.Converters\(aq>>, \(aqfloat\(aq: <type \(aqfloat\(aq>, \(aqfloat16\(aq: <type \(aqfloat\(aq>, \(aqfloat32\(aq: <type \(aqfloat\(aq>, \(aqfloat64\(aq: <type \(aqfloat\(aq>, \(aqint\(aq: <type \(aqint\(aq>, \(aqint16\(aq: <type \(aqint\(aq>, \(aqint32\(aq: <type \(aqint\(aq>, \(aqint64\(aq: <type \(aqlong\(aq>, \(aqint8\(aq: <type \(aqint\(aq>, \(aqstr\(aq: <type \(aqstr\(aq>, \(aqstring\(aq: <type \(aqstr\(aq>, \(aquint\(aq: <type \(aqint\(aq>, \(aquint16\(aq: <type \(aqint\(aq>, \(aquint32\(aq: <type \(aqlong\(aq>, \(aquint64\(aq: <type \(aqlong\(aq>, \(aquint8\(aq: <type \(aqint\(aq>}
+(\fI\%dict\fP <\fI\%str\fP , \fI\%type\fP or \fI\%types.MethodType\fP >) map of type : converting function
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -3928,9 +3844,9 @@ the given function to it elements
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBvalue\fP \-\- given array
+\fBvalue\fP – given array
 .IP \(bu 2
-\fBfun\fP (\fI\%type\fP or \fI\%types.MethodType\fP) \-\- applied function
+\fBfun\fP (\fI\%type\fP or \fI\%types.MethodType\fP) – applied function
 .UNINDENT
 .TP
 .B Returns
@@ -3942,12 +3858,12 @@ created array
 .UNINDENT
 .INDENT 7.0
 .TP
-.B nTnp = {\(aqNX_UINT64\(aq: \(aquint64\(aq, \(aqNX_UINT32\(aq: \(aquint32\(aq, \(aqNX_POSINT\(aq: \(aquint64\(aq, \(aqNX_UINT\(aq: \(aquint64\(aq, \(aqNX_NUMBER\(aq: \(aqfloat64\(aq, \(aqNX_UINT16\(aq: \(aquint16\(aq, \(aqNX_INT8\(aq: \(aqint8\(aq, \(aqNX_FLOAT32\(aq: \(aqfloat32\(aq, \(aqNX_FLOAT\(aq: \(aqfloat64\(aq, \(aqNX_INT32\(aq: \(aqint32\(aq, \(aqNX_INT16\(aq: \(aqint16\(aq, \(aqNX_UINT8\(aq: \(aquint8\(aq, \(aqNX_FLOAT64\(aq: \(aqfloat64\(aq, \(aqNX_CHAR\(aq: \(aqstring\(aq, \(aqNX_BOOLEAN\(aq: \(aqbool\(aq, \(aqNX_INT\(aq: \(aqint64\(aq, \(aqNX_DATE_TIME\(aq: \(aqstring\(aq, \(aqNX_INT64\(aq: \(aqint64\(aq, \(aqISO8601\(aq: \(aqstring\(aq}
+.B nTnp = {\(aqISO8601\(aq: \(aqstring\(aq, \(aqNX_BOOLEAN\(aq: \(aqbool\(aq, \(aqNX_CHAR\(aq: \(aqstring\(aq, \(aqNX_DATE_TIME\(aq: \(aqstring\(aq, \(aqNX_FLOAT\(aq: \(aqfloat64\(aq, \(aqNX_FLOAT32\(aq: \(aqfloat32\(aq, \(aqNX_FLOAT64\(aq: \(aqfloat64\(aq, \(aqNX_INT\(aq: \(aqint64\(aq, \(aqNX_INT16\(aq: \(aqint16\(aq, \(aqNX_INT32\(aq: \(aqint32\(aq, \(aqNX_INT64\(aq: \(aqint64\(aq, \(aqNX_INT8\(aq: \(aqint8\(aq, \(aqNX_NUMBER\(aq: \(aqfloat64\(aq, \(aqNX_POSINT\(aq: \(aquint64\(aq, \(aqNX_UINT\(aq: \(aquint64\(aq, \(aqNX_UINT16\(aq: \(aquint16\(aq, \(aqNX_UINT32\(aq: \(aquint32\(aq, \(aqNX_UINT64\(aq: \(aquint64\(aq, \(aqNX_UINT8\(aq: \(aquint8\(aq}
 (\fI\%dict\fP <\fI\%str\fP , \fI\%str\fP >) map of NEXUS :  numpy types
 .UNINDENT
 .INDENT 7.0
 .TP
-.B pTt = {\(aquint64\(aq: \(aqDevULong64\(aq, \(aqint32\(aq: \(aqDevLong\(aq, \(aqint16\(aq: \(aqDevShort\(aq, \(aqunicode\(aq: \(aqDevString\(aq, \(aqfloat64\(aq: \(aqDevDouble\(aq, \(aqint\(aq: \(aqDevLong64\(aq, \(aqfloat\(aq: \(aqDevDouble\(aq, \(aquint\(aq: \(aqDevULong64\(aq, \(aquint8\(aq: \(aqDevUChar\(aq, \(aqlong\(aq: \(aqDevLong64\(aq, \(aquint32\(aq: \(aqDevULong\(aq, \(aquint16\(aq: \(aqDevUShort\(aq, \(aqbool\(aq: \(aqDevBoolean\(aq, \(aqstr\(aq: \(aqDevString\(aq, \(aqint64\(aq: \(aqDevLong64\(aq, \(aqfloat16\(aq: \(aqDevFloat\(aq, \(aqint8\(aq: \(aqDevUChar\(aq, \(aqfloat32\(aq: \(aqDevFloat\(aq, \(aqstring\(aq: \(aqDevString\(aq}
+.B pTt = {\(aqbool\(aq: \(aqDevBoolean\(aq, \(aqfloat\(aq: \(aqDevDouble\(aq, \(aqfloat16\(aq: \(aqDevFloat\(aq, \(aqfloat32\(aq: \(aqDevFloat\(aq, \(aqfloat64\(aq: \(aqDevDouble\(aq, \(aqint\(aq: \(aqDevLong64\(aq, \(aqint16\(aq: \(aqDevShort\(aq, \(aqint32\(aq: \(aqDevLong\(aq, \(aqint64\(aq: \(aqDevLong64\(aq, \(aqint8\(aq: \(aqDevUChar\(aq, \(aqlong\(aq: \(aqDevLong64\(aq, \(aqstr\(aq: \(aqDevString\(aq, \(aqstring\(aq: \(aqDevString\(aq, \(aquint\(aq: \(aqDevULong64\(aq, \(aquint16\(aq: \(aqDevUShort\(aq, \(aquint32\(aq: \(aqDevULong\(aq, \(aquint64\(aq: \(aqDevULong64\(aq, \(aquint8\(aq: \(aqDevUChar\(aq, \(aqunicode\(aq: \(aqDevString\(aq}
 (\fI\%dict\fP <\fI\%str\fP ,:obj:\fIstr\fP >) map of Python:Tango types
 .UNINDENT
 .INDENT 7.0
@@ -3963,7 +3879,7 @@ converts to numpy types
 .INDENT 7.0
 .TP
 .B Parameters
-\fBdtype\fP (\fI\%str\fP) \-\- h5 writer type type
+\fBdtype\fP (\fI\%str\fP) – h5 writer type type
 .TP
 .B Returns
 nupy type
@@ -3988,9 +3904,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBtparent\fP (\fI\%FTObject\fP) \-\- treee parent
+\fBtparent\fP (\fI\%FTObject\fP) – treee parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -4044,7 +3960,7 @@ write attribute value
 .INDENT 7.0
 .TP
 .B Parameters
-\fBo\fP (\fI\%any\fP) \-\- python object
+\fBo\fP (\fI\%any\fP) – python object
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -4061,9 +3977,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBtparent\fP (\fI\%FTObject\fP) \-\- treee parent
+\fBtparent\fP (\fI\%FTObject\fP) – treee parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -4075,13 +3991,13 @@ create a new attribute
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBname\fP (\fI\%str\fP) \-\- attribute name
+\fBname\fP (\fI\%str\fP) – attribute name
 .IP \(bu 2
-\fBdtype\fP (\fI\%str\fP) \-\- attribute type
+\fBdtype\fP (\fI\%str\fP) – attribute type
 .IP \(bu 2
-\fBshape\fP (\fBlist\(ga< :obj:\(gaint\fP>) \-\- attribute shape
+\fBshape\fP (\fBlist\(ga< :obj:\(gaint\fP>) – attribute shape
 .IP \(bu 2
-\fBoverwrite\fP (\fI\%bool\fP) \-\- overwrite flag
+\fBoverwrite\fP (\fI\%bool\fP) – overwrite flag
 .UNINDENT
 .TP
 .B Returns
@@ -4110,9 +4026,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBtparent\fP (\fI\%FTObject\fP) \-\- treee parent
+\fBtparent\fP (\fI\%FTObject\fP) – treee parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -4160,9 +4076,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBtparent\fP (\fI\%FTObject\fP) \-\- treee parent
+\fBtparent\fP (\fI\%FTObject\fP) – treee parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -4200,9 +4116,9 @@ grow the field
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBdim\fP (\fI\%int\fP) \-\- growing dimension
+\fBdim\fP (\fI\%int\fP) – growing dimension
 .IP \(bu 2
-\fBdim\fP \-\- size of the grow
+\fBdim\fP – size of the grow
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -4270,7 +4186,7 @@ write the field value
 .INDENT 7.0
 .TP
 .B Parameters
-\fBo\fP (\fI\%any\fP) \-\- pni object
+\fBo\fP (\fI\%any\fP) – pni object
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -4287,12 +4203,12 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBfilename\fP (\fI\%str\fP) \-\- file name
+\fBfilename\fP (\fI\%str\fP) – file name
 .IP \(bu 2
 \fBwriter\fP (\fBPNIWriter\fP or \fBH5PYWriter\fP
-or \fBH5CppWriter\fP) \-\- writer module
+or \fBH5CppWriter\fP) – writer module
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -4328,11 +4244,6 @@ has swmr_mode
 .UNINDENT
 .INDENT 7.0
 .TP
-.B name = None
-(\fI\%str\fP) file name
-.UNINDENT
-.INDENT 7.0
-.TP
 .B readonly
 check if file is readonly
 .INDENT 7.0
@@ -4353,11 +4264,11 @@ reopen attribute
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBreadonly\fP (\fI\%bool\fP) \-\- readonly flag
+\fBreadonly\fP (\fI\%bool\fP) – readonly flag
 .IP \(bu 2
-\fBswmr\fP (\fI\%bool\fP) \-\- swmr flag
+\fBswmr\fP (\fI\%bool\fP) – swmr flag
 .IP \(bu 2
-\fBlibver\fP (\fI\%str\fP) \-\- library version, default: \(aqlatest\(aq
+\fBlibver\fP (\fI\%str\fP) – library version, default: ‘latest’
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -4374,11 +4285,6 @@ parent object
 \fI\%FTGroup\fP
 .UNINDENT
 .UNINDENT
-.INDENT 7.0
-.TP
-.B writer = None
-(\fBPNIWriter\fP or \fBH5PYWriter\fP or \fBH5CppWriter\fP)
-.UNINDENT
 .UNINDENT
 .INDENT 0.0
 .TP
@@ -4393,9 +4299,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBtparent\fP (\fI\%FTObject\fP) \-\- treee parent
+\fBtparent\fP (\fI\%FTObject\fP) – treee parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -4420,15 +4326,15 @@ open a file tree element
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBn\fP (\fI\%str\fP) \-\- group name
+\fBn\fP (\fI\%str\fP) – group name
 .IP \(bu 2
-\fBtype_code\fP (\fI\%str\fP) \-\- nexus field type
+\fBtype_code\fP (\fI\%str\fP) – nexus field type
 .IP \(bu 2
-\fBshape\fP (\fBlist\fP < \fI\%int\fP >) \-\- shape
+\fBshape\fP (\fBlist\fP < \fI\%int\fP >) – shape
 .IP \(bu 2
-\fBchunk\fP (\fBlist\fP < \fI\%int\fP >) \-\- chunk
+\fBchunk\fP (\fBlist\fP < \fI\%int\fP >) – chunk
 .IP \(bu 2
-\fBdfilter\fP (\fI\%FTDeflate\fP) \-\- filter deflater
+\fBdfilter\fP (\fI\%FTDeflate\fP) – filter deflater
 .UNINDENT
 .TP
 .B Returns
@@ -4447,9 +4353,9 @@ open a file tree element
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBn\fP (\fI\%str\fP) \-\- group name
+\fBn\fP (\fI\%str\fP) – group name
 .IP \(bu 2
-\fBnxclass\fP (\fI\%str\fP) \-\- group type
+\fBnxclass\fP (\fI\%str\fP) – group type
 .UNINDENT
 .TP
 .B Returns
@@ -4466,7 +4372,7 @@ if child exists
 .INDENT 7.0
 .TP
 .B Parameters
-\fBname\fP (\fI\%str\fP) \-\- child name
+\fBname\fP (\fI\%str\fP) – child name
 .TP
 .B Returns
 existing flag
@@ -4495,7 +4401,7 @@ open a file tree element
 .INDENT 7.0
 .TP
 .B Parameters
-\fBname\fP (\fI\%str\fP) \-\- element name
+\fBname\fP (\fI\%str\fP) – element name
 .TP
 .B Returns
 file tree object
@@ -4522,11 +4428,6 @@ group size
 \fI\%int\fP
 .UNINDENT
 .UNINDENT
-.INDENT 7.0
-.TP
-.B stepsperfile = None
-(\fI\%int\fP) steps per file
-.UNINDENT
 .UNINDENT
 .INDENT 0.0
 .TP
@@ -4541,9 +4442,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBtparent\fP (\fI\%FTObject\fP) \-\- treee parent
+\fBtparent\fP (\fI\%FTObject\fP) – treee parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -4591,9 +4492,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- h5 object
+\fBh5object\fP (\fI\%any\fP) – h5 object
 .IP \(bu 2
-\fBtparent\fP (\fI\%FTObject\fP) \-\- tree parent
+\fBtparent\fP (\fI\%FTObject\fP) – tree parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -4603,7 +4504,7 @@ append child weakref
 .INDENT 7.0
 .TP
 .B Parameters
-\fBtparent\fP (\fI\%FTObject\fP) \-\- tree parent
+\fBtparent\fP (\fI\%FTObject\fP) – tree parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -4665,11 +4566,11 @@ create a new file
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBfilename\fP (\fI\%str\fP) \-\- file name
+\fBfilename\fP (\fI\%str\fP) – file name
 .IP \(bu 2
-\fBoverwrite\fP (\fI\%bool\fP) \-\- overwrite flag
+\fBoverwrite\fP (\fI\%bool\fP) – overwrite flag
 .IP \(bu 2
-\fBpars\fP (\fI\%dict\fP < \fI\%str\fP, \fI\%str\fP>) \-\- parameters
+\fBpars\fP (\fI\%dict\fP < \fI\%str\fP, \fI\%str\fP>) – parameters
 .UNINDENT
 .TP
 .B Returns
@@ -4686,7 +4587,7 @@ create deflate filter
 .INDENT 7.0
 .TP
 .B Parameters
-\fBparent\fP (\fI\%FTObject\fP) \-\- parent object
+\fBparent\fP (\fI\%FTObject\fP) – parent object
 .TP
 .B Returns
 deflate filter object
@@ -4702,7 +4603,7 @@ get first element if the only
 .INDENT 7.0
 .TP
 .B Parameters
-\fBarray\fP (\fI\%any\fP) \-\- numpy array
+\fBarray\fP (\fI\%any\fP) – numpy array
 .TP
 .B Returns
 first element of the array
@@ -4715,7 +4616,7 @@ get links
 .INDENT 7.0
 .TP
 .B Parameters
-\fBparent\fP (\fI\%FTObject\fP) \-\- parent object
+\fBparent\fP (\fI\%FTObject\fP) – parent object
 .TP
 .B Returns
 list of link objects
@@ -4738,11 +4639,11 @@ create link
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBtarget\fP (\fI\%str\fP) \-\- file name
+\fBtarget\fP (\fI\%str\fP) – file name
 .IP \(bu 2
-\fBparent\fP (\fI\%FTObject\fP) \-\- parent object
+\fBparent\fP (\fI\%FTObject\fP) – parent object
 .IP \(bu 2
-\fBname\fP (\fI\%str\fP) \-\- link name
+\fBname\fP (\fI\%str\fP) – link name
 .UNINDENT
 .TP
 .B Returns
@@ -4761,11 +4662,11 @@ open the new file
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBfilename\fP (\fI\%str\fP) \-\- file name
+\fBfilename\fP (\fI\%str\fP) – file name
 .IP \(bu 2
-\fBreadonly\fP (\fI\%bool\fP) \-\- readonly flag
+\fBreadonly\fP (\fI\%bool\fP) – readonly flag
 .IP \(bu 2
-\fBpars\fP (\fI\%dict\fP < \fI\%str\fP, \fI\%str\fP>) \-\- parameters
+\fBpars\fP (\fI\%dict\fP < \fI\%str\fP, \fI\%str\fP>) – parameters
 .UNINDENT
 .TP
 .B Returns
@@ -4782,18 +4683,8 @@ sets writer
 .INDENT 7.0
 .TP
 .B Parameters
-\fBwr\fP (\fBPNIWriter\fP or \fBH5PYWriter\fP or \fBH5CppWriter\fP) \-\- writer module
+\fBwr\fP (\fBPNIWriter\fP or \fBH5PYWriter\fP or \fBH5CppWriter\fP) – writer module
 .UNINDENT
-.UNINDENT
-.INDENT 0.0
-.TP
-.B nxswriter.FileWriter.writer = None
-(\fBPNIWriter\fP or \fBH5PYWriter\(gaor :mod:\(gaH5CppWriter\fP)
-.UNINDENT
-.INDENT 0.0
-.TP
-.B nxswriter.FileWriter.writerlock = <thread.lock object>
-(\fBthreading.Lock\fP) writer module
 .UNINDENT
 .SS nxswriter.PNIWriter module
 .sp
@@ -4811,9 +4702,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+\fBtparent\fP (\fBFTObject\fP) – treee parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -4846,16 +4737,6 @@ valid flag
 .B Return type
 \fI\%bool\fP
 .UNINDENT
-.UNINDENT
-.INDENT 7.0
-.TP
-.B name = None
-(\fI\%str\fP) object name
-.UNINDENT
-.INDENT 7.0
-.TP
-.B path = None
-(\fI\%str\fP) object nexus path
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -4895,7 +4776,7 @@ write attribute value
 .INDENT 7.0
 .TP
 .B Parameters
-\fBo\fP (\fI\%any\fP) \-\- python object
+\fBo\fP (\fI\%any\fP) – python object
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -4912,9 +4793,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+\fBtparent\fP (\fBFTObject\fP) – treee parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -4931,13 +4812,13 @@ create a new attribute
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBname\fP (\fI\%str\fP) \-\- attribute name
+\fBname\fP (\fI\%str\fP) – attribute name
 .IP \(bu 2
-\fBdtype\fP (\fI\%str\fP) \-\- attribute type
+\fBdtype\fP (\fI\%str\fP) – attribute type
 .IP \(bu 2
-\fBshape\fP (\fBlist\fP < \fI\%int\fP >) \-\- attribute shape
+\fBshape\fP (\fBlist\fP < \fI\%int\fP >) – attribute shape
 .IP \(bu 2
-\fBoverwrite\fP (\fI\%bool\fP) \-\- overwrite flag
+\fBoverwrite\fP (\fI\%bool\fP) – overwrite flag
 .UNINDENT
 .TP
 .B Returns
@@ -4962,16 +4843,6 @@ valid flag
 .UNINDENT
 .INDENT 7.0
 .TP
-.B name = None
-(\fI\%str\fP) object name
-.UNINDENT
-.INDENT 7.0
-.TP
-.B path = None
-(\fI\%str\fP) object nexus path
-.UNINDENT
-.INDENT 7.0
-.TP
 .B reopen()
 reopen field
 .UNINDENT
@@ -4987,17 +4858,33 @@ constructor
 .INDENT 7.0
 .TP
 .B Parameters
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .UNINDENT
 .INDENT 7.0
 .TP
 .B rate
-(\fI\%int\fP) compression rate
+getter for compression rate
+.INDENT 7.0
+.TP
+.B Returns
+compression rate
+.TP
+.B Return type
+\fI\%int\fP
+.UNINDENT
 .UNINDENT
 .INDENT 7.0
 .TP
 .B shuffle
-(\fI\%bool\fP) compression shuffle
+getter for compression shuffle
+.INDENT 7.0
+.TP
+.B Returns
+compression shuffle
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
 .UNINDENT
 .UNINDENT
 .INDENT 0.0
@@ -5013,9 +4900,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+\fBtparent\fP (\fBFTObject\fP) – treee parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -5058,9 +4945,9 @@ grow the field
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBdim\fP (\fI\%int\fP) \-\- growing dimension
+\fBdim\fP (\fI\%int\fP) – growing dimension
 .IP \(bu 2
-\fBdim\fP \-\- size of the grow
+\fBdim\fP – size of the grow
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -5076,16 +4963,6 @@ valid flag
 .B Return type
 \fI\%bool\fP
 .UNINDENT
-.UNINDENT
-.INDENT 7.0
-.TP
-.B name = None
-(\fI\%str\fP) object name
-.UNINDENT
-.INDENT 7.0
-.TP
-.B path = None
-(\fI\%str\fP) object nexus path
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -5151,7 +5028,7 @@ write the field value
 .INDENT 7.0
 .TP
 .B Parameters
-\fBo\fP (\fI\%any\fP) \-\- pni object
+\fBo\fP (\fI\%any\fP) – pni object
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -5168,9 +5045,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBfilename\fP (\fI\%str\fP) \-\- file name
+\fBfilename\fP (\fI\%str\fP) – file name
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -5198,11 +5075,6 @@ valid flag
 .UNINDENT
 .INDENT 7.0
 .TP
-.B path = None
-(\fI\%str\fP) object nexus path
-.UNINDENT
-.INDENT 7.0
-.TP
 .B readonly
 check if file is readonly
 .INDENT 7.0
@@ -5223,11 +5095,11 @@ reopen file
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBreadonly\fP (\fI\%bool\fP) \-\- readonly flag
+\fBreadonly\fP (\fI\%bool\fP) – readonly flag
 .IP \(bu 2
-\fBswmr\fP (\fI\%bool\fP) \-\- swmr flag
+\fBswmr\fP (\fI\%bool\fP) – swmr flag
 .IP \(bu 2
-\fBlibver\fP (\fI\%str\fP) \-\- library version, default: \(aqlatest\(aq
+\fBlibver\fP (\fI\%str\fP) – library version, default: ‘latest’
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -5258,9 +5130,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBtparent\fP (\fBFTObject\fP) \-\- tree parent
+\fBtparent\fP (\fBFTObject\fP) – tree parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -5272,7 +5144,7 @@ constructor
 .INDENT 7.0
 .TP
 .B Parameters
-\fBgroup\fP \-\- group object
+\fBgroup\fP – group object
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -5290,7 +5162,7 @@ attribute object
 .UNINDENT
 .INDENT 7.0
 .TP
-.B PNIGroup.attributes
+.B attributes
 return the attribute manager
 .INDENT 7.0
 .TP
@@ -5303,27 +5175,27 @@ attribute manager
 .UNINDENT
 .INDENT 7.0
 .TP
-.B PNIGroup.close()
+.B close()
 close group
 .UNINDENT
 .INDENT 7.0
 .TP
-.B PNIGroup.create_field(name, type_code, shape=None, chunk=None, dfilter=None)
+.B create_field(name, type_code, shape=None, chunk=None, dfilter=None)
 open a file tree element
 .INDENT 7.0
 .TP
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBn\fP (\fI\%str\fP) \-\- group name
+\fBn\fP (\fI\%str\fP) – group name
 .IP \(bu 2
-\fBtype_code\fP (\fI\%str\fP) \-\- nexus field type
+\fBtype_code\fP (\fI\%str\fP) – nexus field type
 .IP \(bu 2
-\fBshape\fP (\fBlist\fP < \fI\%int\fP >) \-\- shape
+\fBshape\fP (\fBlist\fP < \fI\%int\fP >) – shape
 .IP \(bu 2
-\fBchunk\fP (\fBlist\fP < \fI\%int\fP >) \-\- chunk
+\fBchunk\fP (\fBlist\fP < \fI\%int\fP >) – chunk
 .IP \(bu 2
-\fBdfilter\fP (\fI\%PNIDeflate\fP) \-\- filter deflater
+\fBdfilter\fP (\fI\%PNIDeflate\fP) – filter deflater
 .UNINDENT
 .TP
 .B Returns
@@ -5335,16 +5207,16 @@ file tree field
 .UNINDENT
 .INDENT 7.0
 .TP
-.B PNIGroup.create_group(n, nxclass=\(aq\(aq)
+.B create_group(n, nxclass=\(aq\(aq)
 open a file tree element
 .INDENT 7.0
 .TP
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBn\fP (\fI\%str\fP) \-\- group name
+\fBn\fP (\fI\%str\fP) – group name
 .IP \(bu 2
-\fBnxclass\fP (\fI\%str\fP) \-\- group type
+\fBnxclass\fP (\fI\%str\fP) – group type
 .UNINDENT
 .TP
 .B Returns
@@ -5356,12 +5228,12 @@ file tree group
 .UNINDENT
 .INDENT 7.0
 .TP
-.B PNIGroup.exists(name)
+.B exists(name)
 if child exists
 .INDENT 7.0
 .TP
 .B Parameters
-\fBname\fP (\fI\%str\fP) \-\- child name
+\fBname\fP (\fI\%str\fP) – child name
 .TP
 .B Returns
 existing flag
@@ -5372,7 +5244,7 @@ existing flag
 .UNINDENT
 .INDENT 7.0
 .TP
-.B PNIGroup.is_valid
+.B is_valid
 check if field is valid
 .INDENT 7.0
 .TP
@@ -5385,12 +5257,7 @@ valid flag
 .UNINDENT
 .INDENT 7.0
 .TP
-.B PNIGroup.name = None
-(\fI\%str\fP) object name
-.UNINDENT
-.INDENT 7.0
-.TP
-.B PNIGroup.names()
+.B names()
 read the child names
 .INDENT 7.0
 .TP
@@ -5403,12 +5270,12 @@ pni object
 .UNINDENT
 .INDENT 7.0
 .TP
-.B PNIGroup.open(name)
+.B open(name)
 open a file tree element
 .INDENT 7.0
 .TP
 .B Parameters
-\fBname\fP (\fI\%str\fP) \-\- element name
+\fBname\fP (\fI\%str\fP) – element name
 .TP
 .B Returns
 file tree object
@@ -5419,17 +5286,12 @@ file tree object
 .UNINDENT
 .INDENT 7.0
 .TP
-.B PNIGroup.path = None
-(\fI\%str\fP) object nexus path
-.UNINDENT
-.INDENT 7.0
-.TP
-.B PNIGroup.reopen()
+.B reopen()
 reopen group
 .UNINDENT
 .INDENT 7.0
 .TP
-.B PNIGroup.size
+.B size
 group size
 .INDENT 7.0
 .TP
@@ -5454,9 +5316,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+\fBtparent\fP (\fBFTObject\fP) – treee parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -5476,16 +5338,6 @@ valid flag
 .B Return type
 \fI\%bool\fP
 .UNINDENT
-.UNINDENT
-.INDENT 7.0
-.TP
-.B name = None
-(\fI\%str\fP) object name
-.UNINDENT
-.INDENT 7.0
-.TP
-.B path = None
-(\fI\%str\fP) object nexus path
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -5528,11 +5380,11 @@ create a new file
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBfilename\fP (\fI\%str\fP) \-\- file name
+\fBfilename\fP (\fI\%str\fP) – file name
 .IP \(bu 2
-\fBoverwrite\fP (\fI\%bool\fP) \-\- overwrite flag
+\fBoverwrite\fP (\fI\%bool\fP) – overwrite flag
 .IP \(bu 2
-\fBlibver\fP (\fI\%str\fP) \-\- library version: \(aqlastest\(aq or \(aqearliest\(aq
+\fBlibver\fP (\fI\%str\fP) – library version: ‘lastest’ or ‘earliest’
 .UNINDENT
 .TP
 .B Returns
@@ -5562,7 +5414,7 @@ get links
 .INDENT 7.0
 .TP
 .B Parameters
-\fBparent\fP (\fBFTObject\fP) \-\- parent object
+\fBparent\fP (\fBFTObject\fP) – parent object
 .TP
 .B Returns
 list of link objects
@@ -5588,11 +5440,11 @@ create link
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBtarget\fP (\fI\%str\fP) \-\- file name
+\fBtarget\fP (\fI\%str\fP) – file name
 .IP \(bu 2
-\fBparent\fP (\fBFTObject\fP) \-\- parent object
+\fBparent\fP (\fBFTObject\fP) – parent object
 .IP \(bu 2
-\fBname\fP (\fI\%str\fP) \-\- link name
+\fBname\fP (\fI\%str\fP) – link name
 .UNINDENT
 .TP
 .B Returns
@@ -5611,11 +5463,11 @@ open the new file
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBfilename\fP (\fI\%str\fP) \-\- file name
+\fBfilename\fP (\fI\%str\fP) – file name
 .IP \(bu 2
-\fBreadonly\fP (\fI\%bool\fP) \-\- readonly flag
+\fBreadonly\fP (\fI\%bool\fP) – readonly flag
 .IP \(bu 2
-\fBlibver\fP (\fI\%str\fP) \-\- library version: \(aqlastest\(aq or \(aqearliest\(aq
+\fBlibver\fP (\fI\%str\fP) – library version: ‘lastest’ or ‘earliest’
 .UNINDENT
 .TP
 .B Returns
@@ -5641,9 +5493,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+\fBtparent\fP (\fBFTObject\fP) – treee parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -5715,7 +5567,7 @@ write attribute value
 .INDENT 7.0
 .TP
 .B Parameters
-\fBo\fP (\fI\%any\fP) \-\- python object
+\fBo\fP (\fI\%any\fP) – python object
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -5732,9 +5584,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+\fBtparent\fP (\fBFTObject\fP) – treee parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -5746,7 +5598,7 @@ constructor
 .INDENT 7.0
 .TP
 .B Parameters
-\fBmanager\fP (\fI\%H5PYAttributeManager\fP) \-\- attribute manager
+\fBmanager\fP (\fI\%H5PYAttributeManager\fP) – attribute manager
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -5764,25 +5616,25 @@ attribute object
 .UNINDENT
 .INDENT 7.0
 .TP
-.B H5PYAttributeManager.close()
+.B close()
 close attribure manager
 .UNINDENT
 .INDENT 7.0
 .TP
-.B H5PYAttributeManager.create(name, dtype, shape=None, overwrite=False)
+.B create(name, dtype, shape=None, overwrite=False)
 create a new attribute
 .INDENT 7.0
 .TP
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBname\fP (\fI\%str\fP) \-\- attribute name
+\fBname\fP (\fI\%str\fP) – attribute name
 .IP \(bu 2
-\fBdtype\fP (\fI\%str\fP) \-\- attribute type
+\fBdtype\fP (\fI\%str\fP) – attribute type
 .IP \(bu 2
-\fBshape\fP (\fBlist\fP < \fI\%int\fP >) \-\- attribute shape
+\fBshape\fP (\fBlist\fP < \fI\%int\fP >) – attribute shape
 .IP \(bu 2
-\fBoverwrite\fP (\fI\%bool\fP) \-\- overwrite flag
+\fBoverwrite\fP (\fI\%bool\fP) – overwrite flag
 .UNINDENT
 .TP
 .B Returns
@@ -5794,7 +5646,7 @@ attribute object
 .UNINDENT
 .INDENT 7.0
 .TP
-.B H5PYAttributeManager.is_valid
+.B is_valid
 check if link is valid
 .INDENT 7.0
 .TP
@@ -5807,17 +5659,7 @@ valid flag
 .UNINDENT
 .INDENT 7.0
 .TP
-.B H5PYAttributeManager.name = None
-(\fI\%str\fP) object name
-.UNINDENT
-.INDENT 7.0
-.TP
-.B H5PYAttributeManager.path = None
-(\fI\%str\fP) object nexus path
-.UNINDENT
-.INDENT 7.0
-.TP
-.B H5PYAttributeManager.reopen()
+.B reopen()
 reopen field
 .UNINDENT
 .UNINDENT
@@ -5832,12 +5674,28 @@ constructor
 .INDENT 7.0
 .TP
 .B rate
-(\fI\%int\fP) compression rate
+getter for compression rate
+.INDENT 7.0
+.TP
+.B Returns
+compression rate
+.TP
+.B Return type
+\fI\%int\fP
+.UNINDENT
 .UNINDENT
 .INDENT 7.0
 .TP
 .B shuffle
-(\fI\%bool\fP) compression shuffle
+getter for compression shuffle
+.INDENT 7.0
+.TP
+.B Returns
+compression shuffle
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
 .UNINDENT
 .UNINDENT
 .INDENT 0.0
@@ -5853,9 +5711,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+\fBtparent\fP (\fBFTObject\fP) – treee parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -5898,9 +5756,9 @@ grow the field
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBdim\fP (\fI\%int\fP) \-\- growing dimension
+\fBdim\fP (\fI\%int\fP) – growing dimension
 .IP \(bu 2
-\fBdim\fP \-\- size of the grow
+\fBdim\fP – size of the grow
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -5981,7 +5839,7 @@ write the field value
 .INDENT 7.0
 .TP
 .B Parameters
-\fBo\fP (\fI\%any\fP) \-\- pni object
+\fBo\fP (\fI\%any\fP) – pni object
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -5998,9 +5856,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBfilename\fP (\fI\%str\fP) \-\- file name
+\fBfilename\fP (\fI\%str\fP) – file name
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -6041,11 +5899,6 @@ valid flag
 .UNINDENT
 .INDENT 7.0
 .TP
-.B path = None
-(\fI\%str\fP) object nexus path
-.UNINDENT
-.INDENT 7.0
-.TP
 .B readonly
 check if file is readonly
 .INDENT 7.0
@@ -6066,11 +5919,11 @@ reopen file
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBreadonly\fP (\fI\%bool\fP) \-\- readonly flag
+\fBreadonly\fP (\fI\%bool\fP) – readonly flag
 .IP \(bu 2
-\fBswmr\fP (\fI\%bool\fP) \-\- swmr flag
+\fBswmr\fP (\fI\%bool\fP) – swmr flag
 .IP \(bu 2
-\fBlibver\fP (\fI\%str\fP) \-\- library version, default: \(aqlatest\(aq
+\fBlibver\fP (\fI\%str\fP) – library version, default: ‘latest’
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -6101,9 +5954,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+\fBtparent\fP (\fBFTObject\fP) – treee parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -6115,7 +5968,7 @@ constructor
 .INDENT 7.0
 .TP
 .B Parameters
-\fBgroup\fP \-\- group object
+\fBgroup\fP – group object
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -6133,7 +5986,7 @@ attribute object
 .UNINDENT
 .INDENT 7.0
 .TP
-.B H5PYGroup.attributes
+.B attributes
 return the attribute manager
 .INDENT 7.0
 .TP
@@ -6146,27 +5999,27 @@ attribute manager
 .UNINDENT
 .INDENT 7.0
 .TP
-.B H5PYGroup.close()
+.B close()
 close group
 .UNINDENT
 .INDENT 7.0
 .TP
-.B H5PYGroup.create_field(name, type_code, shape=None, chunk=None, dfilter=None)
+.B create_field(name, type_code, shape=None, chunk=None, dfilter=None)
 open a file tree element
 .INDENT 7.0
 .TP
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBn\fP (\fI\%str\fP) \-\- group name
+\fBn\fP (\fI\%str\fP) – group name
 .IP \(bu 2
-\fBtype_code\fP (\fI\%str\fP) \-\- nexus field type
+\fBtype_code\fP (\fI\%str\fP) – nexus field type
 .IP \(bu 2
-\fBshape\fP (\fBlist\fP < \fI\%int\fP >) \-\- shape
+\fBshape\fP (\fBlist\fP < \fI\%int\fP >) – shape
 .IP \(bu 2
-\fBchunk\fP (\fBlist\fP < \fI\%int\fP >) \-\- chunk
+\fBchunk\fP (\fBlist\fP < \fI\%int\fP >) – chunk
 .IP \(bu 2
-\fBdfilter\fP (\fI\%H5PYDeflate\fP) \-\- filter deflater
+\fBdfilter\fP (\fI\%H5PYDeflate\fP) – filter deflater
 .UNINDENT
 .TP
 .B Returns
@@ -6178,16 +6031,16 @@ file tree field
 .UNINDENT
 .INDENT 7.0
 .TP
-.B H5PYGroup.create_group(n, nxclass=\(aq\(aq)
+.B create_group(n, nxclass=\(aq\(aq)
 open a file tree element
 .INDENT 7.0
 .TP
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBn\fP (\fI\%str\fP) \-\- group name
+\fBn\fP (\fI\%str\fP) – group name
 .IP \(bu 2
-\fBnxclass\fP (\fI\%str\fP) \-\- group type
+\fBnxclass\fP (\fI\%str\fP) – group type
 .UNINDENT
 .TP
 .B Returns
@@ -6199,12 +6052,12 @@ file tree group
 .UNINDENT
 .INDENT 7.0
 .TP
-.B H5PYGroup.exists(name)
+.B exists(name)
 if child exists
 .INDENT 7.0
 .TP
 .B Parameters
-\fBname\fP (\fI\%str\fP) \-\- child name
+\fBname\fP (\fI\%str\fP) – child name
 .TP
 .B Returns
 existing flag
@@ -6215,7 +6068,7 @@ existing flag
 .UNINDENT
 .INDENT 7.0
 .TP
-.B H5PYGroup.is_valid
+.B is_valid
 check if group is valid
 .INDENT 7.0
 .TP
@@ -6228,7 +6081,7 @@ valid flag
 .UNINDENT
 .INDENT 7.0
 .TP
-.B H5PYGroup.names()
+.B names()
 read the child names
 .INDENT 7.0
 .TP
@@ -6241,12 +6094,12 @@ pni object
 .UNINDENT
 .INDENT 7.0
 .TP
-.B H5PYGroup.open(name)
+.B open(name)
 open a file tree element
 .INDENT 7.0
 .TP
 .B Parameters
-\fBname\fP (\fI\%str\fP) \-\- element name
+\fBname\fP (\fI\%str\fP) – element name
 .TP
 .B Returns
 file tree object
@@ -6257,12 +6110,12 @@ file tree object
 .UNINDENT
 .INDENT 7.0
 .TP
-.B H5PYGroup.reopen()
+.B reopen()
 reopen file
 .UNINDENT
 .INDENT 7.0
 .TP
-.B H5PYGroup.size
+.B size
 group size
 .INDENT 7.0
 .TP
@@ -6287,9 +6140,9 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBh5object\fP (\fI\%any\fP) \-\- pni object
+\fBh5object\fP (\fI\%any\fP) – pni object
 .IP \(bu 2
-\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+\fBtparent\fP (\fBFTObject\fP) – treee parent
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -6372,11 +6225,11 @@ create a new file
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBfilename\fP (\fI\%str\fP) \-\- file name
+\fBfilename\fP (\fI\%str\fP) – file name
 .IP \(bu 2
-\fBoverwrite\fP (\fI\%bool\fP) \-\- overwrite flag
+\fBoverwrite\fP (\fI\%bool\fP) – overwrite flag
 .IP \(bu 2
-\fBpars\fP (\fI\%dict\fP < \fI\%str\fP, \fI\%str\fP>) \-\- parameters
+\fBpars\fP (\fI\%dict\fP < \fI\%str\fP, \fI\%str\fP>) – parameters
 .UNINDENT
 .TP
 .B Returns
@@ -6406,7 +6259,7 @@ get links
 .INDENT 7.0
 .TP
 .B Parameters
-\fBparent\fP (\fBFTObject\fP) \-\- parent object
+\fBparent\fP (\fBFTObject\fP) – parent object
 .TP
 .B Returns
 list of link objects
@@ -6432,11 +6285,11 @@ create link
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBtarget\fP (\fI\%str\fP) \-\- file name
+\fBtarget\fP (\fI\%str\fP) – file name
 .IP \(bu 2
-\fBparent\fP (\fBFTObject\fP) \-\- parent object
+\fBparent\fP (\fBFTObject\fP) – parent object
 .IP \(bu 2
-\fBname\fP (\fI\%str\fP) \-\- link name
+\fBname\fP (\fI\%str\fP) – link name
 .UNINDENT
 .TP
 .B Returns
@@ -6455,11 +6308,11 @@ open the new file
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBfilename\fP (\fI\%str\fP) \-\- file name
+\fBfilename\fP (\fI\%str\fP) – file name
 .IP \(bu 2
-\fBreadonly\fP (\fI\%bool\fP) \-\- readonly flag
+\fBreadonly\fP (\fI\%bool\fP) – readonly flag
 .IP \(bu 2
-\fBpars\fP (\fI\%dict\fP < \fI\%str\fP, \fI\%str\fP>) \-\- parameters
+\fBpars\fP (\fI\%dict\fP < \fI\%str\fP, \fI\%str\fP>) – parameters
 .UNINDENT
 .TP
 .B Returns
@@ -6479,7 +6332,7 @@ launches the TANGO server
 .INDENT 7.0
 .TP
 .B Parameters
-\fBargv\fP (\fBlist\fP <\fI\%str\fP>) \-\- command\-line arguments
+\fBargv\fP (\fBlist\fP <\fI\%str\fP>) – command\-line arguments
 .UNINDENT
 .UNINDENT
 .INDENT 0.0

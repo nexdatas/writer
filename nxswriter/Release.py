@@ -21,4 +21,4 @@
 
 
 #: package version
-__version__ = "2.22.6"
+__version__ = "2.23.0"

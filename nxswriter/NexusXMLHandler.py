@@ -155,7 +155,7 @@ class NexusXMLHandler(sax.ContentHandler):
                           'FINAL': self.finalPool}
         #: (:obj:`dict` <:obj:`str`, \
         #:  :class:`nxswriter.ThreadPool.ThreadPool`> ) \
-        #:     collection of thread pool with triggered STEP elements
+        #:  collection of thread pool with triggered STEP elements
         self.triggerPools = {}
 
         #: (:class:`nxswriter.DecoderPool.DecoderPool`) pool with decoders
