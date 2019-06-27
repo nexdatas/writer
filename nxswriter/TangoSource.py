@@ -23,7 +23,8 @@ import sys
 import time
 import threading
 import socket
-from xml.dom import minidom
+import xml.etree.ElementTree as et
+from lxml.etree import XMLParser
 
 from .Types import NTP
 
@@ -176,14 +177,12 @@ class TangoSource(DataSource):
         """
 
         if sys.version_info > (3,):
-            dom = minidom.parseString(bytes(xml, "UTF-8"))
-        else:
-            dom = minidom.parseString(xml)
-        rec = dom.getElementsByTagName("record")
+            xml = bytes(xml, "UTF-8")
+        root = et.fromstring(xml, parser=XMLParser(collect_ids=False))
+        rec = root.find("record")
         name = None
-        if rec and len(rec) > 0:
-            name = rec[0].getAttribute("name") \
-                if rec[0].hasAttribute("name") else None
+        if rec is not None:
+            name = rec.get("name")
         if not name:
             if self._streams:
                 self._streams.error(
@@ -193,22 +192,16 @@ class TangoSource(DataSource):
 
             raise DataSourceSetupError(
                 "Tango record name not defined: %s" % xml)
-        dv = dom.getElementsByTagName("device")
+        dv = root.find("device")
         device = None
         client = False
-        if dv and len(dv) > 0:
-            device = dv[0].getAttribute("name") \
-                if dv[0].hasAttribute("name") else None
-            hostname = dv[0].getAttribute("hostname") \
-                if dv[0].hasAttribute("hostname") else None
-            port = dv[0].getAttribute("port") \
-                if dv[0].hasAttribute("port") else None
-            group = dv[0].getAttribute("group") \
-                if dv[0].hasAttribute("group") else None
-            encoding = dv[0].getAttribute("encoding") \
-                if dv[0].hasAttribute("encoding") else None
-            memberType = dv[0].getAttribute("member") \
-                if dv[0].hasAttribute("member") else None
+        if dv is not None:
+            device = dv.get("name")
+            hostname = dv.get("hostname")
+            port = dv.get("port")
+            group = dv.get("group")
+            encoding = dv.get("encoding")
+            memberType = dv.get("member")
             if not memberType or memberType not in [
                     "attribute", "command", "property"]:
                 memberType = "attribute"

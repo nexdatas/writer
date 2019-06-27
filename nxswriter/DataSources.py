@@ -20,6 +20,24 @@
 """ Definitions of various datasources """
 
 from .Types import NTP
+import xml.etree.ElementTree as et
+import sys
+
+
+def _tostr(text):
+    """ converts text  to str type
+
+    :param text: text
+    :type text: :obj:`bytes` or :obj:`unicode`
+    :returns: text in str type
+    :rtype: :obj:`str`
+    """
+    if isinstance(text, str):
+        return text
+    elif sys.version_info > (3,):
+        return str(text, encoding="utf8")
+    else:
+        return str(text)
 
 
 class DataSource(object):
@@ -69,6 +87,20 @@ class DataSource(object):
         return "unknown DataSource"
 
     @classmethod
+    def _toxml(cls, node):
+        """ provides xml content of the whole node
+
+        :param node: DOM node
+        :type node: :class:`xml.dom.Node`
+        :returns: xml content string
+        :rtype: :obj:`str`
+        """
+        xml = _tostr(et.tostring(node, encoding='utf8', method='xml'))
+        if xml.startswith("<?xml version='1.0' encoding='utf8'?>"):
+            xml = str(xml[38:])
+        return xml
+
+    @classmethod
     def _getText(cls, node):
         """ provides xml content of the node
 
@@ -77,7 +109,7 @@ class DataSource(object):
         :returns: xml content string
         :rtype: :obj:`str`
         """
-        xml = node.toxml()
+        xml = cls._toxml(node)
         start = xml.find('>')
         end = xml.rfind('<')
         if start == -1 or end < start:

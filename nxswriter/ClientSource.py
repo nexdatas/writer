@@ -20,8 +20,8 @@
 """ Definitions of CLIENT datasource """
 
 import sys
-from xml.dom import minidom
-
+import xml.etree.ElementTree as et
+from lxml.etree import XMLParser
 from .DataSources import DataSource
 from .Errors import DataSourceSetupError
 
@@ -57,13 +57,11 @@ class ClientSource(DataSource):
         :        if :obj:`name` is not defined
         """
         if sys.version_info > (3,):
-            dom = minidom.parseString(bytes(xml, "UTF-8"))
-        else:
-            dom = minidom.parseString(xml)
-        rec = dom.getElementsByTagName("record")
-        if rec and len(rec) > 0:
-            self.name = rec[0].getAttribute("name") \
-                if rec[0].hasAttribute("name") else None
+            xml = bytes(xml, "UTF-8")
+        root = et.fromstring(xml, parser=XMLParser(collect_ids=False))
+        rec = root.find("record")
+        if rec is not None:
+            self.name = rec.get("name")
         if not self.name:
             if self._streams:
                 self._streams.error(

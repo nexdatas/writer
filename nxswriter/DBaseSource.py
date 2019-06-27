@@ -19,7 +19,8 @@
 
 """ Definitions of DB datasource """
 
-from xml.dom import minidom
+import xml.etree.ElementTree as et
+from lxml.etree import XMLParser
 import sys
 
 from .Types import NTP
@@ -119,14 +120,12 @@ class DBaseSource(DataSource):
             if :obj:`format` or :obj:`query` is not defined
         """
         if sys.version_info > (3,):
-            dom = minidom.parseString(bytes(xml, "UTF-8"))
-        else:
-            dom = minidom.parseString(xml)
-        query = dom.getElementsByTagName("query")
-        if query and len(query) > 0:
-            self.format = query[0].getAttribute("format") \
-                if query[0].hasAttribute("format") else None
-            self.query = self._getText(query[0])
+            xml = bytes(xml, "UTF-8")
+        root = et.fromstring(xml, parser=XMLParser(collect_ids=False))
+        query = root.find("query")
+        if query is not None:
+            self.format = query.get("format")
+            self.query = self._getText(query)
 
         if not self.format or not self.query:
             if self._streams:
@@ -138,27 +137,19 @@ class DBaseSource(DataSource):
             raise DataSourceSetupError(
                 "Database query or its format not defined: %s" % xml)
 
-        db = dom.getElementsByTagName("database")
-        if db and len(db) > 0:
-            self.dbname = db[0].getAttribute("dbname") \
-                if db[0].hasAttribute("dbname") else None
-            self.dbtype = db[0].getAttribute("dbtype") \
-                if db[0].hasAttribute("dbtype") else None
-            self.user = db[0].getAttribute("user")  \
-                if db[0].hasAttribute("user") else None
-            self.passwd = db[0].getAttribute("passwd") \
-                if db[0].hasAttribute("passwd") else None
-            self.mode = db[0].getAttribute("mode") \
-                if db[0].hasAttribute("mode") else None
-            mycnf = db[0].getAttribute("mycnf") \
-                if db[0].hasAttribute("mycnf") else None
+        db = root.find("database")
+        if db is not None:
+            self.dbname = db.get("dbname")
+            self.dbtype = db.get("dbtype")
+            self.user = db.get("user")
+            self.passwd = db.get("passwd")
+            self.mode = db.get("mode")
+            mycnf = db.get("mycnf")
             if mycnf:
                 self.mycnf = mycnf
-            self.hostname = db[0].getAttribute("hostname") \
-                if db[0].hasAttribute("hostname") else None
-            self.port = db[0].getAttribute("port") \
-                if db[0].hasAttribute("port") else None
-            self.dsn = self._getText(db[0])
+            self.hostname = db.get("hostname")
+            self.port = db.get("port")
+            self.dsn = self._getText(db)
 
     def __connectMYSQL(self):
         """ connects to MYSQL database
