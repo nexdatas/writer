@@ -26,7 +26,7 @@ from xml import sax
 import json
 import sys
 import gc
-
+import weakref
 
 try:
     from cStringIO import StringIO
@@ -103,7 +103,7 @@ class TangoDataWriter(object):
         #: (:obj:`dict` <:obj:`str` , :obj:`any`>) open file parameters
         self.__pars = {}
         #: (:class:`PyTango.Device_4Impl`) Tango server
-        self.__server = server
+        self.__server = weakref.ref(server)
         #: (:obj:`str`) XML string with file settings
         self.__xmlsettings = ""
         #: (:obj:`str`) global JSON string with data records
@@ -167,7 +167,7 @@ class TangoDataWriter(object):
         self.__filetimes = {}
 
         #: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set
-        self._streams = StreamSet(server)
+        self._streams = StreamSet(self.__server)
 
         #: (:obj:`bool`) skip acquisition flag
         self.skipacquisition = False
@@ -658,20 +658,20 @@ class TangoDataWriter(object):
         self.__eFile = None
         self.__logGroup = None
         # JKR tests
-        gc.collect()
+        # gc.collect()
         # JK tests
-        # gc.set_debug(gc.DEBUG_LEAK)
-        # n = gc.collect()
-        # print("UNREACHABLE %s" % n)
-        # gres = gc.garbage
-        # print("GARBAGE %s" % len(gres))
-        # res = str(gres)
-        # import time
-        # fname = "/tmp/gcdump-%s.gc" % str(time.time())
-        # print(fname)
-        # fl = open(fname, "w")
-        # fl.write(res)
-        # fl.close()
+        gc.set_debug(gc.DEBUG_LEAK)
+        n = gc.collect()
+        print("UNREACHABLE %s" % n)
+        gres = gc.garbage
+        print("GARBAGE %s" % len(gres))
+        res = str(gres)
+        import time
+        fname = "/tmp/gcdump-%s.gc" % str(time.time())
+        print(fname)
+        fl = open(fname, "w")
+        fl.write(res)
+        fl.close()
         # JKE tests
 
 

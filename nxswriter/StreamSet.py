@@ -20,6 +20,7 @@
 """ labels to Tango Streams """
 
 import sys
+import weakref
 
 
 class StreamSet(object):
@@ -42,17 +43,17 @@ class StreamSet(object):
         #: (:class:`PyTango.log4tango.TangoStream`) Tango debug log stream
         self.log_debug = None
         #: (:obj:`set <:obj:`str` >`) if tango server
-        if streams:
-            if hasattr(streams, "log_fatal"):
-                self.log_fatal = streams.log_fatal
-            if hasattr(streams, "log_error"):
-                self.log_error = streams.log_error
-            if hasattr(streams, "log_warn"):
-                self.log_warn = streams.log_warn
-            if hasattr(streams, "log_info"):
-                self.log_info = streams.log_info
-            if hasattr(streams, "log_debug"):
-                self.log_debug = streams.log_debug
+        if streams():
+            if hasattr(streams(), "log_fatal"):
+                self.log_fatal = weakref.ref(streams().log_fatal)
+            if hasattr(streams(), "log_error"):
+                self.log_error = weakref.ref(streams().log_error)
+            if hasattr(streams(), "log_warn"):
+                self.log_warn = weakref.ref(streams().log_warn)
+            if hasattr(streams(), "log_info"):
+                self.log_info = weakref.ref(streams().log_info)
+            if hasattr(streams(), "log_debug"):
+                self.log_debug = weakref.ref(streams().log_debug)
 
     def fatal(self, message, std=True):
         """ writes fatal error message
@@ -64,8 +65,8 @@ class StreamSet(object):
         :type std: :obj:`bool`
         """
         try:
-            if self.log_fatal:
-                self.log_fatal.write(message + '\n')
+            if self.log_fatal():
+                self.log_fatal().write(message + '\n')
             elif std:
                 sys.stderr.write(message + '\n')
                 sys.stderr.flush()
@@ -82,8 +83,8 @@ class StreamSet(object):
         :type std: :obj:`bool`
         """
         try:
-            if self.log_error:
-                self.log_error.write(message + '\n')
+            if self.log_error():
+                self.log_error().write(message + '\n')
             elif std:
                 sys.stderr.write(message + '\n')
                 sys.stderr.flush()
@@ -100,8 +101,8 @@ class StreamSet(object):
         :type std: :obj:`bool`
         """
         try:
-            if self.log_warn:
-                self.log_warn.write(message + '\n')
+            if self.log_warn():
+                self.log_warn().write(message + '\n')
             elif std:
                 sys.stderr.write(message + '\n')
                 sys.stderr.flush()
@@ -118,8 +119,8 @@ class StreamSet(object):
         :type std: :obj:`bool`
         """
         try:
-            if self.log_info:
-                self.log_info.write(message + '\n')
+            if self.log_info():
+                self.log_info().write(message + '\n')
             elif std:
                 sys.stdout.write(message + '\n')
                 sys.stdout.flush()
@@ -136,8 +137,8 @@ class StreamSet(object):
         :type std: :obj:`bool`
        """
         try:
-            if self.log_debug:
-                self.log_debug.write(message + '\n')
+            if self.log_debug():
+                self.log_debug().write(message + '\n')
             elif std:
                 sys.stdout.write(message + '\n')
                 sys.stdout.flush()
