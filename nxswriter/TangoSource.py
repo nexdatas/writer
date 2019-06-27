@@ -182,8 +182,7 @@ class TangoSource(DataSource):
         rec = root.find("record")
         name = None
         if rec is not None:
-            name = rec.attrib["name"] \
-                   if "name" in rec.attrib else None
+            name = rec.get("name")
         if not name:
             if self._streams:
                 self._streams.error(
@@ -197,18 +196,12 @@ class TangoSource(DataSource):
         device = None
         client = False
         if dv is not None:
-            device = dv.attrib["name"] \
-                if "name" in dv.attrib else None
-            hostname = dv.attrib["hostname"] \
-                if "hostname" in dv.attrib else None
-            port = dv.attrib["port"] \
-                if "port" in dv.attrib else None
-            group = dv.attrib["group"] \
-                if "group" in dv.attrib else None
-            encoding = dv.attrib["encoding"] \
-                if "encoding" in dv.attrib else None
-            memberType = dv.attrib["member"] \
-                if "member" in dv.attrib else None
+            device = dv.get("name")
+            hostname = dv.get("hostname")
+            port = dv.get("port")
+            group = dv.get("group")
+            encoding = dv.get("encoding")
+            memberType = dv.get("member")
             if not memberType or memberType not in [
                     "attribute", "command", "property"]:
                 memberType = "attribute"

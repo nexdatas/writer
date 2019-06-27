@@ -124,8 +124,7 @@ class DBaseSource(DataSource):
         root = et.fromstring(xml, parser=XMLParser(collect_ids=False))
         query = root.find("query")
         if query is not None:
-            self.format = query.attrib["format"] \
-                if "format" in query.attrib else None
+            self.format = query.get("format")
             self.query = self._getText(query)
 
         if not self.format or not self.query:
@@ -140,24 +139,16 @@ class DBaseSource(DataSource):
 
         db = root.find("database")
         if db is not None:
-            self.dbname = db.attrib["dbname"] \
-                if "dbname" in db.attrib else None
-            self.dbtype = db.attrib["dbtype"] \
-                if "dbtype" in db.attrib else None
-            self.user = db.attrib["user"] \
-                if "user" in db.attrib else None
-            self.passwd = db.attrib["passwd"] \
-                if "passwd" in db.attrib else None
-            self.mode = db.attrib["mode"] \
-                if "mode" in db.attrib else None
-            mycnf = db.attrib["mycnf"] \
-                if "mycnf" in db.attrib else None
+            self.dbname = db.get("dbname")
+            self.dbtype = db.get("dbtype")
+            self.user = db.get("user")
+            self.passwd = db.get("passwd")
+            self.mode = db.get("mode")
+            mycnf = db.get("mycnf")
             if mycnf:
                 self.mycnf = mycnf
-            self.hostname = db.attrib["hostname"] \
-                if "hostname" in db.attrib else None
-            self.port = db.attrib["port"] \
-                if "port" in db.attrib else None
+            self.hostname = db.get("hostname")
+            self.port = db.get("port")
             self.dsn = self._getText(db)
 
     def __connectMYSQL(self):

@@ -61,8 +61,7 @@ class ClientSource(DataSource):
         root = et.fromstring(xml, parser=XMLParser(collect_ids=False))
         rec = root.find("record")
         if rec is not None:
-            self.name = rec.attrib["name"] \
-                   if "name" in rec.attrib else None
+            self.name = rec.get("name")
         if not self.name:
             if self._streams:
                 self._streams.error(
