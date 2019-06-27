@@ -20,6 +20,7 @@
 """ SAX parser for interpreting content of  XML configuration string """
 
 from xml import sax
+import weakref
 
 from .StreamSet import StreamSet
 
@@ -69,7 +70,6 @@ class NexusXMLHandler(sax.ContentHandler):
         :type reloadmode: :obj: `bool`
         """
         sax.ContentHandler.__init__(self)
-
         #: (:class:`nxswriter.TNObject`) map of NXclass : name
         self.__groupTypes = TNObject()
         #: (:obj:`bool`) if name fetching required
@@ -88,7 +88,7 @@ class NexusXMLHandler(sax.ContentHandler):
         self.raiseUnsupportedTag = True
 
         #: (:class:`xml.sax.xmlreader.XMLReader`) xmlreader
-        self.__parser = parser
+        self.__parser = weakref.ref(parser)
         #: (:class:`nxswriter.InnerXMLHandler.InnerXMLHandler`) \
         #:     inner xml handler
         self.__innerHandler = None
@@ -129,13 +129,19 @@ class NexusXMLHandler(sax.ContentHandler):
 
         #: (:class:`nxswriter.ThreadPool.ThreadPool`) \
         #:       thread pool with INIT elements
-        self.initPool = ThreadPool(streams=StreamSet(streams))
+        # self.initPool = ThreadPool(streams=StreamSet(
+        #     weakref.ref(streams)))
+        self.initPool = ThreadPool()
         #: (:class:`nxswriter.ThreadPool.ThreadPool`) \
         #:       thread pool with STEP elements
-        self.stepPool = ThreadPool(streams=StreamSet(streams))
+        # self.stepPool = ThreadPool(streams=StreamSet(
+        #     weakref.ref(streams)))
+        self.stepPool = ThreadPool()
         #: (:class:`nxswriter.ThreadPool.ThreadPool`) \
         #:      thread pool with FINAL elements
-        self.finalPool = ThreadPool(streams=StreamSet(streams))
+        # self.finalPool = ThreadPool(streams=StreamSet(
+        #     weakref.ref(streams)))
+        self.finalPool = ThreadPool()
 
         #: (:obj:`dict` \
         #:  <:obj:`str`, :class:`nxswriter.ThreadPool.ThreadPool`> ) \
@@ -149,11 +155,11 @@ class NexusXMLHandler(sax.ContentHandler):
         self.triggerPools = {}
 
         #: (:class:`nxswriter.DecoderPool.DecoderPool`) pool with decoders
-        self.__decoders = decoders
+        self.__decoders = weakref.ref(decoders) if decoders else (lambda: None)
 
         #: (:class:`nxswriter.DataSourcePool.DataSourcePool`) \
         #:     pool with datasources
-        self.__datasources = datasources
+        self.__datasources = weakref.ref(datasources) if datasources else (lambda: None)
 
         #: (:obj:`bool`) if innerparse was running
         self.__inner = False
@@ -197,26 +203,28 @@ class NexusXMLHandler(sax.ContentHandler):
                 self.__createInnerTag(self.__innerHandler.xml)
             self.__inner = False
         if not self.__unsupportedTag:
-            if self.__parser and name in self.withXMLinput:
+            if self.__parser() and name in self.withXMLinput:
                 self.__storedAttrs = attrs
                 self.__storedName = name
                 self.__innerHandler = InnerXMLHandler(
-                    self.__parser, self, name, attrs)
-                self.__parser.setContentHandler(self.__innerHandler)
+                    self.__parser(), self, name, attrs)
+                self.__parser().setContentHandler(self.__innerHandler)
                 self.__inner = True
             elif name in self.withAttr:
                 self.__stack.append(
                     self.elementClass[name](
                         attrs, self.__last(),
-                        streams=StreamSet(self._streams),
+                        # streams=StreamSet(weakref.ref(self._streams)),
+                        streams=None,
                         reloadmode=self.__reloadmode))
             elif name in self.elementClass:
                 self.__stack.append(
                     self.elementClass[name](
                         attrs, self.__last(),
-                        streams=StreamSet(self._streams)))
-                if hasattr(self.__datasources, "canfail") \
-                   and self.__datasources.canfail \
+                        streams=None))
+                        # streams=StreamSet(weakref.ref(self._streams))))
+                if hasattr(self.__datasources(), "canfail") \
+                   and self.__datasources().canfail \
                    and hasattr(self.__stack[-1], "setCanFail"):
                     self.__stack[-1].setCanFail()
             elif name not in self.transparentTags:
@@ -248,7 +256,7 @@ class NexusXMLHandler(sax.ContentHandler):
         if self.__inner is True:
             self.__createInnerTag(self.__innerHandler.xml)
             self.__inner = False
-        if not self.__unsupportedTag and self.__parser \
+        if not self.__unsupportedTag and self.__parser() \
                 and name in self.withXMLinput:
             pass
         elif not self.__unsupportedTag and name in self.elementClass:
@@ -286,7 +294,8 @@ class NexusXMLHandler(sax.ContentHandler):
         if trigger and strategy == 'STEP':
             if trigger not in self.triggerPools.keys():
                 self.triggerPools[trigger] = ThreadPool(
-                    streams=StreamSet(self._streams))
+                    streams=None)
+                    # streams=StreamSet(weakref.ref(self._streams)))
             self.triggerPools[trigger].append(task)
         elif strategy in self.__poolMap.keys():
             self.__poolMap[strategy].append(task)
@@ -301,14 +310,15 @@ class NexusXMLHandler(sax.ContentHandler):
             res = None
             inner = self.withXMLinput[self.__storedName](
                 self.__storedAttrs, self.__last(),
-                streams=StreamSet(self._streams))
+                streams=None)
+                # streams=StreamSet(weakref.ref(self._streams)))
             if hasattr(inner, "setDataSources") \
                     and callable(inner.setDataSources):
-                inner.setDataSources(self.__datasources)
+                inner.setDataSources(self.__datasources())
             if hasattr(inner, "store") and callable(inner.store):
                 res = inner.store(xml, self.__json)
             if hasattr(inner, "setDecoders") and callable(inner.setDecoders):
-                inner.setDecoders(self.__decoders)
+                inner.setDecoders(self.__decoders())
             if res:
                 self.__addToPool(res, inner)
 

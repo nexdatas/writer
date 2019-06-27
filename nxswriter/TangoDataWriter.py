@@ -102,8 +102,6 @@ class TangoDataWriter(object):
         self.__fileext = ""
         #: (:obj:`dict` <:obj:`str` , :obj:`any`>) open file parameters
         self.__pars = {}
-        #: (:class:`PyTango.Device_4Impl`) Tango server
-        self.__server = weakref.ref(server)
         #: (:obj:`str`) XML string with file settings
         self.__xmlsettings = ""
         #: (:obj:`str`) global JSON string with data records
@@ -167,7 +165,8 @@ class TangoDataWriter(object):
         self.__filetimes = {}
 
         #: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set
-        self._streams = StreamSet(self.__server)
+        # self._streams = StreamSet(weakref.ref(None))
+        self._streams = StreamSet(lambda : None)
 
         #: (:obj:`bool`) skip acquisition flag
         self.skipacquisition = False
@@ -414,21 +413,21 @@ class TangoDataWriter(object):
             self.__datasources.counter = -1
             self.__datasources.nxroot = self.__nxRoot
             errorHandler = sax.ErrorHandler()
-            parser = sax.make_parser()
+            self.__parser = sax.make_parser()
 
             handler = NexusXMLHandler(
                 self.__eFile, self.__datasources,
                 self.__decoders, self.__fetcher.groupTypes,
-                parser, json.loads(self.jsonrecord),
+                self.__parser, json.loads(self.jsonrecord),
                 self._streams,
                 self.skipacquisition
             )
-            parser.setContentHandler(handler)
-            parser.setErrorHandler(errorHandler)
+            self.__parser.setContentHandler(handler)
+            self.__parser.setErrorHandler(errorHandler)
 
             inpsrc = sax.InputSource()
             inpsrc.setByteStream(StringIO(self.xmlsettings))
-            parser.parse(inpsrc)
+            self.__parser.parse(inpsrc)
 
             self.__initPool = handler.initPool
             self.__stepPool = handler.stepPool
@@ -505,7 +504,6 @@ class TangoDataWriter(object):
         :param jsonstring: local JSON string with data records
         :type jsonstring: :obj:`str`
         """
-
         # flag for STEP mode
         if self.__datasources.counter > 0:
             self.__datasources.counter += 1
