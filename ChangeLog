@@ -1,3 +1,7 @@
+2019-07-11 Jan Kotanski <jankotan@gmail.com>
+	* remove strip attribute
+	* tagged as 2.23.1
+
 2019-06-27 Jan Kotanski <jankotan@gmail.com>
 	* change minidom to etree
 	* remove circular dependences by adding weakref's

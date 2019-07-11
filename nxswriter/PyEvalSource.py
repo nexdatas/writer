@@ -104,8 +104,8 @@ class PyEvalSource(DataSource):
             inputs = root.findall(".//datasource")
             for inp in inputs:
                 if "name" in inp.attrib and "type" in inp.attrib:
-                    name = inp.get("name").strip()
-                    dstype = inp.get("type").strip()
+                    name = inp.get("name")
+                    dstype = inp.get("type")
                     if len(name) > 0:
                         if len(name) > 3 and name[:2] == 'ds.':
                             name = name[3:]
