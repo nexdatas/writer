@@ -61,7 +61,7 @@ class EStrategy(Element):
         if "compression" in attrs.keys() and hasattr(self.last, "compression"):
             try:
                 self.last.compression = int(attrs["compression"])
-            except:
+            except Exception:
                 self.last.compression = 1 \
                     if attrs["compression"].upper() == "TRUE" else 0
             if self.last.compression:
