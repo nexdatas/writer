@@ -35,6 +35,17 @@ from nxstools import filewriter as FileWriter
 from nxstools import h5pywriter as H5PYWriter
 
 try:
+    from pninexus import h5cpp
+    if hasattr(h5cpp.filter, "is_filter_available") \
+       and h5cpp.filter.is_filter_available(32008):
+        BSFILTER = True
+    else:
+        BSFILTER = False
+except Exception:
+    BSFILTER = False
+
+
+try:
     from ProxyHelper import ProxyHelper
 except Exception:
     from .ProxyHelper import ProxyHelper
@@ -442,6 +453,264 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
 
         f.close()
         os.remove(fname)
+
+    # scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_tangoImage_bsfilter(self):
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        if BSFILTER:
+            xml = """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+
+
+       <field units="" type="NX_BOOLEAN" name="ImageBoolean">
+          <strategy mode="STEP"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageBoolean"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_UINT8" name="ImageUChar">
+          <strategy mode="STEP"   compression="32008"
+ compression_opts="0,0" grows="2" />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageUChar"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_INT16" name="ImageShort">
+          <strategy mode="STEP"    compression="32008"  grows="3"
+ shuffle="false"/>
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageShort"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT16" name="ImageUShort">
+          <strategy mode="STEP"   grows="1"   />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageUShort"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_INT32" name="ImageLong">
+          <strategy mode="STEP"  compression="32008"
+ compression_opts="0,2"  grows="2"
+ shuffle="true"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageLong"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT32" name="ImageULong">
+          <strategy mode="STEP"  grows="3"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageULong"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_INT64" name="ImageLong64">
+          <strategy mode="STEP"  compression="32008"  grows="1"
+ shuffle="false"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageLong64"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_UINT64" name="ImageULong64">
+          <strategy mode="STEP"  compression="32008"
+ compression_opts="0,0"  grows="2"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageULong64"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_FLOAT32" name="ImageFloat">
+          <strategy mode="STEP"  compression="32008"
+ compression_opts="0,2"  grows="3"
+ shuffle="true"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageFloat"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_FLOAT64" name="ImageDouble">
+          <strategy mode="STEP"  compression="32008"  grows="1"   />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageDouble"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_CHAR" name="ImageString">
+          <strategy mode="STEP"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageString"/>
+          </datasource>
+        </field>
+
+
+
+       <field units="" type="NX_UINT64" name="InitImageULong64">
+          <strategy mode="INIT" />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageULong64"/>
+          </datasource>
+        </field>
+
+
+
+       <field units="" type="NX_FLOAT32" name="FinalImageFloat">
+          <strategy mode="FINAL"  compression="32008"  shuffle="true"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute"
+ name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageFloat"/>
+          </datasource>
+        </field>
+
+
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+
+            xml = xml.replace("localhost", self._dbhost)
+
+            self._simps.dp.ImageBoolean = self._logical2[0]
+            self._simps.dp.ImageUChar = self._pco1[0]
+            self._simps.dp.ImageShort = self._pco1[0]
+            self._simps.dp.ImageUShort = self._pco1[0]
+            self._simps.dp.ImageLong = self._pco1[0]
+            self._simps.dp.ImageULong = self._pco1[0]
+            self._simps.dp.ImageLong64 = self._pco1[0]
+            self._simps.dp.ImageULong64 = self._pco1[0]
+            self._simps.dp.ImageFloat = self._fpco1[0]
+            self._simps.dp.ImageDouble = self._fpco1[0]
+            self._simps.dp.ImageString = self._dates2[0]
+
+    #        print self._fmca1[0]
+
+            decoder = '"decoders":' \
+                      '{"MLIMA":"nxswriter.DecoderPool.VDEOdecoder"}'
+            tdw = self.openWriter(fname, xml, json='{ ' + decoder + ' }')
+
+            dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
+            self.assertTrue(ProxyHelper.wait(dp, 10000))
+
+            steps = min(len(self._pco1), len(self._logical2),
+                        len(self._fpco1))
+            for i in range(steps):
+                self._simps.dp.ImageBoolean = self._logical2[i]
+                self._simps.dp.ImageUChar = self._pco1[i]
+                self._simps.dp.ImageShort = self._pco1[i]
+                self._simps.dp.ImageUShort = self._pco1[i]
+                self._simps.dp.ImageLong = self._pco1[i]
+                self._simps.dp.ImageULong = self._pco1[i]
+                self._simps.dp.ImageLong64 = self._pco1[i]
+                self._simps.dp.ImageULong64 = self._pco1[i]
+                self._simps.dp.ImageFloat = self._fpco1[i]
+                self._simps.dp.ImageDouble = self._fpco1[i]
+                self._simps.dp.ImageString = self._dates2[i]
+
+                self.record(tdw, '{}')
+                pass
+            self.closeWriter(tdw)
+
+            # check the created file
+
+            FileWriter.writer = H5PYWriter
+            f = FileWriter.open_file(fname, readonly=True)
+            det = self._sc.checkFieldTree(f, fname, 13)
+            self._sc.checkImageField(
+                det, "ImageBoolean", "bool", "NX_BOOLEAN",
+                self._logical2[:steps])
+            self._sc.checkImageField(
+                det, "ImageUChar", "uint8", "NX_UINT8", self._pco1[:steps],
+                grows=2)
+            self._sc.checkImageField(
+                det, "ImageShort", "int16", "NX_INT16", self._pco1[:steps],
+                grows=3)
+            self._sc.checkImageField(
+                det, "ImageUShort", "uint16", "NX_UINT16", self._pco1[:steps],
+                grows=1)
+            self._sc.checkImageField(
+                det, "ImageLong", "int32", "NX_INT32", self._pco1[:steps],
+                grows=2)
+            self._sc.checkImageField(
+                det, "ImageULong", "uint32", "NX_UINT32", self._pco1[:steps],
+                grows=3)
+            self._sc.checkImageField(
+                det, "ImageLong64", "int64", "NX_INT64", self._pco1[:steps],
+                grows=1)
+            self._sc.checkImageField(
+                det, "ImageULong64", "uint64", "NX_UINT64", self._pco1[:steps],
+                grows=2)
+            self._sc.checkImageField(
+                det, "ImageFloat", "float32", "NX_FLOAT32",
+                self._fpco1[:steps],
+                grows=3, error=1.0e-6)
+            self._sc.checkImageField(
+                det, "ImageDouble", "float64", "NX_FLOAT64",
+                self._fpco1[:steps],
+                grows=1, error=1.0e-14)
+            self._sc.checkImageField(
+                det, "ImageString", "string", "NX_CHAR", self._dates2[:steps])
+
+            self._sc.checkSingleImageField(
+                det, "InitImageULong64", "uint64", "NX_UINT64", self._pco1[0])
+            self._sc.checkSingleImageField(
+                det, "FinalImageFloat", "float32", "NX_FLOAT32",
+                self._fpco1[steps - 1], error=1.0e-6)
+            f.close()
+            os.remove(fname)
 
     # scanRecord test
     # \brief It tests recording of simple h5 file

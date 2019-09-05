@@ -59,9 +59,17 @@ class EStrategy(Element):
             self.last.canfail = True \
                 if attrs["canfail"].upper() == "TRUE" else False
         if "compression" in attrs.keys() and hasattr(self.last, "compression"):
-            self.last.compression = True \
-                if attrs["compression"].upper() == "TRUE" else False
+            try:
+                self.last.compression = int(attrs["compression"])
+            except Exception:
+                self.last.compression = 1 \
+                    if attrs["compression"].upper() == "TRUE" else 0
             if self.last.compression:
+                if "compression_opts" in attrs.keys() and \
+                   hasattr(self.last, "compression_opts"):
+                    self.last.compression_opts = \
+                        [int(vl.strip())
+                         for vl in attrs["compression_opts"].split(",")]
                 if "rate" in attrs.keys() and hasattr(self.last, "rate"):
                     self.last.rate = int(attrs["rate"])
                     if self.last.rate < 0:

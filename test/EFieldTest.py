@@ -153,7 +153,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.trigger, None)
         self.assertEqual(el.grows, None)
         self.assertEqual(el.compression, False)
-        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.rate, 2)
         self.assertEqual(el.shuffle, True)
         self._nxFile.close()
         os.remove(self._fname)
@@ -182,7 +182,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.trigger, None)
         self.assertEqual(el.grows, None)
         self.assertEqual(el.compression, False)
-        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.rate, 2)
         self.assertEqual(el.shuffle, True)
         self._nxFile.close()
         os.remove(self._fname)
@@ -211,7 +211,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.trigger, None)
         self.assertEqual(el.grows, None)
         self.assertEqual(el.compression, False)
-        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.rate, 2)
         self.assertEqual(el.shuffle, True)
 
         self.assertEqual(el.store(), None)
@@ -244,7 +244,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.trigger, None)
         self.assertEqual(el.grows, None)
         self.assertEqual(el.compression, False)
-        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.rate, 2)
         self.assertEqual(el.shuffle, True)
 
 #        self.myAssertRaise(ValueError, el.store)
@@ -280,7 +280,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.trigger, None)
         self.assertEqual(el.grows, None)
         self.assertEqual(el.compression, False)
-        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.rate, 2)
         self.assertEqual(el.shuffle, True)
 
 #        self.myAssertRaise(ValueError, el.store)
@@ -302,7 +302,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.trigger, None)
         self.assertEqual(el.grows, None)
         self.assertEqual(el.compression, False)
-        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.rate, 2)
         self.assertEqual(el.shuffle, True)
 
         self._nxFile.close()
@@ -333,7 +333,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.trigger, None)
         self.assertEqual(el.grows, None)
         self.assertEqual(el.compression, False)
-        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.rate, 2)
         self.assertEqual(el.shuffle, True)
 
         self.myAssertRaise(ValueError, el.store)
@@ -368,7 +368,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.trigger, None)
         self.assertEqual(el.grows, None)
         self.assertEqual(el.compression, False)
-        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.rate, 2)
         self.assertEqual(el.shuffle, True)
         self.assertEqual(el.store(), (None, None))
 
@@ -405,7 +405,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.trigger, None)
         self.assertEqual(el.grows, None)
         self.assertEqual(el.compression, False)
-        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.rate, 2)
         self.assertEqual(el.shuffle, True)
         self.assertEqual(el.store(), ('STEP', None))
         self.assertEqual(el.grows, 1)
@@ -440,7 +440,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.trigger, None)
         self.assertEqual(el.grows, 2)
         self.assertEqual(el.compression, False)
-        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.rate, 2)
         self.assertEqual(el.shuffle, True)
         self.assertEqual(el.store(), ('STEP', None))
         self.assertEqual(el.grows, 1)
@@ -474,7 +474,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.trigger, None)
         self.assertEqual(el.grows, None)
         self.assertEqual(el.compression, False)
-        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.rate, 2)
         self.assertEqual(el.shuffle, True)
         self.assertEqual(el.store(), ('INIT', None))
         self.assertEqual(el.grows, None)
@@ -509,7 +509,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.trigger, None)
         self.assertEqual(el.grows, None)
         self.assertEqual(el.compression, False)
-        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.rate, 2)
         self.assertEqual(el.shuffle, True)
         self.assertEqual(el.store(), None)
         self.assertEqual(el.grows, None)
@@ -546,7 +546,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.trigger, None)
         self.assertEqual(el.grows, 2)
         self.assertEqual(el.compression, False)
-        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.rate, 2)
         self.assertEqual(el.shuffle, True)
         self.assertEqual(el.store(), ('STEP', None))
         self.assertEqual(el.grows, 2)
@@ -584,7 +584,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.trigger, None)
         self.assertEqual(el.grows, 2)
         self.assertEqual(el.compression, False)
-        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.rate, 2)
         self.assertEqual(el.shuffle, True)
         self.assertEqual(el.store(), ('STEP', None))
         self.assertEqual(el.grows, 2)
@@ -646,7 +646,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, None)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), ("STEP", None))
@@ -727,7 +727,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, None)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), (stt, None))
@@ -803,7 +803,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, None)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), (stt, None))
@@ -905,7 +905,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), ("STEP", None))
@@ -1018,7 +1018,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, None)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), (stt, None))
@@ -1121,7 +1121,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, None)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), (stt, None))
@@ -1231,7 +1231,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), ("STEP", None))
@@ -1350,7 +1350,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, None)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), (stt, None))
@@ -1467,7 +1467,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, None)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), (stt, None))
@@ -2007,7 +2007,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, None)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), None)
@@ -2114,7 +2114,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), None)
@@ -2227,7 +2227,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), None)
@@ -2353,7 +2353,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), None)
@@ -2495,7 +2495,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), None)
@@ -2556,7 +2556,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.trigger, None)
         self.assertEqual(el.grows, None)
         self.assertEqual(el.compression, False)
-        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.rate, 2)
         self.assertEqual(el.shuffle, True)
 
         self.assertEqual(el.error, None)
@@ -2645,7 +2645,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
             self.assertEqual(el[k].error, None)
 
@@ -2760,7 +2760,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
             self.assertEqual(el[k].error, None)
 
@@ -2878,7 +2878,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -3002,7 +3002,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -3129,7 +3129,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
             el[k].store()
 #            self.assertEqual(el[k].store(), None)
@@ -3275,7 +3275,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -3407,7 +3407,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -3558,7 +3558,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -3701,7 +3701,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -3818,7 +3818,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -3965,7 +3965,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -4100,7 +4100,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -4238,7 +4238,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -4373,7 +4373,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -4515,7 +4515,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -4669,7 +4669,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -4800,7 +4800,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -4941,7 +4941,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -5080,7 +5080,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -5226,7 +5226,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -5364,7 +5364,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -5501,7 +5501,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -5640,7 +5640,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -5788,7 +5788,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -5923,7 +5923,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -6066,7 +6066,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -6210,7 +6210,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -6367,7 +6367,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -6502,7 +6502,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()

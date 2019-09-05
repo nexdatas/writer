@@ -66,10 +66,12 @@ class EField(FElementWithAttr):
         self.grows = None
         #: (:obj:`str`) label for postprocessing data
         self.postrun = ""
-        #: (:obj:`bool`) compression flag
-        self.compression = False
+        #: (:obj:`bool`) compression algorithm id
+        self.compression = 0
         #: (:obj:`int`) compression rate
-        self.rate = 5
+        self.compression_opts = []
+        #: (:obj:`list` < :obj:`int` >) compression algorithm options
+        self.rate = 2
         #: (:obj:`bool`) compression shuffle
         self.shuffle = True
         #: (:obj:`bool`) grew flag
@@ -151,13 +153,15 @@ class EField(FElementWithAttr):
 
         chunk = [s if s > 0 else 1 for s in shape]
         minshape = [1 if s > 0 else 0 for s in shape]
-        deflate = None
+        datafilter = None
         # create Filter
 
         if self.compression:
-            deflate = FileWriter.deflate_filter(self._lastObject())
-            deflate.rate = self.rate
-            deflate.shuffle = self.shuffle
+            datafilter = FileWriter.data_filter(self._lastObject())
+            datafilter.rate = self.rate
+            datafilter.shuffle = self.shuffle
+            datafilter.options = tuple(self.compression_opts)
+            datafilter.filterid = self.compression
 
         if sys.version_info < (3,):
             name = name.encode()
@@ -168,20 +172,20 @@ class EField(FElementWithAttr):
                 if not chunk:
                     f = self._lastObject().create_field(
                         name, dtype, shape, [],
-                        deflate)
+                        datafilter)
                 elif self.canfail:
                     f = self._lastObject().create_field(
                         name, dtype, shape, chunk,
-                        deflate)
+                        datafilter)
                 else:
                     f = self._lastObject().create_field(
                         name, dtype, minshape or [1], chunk,
-                        deflate)
+                        datafilter)
             else:
                 mshape = [1] if self.strategy in ['INIT', 'FINAL'] else [0]
-                if deflate:
+                if datafilter:
                     f = self._lastObject().create_field(
-                        name, dtype, mshape, [1], deflate)
+                        name, dtype, mshape, [1], datafilter)
                 else:
                     f = self._lastObject().create_field(
                         name, dtype, mshape, [1])
