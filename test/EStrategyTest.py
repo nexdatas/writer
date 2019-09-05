@@ -112,8 +112,8 @@ class EStrategyTest(unittest.TestCase):
         self.assertEqual(el.grows, None)
         self.assertEqual(st.last.compression, False)
         self.assertEqual(el.compression, False)
-        self.assertEqual(st.last.rate, 5)
-        self.assertEqual(el.rate, 5)
+        self.assertEqual(st.last.rate, 2)
+        self.assertEqual(el.rate, 2)
         self.assertEqual(st.last.shuffle, True)
         self.assertEqual(el.shuffle, True)
 
@@ -181,8 +181,8 @@ class EStrategyTest(unittest.TestCase):
             st.last.compression, Converters.toBool(attrs["compression"]))
         self.assertEqual(
             el.compression, Converters.toBool(attrs["compression"]))
-        self.assertEqual(st.last.rate, 5)
-        self.assertEqual(el.rate, 5)
+        self.assertEqual(st.last.rate, 2)
+        self.assertEqual(el.rate, 2)
         self.assertEqual(st.last.shuffle, True)
         self.assertEqual(el.shuffle, True)
 
@@ -218,6 +218,43 @@ class EStrategyTest(unittest.TestCase):
             st.last.rate, int(attrs["rate"]) if int(attrs["rate"]) < 10 else 9)
         self.assertEqual(
             el.rate, int(attrs["rate"]) if int(attrs["rate"]) < 10 else 9)
+        self.assertEqual(st.last.shuffle, Converters.toBool(attrs["shuffle"]))
+        self.assertEqual(el.shuffle, Converters.toBool(attrs["shuffle"]))
+
+    # first constructor test
+    # \brief It tests default settings
+    def test_constructor_4(self):
+        print("Run: %s.test_constructor() " % self.__class__.__name__)
+        attrs = {}
+        attrs["mode"] = "STEP"
+        attrs["trigger"] = "def_trigger"
+        attrs["grows"] = "3"
+        attrs["compression"] = "32008"
+        attrs["compression_opts"] = "2,0"
+        attrs["shuffle"] = "true"
+        el = EField(self._fattrs, None)
+        st = EStrategy(attrs, el)
+        self.assertTrue(isinstance(st, Element))
+        self.assertTrue(isinstance(st, EStrategy))
+        self.assertEqual(st.tagName, "strategy")
+        self.assertEqual(st.content, [])
+        self.assertEqual(st.doc, "")
+        self.assertEqual(st.last.strategy, attrs["mode"])
+        self.assertEqual(el.strategy, attrs["mode"])
+        self.assertEqual(st.last.trigger, attrs["trigger"])
+        self.assertEqual(el.trigger, attrs["trigger"])
+        self.assertEqual(st.last.grows, int(attrs["grows"]))
+        self.assertEqual(el.grows, int(attrs["grows"]))
+        self.assertEqual(
+            st.last.compression, int(attrs["compression"]))
+        self.assertEqual(
+            el.compression, int(attrs["compression"]))
+        self.assertEqual(
+            st.last.compression_opts,
+            [int(elm) for elm in attrs["compression_opts"].split(",")])
+        self.assertEqual(
+            el.compression_opts,
+            [int(elm) for elm in attrs["compression_opts"].split(",")])
         self.assertEqual(st.last.shuffle, Converters.toBool(attrs["shuffle"]))
         self.assertEqual(el.shuffle, Converters.toBool(attrs["shuffle"]))
 

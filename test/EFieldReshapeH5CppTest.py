@@ -176,7 +176,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
             self.assertEqual(el[k].error, None)
 
@@ -292,7 +292,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
             self.assertEqual(el[k].error, None)
 
@@ -409,7 +409,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -533,7 +533,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -656,7 +656,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
             el[k].store()
             ds.value = {
@@ -794,7 +794,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -920,7 +920,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -1069,7 +1069,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -1209,7 +1209,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -1350,7 +1350,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -1487,7 +1487,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -1617,7 +1617,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -1756,7 +1756,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -1890,7 +1890,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -2040,7 +2040,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -2173,7 +2173,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -2312,7 +2312,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -2451,7 +2451,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -2598,7 +2598,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -2735,7 +2735,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -2874,7 +2874,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -3014,7 +3014,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -3157,7 +3157,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -3283,7 +3283,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -3425,7 +3425,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -3569,7 +3569,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -3721,7 +3721,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
@@ -3846,7 +3846,7 @@ class EFieldReshapeH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].trigger, None)
             self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
-            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].rate, 2)
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()

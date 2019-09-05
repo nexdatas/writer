@@ -67,8 +67,8 @@ class testwriter(object):
         self.params.append([target, parent, name])
         return self.result
 
-    def deflate_filter(self):
-        self.commands.append("deflate_filter")
+    def data_filter(self):
+        self.commands.append("data_filter")
         self.params.append([])
         return self.result
 
@@ -329,7 +329,7 @@ class FileWriterH5PYTest(unittest.TestCase):
 
     # test
     # \brief It tests default settings
-    def test_deflate_filter(self):
+    def test_data_filter(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tw = testwriter()
@@ -337,9 +337,9 @@ class FileWriterH5PYTest(unittest.TestCase):
         for _ in range(10):
             res = self.__rnd.randint(1, 10)
             tw.result = res
-            tres = FileWriter.deflate_filter()
+            tres = FileWriter.data_filter()
             self.assertEqual(tres, res)
-            self.assertEqual(tw.commands[-1], "deflate_filter")
+            self.assertEqual(tw.commands[-1], "data_filter")
             self.assertEqual(tw.params[-1], [])
             self.assertEqual(tres, res)
 
@@ -858,10 +858,10 @@ class FileWriterH5PYTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = FileWriter.deflate_filter()
-            df1 = FileWriter.deflate_filter()
+            df0 = FileWriter.data_filter()
+            df1 = FileWriter.data_filter()
             df1.rate = 2
-            df2 = FileWriter.deflate_filter()
+            df2 = FileWriter.data_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -1436,10 +1436,10 @@ class FileWriterH5PYTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = FileWriter.deflate_filter()
-            df1 = FileWriter.deflate_filter()
+            df0 = FileWriter.data_filter()
+            df1 = FileWriter.data_filter()
             df1.rate = 2
-            df2 = FileWriter.deflate_filter()
+            df2 = FileWriter.data_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -1701,10 +1701,10 @@ class FileWriterH5PYTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = FileWriter.deflate_filter()
-            df1 = FileWriter.deflate_filter()
+            df0 = FileWriter.data_filter()
+            df1 = FileWriter.data_filter()
             df1.rate = 2
-            df2 = FileWriter.deflate_filter()
+            df2 = FileWriter.data_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -1960,10 +1960,10 @@ class FileWriterH5PYTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = FileWriter.deflate_filter()
-            df1 = FileWriter.deflate_filter()
+            df0 = FileWriter.data_filter()
+            df1 = FileWriter.data_filter()
             df1.rate = 2
-            df2 = FileWriter.deflate_filter()
+            df2 = FileWriter.data_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -2241,10 +2241,10 @@ class FileWriterH5PYTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = FileWriter.deflate_filter()
-            df1 = FileWriter.deflate_filter()
+            df0 = FileWriter.data_filter()
+            df1 = FileWriter.data_filter()
             df1.rate = 2
-            df2 = FileWriter.deflate_filter()
+            df2 = FileWriter.data_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -2572,10 +2572,10 @@ class FileWriterH5PYTest(unittest.TestCase):
             # dt =
             entry.create_group("data", "NXdata")
 
-            df0 = FileWriter.deflate_filter()
-            df1 = FileWriter.deflate_filter()
+            df0 = FileWriter.data_filter()
+            df1 = FileWriter.data_filter()
             df1.rate = 2
-            df2 = FileWriter.deflate_filter()
+            df2 = FileWriter.data_filter()
             df2.rate = 4
             df2.shuffle = True
 
@@ -2643,10 +2643,10 @@ class FileWriterH5PYTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = FileWriter.deflate_filter()
-            df1 = FileWriter.deflate_filter()
+            df0 = FileWriter.data_filter()
+            df1 = FileWriter.data_filter()
             df1.rate = 2
-            df2 = FileWriter.deflate_filter()
+            df2 = FileWriter.data_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -3121,10 +3121,10 @@ class FileWriterH5PYTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = FileWriter.deflate_filter()
-            df1 = FileWriter.deflate_filter()
+            df0 = FileWriter.data_filter()
+            df1 = FileWriter.data_filter()
             df1.rate = 2
-            df2 = FileWriter.deflate_filter()
+            df2 = FileWriter.data_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -3420,10 +3420,10 @@ class FileWriterH5PYTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = FileWriter.deflate_filter()
-            df1 = FileWriter.deflate_filter()
+            df0 = FileWriter.data_filter()
+            df1 = FileWriter.data_filter()
             df1.rate = 2
-            df2 = FileWriter.deflate_filter()
+            df2 = FileWriter.data_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -3763,10 +3763,10 @@ class FileWriterH5PYTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = FileWriter.deflate_filter()
-            df1 = FileWriter.deflate_filter()
+            df0 = FileWriter.data_filter()
+            df1 = FileWriter.data_filter()
             df1.rate = 2
-            df2 = FileWriter.deflate_filter()
+            df2 = FileWriter.data_filter()
             df2.rate = 4
             df2.shuffle = 6
 

@@ -29,6 +29,7 @@ import binascii
 import time
 import PyTango
 
+
 try:
     from ProxyHelper import ProxyHelper
 except Exception:
@@ -64,6 +65,14 @@ if sys.version_info > (3,):
     PY3 = True
 else:
     PY3 = False
+
+try:
+    from pninexus import h5cpp
+    if hasattr(h5cpp.filter, "is_filter_available") \
+       and h5cpp.filter.is_filter_available(32008):
+        BSFILTER = True
+except Exception:
+    BSFILTER = False
 
 #: (:obj:`bool`) PyTango bug #213 flag related to EncodedAttributes in python3
 PYTG_BUG_213 = False
