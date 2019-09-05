@@ -71,6 +71,8 @@ try:
     if hasattr(h5cpp.filter, "is_filter_available") \
        and h5cpp.filter.is_filter_available(32008):
         BSFILTER = True
+    else:
+        BSFILTER = False
 except Exception:
     BSFILTER = False
 
