@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "NXSWRITER" "1" "Jun 27, 2019" "2.23" "NXSDataWriter"
+.TH "NXSWRITER" "1" "Sep 05, 2019" "2.24" "NXSDataWriter"
 .SH NAME
 nxswriter \- nxswriter Documentation
 .
@@ -1168,7 +1168,12 @@ constructor
 .INDENT 7.0
 .TP
 .B compression = None
-(\fI\%bool\fP) compression flag
+(\fI\%bool\fP) compression algorithm id
+.UNINDENT
+.INDENT 7.0
+.TP
+.B compression_opts = None
+(\fI\%int\fP) compression rate
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -1206,7 +1211,7 @@ It marks the field as failed
 .INDENT 7.0
 .TP
 .B rate = None
-(\fI\%int\fP) compression rate
+(\fBlist\fP < \fI\%int\fP >) compression algorithm options
 .UNINDENT
 .INDENT 7.0
 .TP
