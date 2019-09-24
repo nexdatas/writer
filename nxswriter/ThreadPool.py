@@ -113,7 +113,7 @@ class ThreadPool(object):
         """
 
         for th in self.__threadList:
-            if th.isAlive():
+            if th.is_alive():
                 th.join(timeout)
 
     def runAndWait(self):
