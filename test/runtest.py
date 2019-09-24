@@ -71,7 +71,6 @@ import PyEvalSourceTest
 import DBaseSourceTest
 import DataSourcePoolTest
 import DataSourceFactoryTest
-import DataSourceDecodersTest
 import UTF8decoderTest
 import UINT32decoderTest
 import VDEOdecoderTest
@@ -82,7 +81,6 @@ import ThreadPoolTest
 import FetchNameHandlerTest
 import InnerXMLParserTest
 import TNObjectTest
-import TgDeviceTest
 import StreamSetTest
 import ElementTest
 
@@ -267,6 +265,8 @@ if "ORACLE" in DB_AVAILABLE:
 
 
 if PYTANGO_AVAILABLE:
+    import TgDeviceTest
+    import DataSourceDecodersTest
     import TangoSourceTest
     import TgMemberTest
     import TgGroupTest
@@ -373,10 +373,6 @@ def main():
         unittest.defaultTestLoader.loadTestsFromModule(DataHolderTest))
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ElementThreadTest))
-    if not PYTG_BUG_213:
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(
-                DataSourceDecodersTest))
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ThreadPoolTest))
     suite.addTests(
@@ -385,8 +381,6 @@ def main():
         unittest.defaultTestLoader.loadTestsFromModule(InnerXMLParserTest))
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(TNObjectTest))
-    suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(TgDeviceTest))
 
     if PNI_AVAILABLE:
         suite.addTests(
@@ -571,6 +565,12 @@ def main():
             unittest.defaultTestLoader.loadTestsFromModule(ORACLESourceTest))
 
     if PYTANGO_AVAILABLE:
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(TgDeviceTest))
+        if not PYTG_BUG_213:
+            suite.addTests(
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    DataSourceDecodersTest))
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoSourceTest))
         suite.addTests(

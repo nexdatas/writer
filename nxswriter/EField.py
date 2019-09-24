@@ -148,6 +148,8 @@ class EField(FElementWithAttr):
         if self._reloadmode:
             names = [kd.name for kd in self._lastObject()]
             if name in names:
+                if sys.version_info < (3,):
+                    name = name.encode()
                 f = self._lastObject().open(name)
                 return f
 
