@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>nxswriter.EGroup &#8212; NXSDataWriter 2.23.0 documentation</title>
+    <title>nxswriter.EGroup &#8212; NXSDataWriter 2.24.1 documentation</title>
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.23</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.24</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -213,6 +213,8 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reloadmode</span><span class="p">:</span>
                 <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">kd</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">kd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lastObject</span><span class="p">()]</span>
                 <span class="k">if</span> <span class="n">gname</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,):</span>
+                        <span class="n">gname</span> <span class="o">=</span> <span class="n">gname</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">h5Object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lastObject</span><span class="p">()</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">gname</span><span class="p">)</span>
                     <span class="k">return</span>
             <span class="k">try</span><span class="p">:</span>

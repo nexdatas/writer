@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>nxswriter package &#8212; NXSDataWriter 2.23.0 documentation</title>
+    <title>nxswriter package &#8212; NXSDataWriter 2.24.1 documentation</title>
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.23</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.24</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -483,7 +483,7 @@ if <a class="reference internal" href="#nxswriter.DBaseSource.DBaseSource.format
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy array of defined type or list
 for strings or value for SCALAR</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -939,7 +939,7 @@ is registered</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the decoded data if data was loaded</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1099,7 +1099,7 @@ is registered</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the decoded data if data was loaded</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1291,7 +1291,13 @@ is registered</td>
 <dl class="attribute">
 <dt id="nxswriter.EField.EField.compression">
 <code class="descname">compression</code><em class="property"> = None</em><a class="headerlink" href="#nxswriter.EField.EField.compression" title="Permalink to this definition">¶</a></dt>
-<dd><p>(<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code></a>) compression flag</p>
+<dd><p>(<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code></a>) compression algorithm id</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nxswriter.EField.EField.compression_opts">
+<code class="descname">compression_opts</code><em class="property"> = None</em><a class="headerlink" href="#nxswriter.EField.EField.compression_opts" title="Permalink to this definition">¶</a></dt>
+<dd><p>(<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>) compression rate</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1337,7 +1343,7 @@ is registered</td>
 <dl class="attribute">
 <dt id="nxswriter.EField.EField.rate">
 <code class="descname">rate</code><em class="property"> = None</em><a class="headerlink" href="#nxswriter.EField.EField.rate" title="Permalink to this definition">¶</a></dt>
-<dd><p>(<a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>) compression rate</p>
+<dd><p>(<code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> &lt; <a class="reference external" href="https://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> &gt;) compression algorithm options</p>
 </dd></dl>
 
 <dl class="method">

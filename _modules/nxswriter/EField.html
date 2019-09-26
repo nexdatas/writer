@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>nxswriter.EField &#8212; NXSDataWriter 2.23.0 documentation</title>
+    <title>nxswriter.EField &#8212; NXSDataWriter 2.24.1 documentation</title>
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.23</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.24</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -213,10 +213,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">grows</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1">#: (:obj:`str`) label for postprocessing data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">postrun</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-        <span class="c1">#: (:obj:`bool`) compression flag</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1">#: (:obj:`bool`) compression algorithm id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="c1">#: (:obj:`int`) compression rate</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rate</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compression_opts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1">#: (:obj:`list` &lt; :obj:`int` &gt;) compression algorithm options</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rate</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="c1">#: (:obj:`bool`) compression shuffle</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="c1">#: (:obj:`bool`) grew flag</span>
@@ -293,18 +295,22 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reloadmode</span><span class="p">:</span>
             <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">kd</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">kd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lastObject</span><span class="p">()]</span>
             <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,):</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
                 <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lastObject</span><span class="p">()</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">f</span>
 
         <span class="n">chunk</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">if</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shape</span><span class="p">]</span>
         <span class="n">minshape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="k">if</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shape</span><span class="p">]</span>
-        <span class="n">deflate</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">datafilter</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># create Filter</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compression</span><span class="p">:</span>
-            <span class="n">deflate</span> <span class="o">=</span> <span class="n">FileWriter</span><span class="o">.</span><span class="n">deflate_filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lastObject</span><span class="p">())</span>
-            <span class="n">deflate</span><span class="o">.</span><span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate</span>
-            <span class="n">deflate</span><span class="o">.</span><span class="n">shuffle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span>
+            <span class="n">datafilter</span> <span class="o">=</span> <span class="n">FileWriter</span><span class="o">.</span><span class="n">data_filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lastObject</span><span class="p">())</span>
+            <span class="n">datafilter</span><span class="o">.</span><span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate</span>
+            <span class="n">datafilter</span><span class="o">.</span><span class="n">shuffle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span>
+            <span class="n">datafilter</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compression_opts</span><span class="p">)</span>
+            <span class="n">datafilter</span><span class="o">.</span><span class="n">filterid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compression</span>
 
         <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,):</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
@@ -315,20 +321,20 @@
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk</span><span class="p">:</span>
                     <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lastObject</span><span class="p">()</span><span class="o">.</span><span class="n">create_field</span><span class="p">(</span>
                         <span class="n">name</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="p">[],</span>
-                        <span class="n">deflate</span><span class="p">)</span>
+                        <span class="n">datafilter</span><span class="p">)</span>
                 <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">canfail</span><span class="p">:</span>
                     <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lastObject</span><span class="p">()</span><span class="o">.</span><span class="n">create_field</span><span class="p">(</span>
                         <span class="n">name</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">chunk</span><span class="p">,</span>
-                        <span class="n">deflate</span><span class="p">)</span>
+                        <span class="n">datafilter</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lastObject</span><span class="p">()</span><span class="o">.</span><span class="n">create_field</span><span class="p">(</span>
                         <span class="n">name</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">minshape</span> <span class="ow">or</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">chunk</span><span class="p">,</span>
-                        <span class="n">deflate</span><span class="p">)</span>
+                        <span class="n">datafilter</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">mshape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;INIT&#39;</span><span class="p">,</span> <span class="s1">&#39;FINAL&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">deflate</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">datafilter</span><span class="p">:</span>
                     <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lastObject</span><span class="p">()</span><span class="o">.</span><span class="n">create_field</span><span class="p">(</span>
-                        <span class="n">name</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">mshape</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">deflate</span><span class="p">)</span>
+                        <span class="n">name</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">mshape</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">datafilter</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lastObject</span><span class="p">()</span><span class="o">.</span><span class="n">create_field</span><span class="p">(</span>
                         <span class="n">name</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">mshape</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
