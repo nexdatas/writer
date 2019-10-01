@@ -201,6 +201,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
 
         self.get_device_properties(self.get_device_class())
         self.tdw.defaultCanFail = bool(self.DefaultCanFail)
+        self.tdw.addingLogs = bool(self.AddingLogs)
 
     def set_state(self, state):
         """set_state method
@@ -839,6 +840,10 @@ class NXSDataWriterClass(PyTango.DeviceClass):
         'DefaultCanFail':
         [PyTango.DevBoolean,
          "Default value of CanFail attribute",
+         [True]],
+        'AddingLogs':
+        [PyTango.DevBoolean,
+         "Add XML logs",
          [True]],
     }
 
