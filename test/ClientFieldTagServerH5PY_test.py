@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 # \package test nexdatas
-# \file ClientFieldTagServerTest.py
+# \file ClientFieldTagServer_test.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -26,27 +26,29 @@ import PyTango
 from ProxyHelper import ProxyHelper
 
 import ServerSetUp
-import ClientFieldTagWriterH5CppTest
+import ClientFieldTagWriterH5PY_test
 
 # test fixture
 
 
-class ClientFieldTagServerH5CppTest(
-        ClientFieldTagWriterH5CppTest.ClientFieldTagWriterH5CppTest):
+class ClientFieldTagServerH5PYTest(
+        ClientFieldTagWriterH5PY_test.ClientFieldTagWriterH5PYTest):
     # server counter
     serverCounter = 0
 
     # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
-        ClientFieldTagWriterH5CppTest.ClientFieldTagWriterH5CppTest.__init__(
+        ClientFieldTagWriterH5PY_test.ClientFieldTagWriterH5PYTest.__init__(
             self, methodName)
 
-        ClientFieldTagServerH5CppTest.serverCounter += 1
+        ClientFieldTagServerH5PYTest.serverCounter += 1
         sins = self.__class__.__name__ + \
-            "%s" % ClientFieldTagServerH5CppTest.serverCounter
+            "%s" % ClientFieldTagServerH5PYTest.serverCounter
         self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/" + sins, sins)
 
+#        self._counter =  [1, 2]
+#        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
         self.__status = {
             PyTango.DevState.OFF: "Not Initialized",
             PyTango.DevState.ON: "Ready",
@@ -84,7 +86,7 @@ class ClientFieldTagServerH5CppTest(
     def openWriter(self, fname, xml, json=None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
-        self.setProp(tdw, "writer", "h5cpp")
+        self.setProp(tdw, "writer", "h5py")
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])

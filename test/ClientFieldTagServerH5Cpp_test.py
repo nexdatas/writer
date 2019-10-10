@@ -16,34 +16,35 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 # \package test nexdatas
-# \file DBFieldTagServerH5CppTest.py
+# \file ClientFieldTagServer_test.py
 # unittests for field Tags running Tango Server
 #
-
 import unittest
+
 import PyTango
 
-import ServerSetUp
-import DBFieldTagWriterH5CppTest
 from ProxyHelper import ProxyHelper
+
+import ServerSetUp
+import ClientFieldTagWriterH5Cpp_test
 
 # test fixture
 
 
-class DBFieldTagServerH5CppTest(
-        DBFieldTagWriterH5CppTest.DBFieldTagWriterH5CppTest):
+class ClientFieldTagServerH5CppTest(
+        ClientFieldTagWriterH5Cpp_test.ClientFieldTagWriterH5CppTest):
     # server counter
     serverCounter = 0
 
     # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
-        DBFieldTagWriterH5CppTest.DBFieldTagWriterH5CppTest.__init__(
+        ClientFieldTagWriterH5Cpp_test.ClientFieldTagWriterH5CppTest.__init__(
             self, methodName)
 
-        DBFieldTagServerH5CppTest.serverCounter += 1
+        ClientFieldTagServerH5CppTest.serverCounter += 1
         sins = self.__class__.__name__ + \
-            "%s" % DBFieldTagServerH5CppTest.serverCounter
+            "%s" % ClientFieldTagServerH5CppTest.serverCounter
         self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/" + sins, sins)
 
         self.__status = {
@@ -54,13 +55,10 @@ class DBFieldTagServerH5CppTest(
             PyTango.DevState.RUNNING: "Writing ...",
             PyTango.DevState.FAULT: "Error",
         }
-#        self._counter =  [1, 2]
-#        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
 
     # test starter
     # \brief Common set up of Tango Server
     def setUp(self):
-        DBFieldTagWriterH5CppTest.DBFieldTagWriterH5CppTest.setUp(self)
         self._sv.setUp()
         print("SEED = %s" % self.seed)
         print("CHECKER SEED = %s" % self._sc.seed)
@@ -68,7 +66,6 @@ class DBFieldTagServerH5CppTest(
     # test closer
     # \brief Common tear down oif Tango Server
     def tearDown(self):
-        DBFieldTagWriterH5CppTest.DBFieldTagWriterH5CppTest.tearDown(self)
         self._sv.tearDown()
 
     def setProp(self, rc, name, value):

@@ -16,33 +16,36 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 # \package test nexdatas
-# \file DBFieldTagServerTest.py
-# unittests for field Tags running Tango Server
+# \file DBFieldTagAsynch_test.py
+# unittests for field Tags running Tango Server inm asynchronous mode
 #
 
 import unittest
 import PyTango
 
 import ServerSetUp
-import DBFieldTagWriterTest
+import DBFieldTagWriter_test
 from ProxyHelper import ProxyHelper
 
 # test fixture
 
 
-class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
+class DBFieldTagAsynchTest(DBFieldTagWriter_test.DBFieldTagWriterTest):
     # server counter
     serverCounter = 0
 
     # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
-        DBFieldTagWriterTest.DBFieldTagWriterTest.__init__(self, methodName)
+        DBFieldTagWriter_test.DBFieldTagWriterTest.__init__(self, methodName)
 
-        DBFieldTagServerTest.serverCounter += 1
+        DBFieldTagAsynchTest.serverCounter += 1
         sins = self.__class__.__name__ + \
-            "%s" % DBFieldTagServerTest.serverCounter
+            "%s" % DBFieldTagAsynchTest.serverCounter
         self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/" + sins, sins)
+
+#        self._counter =  [1, 2]
+#        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
 
         self.__status = {
             PyTango.DevState.OFF: "Not Initialized",
@@ -52,13 +55,11 @@ class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
             PyTango.DevState.RUNNING: "Writing ...",
             PyTango.DevState.FAULT: "Error",
         }
-#        self._counter =  [1, 2]
-#        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
 
     # test starter
     # \brief Common set up of Tango Server
     def setUp(self):
-        DBFieldTagWriterTest.DBFieldTagWriterTest.setUp(self)
+        DBFieldTagWriter_test.DBFieldTagWriterTest.setUp(self)
         self._sv.setUp()
         print("SEED = %s" % self.seed)
         print("CHECKER SEED = %s" % self._sc.seed)
@@ -66,7 +67,7 @@ class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
     # test closer
     # \brief Common tear down oif Tango Server
     def tearDown(self):
-        DBFieldTagWriterTest.DBFieldTagWriterTest.tearDown(self)
+        DBFieldTagWriter_test.DBFieldTagWriterTest.tearDown(self)
         self._sv.tearDown()
 
     # opens writer
@@ -91,21 +92,27 @@ class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
         if json:
             tdw.JSONRecord = json
-        tdw.OpenEntry()
-        self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
+        self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
+        tdw.OpenEntryAsynch()
+        self.assertTrue(ProxyHelper.wait(tdw, 10000))
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
+        self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         return tdw
 
     # closes writer
     # \param tdw Tango Data Writer proxy instance
     # \param json JSON Record with client settings
     def closeWriter(self, tdw, json=None):
-        self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
+        self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
 
         if json:
             tdw.JSONRecord = json
-        tdw.CloseEntry()
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
+        self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
+        tdw.CloseEntryAsynch()
+        self.assertTrue(ProxyHelper.wait(tdw, 10000))
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
 
@@ -115,7 +122,12 @@ class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
 
     # performs one record step
     def record(self, tdw, string):
-        tdw.Record(string)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
+        self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
+        tdw.RecordAsynch(string)
+        self.assertTrue(ProxyHelper.wait(tdw, 10000))
+        self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
 
 
 if __name__ == '__main__':

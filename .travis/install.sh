@@ -31,10 +31,10 @@ docker exec -it --user root ndts service tango-starter restart
 
 if [ $2 = "2" ]; then
     echo "install python-pytango"
-    docker exec -it --user root ndts /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python-pytango python-tz; apt-get -qq install -y nxsconfigserver-db python-nxstools; sleep 10'
+    docker exec -it --user root ndts /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python-pytango python-tz; apt-get -qq install -y nxsconfigserver-db python-nxstools python-setuptools; sleep 10'
 else
     echo "install python3-pytango"
-    docker exec -it --user root ndts /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python3-pytango python3-tz; apt-get -qq install -y nxsconfigserver-db python3-nxstools; sleep 10'
+    docker exec -it --user root ndts /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python3-pytango python3-tz; apt-get -qq install -y nxsconfigserver-db python3-nxstools python3-setuptools; sleep 10'
 fi
 if [ $? -ne "0" ]
 then

@@ -16,38 +16,34 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 # \package test nexdatas
-# \file XMLFieldTagServerTest.py
+# \file DBFieldTagServer_test.py
 # unittests for field Tags running Tango Server
 #
-import unittest
 
+import unittest
 import PyTango
 
 import ServerSetUp
-import XMLFieldTagWriterH5PYTest
+import DBFieldTagWriter_test
 from ProxyHelper import ProxyHelper
 
 # test fixture
 
 
-class XMLFieldTagServerH5PYTest(
-        XMLFieldTagWriterH5PYTest.XMLFieldTagWriterH5PYTest):
+class DBFieldTagServerTest(DBFieldTagWriter_test.DBFieldTagWriterTest):
     # server counter
     serverCounter = 0
 
     # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
-        XMLFieldTagWriterH5PYTest.XMLFieldTagWriterH5PYTest.__init__(
-            self, methodName)
+        DBFieldTagWriter_test.DBFieldTagWriterTest.__init__(self, methodName)
 
-        XMLFieldTagServerH5PYTest.serverCounter += 1
+        DBFieldTagServerTest.serverCounter += 1
         sins = self.__class__.__name__ + \
-            "%s" % XMLFieldTagServerH5PYTest.serverCounter
+            "%s" % DBFieldTagServerTest.serverCounter
         self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/" + sins, sins)
 
-#        self._counter =  [1, 2]
-#        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
         self.__status = {
             PyTango.DevState.OFF: "Not Initialized",
             PyTango.DevState.ON: "Ready",
@@ -56,25 +52,22 @@ class XMLFieldTagServerH5PYTest(
             PyTango.DevState.RUNNING: "Writing ...",
             PyTango.DevState.FAULT: "Error",
         }
+#        self._counter =  [1, 2]
+#        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
 
     # test starter
     # \brief Common set up of Tango Server
     def setUp(self):
+        DBFieldTagWriter_test.DBFieldTagWriterTest.setUp(self)
         self._sv.setUp()
+        print("SEED = %s" % self.seed)
         print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down oif Tango Server
     def tearDown(self):
+        DBFieldTagWriter_test.DBFieldTagWriterTest.tearDown(self)
         self._sv.tearDown()
-
-    def setProp(self, rc, name, value):
-        db = PyTango.Database()
-        name = "" + name[0].upper() + name[1:]
-        db.put_device_property(
-            self._sv.new_device_info_writer.name,
-            {name: value})
-        rc.Init()
 
     # opens writer
     # \param fname file name
@@ -84,7 +77,6 @@ class XMLFieldTagServerH5PYTest(
     def openWriter(self, fname, xml, json=None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
-        self.setProp(tdw, "writer", "h5py")
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])

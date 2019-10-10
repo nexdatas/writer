@@ -21,7 +21,10 @@
 
 
 import os
-from distutils.core import setup, Command
+import sys
+from setuptools import setup
+from distutils.core import Command
+
 try:
     from sphinx.setup_command import BuildDoc
 except Exception:
@@ -32,6 +35,9 @@ except Exception:
 NDTS = "nxswriter"
 #: nxswriter imported package
 INDTS = __import__(NDTS)
+
+needs_pytest = set(['test']).intersection(sys.argv)
+pytest_runner = ['pytest-runner'] if needs_pytest else []
 
 
 def read(fname):
@@ -119,14 +125,20 @@ SETUPDATA = dict(
     requires=REQUIRED,
     install_requires=install_requires,
     scripts=['NXSDataWriter'],
-    cmdclass={'test': TestCommand, 'build_sphinx': BuildDoc},
+    cmdclass={
+        # 'test': TestCommand,
+        'build_sphinx': BuildDoc
+    },
+    zip_safe=False,
+    setup_requires=pytest_runner,
+    tests_require=['pytest'],
     command_options={
         'build_sphinx': {
             'project': ('setup.py', name),
             'version': ('setup.py', version),
             'release': ('setup.py', release)}},
     long_description=read('README.rst'),
-    long_description_content_type='text/x-rst'
+    # long_description_content_type='text/x-rst'
 )
 
 
