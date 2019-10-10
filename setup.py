@@ -22,7 +22,11 @@
 
 import os
 from distutils.core import setup, Command
-from sphinx.setup_command import BuildDoc
+try:
+    from sphinx.setup_command import BuildDoc
+except Exception:
+    BuildDoc = None
+
 
 #: package name
 NDTS = "nxswriter"
@@ -61,6 +65,21 @@ class TestCommand(Command):
         raise SystemExit(errno)
 
 
+install_requires = [
+    'h5py',
+    'pytz',
+    'numpy>1.6.0',
+    'lxml',
+    'fabio',
+    'nxstools',
+    # 'pymysqldb',
+    # 'psycopg2-binary'
+    # 'psycopg2'
+    # 'cx-oracle',
+    # 'pytango',
+    # 'pninexus',
+]
+
 #: required files
 REQUIRED = [
     'numpy (>=1.5.0)',
@@ -82,9 +101,23 @@ SETUPDATA = dict(
     description=("Nexus Data writer implemented as a Tango Server"),
     license="GNU GENERAL PUBLIC LICENSE v3",
     keywords="writer Tango server nexus data",
-    url="https://github.com/jkotan/nexdatas/",
+    url="https://github.com/jkotan/nexdatas/writer",
     packages=['nxswriter'],
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Intended Audience :: Science/Research',
+        'Topic :: Scientific/Engineering :: Physics',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+    ],
     requires=REQUIRED,
+    install_requires=install_requires,
     scripts=['NXSDataWriter'],
     cmdclass={'test': TestCommand, 'build_sphinx': BuildDoc},
     command_options={
@@ -92,7 +125,8 @@ SETUPDATA = dict(
             'project': ('setup.py', name),
             'version': ('setup.py', version),
             'release': ('setup.py', release)}},
-    long_description=read('README.rst')
+    long_description=read('README.rst'),
+    long_description_content_type='text/x-rst'
 )
 
 
