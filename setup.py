@@ -116,7 +116,6 @@ SETUPDATA = dict(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    requires=REQUIRED,
     install_requires=install_requires,
     scripts=['NXSDataWriter'],
     cmdclass={
