@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 # \package test nexdatas
-# \file TangoFieldTagServerH5PYTest.py
+# \file TangoFieldTagServerH5Cpp_test.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -24,27 +24,27 @@ import PyTango
 
 
 import ServerSetUp
-import TangoFieldTagWriterH5PYTest
+import TangoFieldTagWriterH5Cpp_test
 from ProxyHelper import ProxyHelper
 
 # test fixture
 
 
-class TangoFieldTagServerH5PYTest(
-        TangoFieldTagWriterH5PYTest.TangoFieldTagWriterH5PYTest):
+class TangoFieldTagServerH5CppTest(
+        TangoFieldTagWriterH5Cpp_test.TangoFieldTagWriterH5CppTest):
     # server counter
     serverCounter = 0
 
     # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
-        TangoFieldTagWriterH5PYTest.TangoFieldTagWriterH5PYTest.__init__(
+        TangoFieldTagWriterH5Cpp_test.TangoFieldTagWriterH5CppTest.__init__(
             self, methodName)
         unittest.TestCase.__init__(self, methodName)
 
-        TangoFieldTagServerH5PYTest.serverCounter += 1
+        TangoFieldTagServerH5CppTest.serverCounter += 1
         sins = self.__class__.__name__ + \
-            "%s" % TangoFieldTagServerH5PYTest.serverCounter
+            "%s" % TangoFieldTagServerH5CppTest.serverCounter
         self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/" + sins, sins)
 
         self.__status = {
@@ -91,7 +91,7 @@ class TangoFieldTagServerH5PYTest(
     def openWriter(self, fname, xml, json=None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
-        self.setProp(tdw, "writer", "h5py")
+        self.setProp(tdw, "writer", "h5cpp")
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])

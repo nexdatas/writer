@@ -16,31 +16,34 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 # \package test nexdatas
-# \file XMLFieldTagAsynchTest.py
-# unittests for field Tags running Tango Server in asynchronous mode
+# \file DBFieldTagAsynchH5Cpp_test.py
+# unittests for field Tags running Tango Server inm asynchronous mode
 #
-import unittest
 
+import unittest
 import PyTango
 
 import ServerSetUp
-import XMLFieldTagWriterTest
+import DBFieldTagWriterH5Cpp_test
 from ProxyHelper import ProxyHelper
 
-
 # test fixture
-class XMLFieldTagAsynchTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
+
+
+class DBFieldTagAsynchH5CppTest(
+        DBFieldTagWriterH5Cpp_test.DBFieldTagWriterH5CppTest):
     # server counter
     serverCounter = 0
+
     # constructor
     # \param methodName name of the test method
-
     def __init__(self, methodName):
-        XMLFieldTagWriterTest.XMLFieldTagWriterTest.__init__(self, methodName)
+        DBFieldTagWriterH5Cpp_test.DBFieldTagWriterH5CppTest.__init__(
+            self, methodName)
 
-        XMLFieldTagAsynchTest.serverCounter += 1
+        DBFieldTagAsynchH5CppTest.serverCounter += 1
         sins = self.__class__.__name__ + \
-            "%s" % XMLFieldTagAsynchTest.serverCounter
+            "%s" % DBFieldTagAsynchH5CppTest.serverCounter
         self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/" + sins, sins)
 
 #        self._counter =  [1, 2]
@@ -58,13 +61,24 @@ class XMLFieldTagAsynchTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
     # test starter
     # \brief Common set up of Tango Server
     def setUp(self):
+        DBFieldTagWriterH5Cpp_test.DBFieldTagWriterH5CppTest.setUp(self)
         self._sv.setUp()
+        print("SEED = %s" % self.seed)
         print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down oif Tango Server
     def tearDown(self):
+        DBFieldTagWriterH5Cpp_test.DBFieldTagWriterH5CppTest.tearDown(self)
         self._sv.tearDown()
+
+    def setProp(self, rc, name, value):
+        db = PyTango.Database()
+        name = "" + name[0].upper() + name[1:]
+        db.put_device_property(
+            self._sv.new_device_info_writer.name,
+            {name: value})
+        rc.Init()
 
     # opens writer
     # \param fname file name
@@ -74,7 +88,7 @@ class XMLFieldTagAsynchTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
     def openWriter(self, fname, xml, json=None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
-
+        self.setProp(tdw, "writer", "h5cpp")
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
@@ -89,8 +103,8 @@ class XMLFieldTagAsynchTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
         if json:
             tdw.JSONRecord = json
-        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         tdw.OpenEntryAsynch()
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
@@ -101,6 +115,7 @@ class XMLFieldTagAsynchTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
     # \param tdw Tango Data Writer proxy instance
     # \param json JSON Record with client settings
     def closeWriter(self, tdw, json=None):
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
 
         if json:
@@ -109,8 +124,8 @@ class XMLFieldTagAsynchTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         tdw.CloseEntryAsynch()
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
-        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
 
         tdw.CloseFile()
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
@@ -122,8 +137,8 @@ class XMLFieldTagAsynchTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         tdw.RecordAsynch(string)
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
-        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
 
 
 if __name__ == '__main__':

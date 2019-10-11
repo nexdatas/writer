@@ -16,34 +16,35 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 # \package test nexdatas
-# \file DBFieldTagAsynchH5CppTest.py
-# unittests for field Tags running Tango Server inm asynchronous mode
+# \file ClientFieldTagAsynchH5PY_test.py
+# unittests for field Tags running Tango Server in asynchronous mode
 #
-
 import unittest
+
 import PyTango
 
+
 import ServerSetUp
-import DBFieldTagWriterH5CppTest
+import ClientFieldTagWriterH5PY_test
 from ProxyHelper import ProxyHelper
 
 # test fixture
 
 
-class DBFieldTagAsynchH5CppTest(
-        DBFieldTagWriterH5CppTest.DBFieldTagWriterH5CppTest):
+class ClientFieldTagAsynchH5PYTest(
+        ClientFieldTagWriterH5PY_test.ClientFieldTagWriterH5PYTest):
     # server counter
     serverCounter = 0
 
     # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
-        DBFieldTagWriterH5CppTest.DBFieldTagWriterH5CppTest.__init__(
+        ClientFieldTagWriterH5PY_test.ClientFieldTagWriterH5PYTest.__init__(
             self, methodName)
 
-        DBFieldTagAsynchH5CppTest.serverCounter += 1
+        ClientFieldTagAsynchH5PYTest.serverCounter += 1
         sins = self.__class__.__name__ + \
-            "%s" % DBFieldTagAsynchH5CppTest.serverCounter
+            "%s" % ClientFieldTagAsynchH5PYTest.serverCounter
         self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/" + sins, sins)
 
 #        self._counter =  [1, 2]
@@ -58,20 +59,6 @@ class DBFieldTagAsynchH5CppTest(
             PyTango.DevState.FAULT: "Error",
         }
 
-    # test starter
-    # \brief Common set up of Tango Server
-    def setUp(self):
-        DBFieldTagWriterH5CppTest.DBFieldTagWriterH5CppTest.setUp(self)
-        self._sv.setUp()
-        print("SEED = %s" % self.seed)
-        print("CHECKER SEED = %s" % self._sc.seed)
-
-    # test closer
-    # \brief Common tear down oif Tango Server
-    def tearDown(self):
-        DBFieldTagWriterH5CppTest.DBFieldTagWriterH5CppTest.tearDown(self)
-        self._sv.tearDown()
-
     def setProp(self, rc, name, value):
         db = PyTango.Database()
         name = "" + name[0].upper() + name[1:]
@@ -79,6 +66,18 @@ class DBFieldTagAsynchH5CppTest(
             self._sv.new_device_info_writer.name,
             {name: value})
         rc.Init()
+
+    # test starter
+    # \brief Common set up of Tango Server
+    def setUp(self):
+        self._sv.setUp()
+        print("SEED = %s" % self.seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
+
+    # test closer
+    # \brief Common tear down oif Tango Server
+    def tearDown(self):
+        self._sv.tearDown()
 
     # opens writer
     # \param fname file name
@@ -88,13 +87,12 @@ class DBFieldTagAsynchH5CppTest(
     def openWriter(self, fname, xml, json=None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
-        self.setProp(tdw, "writer", "h5cpp")
+        self.setProp(tdw, "writer", "h5py")
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
 
         tdw.OpenFile()
-
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
 
@@ -107,29 +105,29 @@ class DBFieldTagAsynchH5CppTest(
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
         tdw.OpenEntryAsynch()
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
-        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         return tdw
 
     # closes writer
     # \param tdw Tango Data Writer proxy instance
     # \param json JSON Record with client settings
     def closeWriter(self, tdw, json=None):
-        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
 
         if json:
             tdw.JSONRecord = json
-        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         tdw.CloseEntryAsynch()
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
-        self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
+        self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
 
         tdw.CloseFile()
-        self.assertEqual(tdw.state(), PyTango.DevState.ON)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
+        self.assertEqual(tdw.state(), PyTango.DevState.ON)
 
     # performs one record step
     def record(self, tdw, string):
