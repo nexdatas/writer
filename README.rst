@@ -79,31 +79,8 @@ and
 
 for Component Selector and Sardana related packages.
 
-Setting NeXus Writer Server
-"""""""""""""""""""""""""""
-
-To set up  NeXus Writer Server run
-
-.. code-block:: console
-
-          $ nxsetup -x NXSDataWriter
-
-The *nxsetup* command comes from the **python-nxstools** package.
-
--------------------------
-Installation from sources
--------------------------
-
-
-Extract sources and run
-
-.. code-block:: console
-
-   $ python setup.py install
-
---------
 From pip
---------
+""""""""
 
 To install it from pip you can
 
@@ -122,6 +99,17 @@ Moreover it is also good to install
    $ pip install pymysqldb
    $ pip install psycopg2-binary
    $ pip install cx-oracle
+
+Setting NeXus Writer Server
+"""""""""""""""""""""""""""
+
+To set up  NeXus Writer Server run
+
+.. code-block:: console
+
+          $ nxsetup -x NXSDataWriter
+
+The *nxsetup* command comes from the **python-nxstools** package.
 
 -----------
 Client code
