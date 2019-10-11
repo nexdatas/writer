@@ -71,6 +71,7 @@ class TestCommand(Command):
         raise SystemExit(errno)
 
 
+#: required python packages
 install_requires = [
     'h5py',
     'pytz',
@@ -84,13 +85,6 @@ install_requires = [
     # 'cx-oracle',
     # 'pytango',
     # 'pninexus',
-]
-
-#: required files
-REQUIRED = [
-    'numpy (>=1.5.0)',
-    'PyTango (>=7.2.2)',
-    'pni (>=1.0.0)'
 ]
 
 release = INDTS.__version__

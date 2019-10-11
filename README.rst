@@ -36,7 +36,7 @@ Download the latest NexDaTaS version from
 Extract sources and run
 
 .. code-block:: console
-	  
+
 	  $ python setup.py install
 
 Debian packages
@@ -65,13 +65,13 @@ Finally,
 	  $ apt-get update
 	  $ apt-get install python-nxswriter
 
-To instal other NexDaTaS packages	  
+To instal other NexDaTaS packages
 
 .. code-block:: console
-	  
+
 	  $ apt-get install python-nxstools nxsconfigserver-db python-nxsconfigserver nxsconfigtool
 
-and 
+and
 
 .. code-block:: console
 
@@ -89,7 +89,7 @@ To set up  NeXus Writer Server run
           $ nxsetup -x NXSDataWriter
 
 The *nxsetup* command comes from the **python-nxstools** package.
-	  
+
 -------------------------
 Installation from sources
 -------------------------
@@ -130,7 +130,7 @@ comments related to the client code.
 
    # We set the name of the output HDF5 file and open it.
 
-   # Now we are ready to pass the XML settings describing a structure of 
+   # Now we are ready to pass the XML settings describing a structure of
    # the output file as well as defining a way of data storing.
    # Examples of the XMLSettings can be found in the XMLExamples directory.
 
@@ -200,3 +200,24 @@ In order to build the XML configurations in the easy way the authors of the serv
 for this purpose a specialized GUI tool, Component Designer.
 The attached to the server XML examples
 was created by XMLFile class defined in XMLCreator/simpleXML.py.
+
+From pip
+""""""""
+
+To install it from pip you can
+
+.. code-block:: console
+
+   $ python3 -m venv myvenv
+   $ . myvenv/bin/activate
+
+   $ pip install nxswriter
+
+Moreover it is also good to install
+
+.. code-block:: console
+
+   $ pip install pytango
+   $ pip install pymysqldb
+   $ pip install psycopg2-binary
+   $ pip install cx-oracle
