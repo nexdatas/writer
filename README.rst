@@ -101,6 +101,28 @@ Extract sources and run
 
    $ python setup.py install
 
+--------
+From pip
+--------
+
+To install it from pip you can
+
+.. code-block:: console
+
+   $ python3 -m venv myvenv
+   $ . myvenv/bin/activate
+
+   $ pip install nxswriter
+
+Moreover it is also good to install
+
+.. code-block:: console
+
+   $ pip install pytango
+   $ pip install pymysqldb
+   $ pip install psycopg2-binary
+   $ pip install cx-oracle
+
 -----------
 Client code
 -----------
@@ -200,24 +222,3 @@ In order to build the XML configurations in the easy way the authors of the serv
 for this purpose a specialized GUI tool, Component Designer.
 The attached to the server XML examples
 was created by XMLFile class defined in XMLCreator/simpleXML.py.
-
-From pip
-""""""""
-
-To install it from pip you can
-
-.. code-block:: console
-
-   $ python3 -m venv myvenv
-   $ . myvenv/bin/activate
-
-   $ pip install nxswriter
-
-Moreover it is also good to install
-
-.. code-block:: console
-
-   $ pip install pytango
-   $ pip install pymysqldb
-   $ pip install psycopg2-binary
-   $ pip install cx-oracle
