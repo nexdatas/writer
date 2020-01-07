@@ -75,7 +75,7 @@ class VDEOdecoderTest(unittest.TestCase):
         mode = modes[str(image.dtype)]
         width, height = image.shape
         version = 1
-        endian = ord(str(struct.pack('=H', 1)[-1]))
+        endian = ord(struct.pack('=H', 1).decode()[-1])
         hsize = struct.calcsize('!IHHqiiHHHH')
         header = struct.pack('!IHHqiiHHHH', 0x5644454f, version, mode, -1,
                              width, height, endian, hsize, 0, 0)
