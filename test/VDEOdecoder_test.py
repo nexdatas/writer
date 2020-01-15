@@ -73,7 +73,7 @@ class VDEOdecoderTest(unittest.TestCase):
         formatID = {0: 'B', 1: 'H', 2: 'I', 3: 'Q'}
         format = 'VIDEO_IMAGE'
         mode = modes[str(image.dtype)]
-        width, height = image.shape
+        height, width = image.shape
         version = 1
         endian = ord(struct.pack('=H', 1).decode()[-1])
         hsize = struct.calcsize('!IHHqiiHHHH')
