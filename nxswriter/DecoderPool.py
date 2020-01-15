@@ -222,7 +222,7 @@ class VDEOdecoder(object):
         :rtype: :obj:`list` <:obj:`int` >
         """
         if self.__header:
-            return [self.__header['width'], self.__header['height']]
+            return [self.__header['height'], self.__header['width']]
 
     def decode(self):
         """ provides the decoded data
@@ -238,8 +238,8 @@ class VDEOdecoder(object):
             fSize = struct.calcsize(dformat)
             self.__value = numpy.array(
                 struct.unpack(dformat * (len(image) // fSize), image),
-                dtype=self.dtype).reshape(self.__header['width'],
-                                          self.__header['height'])
+                dtype=self.dtype).reshape(self.__header['height'],
+                                          self.__header['width'])
             fendian = self.__header['endianness']
             lendian = ord(struct.pack('=H', 1).decode()[-1])
             if fendian != lendian:

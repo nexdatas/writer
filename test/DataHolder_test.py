@@ -98,7 +98,7 @@ class DataHolderTest(unittest.TestCase):
         formatID = {0: 'B', 1: 'H', 2: 'I', 3: 'Q'}
         format = 'VIDEO_IMAGE'
         mode = modes[str(image.dtype)]
-        width, height = image.shape
+        height, width = image.shape
         version = 1
         endian = sys.byteorder == u'big'
         hsize = struct.calcsize('!IHHqiiHHHH')

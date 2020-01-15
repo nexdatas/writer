@@ -152,7 +152,7 @@ class SimpleServer(PyTango.Device_4Impl):
         mode = 0
         # uint16 H
 #        mode = 1
-        width, height = self.attr_ImageUChar.shape
+        height, width = self.attr_ImageUChar.shape
         version = 1
         endian = sys.byteorder == u'big'
         hsize = struct.calcsize('!IHHqiiHHHH')
