@@ -1,3 +1,7 @@
+2020-03-06 Jan Kotanski <jankotan@gmail.com>
+	* support lower record names for client datasources
+	* tagged as 2.26.0
+
 2020-01-15 Jan Kotanski <jankotan@gmail.com>
 	* fix reshaping LIMA encoded attributes
 	* tagged as 2.25.3
