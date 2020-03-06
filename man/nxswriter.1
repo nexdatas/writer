@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "NXSWRITER" "1" "Oct 01, 2019" "2.25" "NXSDataWriter"
+.TH "NXSWRITER" "1" "Mar 06, 2020" "2.26" "NXSDataWriter"
 .SH NAME
 nxswriter \- nxswriter Documentation
 .
@@ -140,6 +140,37 @@ $ apt\-get install python\-nxsrecselector nxselector python\-sardana\-nxsrecorde
 .UNINDENT
 .sp
 for Component Selector and Sardana related packages.
+.SS From pip
+.sp
+To install it from pip you can
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ python3 \-m venv myvenv
+$ . myvenv/bin/activate
+
+$ pip install nxswriter
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Moreover it is also good to install
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ pip install pytango
+$ pip install pymysqldb
+$ pip install psycopg2\-binary
+$ pip install cx\-oracle
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
 .SS Setting NeXus Writer Server
 .sp
 To set up  NeXus Writer Server run
@@ -155,19 +186,6 @@ $ nxsetup \-x NXSDataWriter
 .UNINDENT
 .sp
 The \fInxsetup\fP command comes from the \fBpython\-nxstools\fP package.
-.SH INSTALLATION FROM SOURCES
-.sp
-Extract sources and run
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-$ python setup.py install
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
 .SH CLIENT CODE
 .sp
 In order to use Nexus Data Server one has to write a client code. Some simple client codes
