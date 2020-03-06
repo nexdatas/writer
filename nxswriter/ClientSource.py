@@ -103,7 +103,7 @@ class ClientSource(DataSource):
         """
         res = self._getJSONData(
             self.name, self.__globalJSON, self.__localJSON)
-        if res is not None:
+        if res is not None or self.name is None:
             return res
         return self._getJSONData(
             self.name.lower(),

@@ -352,9 +352,10 @@ class TangoSource(DataSource):
             res = self.__tryclient(self.fullclient)
             if res:
                 return res
-            res = self.__tryclient(self.fullclient.lower())
-            if res:
-                return res
+            if self.fullclient is not None:
+                res = self.__tryclient(self.fullclient.lower())
+                if res:
+                    return res
         if not PYTANGO_AVAILABLE:
             if self._streams:
                 self._streams.error(
