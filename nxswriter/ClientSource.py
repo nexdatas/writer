@@ -102,4 +102,5 @@ class ClientSource(DataSource):
         :        'decoders': :obj:`str`} )
         """
         return self._getJSONData(
-            [self.name, self.name.lower()], self.__globalJSON, self.__localJSON)
+            [self.name, self.name.lower()],
+            self.__globalJSON, self.__localJSON)
