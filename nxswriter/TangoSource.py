@@ -279,7 +279,7 @@ class TangoSource(DataSource):
         :        'decoders': :obj:`str`}
         """
         res = None
-        fclient = "/".join(fullclient.split('/')[:-1])
+        fclient = "/".join((fullclient or "").split('/')[:-1])
         sclient = "/".join(self.client.split('/')[:-1])
         clients = [
             "tango://%s" % fullclient,
