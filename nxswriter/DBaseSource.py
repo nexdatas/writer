@@ -39,7 +39,7 @@ try:
         import pymysql
         pymysql.install_as_MySQLdb()
     DB_AVAILABLE.append("MYSQL")
-except ImportError as e:
+except ImportError:
     pass
     # sys.stdout.write("MYSQL not available: %s\n" % e)
     # sys.stdout.flush()
@@ -47,7 +47,7 @@ except ImportError as e:
 try:
     import psycopg2
     DB_AVAILABLE.append("PGSQL")
-except ImportError as e:
+except ImportError:
     pass
     # sys.stdout.write("PGSQL not available: %s\n" % e)
     # sys.stdout.flush()
@@ -55,7 +55,7 @@ except ImportError as e:
 try:
     import cx_Oracle
     DB_AVAILABLE.append("ORACLE")
-except ImportError as e:
+except ImportError:
     pass
     # sys.stdout.write("ORACLE not available: %s\n" % e)
     # sys.stdout.flush()

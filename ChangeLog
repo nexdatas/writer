@@ -1,3 +1,7 @@
+2020-04-14 Jan Kotanski <jankotan@gmail.com>
+	* speed up getJSONData
+	* tagged as 2.27.0
+
 2020-03-06 Jan Kotanski <jankotan@gmail.com>
 	* support lower record names for client datasources
 	* tagged as 2.26.0

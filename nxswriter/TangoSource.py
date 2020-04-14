@@ -279,65 +279,24 @@ class TangoSource(DataSource):
         :        'decoders': :obj:`str`}
         """
         res = None
+        fclient = "/".join((fullclient or "").split('/')[:-1])
+        sclient = "/".join(self.client.split('/')[:-1])
+        clients = [
+            "tango://%s" % fullclient,
+            fullclient,
+            fclient,
+            "tango://%s" % fclient,
+            "tango://%s" % self.client,
+            self.client,
+            sclient,
+            "tango://%s" % sclient
+        ]
         try:
             res = self._getJSONData(
-                "tango://%s" % fullclient,
+                clients,
                 self.__globalJSON, self.__localJSON)
         except Exception:
             res = None
-        if not res:
-            try:
-                res = self._getJSONData(
-                    fullclient,
-                    self.__globalJSON, self.__localJSON)
-            except Exception:
-                res = None
-        if not res:
-            try:
-                sclient = "/".join(fullclient.split('/')[:-1])
-                res = self._getJSONData(
-                    sclient,
-                    self.__globalJSON, self.__localJSON)
-            except Exception:
-                res = None
-        if not res:
-            try:
-                sclient = "/".join(fullclient.split('/')[:-1])
-                res = self._getJSONData(
-                    "tango://%s" % sclient,
-                    self.__globalJSON, self.__localJSON)
-            except Exception:
-                res = None
-        if not res:
-            try:
-                res = self._getJSONData(
-                    "tango://%s" % self.client,
-                    self.__globalJSON, self.__localJSON)
-            except Exception:
-                res = None
-        if not res:
-            try:
-                res = self._getJSONData(
-                    self.client,
-                    self.__globalJSON, self.__localJSON)
-            except Exception:
-                res = None
-        if not res:
-            try:
-                sclient = "/".join(self.client.split('/')[:-1])
-                res = self._getJSONData(
-                    sclient,
-                    self.__globalJSON, self.__localJSON)
-            except Exception:
-                res = None
-        if not res:
-            try:
-                sclient = "/".join(self.client.split('/')[:-1])
-                res = self._getJSONData(
-                    "tango://%s" % sclient,
-                    self.__globalJSON, self.__localJSON)
-            except Exception:
-                res = None
         return res
 
     def getData(self):
