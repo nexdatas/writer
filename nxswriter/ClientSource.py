@@ -101,10 +101,5 @@ class ClientSource(DataSource):
         :        'shape': :obj:`list` <int>, 'encoding': :obj:`str`, \
         :        'decoders': :obj:`str`} )
         """
-        res = self._getJSONData(
-            self.name, self.__globalJSON, self.__localJSON)
-        if res is not None or self.name is None:
-            return res
         return self._getJSONData(
-            self.name.lower(),
-            self.__globalJSON, self.__localJSON)
+            [self.name, self.name.lower()], self.__globalJSON, self.__localJSON)

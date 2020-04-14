@@ -119,11 +119,11 @@ class DataSource(object):
             replace("&amp;", "&")
 
     @classmethod
-    def _getJSONData(cls, name, globalJSON, localJSON):
+    def _getJSONData(cls, names, globalJSON, localJSON):
         """ provides access to the data
 
-        :param name: data key name
-        :type name: :obj:`str:obj:`
+        :param names: data key names
+        :type names: :obj:`list` < :obj:`str` > or :obj:`str`
         :param globalJSON: static JSON string
         :type globalJSON: \
         :     :obj:`dict` <:obj:`str` , :obj:`dict` <:obj:`str`, any>>
@@ -133,6 +133,11 @@ class DataSource(object):
         :returns: dictionary with collected data
         :rtype: :obj:`dict` <:obj:`str`, any>
         """
+        # backports for the older version
+        name = name or []
+        if not isinstance(name, list):
+            name = [name]
+
         if globalJSON and 'data' not in globalJSON.keys():
             globalJSON = None
 
@@ -140,14 +145,15 @@ class DataSource(object):
             localJSON = None
 
         rec = None
-        if localJSON and 'data' in localJSON \
-                and name in localJSON['data']:
-            rec = localJSON['data'][str(name)]
-        elif globalJSON and 'data' in globalJSON \
-                and name in globalJSON['data']:
-            rec = globalJSON['data'][str(name)]
-        else:
-            return
+        for nm in name:
+            if localJSON and 'data' in localJSON \
+                    and nm in localJSON['data']:
+                rec = localJSON['data'][str(nm)]
+            elif globalJSON and 'data' in globalJSON \
+                    and nm in globalJSON['data']:
+                rec = globalJSON['data'][str(nm)]
+            if rec is not None:
+                break
         if rec is None:
             return
         ntp = NTP()
