@@ -39,6 +39,7 @@ from .StreamSet import StreamSet
 from nxstools import filewriter as FileWriter
 
 from .H5Elements import EFile
+from .EGroup import EGroup
 from .DecoderPool import DecoderPool
 from .DataSourcePool import DataSourcePool
 
@@ -106,9 +107,13 @@ class TangoDataWriter(object):
         self.__xmlsettings = ""
         #: (:obj:`str`) global JSON string with data records
         self.__json = "{}"
+        #: (:obj:`str`) nexus parent path
+        self.__parent = ""
+        #: (:obj:`str`) nexus parent path of (name, type)
+        self.__parents = []
         #: (:obj:`int`) maximal number of threads
         self.numberOfThreads = 100
-#        self.numberOfThreads = 1
+        # self.numberOfThreads = 1
 
         #: (:class:`ThreadPool.ThreadPool`) thread pool with INIT elements
         self.__initPool = None
@@ -122,6 +127,9 @@ class TangoDataWriter(object):
         self.__triggerPools = {}
         #: (:class:`nxswriter.FileWriter.FTGroup`) H5 file handle
         self.__nxRoot = None
+        #: (:obj: `list` <:class:`nxswriter.FileWriter.FTGroup` >)
+        #      group path of H5 file handles
+        self.__nxPath = []
         #: (:class:`nxswriter.FileWriter.FTFile`) H5 file handle
         self.__nxFile = None
         #: (:class:`nxswriter.H5Elements.EFile`) element file objects
@@ -305,6 +313,46 @@ class TangoDataWriter(object):
     xmlsettings = property(__getXML, __setXML, __delXML,
                            doc='(:obj:`str`) the xml settings')
 
+    def __getParent(self):
+        """ get method for parent attribute
+
+        :returns: value of parent nexus path
+        :rtype: :obj:`str`
+        """
+        return self.__parent
+
+    def __setParent(self, parent):
+        """ set method for parent attribute
+
+        :param parent: parent nexus path
+        :type parent: :obj:`str`
+        """
+        self.__parent = ""
+        self.__parents = []
+        parent = parent or ""
+        spath = parent.split("/")
+        parents = []
+        for dr in spath:
+            if dr.strip():
+                w = dr.split(':')
+                if len(w) == 1:
+                    if len(w[0]) > 2 and w[0][:2] == 'NX':
+                        w.insert(0, w[0][2:])
+                    else:
+                        w.append("NX" + w[0])
+                parents.append((w[0], w[1]))
+        self.__parents = parents
+        self.__parent = parent
+
+    def __delParent(self):
+        """ del method for parent attribute
+        """
+        del self.__parent
+
+    #: the parent nexus path
+    parent = property(__getParent, __setParent, __delParent,
+                      doc='(:obj:`str`) parent nexus path')
+
     def getFile(self):
         """ the H5 file handle
 
@@ -351,6 +399,14 @@ class TangoDataWriter(object):
 
         #: element file objects
         self.__eFile = EFile([], None, self.__nxRoot)
+
+        last = self.__eFile
+        for gname, gtype in self.__parents:
+            last = EGroup(
+                {"name": gname, "type": gtype},
+                last,
+                reloadmode=True)
+            self.__nxPath.append(last)
 
         if self.addingLogs:
             name = "nexus_logs"
@@ -414,7 +470,8 @@ class TangoDataWriter(object):
             errorHandler = sax.ErrorHandler()
             parser = sax.make_parser()
             handler = NexusXMLHandler(
-                self.__eFile, self.__datasources,
+                self.__nxPath[-1] if self.__nxPath else self.__eFile,
+                self.__datasources,
                 self.__decoders, self.__fetcher.groupTypes,
                 parser, json.loads(self.jsonrecord),
                 self._streams,
@@ -648,6 +705,7 @@ class TangoDataWriter(object):
         if self.addingLogs and self.__logGroup:
             self.__logGroup.close()
 
+        self.__nxPath = []
         self.__nxRoot = None
         self.__nxFile = None
         self.__eFile = None

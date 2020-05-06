@@ -42,7 +42,7 @@ class CreateFile(object):
         #: (:obj:`str`) file name
         self.__file = ""
         #: (:obj:`str`) nexus path
-        self.__nxspath = ""
+        self.__nxpath = ""
         #: (:obj:`str`) xml configuration string
         self.__xml = ""
         #: (:obj:`str`) json data string
@@ -55,14 +55,16 @@ class CreateFile(object):
         self.__jsonfile = options.jsonfile
         #: (:obj:`bool`) verbose mode
         self.__verbose = options.verbose or False
+        #: (:obj:`bool`) append mode
+        self.__append = options.append or False
 
         lparent = str(options.parent).split(":/")
         if len(lparent) >= 3:
             self.__file = lparent[1]
-            self.__nxspath = ":/".join(lparent[2:])
+            self.__nxpath = ":/".join(lparent[2:])
         elif len(lparent) == 2:
             self.__file = lparent[0]
-            self.__nxspath = lparent[1]
+            self.__nxpath = lparent[1]
         elif len(lparent) == 1:
             self.__file = lparent[0]
 
@@ -110,6 +112,7 @@ class CreateFile(object):
         """
         tdw = TangoDataWriter.TangoDataWriter()
         tdw.fileName = str(self.__file)
+        tdw.parent = str(self.__nxpath or "")
         if self.__verbose:
             print("opening the %s file" % self.__file)
         tdw.openFile()
@@ -119,6 +122,7 @@ class CreateFile(object):
             print("opening the data entry ")
         if self.__data and self.__data.strip():
             tdw.jsonrecord = self.jsonstring()
+        tdw.skipacquisition = self.__append
         tdw.openEntry()
         for i in range(self.__nrecords):
             if self.__verbose:
@@ -132,6 +136,7 @@ class CreateFile(object):
         if self.__verbose:
             print("closing the data entry ")
         tdw.jsonrecord = self.jsonstring()
+        tdw.skipacquisition = self.__append
         tdw.closeEntry()
 
         if self.__verbose:
@@ -203,6 +208,10 @@ def main():
         "-v", "--verbose", action="store_true",
         default=False, dest="verbose",
         help="verbose mode")
+    parser.add_argument(
+        "-a", "--append", action="store_true",
+        default=False, dest="append",
+        help="append mode")
 
     try:
         options = parser.parse_args()
