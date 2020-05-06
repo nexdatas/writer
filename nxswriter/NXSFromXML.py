@@ -40,34 +40,36 @@ class CreateFile(object):
         :type options: :class:`argparse.Namespace`
         """
         #: (:obj:`str`) file name
-        self.file = ""
+        self.__file = ""
         #: (:obj:`str`) nexus path
-        self.nxspath = ""
+        self.__nxspath = ""
         #: (:obj:`str`) xml configuration string
-        self.xml = ""
+        self.__xml = ""
         #: (:obj:`str`) json data string
-        self.data = options.data
+        self.__data = options.data
         #: (:obj:`float`) time between records in seconds
-        self.stime = float(options.stime)
+        self.__stime = float(options.stime)
         #: (:obj:`int`) number of record steps
-        self.nrecords = int(options.nrecords)
+        self.__nrecords = int(options.nrecords)
         #: (:obj:`str`) json file
-        self.jsonfile = options.jsonfile
+        self.__jsonfile = options.jsonfile
+        #: (:obj:`bool`) verbose mode
+        self.__verbose = options.verbose or False
 
         lparent = str(options.parent).split(":/")
         if len(lparent) >= 3:
-            self.file = lparent[1]
-            self.nxspath = ":/".join(lparent[2:])
+            self.__file = lparent[1]
+            self.__nxspath = ":/".join(lparent[2:])
         elif len(lparent) == 2:
-            self.file = lparent[0]
-            self.nxspath = lparent[1]
+            self.__file = lparent[0]
+            self.__nxspath = lparent[1]
         elif len(lparent) == 1:
-            self.file = lparent[0]
+            self.__file = lparent[0]
 
         if options.args and len(options.args):
-            self.xml = options.args[0].strip()
+            self.__xml = options.args[0].strip()
         else:
-            self.xml = open(options.xmlfile, 'r').read()
+            self.__xml = open(options.xmlfile, 'r').read()
 
     @classmethod
     def currenttime(cls):
@@ -89,8 +91,8 @@ class CreateFile(object):
         :rtype: :obj:`str`
         """
         jsn = {}
-        if self.jsonfile:
-            sjsn = open(self.jsonfile, 'r').read()
+        if self.__jsonfile:
+            sjsn = open(self.__jsonfile, 'r').read()
             if sjsn.strip():
                 jsn = sjsn.loads()
         if "data" not in jsn.keys():
@@ -99,7 +101,7 @@ class CreateFile(object):
             jsn["data"]["start_time"] = self.currenttime()
         if "end_time" not in jsn["data"]:
             jsn["data"]["end_time"] = self.currenttime()
-        data = json.loads(str(self.data.strip()))
+        data = json.loads(str(self.__data.strip()))
         jsn["data"].update(data)
         return json.dumps(jsn)
 
@@ -107,27 +109,33 @@ class CreateFile(object):
         """ the main program function
         """
         tdw = TangoDataWriter.TangoDataWriter()
-        tdw.fileName = str(self.file)
-        print("opening the %s file" % self.file)
+        tdw.fileName = str(self.__file)
+        if self.__verbose:
+            print("opening the %s file" % self.__file)
         tdw.openFile()
-        tdw.xmlsettings = self.xml
+        tdw.xmlsettings = self.__xml
 
-        print("opening the data entry ")
-        if self.data and self.data.strip():
+        if self.__verbose:
+            print("opening the data entry ")
+        if self.__data and self.__data.strip():
             tdw.jsonrecord = self.jsonstring()
         tdw.openEntry()
-        for i in range(self.nrecords):
-            print("recording the H5 file")
+        for i in range(self.__nrecords):
+            if self.__verbose:
+                print("recording the H5 file")
             tdw.jsonrecord = self.jsonstring()
             tdw.record()
-            if self.nrecords > 1:
-                print("sleeping for 1s")
-                time.sleep(self.stime)
-        print("closing the data entry ")
+            if self.__nrecords > 1:
+                if self.__verbose:
+                    print("sleeping for 1s")
+                time.sleep(self.__stime)
+        if self.__verbose:
+            print("closing the data entry ")
         tdw.jsonrecord = self.jsonstring()
         tdw.closeEntry()
 
-        print("closing the H5 file")
+        if self.__verbose:
+            print("closing the H5 file")
         tdw.closeFile()
 
 
@@ -145,7 +153,20 @@ def main():
     description = "Command-line tool for creating NeXus files" \
                   + " from XML template"
 
-    epilog = 'For more help:\n  nxsdata <sub-command> -h'
+    epilog = 'examples:\n' \
+        '  nxsfromxml  -x config.xml -p newfile.nxs -j datastring.json\n\n' \
+        '    - creates a newfile.nxs file with configuration from config.xml' \
+        ' and data from datastring.json\n\n' \
+        '  nxsfromxml  -x config.xml -p outputfile.nxs -d'\
+        ' \'{"sample_name":"sn", "chemical_formula":"H2O", ' \
+        '"beamtime_id":"1234", "title":"Sample"}\'\n\n' \
+        '    - creates an outputfile.nxs file with configuration ' \
+        'from config.xml and data from given json dictionary\n\n' \
+        '  nxsconfig get source mono slit1 mirror2 | ' \
+        'nxsfromxml -p basicsetup.nxs\n\n' \
+        '    - creates an basicsetup.nxs file with configuration ' \
+        'of source mono slit1 mirror2 components ' \
+        'created by nxsconfig get \n\n'
     parser = argparse.ArgumentParser(
         description=description, epilog=epilog,
         formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -153,19 +174,23 @@ def main():
     parser.add_argument(
         'args', metavar='xml_config', type=str, nargs='?',
         help='nexus writer configuration string')
-    parser.add_argument("-x", "--xml-file",
-                        help="optional file with nexus "
-                        "configuration string",
-                        dest="xmlfile", default="")
-    parser.add_argument("-p", "--parent",
-                        help="nexus file name",
-                        dest="parent", default="")
-    parser.add_argument("-d", "--data",
-                        help="json string with data",
-                        dest="data", default="")
-    parser.add_argument("-j", "--json-file",
-                        help="json data file",
-                        dest="jsonfile", default="")
+    parser.add_argument(
+        "-x", "--xml-file",
+        help="optional file with nexus "
+        "configuration string",
+        dest="xmlfile", default="")
+    parser.add_argument(
+        "-p", "--parent",
+        help="nexus file name",
+        dest="parent", default="")
+    parser.add_argument(
+        "-d", "--data",
+        help="json string with data",
+        dest="data", default="")
+    parser.add_argument(
+        "-j", "--json-file",
+        help="json data file in a jsonrecord attribute format",
+        dest="jsonfile", default="")
     parser.add_argument(
         "-t", "--time",
         help="time between record steps in seconds, default: 1 s",
@@ -174,6 +199,10 @@ def main():
         "-n", "--nrecords",
         help="number of performed record steps",
         dest="nrecords", default="1")
+    parser.add_argument(
+        "-v", "--verbose", action="store_true",
+        default=False, dest="verbose",
+        help="verbose mode")
 
     try:
         options = parser.parse_args()
@@ -207,9 +236,6 @@ def main():
 
     command = CreateFile(options)
     command.run()
-    # result = runners[options.subparser].run(options)
-    # if result and str(result).strip():
-    #     print(result)
 
 
 if __name__ == "__main__":
