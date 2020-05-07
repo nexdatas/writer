@@ -1,4 +1,9 @@
 2020-04-14 Jan Kotanski <jankotan@gmail.com>
+	* add nxsfromxml script
+	* add optional parent nexus path to fileName attribute
+	* tagged as 2.28.0
+
+2020-04-14 Jan Kotanski <jankotan@gmail.com>
 	* speed up getJSONData
 	* tagged as 2.27.0
 

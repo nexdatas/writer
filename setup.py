@@ -117,7 +117,7 @@ SETUPDATA = dict(
         'Programming Language :: Python :: 3.7',
     ],
     install_requires=install_requires,
-    scripts=['NXSDataWriter'],
+    scripts=['NXSDataWriter', 'nxsfromxml'],
     cmdclass={
         # 'test': TestCommand,
         'build_sphinx': BuildDoc

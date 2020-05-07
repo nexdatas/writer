@@ -1,0 +1,64 @@
+.TH nxsfromxml 1 "2014-01-02" nxsfromxml
+.SH NAME
+.B nxsfromxml
+\- command-line tool for creating NeXus files from XML template
+
+.SH SYNOPSIS
+.B  nxsfromxml
+.I [-h] [-x XMLFILE] [-p PARENT] [-d DATA] [-j JSONFILE] [-t STIME] [-n NRECORDS] [-v] [-a] [xml_config]
+
+
+.SH DESCRIPTION
+.B nxsfromxml
+is a command-line tool which uses the nxswriter package to create NeXus files from XML template. Optional data can be provided in a json file or a json string  as a command-line parameter.
+
+.SH OPTIONS
+.IP "xml_config"
+nexus writer configuration string
+
+optional arguments:
+.IP "-h, --help"
+show this help message and exit
+.IP "-x XMLFILE, --xml-file XMLFILE"
+optional file with nexus configuration string
+.IP "-p PARENT, --parent PARENT"
+nexus file name and optional parent nexus path
+.IP "-d DATA, --data DATA"
+json string with data
+.IP "-j JSONFILE, --json-file JSONFILE"
+json data file in a jsonrecord attribute format
+.IP "-t STIME, --time STIME"
+time between record steps in seconds, default: 1 s
+.IP "-n NRECORDS, --nrecords NRECORDS"
+number of performed record steps
+.IP "-v, --verbose"
+verbose mode
+.IP "-a, --append"
+append mode
+
+.SH EXAMPLES:
+  nxsfromxml  -x config.xml -p newfile.nxs -j datastring.json
+
+    - creates a newfile.nxs file with configuration from config.xml and data from datastring.json
+
+  nxsfromxml  -x config.xml -p outputfile.nxs -d '{"sample_name":"sn", "chemical_formula":"H2O", "beamtime_id":"1234", "title":"Sample"}'
+
+    - creates an outputfile.nxs file with configuration from config.xml and data from given json dictionary
+
+  nxsconfig get source mono slit1 mirror2 | nxsfromxml -p basicsetup.nxs
+
+    - creates an basicsetup.nxs file with configuration of source mono slit1 mirror2 components created by nxsconfig get 
+
+.SH SEE ALSO
+https://github.com/jkotan/nexdatas/
+
+.SH COPYRIGHT
+Copyrights (c) 2020, GNU GPL v2, DESY, Jan Kotanski
+
+.SH BUGS
+Please report bugs on the project's mailing list:
+mailto://jankotan@gmail.com
+
+.SH AUTHORS
+Jan Kotanski <jankotan@gmail.com>
+

@@ -39,6 +39,7 @@ from .StreamSet import StreamSet
 from nxstools import filewriter as FileWriter
 
 from .H5Elements import EFile
+from .EGroup import EGroup
 from .DecoderPool import DecoderPool
 from .DataSourcePool import DataSourcePool
 
@@ -94,8 +95,10 @@ class TangoDataWriter(object):
         :param server: Tango server
         :type server: :class:`PyTango.Device_4Impl`
         """
+        #: (:obj:`str`) output file name and optional nexus parent path
+        self.__parent = ""
         #: (:obj:`str`) output file name
-        self.fileName = ""
+        self.__fileName = ""
         #: (:obj:`str`) output file name prefix
         self.__fileprefix = ""
         #: (:obj:`str`) output file name extension
@@ -106,9 +109,11 @@ class TangoDataWriter(object):
         self.__xmlsettings = ""
         #: (:obj:`str`) global JSON string with data records
         self.__json = "{}"
+        #: (:obj:`str`) nexus parent path of (name, type)
+        self.__parents = []
         #: (:obj:`int`) maximal number of threads
         self.numberOfThreads = 100
-#        self.numberOfThreads = 1
+        # self.numberOfThreads = 1
 
         #: (:class:`ThreadPool.ThreadPool`) thread pool with INIT elements
         self.__initPool = None
@@ -122,6 +127,9 @@ class TangoDataWriter(object):
         self.__triggerPools = {}
         #: (:class:`nxswriter.FileWriter.FTGroup`) H5 file handle
         self.__nxRoot = None
+        #: (:obj: `list` <:class:`nxswriter.FileWriter.FTGroup` >)
+        #      group path of H5 file handles
+        self.__nxPath = []
         #: (:class:`nxswriter.FileWriter.FTFile`) H5 file handle
         self.__nxFile = None
         #: (:class:`nxswriter.H5Elements.EFile`) element file objects
@@ -305,6 +313,56 @@ class TangoDataWriter(object):
     xmlsettings = property(__getXML, __setXML, __delXML,
                            doc='(:obj:`str`) the xml settings')
 
+    def __getFileName(self):
+        """ get method for parent attribute
+
+        :returns: value of parent nexus path
+        :rtype: :obj:`str`
+        """
+        return self.__parent
+
+    def __setFileName(self, parent):
+        """ set method for parent attribute
+
+        :param parent: parent nexus path
+        :type parent: :obj:`str`
+        """
+        parent = parent or ""
+        lparent = str(parent).split(":/")
+        if len(lparent) >= 3:
+            fileName = lparent[1]
+            nxpath = ":/".join(lparent[2:])
+        elif len(lparent) == 2:
+            fileName = lparent[0]
+            nxpath = lparent[1]
+        elif len(lparent) == 1:
+            fileName = lparent[0]
+            nxpath = ""
+
+        spath = nxpath.split("/")
+        parents = []
+        for dr in spath:
+            if dr.strip():
+                w = dr.split(':')
+                if len(w) == 1:
+                    if len(w[0]) > 2 and w[0][:2] == 'NX':
+                        w.insert(0, w[0][2:])
+                    else:
+                        w.append("NX" + w[0])
+                parents.append((w[0], w[1]))
+        self.__fileName = fileName
+        self.__parents = parents
+        self.__parent = parent
+
+    def __delFileName(self):
+        """ del method for parent attribute
+        """
+        del self.__parent
+
+    #: the parent nexus path
+    fileName = property(__getFileName, __setFileName, __delFileName,
+                        doc='(:obj:`str`) file name and optional nexus path')
+
     def getFile(self):
         """ the H5 file handle
 
@@ -337,20 +395,28 @@ class TangoDataWriter(object):
         self.__pars = self.__getParams(self.writer)
         pars = dict(self.__pars)
         pars["writer"] = wrmodule
-        if os.path.isfile(self.fileName):
+        if os.path.isfile(self.__fileName):
             self.__nxFile = FileWriter.open_file(
-                self.fileName, False, **pars)
+                self.__fileName, False, **pars)
         else:
             self.__nxFile = FileWriter.create_file(
-                self.fileName, **pars)
+                self.__fileName, **pars)
         self.__fileprefix, self.__fileext = os.path.splitext(
-            str(self.fileName))
+            str(self.__fileName))
         self.__nxRoot = self.__nxFile.root()
         self.__nxRoot.stepsperfile = self.stepsperfile
         self.__nxRoot.currentfileid = self.__currentfileid
 
         #: element file objects
         self.__eFile = EFile([], None, self.__nxRoot)
+
+        last = self.__eFile
+        for gname, gtype in self.__parents:
+            last = EGroup(
+                {"name": gname, "type": gtype},
+                last,
+                reloadmode=True)
+            self.__nxPath.append(last)
 
         if self.addingLogs:
             name = "nexus_logs"
@@ -414,7 +480,8 @@ class TangoDataWriter(object):
             errorHandler = sax.ErrorHandler()
             parser = sax.make_parser()
             handler = NexusXMLHandler(
-                self.__eFile, self.__datasources,
+                self.__nxPath[-1] if self.__nxPath else self.__eFile,
+                self.__datasources,
                 self.__decoders, self.__fetcher.groupTypes,
                 parser, json.loads(self.jsonrecord),
                 self._streams,
@@ -471,7 +538,7 @@ class TangoDataWriter(object):
             self.__currentfileid,
             self.__fileext)
         )
-        shutil.copy2(self.fileName, self.__filenames[-1])
+        shutil.copy2(self.__fileName, self.__filenames[-1])
         self.__filetimes[self.__filenames[-1]] = self.__nxFile.currenttime()
         self.__nxFile.name = self.__filenames[-1]
         self.__nxFile.reopen(readonly=False, **self.__pars)
@@ -563,7 +630,7 @@ class TangoDataWriter(object):
         """
         # flag for FINAL mode
         if self.stepsperfile > 0:
-            os.remove(self.fileName)
+            os.remove(self.__fileName)
             if (self.__datasources.counter) % self.stepsperfile == 0:
                 self.__removefile()
 
@@ -648,6 +715,7 @@ class TangoDataWriter(object):
         if self.addingLogs and self.__logGroup:
             self.__logGroup.close()
 
+        self.__nxPath = []
         self.__nxRoot = None
         self.__nxFile = None
         self.__eFile = None
