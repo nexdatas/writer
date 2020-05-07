@@ -39,10 +39,8 @@ class CreateFile(object):
         :param options: parser options
         :type options: :class:`argparse.Namespace`
         """
-        #: (:obj:`str`) file name
-        self.__file = ""
-        #: (:obj:`str`) nexus path
-        self.__nxpath = ""
+        #: (:obj:`str`) file name with optional nexus path
+        self.__parent = options.parent or ""
         #: (:obj:`str`) xml configuration string
         self.__xml = ""
         #: (:obj:`str`) json data string
@@ -57,16 +55,6 @@ class CreateFile(object):
         self.__verbose = options.verbose or False
         #: (:obj:`bool`) append mode
         self.__append = options.append or False
-
-        lparent = str(options.parent).split(":/")
-        if len(lparent) >= 3:
-            self.__file = lparent[1]
-            self.__nxpath = ":/".join(lparent[2:])
-        elif len(lparent) == 2:
-            self.__file = lparent[0]
-            self.__nxpath = lparent[1]
-        elif len(lparent) == 1:
-            self.__file = lparent[0]
 
         if options.args and len(options.args):
             self.__xml = options.args[0].strip()
@@ -111,10 +99,9 @@ class CreateFile(object):
         """ the main program function
         """
         tdw = TangoDataWriter.TangoDataWriter()
-        tdw.fileName = str(self.__file)
-        tdw.parent = str(self.__nxpath or "")
+        tdw.fileName = str(self.__parent)
         if self.__verbose:
-            print("opening the %s file" % self.__file)
+            print("opening the %s file" % self.__parent)
         tdw.openFile()
         tdw.xmlsettings = self.__xml
 

@@ -95,8 +95,10 @@ class TangoDataWriter(object):
         :param server: Tango server
         :type server: :class:`PyTango.Device_4Impl`
         """
+        #: (:obj:`str`) output file name and optional nexus parent path
+        self.__parent = ""
         #: (:obj:`str`) output file name
-        self.fileName = ""
+        self.__fileName = ""
         #: (:obj:`str`) output file name prefix
         self.__fileprefix = ""
         #: (:obj:`str`) output file name extension
@@ -107,8 +109,6 @@ class TangoDataWriter(object):
         self.__xmlsettings = ""
         #: (:obj:`str`) global JSON string with data records
         self.__json = "{}"
-        #: (:obj:`str`) nexus parent path
-        self.__parent = ""
         #: (:obj:`str`) nexus parent path of (name, type)
         self.__parents = []
         #: (:obj:`int`) maximal number of threads
@@ -313,7 +313,7 @@ class TangoDataWriter(object):
     xmlsettings = property(__getXML, __setXML, __delXML,
                            doc='(:obj:`str`) the xml settings')
 
-    def __getParent(self):
+    def __getFileName(self):
         """ get method for parent attribute
 
         :returns: value of parent nexus path
@@ -321,16 +321,25 @@ class TangoDataWriter(object):
         """
         return self.__parent
 
-    def __setParent(self, parent):
+    def __setFileName(self, parent):
         """ set method for parent attribute
 
         :param parent: parent nexus path
         :type parent: :obj:`str`
         """
-        self.__parent = ""
-        self.__parents = []
         parent = parent or ""
-        spath = parent.split("/")
+        lparent = str(parent).split(":/")
+        if len(lparent) >= 3:
+            fileName = lparent[1]
+            nxpath = ":/".join(lparent[2:])
+        elif len(lparent) == 2:
+            fileName = lparent[0]
+            nxpath = lparent[1]
+        elif len(lparent) == 1:
+            fileName = lparent[0]
+            nxpath = ""
+
+        spath = nxpath.split("/")
         parents = []
         for dr in spath:
             if dr.strip():
@@ -341,17 +350,18 @@ class TangoDataWriter(object):
                     else:
                         w.append("NX" + w[0])
                 parents.append((w[0], w[1]))
+        self.__fileName = fileName
         self.__parents = parents
         self.__parent = parent
 
-    def __delParent(self):
+    def __delFileName(self):
         """ del method for parent attribute
         """
         del self.__parent
 
     #: the parent nexus path
-    parent = property(__getParent, __setParent, __delParent,
-                      doc='(:obj:`str`) parent nexus path')
+    fileName = property(__getFileName, __setFileName, __delFileName,
+                        doc='(:obj:`str`) file name and optional nexus path')
 
     def getFile(self):
         """ the H5 file handle
@@ -385,14 +395,14 @@ class TangoDataWriter(object):
         self.__pars = self.__getParams(self.writer)
         pars = dict(self.__pars)
         pars["writer"] = wrmodule
-        if os.path.isfile(self.fileName):
+        if os.path.isfile(self.__fileName):
             self.__nxFile = FileWriter.open_file(
-                self.fileName, False, **pars)
+                self.__fileName, False, **pars)
         else:
             self.__nxFile = FileWriter.create_file(
-                self.fileName, **pars)
+                self.__fileName, **pars)
         self.__fileprefix, self.__fileext = os.path.splitext(
-            str(self.fileName))
+            str(self.__fileName))
         self.__nxRoot = self.__nxFile.root()
         self.__nxRoot.stepsperfile = self.stepsperfile
         self.__nxRoot.currentfileid = self.__currentfileid
@@ -528,7 +538,7 @@ class TangoDataWriter(object):
             self.__currentfileid,
             self.__fileext)
         )
-        shutil.copy2(self.fileName, self.__filenames[-1])
+        shutil.copy2(self.__fileName, self.__filenames[-1])
         self.__filetimes[self.__filenames[-1]] = self.__nxFile.currenttime()
         self.__nxFile.name = self.__filenames[-1]
         self.__nxFile.reopen(readonly=False, **self.__pars)
@@ -620,7 +630,7 @@ class TangoDataWriter(object):
         """
         # flag for FINAL mode
         if self.stepsperfile > 0:
-            os.remove(self.fileName)
+            os.remove(self.__fileName)
             if (self.__datasources.counter) % self.stepsperfile == 0:
                 self.__removefile()
 
