@@ -61,6 +61,24 @@ class CreateFile(object):
         else:
             self.__xml = open(options.xmlfile, 'r').read()
 
+        #: (:obj:`str`) writer module
+        self.__writer = ""
+        if options.h5cpp:
+            self.__writer = "h5cpp"
+        elif options.h5py:
+            self.__writer = "h5py"
+        elif options.pni:
+            self.__writer = "pni"
+        elif "h5cpp" in TangoDataWriter.WRITERS.keys():
+            self.__writer = "h5cpp"
+        elif "h5py" in TangoDataWriter.WRITERS.keys():
+            self.__writer = "h5py"
+        else:
+            self.__writer = "pni"
+        if self.__writer not in TangoDataWriter.WRITERS.keys():
+            raise Exception("nxsfromxml: Writer '%s' cannot be found\n"
+                            % self.__writer)
+
     @classmethod
     def currenttime(cls):
         """ returns current time string
@@ -99,21 +117,25 @@ class CreateFile(object):
         """ the main program function
         """
         tdw = TangoDataWriter.TangoDataWriter()
+        if self.__verbose:
+            print("using the '%s' writer module" % self.__writer)
+
+        tdw.writer = self.__writer
         tdw.fileName = str(self.__parent)
         if self.__verbose:
-            print("opening the %s file" % self.__parent)
+            print("opening the '%s' file" % self.__parent)
         tdw.openFile()
         tdw.xmlsettings = self.__xml
 
         if self.__verbose:
-            print("opening the data entry ")
+            print("opening the data entry")
         if self.__data and self.__data.strip():
             tdw.jsonrecord = self.jsonstring()
         tdw.skipacquisition = self.__append
         tdw.openEntry()
         for i in range(self.__nrecords):
             if self.__verbose:
-                print("recording the H5 file")
+                print("recording step of the H5 file")
             tdw.jsonrecord = self.jsonstring()
             tdw.record()
             if self.__nrecords > 1:
@@ -199,6 +221,18 @@ def main():
         "-a", "--append", action="store_true",
         default=False, dest="append",
         help="append mode")
+    parser.add_argument(
+        "--h5cpp", action="store_true",
+        default=False, dest="h5cpp",
+        help="use h5cpp module as a nexus reader")
+    parser.add_argument(
+        "--h5py", action="store_true",
+        default=False, dest="h5py",
+        help="use h5py module as a nexus reader")
+    parser.add_argument(
+        "--pni", action="store_true",
+        default=False, dest="pni",
+        help="use pni module as a nexus reader")
 
     try:
         options = parser.parse_args()
@@ -230,8 +264,14 @@ def main():
         parser.print_help()
         sys.exit(255)
 
-    command = CreateFile(options)
-    command.run()
+    try:
+        command = CreateFile(options)
+        command.run()
+    except Exception as e:
+        sys.stderr.write("Error: nxsfromxml interrupted with:")
+        sys.stderr.write(str(e))
+        sys.stderr.flush()
+        sys.exit(255)
 
 
 if __name__ == "__main__":

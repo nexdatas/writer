@@ -31,10 +31,16 @@ json data file in a jsonrecord attribute format
 time between record steps in seconds, default: 1 s
 .IP "-n NRECORDS, --nrecords NRECORDS"
 number of performed record steps
-.IP "-v, --verbose"
-verbose mode
 .IP "-a, --append"
 append mode
+.IP "-v, --verbose"
+verbose mode
+.IP "--h5cpp"
+use h5cpp module as a nexus reader
+.IP "--h5py"
+use h5py module as a nexus reader
+.IP "--pni"
+use pni module as a nexus reader
 
 .SH EXAMPLES:
   nxsfromxml  -x config.xml -p newfile.nxs -j datastring.json
