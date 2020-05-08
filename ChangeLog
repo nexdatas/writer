@@ -1,4 +1,8 @@
-2020-04-14 Jan Kotanski <jankotan@gmail.com>
+2020-05-08 Jan Kotanski <jankotan@gmail.com>
+	* fix manifest file
+	* tagged as 2.28.1
+
+2020-05-08 Jan Kotanski <jankotan@gmail.com>
 	* add nxsfromxml script
 	* add optional parent nexus path to fileName attribute
 	* tagged as 2.28.0
