@@ -129,6 +129,7 @@ if H5PY_AVAILABLE:
     import FElementH5PY_test
     import TangoDataWriterH5PY_test
     import FileWriterH5PY_test
+    import NXSFromXMLH5PY_test
 if H5CPP_AVAILABLE:
     import EDimensionsH5Cpp_test
     import ElementH5Cpp_test
@@ -150,6 +151,7 @@ if H5CPP_AVAILABLE:
     import FElementH5Cpp_test
     import TangoDataWriterH5Cpp_test
     import FileWriterH5Cpp_test
+    import NXSFromXMLH5Cpp_test
 
 if PNI_AVAILABLE and H5PY_AVAILABLE:
     import FileWriterPNIH5PY_test
@@ -479,6 +481,9 @@ def main():
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(
                 FileWriterH5PY_test))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(
+                NXSFromXMLH5PY_test))
 
     if H5CPP_AVAILABLE:
         suite.addTests(
@@ -533,6 +538,9 @@ def main():
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(
                 FileWriterH5Cpp_test))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(
+                NXSFromXMLH5Cpp_test))
 
     if PNI_AVAILABLE and H5PY_AVAILABLE:
         suite.addTests(
