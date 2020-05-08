@@ -102,15 +102,16 @@ class CreateFile(object):
         if self.__jsonfile:
             sjsn = open(self.__jsonfile, 'r').read()
             if sjsn.strip():
-                jsn = sjsn.loads()
+                jsn = json.loads(sjsn.strip())
         if "data" not in jsn.keys():
             jsn["data"] = {}
         if "start_time" not in jsn["data"]:
             jsn["data"]["start_time"] = self.currenttime()
         if "end_time" not in jsn["data"]:
             jsn["data"]["end_time"] = self.currenttime()
-        data = json.loads(str(self.__data.strip()))
-        jsn["data"].update(data)
+        if str(self.__data.strip()):
+            data = json.loads(str(self.__data.strip()))
+            jsn["data"].update(data)
         return json.dumps(jsn)
 
     def run(self):
@@ -129,8 +130,7 @@ class CreateFile(object):
 
         if self.__verbose:
             print("opening the data entry")
-        if self.__data and self.__data.strip():
-            tdw.jsonrecord = self.jsonstring()
+        tdw.jsonrecord = self.jsonstring()
         tdw.skipacquisition = self.__append
         tdw.openEntry()
         for i in range(self.__nrecords):
