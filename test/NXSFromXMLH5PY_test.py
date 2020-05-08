@@ -41,6 +41,24 @@ if sys.version_info > (3, ):
 
 # test fixture
 
+#: (:obj:`bool`) PyTango bug #213 flag related to EncodedAttributes in python3
+PYTG_BUG_213 = False
+if sys.version_info > (3,):
+    try:
+        import PyTango
+        PYTGMAJOR, PYTGMINOR, PYTGPATCH = list(
+            map(int, PyTango.__version__.split(".")[:3]))
+        if PYTGMAJOR <= 9:
+            if PYTGMAJOR == 9:
+                if PYTGMINOR < 2:
+                    PYTG_BUG_213 = True
+                elif PYTGMINOR == 2 and PYTGPATCH <= 4:
+                    PYTG_BUG_213 = True
+            else:
+                PYTG_BUG_213 = True
+    except Exception:
+        pass
+
 
 class NXSFromXMLH5PYTest(unittest.TestCase):
 
@@ -198,7 +216,10 @@ class NXSFromXMLH5PYTest(unittest.TestCase):
                 sys.stderr = old_stderr
                 vl = mystdout.getvalue()
                 er = mystderr.getvalue()
-                self.assertEqual('', er)
+                if PYTG_BUG_213:
+                    self.assertTrue(er)
+                else:
+                    self.assertEqual('', er)
                 if ci % 2:
                     self.assertEqual('', vl)
                 else:
@@ -557,7 +578,10 @@ class NXSFromXMLH5PYTest(unittest.TestCase):
                 sys.stderr = old_stderr
                 vl = mystdout.getvalue()
                 er = mystderr.getvalue()
-                self.assertEqual('', er)
+                if PYTG_BUG_213:
+                    self.assertTrue(er)
+                else:
+                    self.assertEqual('', er)
                 if ci % 2:
                     self.assertEqual('', vl)
                 else:
@@ -576,7 +600,10 @@ class NXSFromXMLH5PYTest(unittest.TestCase):
                 sys.stderr = old_stderr
                 vl = mystdout.getvalue()
                 er = mystderr.getvalue()
-                self.assertEqual('', er)
+                if PYTG_BUG_213:
+                    self.assertTrue(er)
+                else:
+                    self.assertEqual('', er)
                 if ci % 2:
                     self.assertEqual('', vl)
                 else:
@@ -831,7 +858,10 @@ class NXSFromXMLH5PYTest(unittest.TestCase):
                 sys.stderr = old_stderr
                 vl = mystdout.getvalue()
                 er = mystderr.getvalue()
-                self.assertEqual('', er)
+                if PYTG_BUG_213:
+                    self.assertTrue(er)
+                else:
+                    self.assertEqual('', er)
                 if ci % 2:
                     self.assertEqual('', vl)
                 else:
