@@ -38,7 +38,7 @@ if [ $2 = "2" ]; then
 else
     echo "install python3-pytango"
     if [ $1 = "ubuntu20.04" ]; then
-	docker exec -it --user root ndts /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python3-tango python3-tz; apt-get -qq install -y nxsconfigserver-db python3-nxstools python3-setuptools git libhdf5-dev python3-dev; sleep 10'
+	docker exec -it --user root ndts /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y   python3-tango python3-tz; apt-get -qq install -y nxsconfigserver-db python3-nxstools python3-setuptools git cython3 libhdf5-dev python3-dev; sleep 10'
 	docker exec -it --user root ndts /bin/sh -c 'git clone -b 2.10.x https://github.com/h5py/h5py h5py'
 	docker exec -it --user root ndts /bin/sh -c 'cd h5py; python3 setup.py install'
 
