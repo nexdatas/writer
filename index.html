@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Welcome to NXSDataWriter’s documentation! &#8212; NXSDataWriter 2.24.1 documentation</title>
+    <title>Welcome to NXSDataWriter’s documentation! &#8212; NXSDataWriter 2.27.0 documentation</title>
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="#">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.24</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.27</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -108,10 +108,10 @@
 <li><a class="reference internal" href="#installation">Installation</a><ul>
 <li><a class="reference internal" href="#from-sources">From sources</a></li>
 <li><a class="reference internal" href="#debian-packages">Debian packages</a></li>
+<li><a class="reference internal" href="#from-pip">From pip</a></li>
 <li><a class="reference internal" href="#setting-nexus-writer-server">Setting NeXus Writer Server</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#installation-from-sources">Installation from sources</a></li>
 <li><a class="reference internal" href="#client-code">Client code</a></li>
 </ul>
 </li>
@@ -159,10 +159,10 @@
 <li><a class="reference internal" href="#installation">Installation</a><ul>
 <li><a class="reference internal" href="#from-sources">From sources</a></li>
 <li><a class="reference internal" href="#debian-packages">Debian packages</a></li>
+<li><a class="reference internal" href="#from-pip">From pip</a></li>
 <li><a class="reference internal" href="#setting-nexus-writer-server">Setting NeXus Writer Server</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#installation-from-sources">Installation from sources</a></li>
 <li><a class="reference internal" href="#client-code">Client code</a></li>
 </ul>
 </li>
@@ -249,6 +249,23 @@ various databases as well as passed by a user client via JSON strings.</p>
 </div>
 <p>for Component Selector and Sardana related packages.</p>
 </div>
+<div class="section" id="from-pip">
+<h3>From pip<a class="headerlink" href="#from-pip" title="Permalink to this headline">¶</a></h3>
+<p>To install it from pip you can</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> python3 -m venv myvenv
+<span class="gp">$</span> . myvenv/bin/activate
+
+<span class="gp">$</span> pip install nxswriter
+</pre></div>
+</div>
+<p>Moreover it is also good to install</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> pip install pytango
+<span class="gp">$</span> pip install pymysqldb
+<span class="gp">$</span> pip install psycopg2-binary
+<span class="gp">$</span> pip install cx-oracle
+</pre></div>
+</div>
+</div>
 <div class="section" id="setting-nexus-writer-server">
 <h3>Setting NeXus Writer Server<a class="headerlink" href="#setting-nexus-writer-server" title="Permalink to this headline">¶</a></h3>
 <p>To set up  NeXus Writer Server run</p>
@@ -256,13 +273,6 @@ various databases as well as passed by a user client via JSON strings.</p>
 </pre></div>
 </div>
 <p>The <em>nxsetup</em> command comes from the <strong>python-nxstools</strong> package.</p>
-</div>
-</div>
-<div class="section" id="installation-from-sources">
-<h2>Installation from sources<a class="headerlink" href="#installation-from-sources" title="Permalink to this headline">¶</a></h2>
-<p>Extract sources and run</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> python setup.py install
-</pre></div>
 </div>
 </div>
 <div class="section" id="client-code">

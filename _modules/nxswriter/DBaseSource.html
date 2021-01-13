@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>nxswriter.DBaseSource &#8212; NXSDataWriter 2.24.1 documentation</title>
+    <title>nxswriter.DBaseSource &#8212; NXSDataWriter 2.27.0 documentation</title>
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.24</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.27</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -186,7 +186,7 @@
         <span class="kn">import</span> <span class="nn">pymysql</span>
         <span class="n">pymysql</span><span class="o">.</span><span class="n">install_as_MySQLdb</span><span class="p">()</span>
     <span class="n">DB_AVAILABLE</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;MYSQL&quot;</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="k">pass</span>
     <span class="c1"># sys.stdout.write(&quot;MYSQL not available: %s\n&quot; % e)</span>
     <span class="c1"># sys.stdout.flush()</span>
@@ -194,7 +194,7 @@
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">psycopg2</span>
     <span class="n">DB_AVAILABLE</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;PGSQL&quot;</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="k">pass</span>
     <span class="c1"># sys.stdout.write(&quot;PGSQL not available: %s\n&quot; % e)</span>
     <span class="c1"># sys.stdout.flush()</span>
@@ -202,7 +202,7 @@
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">cx_Oracle</span>
     <span class="n">DB_AVAILABLE</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;ORACLE&quot;</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="k">pass</span>
     <span class="c1"># sys.stdout.write(&quot;ORACLE not available: %s\n&quot; % e)</span>
     <span class="c1"># sys.stdout.flush()</span>

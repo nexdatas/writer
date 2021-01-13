@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>nxswriter.NXSWriter &#8212; NXSDataWriter 2.24.1 documentation</title>
+    <title>nxswriter.NXSWriter &#8212; NXSDataWriter 2.27.0 documentation</title>
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.24</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.27</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -347,7 +347,8 @@
             <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">get_device_properties</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_device_class</span><span class="p">())</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tdw</span><span class="o">.</span><span class="n">defaultCanFail</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DefaultCanFail</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tdw</span><span class="o">.</span><span class="n">defaultCanFail</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DefaultCanFail</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tdw</span><span class="o">.</span><span class="n">addingLogs</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">AddingLogs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NXSDataWriter.set_state"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.set_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;set_state method</span>
@@ -986,6 +987,10 @@
         <span class="s1">&#39;DefaultCanFail&#39;</span><span class="p">:</span>
         <span class="p">[</span><span class="n">PyTango</span><span class="o">.</span><span class="n">DevBoolean</span><span class="p">,</span>
          <span class="s2">&quot;Default value of CanFail attribute&quot;</span><span class="p">,</span>
+         <span class="p">[</span><span class="kc">True</span><span class="p">]],</span>
+        <span class="s1">&#39;AddingLogs&#39;</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">PyTango</span><span class="o">.</span><span class="n">DevBoolean</span><span class="p">,</span>
+         <span class="s2">&quot;Add XML logs&quot;</span><span class="p">,</span>
          <span class="p">[</span><span class="kc">True</span><span class="p">]],</span>
     <span class="p">}</span>
 

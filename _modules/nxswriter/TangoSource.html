@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>nxswriter.TangoSource &#8212; NXSDataWriter 2.24.1 documentation</title>
+    <title>nxswriter.TangoSource &#8212; NXSDataWriter 2.27.0 documentation</title>
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.24</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.27</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -415,6 +415,37 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__decoders</span> <span class="o">=</span> <span class="n">decoders</span></div>
 
+    <span class="k">def</span> <span class="nf">__tryclient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fullclient</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; data provider from client</span>
+
+<span class="sd">        :param fullclient: data key name</span>
+<span class="sd">        :type fullclient: :obj:`str:obj:`</span>
+<span class="sd">        :returns: dictionary with collected data</span>
+<span class="sd">        :rtype: {&#39;rank&#39;: :obj:`str`, &#39;value&#39;: any, &#39;tangoDType&#39;: :obj:`str`, \</span>
+<span class="sd">        :        &#39;shape&#39;: :obj:`list` &lt;int&gt;, &#39;encoding&#39;: :obj:`str`, \</span>
+<span class="sd">        :        &#39;decoders&#39;: :obj:`str`}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">fclient</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">fullclient</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">sclient</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">clients</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;tango://</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">fullclient</span><span class="p">,</span>
+            <span class="n">fullclient</span><span class="p">,</span>
+            <span class="n">fclient</span><span class="p">,</span>
+            <span class="s2">&quot;tango://</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">fclient</span><span class="p">,</span>
+            <span class="s2">&quot;tango://</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span>
+            <span class="n">sclient</span><span class="p">,</span>
+            <span class="s2">&quot;tango://</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">sclient</span>
+        <span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getJSONData</span><span class="p">(</span>
+                <span class="n">clients</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__globalJSON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__localJSON</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">res</span>
+
 <div class="viewcode-block" id="TangoSource.getData"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoSource.TangoSource.getData">[docs]</a>    <span class="k">def</span> <span class="nf">getData</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; data provider</span>
 
@@ -424,68 +455,13 @@
 <span class="sd">        :        &#39;decoders&#39;: :obj:`str`}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
-            <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getJSONData</span><span class="p">(</span>
-                    <span class="s2">&quot;tango://</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">fullclient</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">__globalJSON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__localJSON</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getJSONData</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">fullclient</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">__globalJSON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__localJSON</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                    <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">sclient</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fullclient</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-                    <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getJSONData</span><span class="p">(</span>
-                        <span class="n">sclient</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">__globalJSON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__localJSON</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                    <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">sclient</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fullclient</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-                    <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getJSONData</span><span class="p">(</span>
-                        <span class="s2">&quot;tango://</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">sclient</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">__globalJSON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__localJSON</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                    <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getJSONData</span><span class="p">(</span>
-                        <span class="s2">&quot;tango://</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">__globalJSON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__localJSON</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                    <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getJSONData</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">__globalJSON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__localJSON</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                    <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">sclient</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-                    <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getJSONData</span><span class="p">(</span>
-                        <span class="n">sclient</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">__globalJSON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__localJSON</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                    <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">sclient</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-                    <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getJSONData</span><span class="p">(</span>
-                        <span class="s2">&quot;tango://</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">sclient</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">__globalJSON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__localJSON</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                    <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__tryclient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fullclient</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">res</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">res</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fullclient</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__tryclient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fullclient</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+                <span class="k">if</span> <span class="n">res</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">res</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">PYTANGO_AVAILABLE</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
